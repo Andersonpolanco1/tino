@@ -14,12 +14,12 @@ const config: ExpoConfig = {
   userInterfaceStyle: 'automatic',
   backgroundColor: claro.fondo,
   ios: {
-    bundleIdentifier: 'com.tino.app',
+    bundleIdentifier: 'com.polanco.tino',
     supportsTablet: false,
     config: { usesNonExemptEncryption: false },
   },
   android: {
-    package: 'com.tino.app',
+    package: 'com.polanco.tino',
     adaptiveIcon: {
       foregroundImage: './assets/iconos/android-primer-plano.png',
       backgroundImage: './assets/iconos/android-fondo.png',

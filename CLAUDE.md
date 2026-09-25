@@ -19,7 +19,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 - Etapa actual: **2. Motor** (sección 13 de la documentación técnica).
 - Etapa 1 terminada en código: Expo SDK 57 con Expo Router (`app/`), tema claro y oscuro con `useTema()` y `Texto` (`src/diseno/`), fuentes incluidas, i18n con i18next (`src/i18n/`), país detectado por región con modo sin catálogo (`src/paises/`), base SQLCipher con clave en el almacén seguro y migraciones por `PRAGMA user_version` (`src/datos/`), y pestañas vacías.
 - Falta verificar la etapa 1 en teléfonos reales: SQLCipher no corre en Expo Go, así que hace falta una compilación de desarrollo (`npx eas-cli@latest build --profile development`) o `npx expo run:android`.
-- Por decidir antes de la primera compilación de tienda: identificador de paquete (hoy `com.tino.app` en `app.config.ts`) e iconos de la barra de pestañas (etapa 4).
+- Identificador de paquete: `com.polanco.tino` (iOS y Android). Pendiente para la etapa 4: iconos de la barra de pestañas.
 - Pendiente de datos: feriados de RD en `src/paises/do.json` y productos de tarjeta en `datos-publicos/emisores-do.json`.
 
 Actualiza esta sección al terminar cada etapa.
