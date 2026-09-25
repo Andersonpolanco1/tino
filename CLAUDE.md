@@ -16,8 +16,10 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 ## Estado actual
 
-- Etapa actual: **1. Base** (sección 13 de la documentación técnica). El repositorio aún no tiene el proyecto de Expo.
-- Ya existen: tipos, casos de prueba del motor, motor de referencia en Python, tokens de diseño, textos iniciales, configuración de RD, catálogo de emisores e iconos.
+- Etapa actual: **2. Motor** (sección 13 de la documentación técnica).
+- Etapa 1 terminada en código: Expo SDK 57 con Expo Router (`app/`), tema claro y oscuro con `useTema()` y `Texto` (`src/diseno/`), fuentes incluidas, i18n con i18next (`src/i18n/`), país detectado por región con modo sin catálogo (`src/paises/`), base SQLCipher con clave en el almacén seguro y migraciones por `PRAGMA user_version` (`src/datos/`), y pestañas vacías.
+- Falta verificar la etapa 1 en teléfonos reales: SQLCipher no corre en Expo Go, así que hace falta una compilación de desarrollo (`npx eas-cli@latest build --profile development`) o `npx expo run:android`.
+- Por decidir antes de la primera compilación de tienda: identificador de paquete (hoy `com.tino.app` en `app.config.ts`) e iconos de la barra de pestañas (etapa 4).
 - Pendiente de datos: feriados de RD en `src/paises/do.json` y productos de tarjeta en `datos-publicos/emisores-do.json`.
 
 Actualiza esta sección al terminar cada etapa.
@@ -43,9 +45,12 @@ Actualiza esta sección al terminar cada etapa.
 
 ## Comandos
 
-Se completan cuando exista el proyecto de Expo (etapa 1):
-
-- Instalar dependencias: `npm install`
-- Iniciar en desarrollo: `npx expo start`
+- Instalar dependencias: `npm install`. Para agregar paquetes usa `npx expo install <paquete>`, que elige versiones compatibles con el SDK.
+- Iniciar en desarrollo: `npx expo start` (requiere la compilación de desarrollo instalada; no sirve Expo Go)
+- Compilar y abrir en Android local: `npm run android`
 - Pruebas: `npm test`
-- Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py`
+- Tipos: `npm run typecheck`
+- Diagnóstico de dependencias: `npx expo-doctor`
+- Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py` (en Windows, `python`)
+
+Notas del entorno: TypeScript 6 no carga tipos globales solos (están en `types` de `tsconfig.json`); RNTL 14 tiene `render` y `renderHook` asíncronos; `Tabs` se importa de `expo-router/js-tabs`. Las pruebas no pueden vivir dentro de `app/` porque Expo Router las trataría como rutas.
