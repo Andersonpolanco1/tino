@@ -5,8 +5,21 @@
   "idiomas": [
     "es-DO"
   ],
-  "feriados": [],
-  "feriadosNota": "Completar con el calendario oficial de días feriados del año, con los traslados que dispone la ley.",
+  "feriados": [
+    "2026-01-01",
+    "2026-01-05",
+    "2026-01-21",
+    "2026-01-26",
+    "2026-02-27",
+    "2026-04-03",
+    "2026-05-04",
+    "2026-06-04",
+    "2026-08-16",
+    "2026-09-24",
+    "2026-11-09",
+    "2026-12-25"
+  ],
+  "feriadosNota": "Días no laborables ya trasladados según la Ley 139-97, del calendario oficial del Ministerio de Trabajo. Cubre 2026; falta agregar 2027.",
   "catalogoDisponible": true,
   "funciones": {
     "dobleBalance": true
