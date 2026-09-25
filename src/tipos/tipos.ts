@@ -121,7 +121,7 @@ export interface ProductoTarjeta {
   id: string;                        // "banreservas-visa-oro"
   nombre: string;                    // "Visa Oro"
   marca: 'visa' | 'mastercard' | 'amex' | 'otra';
-  monedaFacturacion: MonedaFacturacion;
+  monedaFacturacion?: MonedaFacturacion; // sin dato = el registro se la pregunta al usuario
   plantilla?: Partial<Pick<Tarjeta, 'fechaLimite' | 'ajusteDiaNoHabil' | 'compraEnDiaDeCorte' | 'recompensa'>>;
 }
 

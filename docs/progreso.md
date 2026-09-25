@@ -150,8 +150,14 @@ Criterios de la especificación:
 ## Pendientes fuera del código
 
 - [ ] Feriados de RD de 2027 en `src/paises/do.json`
-- [ ] Productos de tarjeta y recompensas de los emisores del grupo 1 en `datos-publicos/emisores-do.json`
-- [ ] Verificar los 7 emisores marcados "por verificar"
+- [x] Productos preliminares del grupo 1: 135 productos de 15 emisores, solo nombre y marca (catálogo 2026.09.2)
+- [ ] Segunda revisión de los productos contra la página de cada banco, empezando por Popular (mezcla nombres viejos y actuales)
+- [ ] Productos de Lafise y Qik (grupo 1, no cubiertos por la investigación)
+- [ ] Confirmar la marca de los productos con marca `otra`: Edesur y La Cadena (BHD); Premium Gold y Clásica (APAP); Insignia (Banco Caribe); ConfiaMás, Clásica Internacional, Gold Internacional, Confía en Ti, Unase y Unión (La Nacional)
+- [ ] Confirmar nombres dudosos: "Visa Lama Plazos" (Promerica), "Gold Mastercard (antes Orange)" (Scotiabank), "Mastercard Teen" (Popular, ¿es de crédito?)
+- [ ] Confirmar la moneda de facturación de cada producto; hoy solo la tienen los de doble saldo, dos límites o uso local
+- [ ] Averiguar qué es "Preserva" de Banreservas (se dejó fuera)
+- [ ] Verificar los emisores que siguen "por verificar": Alaver, Banfondesa, Motor Crédito, Adopem y Citibank en el grupo 1, y los del grupo 2
 - [ ] Búsqueda de marcas de "Tino" (1.1 de la especificación)
 - [ ] Variantes oscura y tintada del icono de iOS
 - [ ] Cuentas de Apple Developer, Google Play Console y proyecto en Expo
@@ -175,4 +181,7 @@ Criterios de la especificación:
 | D9 | 2026-09-25 | Las funciones marcadas **(asignada)** se ubicaron en las etapas 3 y 4 | La tabla de etapas no las asignaba |
 | D10 | 2026-09-25 | Además de los 17 casos, el motor se compara con 200 casos aleatorios de la referencia (`motor.aleatorios.json`, semilla fija) | Los 17 casos documentan reglas; los aleatorios detectan diferencias de redondeo, meses cortos, feriados y cobros que nadie escribió a mano |
 | D12 | 2026-09-25 | Toda transacción exclusiva usa `base.transaccion(...)`, que aplica la clave en la conexión de la transacción | expo-sqlite abre una conexión nueva para cada transacción exclusiva; sin la clave, SQLCipher responde "file is not a database" (encontrado al probar en el emulador) |
+| D13 | 2026-09-25 | `ProductoTarjeta.monedaFacturacion` es opcional; si falta, el registro se la pregunta al usuario | La investigación del catálogo casi nunca la da, e inventarla penalizaría tarjetas sin razón en compras en dólares |
+| D14 | 2026-09-25 | El catálogo trae solo nombre y marca, sin recompensas precargadas; las tasas por categoría (PREMIA, Insignia, ConnectMiles, etc.) quedan para v2 | El MVP solo maneja una tasa base; cargar una tasa de categoría como base distorsiona el ranking |
+| D15 | 2026-09-25 | Cada variante comercial es un producto propio; el doble saldo es atributo, no producto; fuera del catálogo las líneas de crédito y las tarjetas de empresa | Las variantes cambian beneficios; el MVP es para personas |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |
