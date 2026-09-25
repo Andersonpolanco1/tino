@@ -33,22 +33,23 @@ Criterios de la especificación:
 
 Listo cuando: `npm test` pasa todos los casos del motor.
 
-- [ ] `fechas.ts`: cortes (29–31 en meses cortos), próximo corte y corte anterior, fecha límite y ajuste de día no hábil
-- [ ] `recompensas.ts`: puntos por monto, por porcentaje y por transacción, y cashback
-- [ ] `ingresos.ts`: fechas de cobro entre hoy y la fecha de pago (3 frecuencias, igual que la referencia; ver decisión D6)
-- [ ] `ranking.ts`: exclusiones, penalizaciones, reparto de pesos, puntaje, semáforo y orden
-- [ ] `orden.ts`: barra de orden (Más días, Más puntos, Más cashback) sin cambiar el enfoque
-- [ ] Redondeo igual al de la referencia en Python
-- [ ] Los 17 casos de `motor.casos.json` pasan exactamente
-- [ ] Pruebas propias: meses de 28 a 31 días, año bisiesto, cambio de año, feriado junto a fin de semana
-- [ ] Prueba de que el motor no importa React ni Expo ni lee la hora del sistema
+- [x] `fechas.ts`: cortes (29–31 en meses cortos), próximo corte y corte anterior, fecha límite y ajuste de día no hábil
+- [x] `recompensas.ts`: puntos por monto, por porcentaje y por transacción, y cashback
+- [x] `ingresos.ts`: fechas de cobro entre hoy y la fecha de pago (3 frecuencias, igual que la referencia; ver decisión D6)
+- [x] `ranking.ts`: exclusiones, penalizaciones, reparto de pesos, puntaje, semáforo y orden
+- [x] `orden.ts`: barra de orden (Más días, Más puntos, Más cashback) sin cambiar el enfoque
+- [x] Redondeo igual al de la referencia en Python
+- [x] Los 17 casos de `motor.casos.json` pasan exactamente
+- [x] Pruebas propias: meses de 28 a 31 días, año bisiesto, cambio de año, feriado junto a fin de semana
+- [x] Prueba de que el motor no importa React ni Expo ni lee la hora del sistema
+- [x] 200 casos aleatorios de la referencia (`generar_aleatorios.py`) que coinciden exactamente (decisión D10)
 
 Criterios de la especificación:
 
-- [ ] 14.1: días de gracia correctos en meses de 28, 29, 30 y 31 días, y con fechas límite en fin de semana
-- [ ] 14.1: "1 punto por cada 100" y "2% en puntos" dan el valor por cada 1,000 esperado
-- [ ] 14.1: una tarjeta sin recompensa aparece en el ranking, puntuada solo por días
-- [ ] 14.1: una tarjeta en pausa no aparece en el ranking (en el widget se verifica en la etapa 6)
+- [x] 14.1: días de gracia correctos en meses de 28, 29, 30 y 31 días, y con fechas límite en fin de semana
+- [x] 14.1: "1 punto por cada 100" y "2% en puntos" dan el valor por cada 1,000 esperado
+- [x] 14.1: una tarjeta sin recompensa aparece en el ranking, puntuada solo por días
+- [x] 14.1: una tarjeta en pausa no aparece en el ranking (en el widget se verifica en la etapa 6)
 
 ## Etapa 3. Registro de tarjetas
 
@@ -155,6 +156,8 @@ Criterios de la especificación:
 - [ ] Cuentas de Apple Developer, Google Play Console y proyecto en Expo
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
+- [ ] Actualizar en claude.ai la documentación técnica (sección 5.7 y 11): mencionar `generar_aleatorios.py` y los casos aleatorios, y reexportarla a `docs/`
+- [ ] Actualizar en claude.ai el ejemplo 7.4 de la especificación con los días reales (46, 35 y 50), como pide la nota de la sección 5.7 técnica
 
 ## Decisiones
 
@@ -169,3 +172,5 @@ Criterios de la especificación:
 | D7 | 2026-09-25 | Los modos "Reducir deuda" y "Personalizado" hacen que el motor lance un error; la interfaz del MVP no los ofrece | Son de v2 y la referencia no tiene pesos para ellos |
 | D8 | 2026-09-25 | El motor usa `pais.monedaSecundaria` donde la referencia escribe `'USD'` | Nada de RD va en el código; para RD el resultado es idéntico |
 | D9 | 2026-09-25 | Las funciones marcadas **(asignada)** se ubicaron en las etapas 3 y 4 | La tabla de etapas no las asignaba |
+| D10 | 2026-09-25 | Además de los 17 casos, el motor se compara con 200 casos aleatorios de la referencia (`motor.aleatorios.json`, semilla fija) | Los 17 casos documentan reglas; los aleatorios detectan diferencias de redondeo, meses cortos, feriados y cobros que nadie escribió a mano |
+| D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

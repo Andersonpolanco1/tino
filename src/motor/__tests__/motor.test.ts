@@ -25,6 +25,20 @@ describe.each(casos.map(c => [c.id, c] as const))('caso %s', (_id, caso) => {
   });
 });
 
+// Casos aleatorios de generar_aleatorios.py: buscan diferencias con la referencia en
+// combinaciones que nadie escribió a mano.
+describe('casos aleatorios de la referencia', () => {
+  const aleatorios = require('./motor.aleatorios.json').casos as Omit<Caso, 'descripcion' | 'verifica'>[];
+
+  test('hay casos generados', () => {
+    expect(aleatorios.length).toBeGreaterThanOrEqual(200);
+  });
+
+  test.each(aleatorios.map(c => [c.id, c] as const))('%s', (_id, caso) => {
+    expect(calcularRanking(caso.entrada)).toEqual(caso.esperado);
+  });
+});
+
 // Regla del motor: TypeScript puro, sin interfaz ni hora del sistema.
 test('el motor no importa React ni Expo ni lee la hora del sistema', () => {
   const carpeta = join(__dirname, '..');

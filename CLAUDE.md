@@ -16,7 +16,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 ## Estado actual
 
-- Etapa actual: **2. Motor** (sección 13 de la documentación técnica).
+- Etapa actual: **3. Registro de tarjetas** (sección 13 de la documentación técnica). La etapa 2 (motor) está terminada.
 - El seguimiento detallado está en `docs/progreso.md`: casillas por etapa, criterios de aceptación, pendientes fuera del código y decisiones tomadas. Es la lista que se va tachando.
 - Etapa 1 terminada en código; falta verificarla en teléfono (SQLCipher no corre en Expo Go: `npx expo run:android` o `npx eas-cli@latest build --profile development`).
 
@@ -30,7 +30,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 ## Reglas que no se rompen
 
-- **Motor:** es TypeScript puro en `src/motor/`, sin importar React ni Expo, y recibe la fecha de hoy como parámetro. Nunca cambies sus reglas sin actualizar primero `herramientas/motor-referencia/motor.py`, regenerar los casos con `python3 generar_casos.py` y después ajustar el código.
+- **Motor:** es TypeScript puro en `src/motor/`, sin importar React ni Expo, y recibe la fecha de hoy como parámetro. Nunca cambies sus reglas sin actualizar primero `herramientas/motor-referencia/motor.py`, regenerar los casos con `python3 generar_casos.py` y `python3 generar_aleatorios.py`, y después ajustar el código.
 - **Privacidad:** nunca pidas ni guardes el número completo de tarjeta, la fecha de vencimiento, el CVV ni credenciales bancarias. Los datos financieros viven solo en la base local cifrada.
 - **Analítica:** solo los eventos y propiedades de la sección 10 de la documentación técnica, desde `src/analitica/`. Nunca montos, alias ni números.
 - **Diseño:** ningún color ni tamaño escrito en las pantallas; todo sale de `src/diseno/tokens.json` mediante `useTema()`. Contraste mínimo 4.5:1 y áreas de toque de 44 puntos.
@@ -48,6 +48,6 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 - Pruebas: `npm test`
 - Tipos: `npm run typecheck`
 - Diagnóstico de dependencias: `npx expo-doctor`
-- Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py` (en Windows, `python`)
+- Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py && python3 generar_aleatorios.py` (en Windows, `python`)
 
 Notas del entorno: TypeScript 6 no carga tipos globales solos (están en `types` de `tsconfig.json`); RNTL 14 tiene `render` y `renderHook` asíncronos; `Tabs` se importa de `expo-router/js-tabs`. Las pruebas no pueden vivir dentro de `app/` porque Expo Router las trataría como rutas.
