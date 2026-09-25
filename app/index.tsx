@@ -1,6 +1,8 @@
 import { Redirect } from 'expo-router';
+import { useAlmacen } from '@/estado';
 
-// El onboarding (etapa 3) decidirá aquí si el usuario ya registró tarjetas.
+// Sin tarjetas registradas, la app empieza por el onboarding.
 export default function Entrada() {
-  return <Redirect href="/inicio" />;
+  const hayTarjetas = useAlmacen(s => s.tarjetas.length > 0);
+  return <Redirect href={hayTarjetas ? '/inicio' : '/onboarding'} />;
 }

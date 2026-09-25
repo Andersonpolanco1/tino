@@ -158,5 +158,24 @@
   },
   "errores": {
     "baseDatos": "No pudimos abrir tus datos guardados. Cierra la app y vuelve a abrirla."
+  },
+  "onboarding": {
+    "bienvenidaTitulo": "Te decimos qué tarjeta usar hoy",
+    "bienvenidaTexto": "Registra tus tarjetas de crédito con sus fechas de corte y pago. Cada día te mostramos cuál te da más días para pagar y más recompensas.",
+    "privacidad": "Tus datos se guardan cifrados solo en este teléfono. Nunca pedimos el número de tu tarjeta ni tus datos del banco.",
+    "empezar": "Empezar",
+    "tarjetasTitulo": "Tus tarjetas",
+    "tarjetasTexto": "Agrega las tarjetas que usas. Con dos o más te decimos cuál conviene cada día.",
+    "agregarPrimera": "Agregar mi primera tarjeta",
+    "agregarOtra": "Agregar otra tarjeta",
+    "continuar": "Continuar",
+    "enfoqueTitulo": "¿Qué te importa más?",
+    "enfoqueTexto": "Puedes cambiarlo cuando quieras desde la pantalla de inicio."
+  },
+  "enfoqueDescripcion": {
+    "liquidez": "Más días para pagar sin intereses.",
+    "puntos": "Acumular más puntos.",
+    "cashback": "Recibir más dinero de vuelta.",
+    "equilibrado": "Un poco de todo."
   }
 }
