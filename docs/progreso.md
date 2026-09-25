@@ -150,13 +150,12 @@ Criterios de la especificación:
 ## Pendientes fuera del código
 
 - [ ] Feriados de RD de 2027 en `src/paises/do.json`
-- [x] Productos preliminares del grupo 1: 135 productos de 15 emisores, solo nombre y marca (catálogo 2026.09.2)
-- [ ] Segunda revisión de los productos contra la página de cada banco, empezando por Popular (mezcla nombres viejos y actuales)
-- [ ] Productos de Lafise y Qik (grupo 1, no cubiertos por la investigación)
-- [ ] Confirmar la marca de los productos con marca `otra`: Edesur y La Cadena (BHD); Premium Gold y Clásica (APAP); Insignia (Banco Caribe); ConfiaMás, Clásica Internacional, Gold Internacional, Confía en Ti, Unase y Unión (La Nacional)
-- [ ] Confirmar nombres dudosos: "Visa Lama Plazos" (Promerica), "Gold Mastercard (antes Orange)" (Scotiabank), "Mastercard Teen" (Popular, ¿es de crédito?)
-- [ ] Confirmar la moneda de facturación de cada producto; hoy solo la tienen los de doble saldo, dos límites o uso local
-- [ ] Averiguar qué es "Preserva" de Banreservas (se dejó fuera)
+- [x] Productos del grupo 1 verificados en los sitios oficiales: 172 productos de 17 emisores (catálogo 2026.09.3, fuentes en `datos-publicos/verificacion-emisores-do.md`)
+- [ ] Vimenca: confirmar qué tarjetas del portafolio anterior siguen vigentes (hoy solo Clásica, Gold e Infinite)
+- [ ] Banco Caribe: confirmar Visa Elite Infinite (solo aparece en una nota de prensa)
+- [ ] Confirmar la marca de los productos con marca `otra`: Preserva (Banreservas) y Clásica Internacional, Gold, ConfiaMás, Confía en Ti y Confiador (La Nacional)
+- [ ] Confirmar la moneda de facturación de los productos que no la declaran; hoy la tienen los que el emisor publica como doble saldo, solo pesos o local
+- [ ] Revisar el catálogo cada trimestre y con cada listado nuevo de la Superintendencia de Bancos
 - [ ] Verificar los emisores que siguen "por verificar": Alaver, Banfondesa, Motor Crédito, Adopem y Citibank en el grupo 1, y los del grupo 2
 - [ ] Búsqueda de marcas de "Tino" (1.1 de la especificación)
 - [ ] Variantes oscura y tintada del icono de iOS
@@ -184,4 +183,5 @@ Criterios de la especificación:
 | D13 | 2026-09-25 | `ProductoTarjeta.monedaFacturacion` es opcional; si falta, el registro se la pregunta al usuario | La investigación del catálogo casi nunca la da, e inventarla penalizaría tarjetas sin razón en compras en dólares |
 | D14 | 2026-09-25 | El catálogo trae solo nombre y marca, sin recompensas precargadas; las tasas por categoría (PREMIA, Insignia, ConnectMiles, etc.) quedan para v2 | El MVP solo maneja una tasa base; cargar una tasa de categoría como base distorsiona el ranking |
 | D15 | 2026-09-25 | Cada variante comercial es un producto propio; el doble saldo es atributo, no producto; fuera del catálogo las líneas de crédito y las tarjetas de empresa | Las variantes cambian beneficios; el MVP es para personas |
+| D16 | 2026-09-25 | El catálogo solo incluye productos que el emisor publica hoy, con su fuente registrada en `verificacion-emisores-do.md`; fuera las tarjetas de flotilla o combustible | La investigación preliminar tenía productos descontinuados y nombres equivocados; una tarjeta que solo sirve en gasolineras no debe competir en el ranking general |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

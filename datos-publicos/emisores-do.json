@@ -1,9 +1,9 @@
 {
   "pais": "DO",
-  "version": "2026.09.2",
+  "version": "2026.09.3",
   "generadoEn": "2026-09-25",
-  "fuente": "Listado de entidades autorizadas a operar de la Superintendencia de Bancos (corte de junio de 2026) y participación de mercado por activos publicada por la misma entidad. Productos: investigación preliminar de septiembre de 2026 sobre catálogos y tarifarios de los emisores, pendiente de revisar contra la página de cada banco.",
-  "nota": "Productos preliminares del grupo 1: solo nombre y marca. La moneda de facturación aparece solo cuando se conoce; sin ella, el registro se la pregunta al usuario. Marca \"otra\" = marca por confirmar. Faltan Lafise y Qik.",
+  "fuente": "Emisores: listado de entidades autorizadas de la Superintendencia de Bancos (corte de junio de 2026) y participación de mercado por activos publicada por la misma entidad. Productos: verificados el 2026-09-25 en los sitios oficiales y documentos de cada emisor; detalle y enlaces en verificacion-emisores-do.md.",
+  "nota": "Productos del grupo 1: nombre, marca y, solo cuando el emisor la declara, moneda de facturación; sin ella, el registro se la pregunta al usuario. Marca \"otra\" = el emisor no publica la marca. Sin recompensas precargadas (decisión D14).",
   "emisores": [
     {
       "id": "banreservas",
@@ -45,13 +45,13 @@
           "marca": "mastercard"
         },
         {
-          "id": "banreservas-visa-ser",
-          "nombre": "Visa SER",
+          "id": "banreservas-visa-platinum-universe",
+          "nombre": "Visa Platinum Universe",
           "marca": "visa"
         },
         {
-          "id": "banreservas-mastercard-standard-tactil",
-          "nombre": "Mastercard Standard Táctil",
+          "id": "banreservas-mastercard-black",
+          "nombre": "Mastercard Black",
           "marca": "mastercard"
         },
         {
@@ -60,9 +60,21 @@
           "marca": "visa"
         },
         {
-          "id": "banreservas-mastercard-black",
-          "nombre": "Mastercard Black",
-          "marca": "mastercard"
+          "id": "banreservas-visa-ser",
+          "nombre": "Visa SER",
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
+        },
+        {
+          "id": "banreservas-mastercard-standard-tactil",
+          "nombre": "Mastercard Standard Táctil",
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
+        },
+        {
+          "id": "banreservas-preserva",
+          "nombre": "Preserva",
+          "marca": "otra"
         }
       ]
     },
@@ -81,51 +93,31 @@
           "marca": "visa"
         },
         {
-          "id": "banco-popular-visa-gold",
-          "nombre": "Visa Gold",
-          "marca": "visa"
-        },
-        {
-          "id": "banco-popular-visa-gold-doble-saldo",
-          "nombre": "Visa Gold Doble Saldo",
-          "marca": "visa",
-          "monedaFacturacion": "doble_balance"
-        },
-        {
-          "id": "banco-popular-visa-platinum-titanium-doble-saldo",
-          "nombre": "Visa Platinum/Titanium Doble Saldo",
-          "marca": "visa",
-          "monedaFacturacion": "doble_balance"
-        },
-        {
-          "id": "banco-popular-visa-infinite-prestige",
-          "nombre": "Visa Infinite Prestige",
-          "marca": "visa"
-        },
-        {
-          "id": "banco-popular-visa-isi",
-          "nombre": "Visa ISI",
-          "marca": "visa"
-        },
-        {
-          "id": "banco-popular-visa-ikea-family",
-          "nombre": "Visa IKEA FAMILY",
-          "marca": "visa"
-        },
-        {
-          "id": "banco-popular-visa-impulsa",
-          "nombre": "Visa Impulsa",
-          "marca": "visa"
-        },
-        {
           "id": "banco-popular-mastercard-clasica",
           "nombre": "Mastercard Clásica",
           "marca": "mastercard"
         },
         {
+          "id": "banco-popular-visa-gold",
+          "nombre": "Visa Gold",
+          "marca": "visa"
+        },
+        {
           "id": "banco-popular-mastercard-gold",
           "nombre": "Mastercard Gold",
           "marca": "mastercard"
+        },
+        {
+          "id": "banco-popular-visa-platinum-doble-saldo",
+          "nombre": "Visa Platinum Doble Saldo",
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "banco-popular-mastercard-platinum-doble-saldo",
+          "nombre": "Mastercard Platinum Doble Saldo",
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "banco-popular-mastercard-titanium",
@@ -138,33 +130,44 @@
           "marca": "mastercard"
         },
         {
+          "id": "banco-popular-visa-prestige",
+          "nombre": "Visa Prestige",
+          "marca": "visa"
+        },
+        {
+          "id": "banco-popular-visa-isi",
+          "nombre": "Visa ISI",
+          "marca": "visa"
+        },
+        {
           "id": "banco-popular-mastercard-infinia",
           "nombre": "Mastercard Infinia",
           "marca": "mastercard"
         },
         {
-          "id": "banco-popular-mastercard-plus-ccn",
-          "nombre": "Mastercard Plus CCN",
+          "id": "banco-popular-mastercard-gnial",
+          "nombre": "Mastercard gnial",
           "marca": "mastercard"
         },
         {
           "id": "banco-popular-mastercard-jetblue",
           "nombre": "Mastercard JetBlue",
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "banco-popular-mastercard-mileageplus",
+          "nombre": "Mastercard MileagePlus",
           "marca": "mastercard"
         },
         {
-          "id": "banco-popular-mastercard-universal",
-          "nombre": "Mastercard Universal",
-          "marca": "mastercard"
+          "id": "banco-popular-visa-ikea-family",
+          "nombre": "Visa IKEA Family",
+          "marca": "visa"
         },
         {
-          "id": "banco-popular-mastercard-orbit",
-          "nombre": "Mastercard Orbit",
-          "marca": "mastercard"
-        },
-        {
-          "id": "banco-popular-mastercard-mileageplus-united",
-          "nombre": "Mastercard MileagePlus / United",
+          "id": "banco-popular-mastercard-plus-ccn",
+          "nombre": "Mastercard Plus CCN",
           "marca": "mastercard"
         },
         {
@@ -178,14 +181,10 @@
           "marca": "mastercard"
         },
         {
-          "id": "banco-popular-mastercard-teen",
-          "nombre": "Mastercard Teen",
-          "marca": "mastercard"
-        },
-        {
-          "id": "banco-popular-mastercard-avanza",
-          "nombre": "Mastercard Avanza",
-          "marca": "mastercard"
+          "id": "banco-popular-mastercard-seguros-universal",
+          "nombre": "Mastercard Seguros Universal",
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         }
       ]
     },
@@ -201,92 +200,122 @@
         {
           "id": "bhd-visa-clasica",
           "nombre": "Visa Clásica",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "bhd-visa-clasica-pesos",
+          "nombre": "Visa Clásica Pesos",
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "bhd-mastercard-standard",
           "nombre": "Mastercard Standard",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
-          "id": "bhd-visa-oro",
-          "nombre": "Visa Oro",
-          "marca": "visa"
+          "id": "bhd-mastercard-standard-pesos",
+          "nombre": "Mastercard Standard Pesos",
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
-          "id": "bhd-mastercard-oro",
-          "nombre": "Mastercard Oro",
-          "marca": "mastercard"
+          "id": "bhd-visa-billet",
+          "nombre": "Visa Billet",
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
+        },
+        {
+          "id": "bhd-visa-billet-garantizada",
+          "nombre": "Visa Billet Garantizada",
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
+        },
+        {
+          "id": "bhd-visa-gold",
+          "nombre": "Visa Gold",
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-visa-platinum",
           "nombre": "Visa Platinum",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-mastercard-platinum",
           "nombre": "Mastercard Platinum",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-visa-infinite",
           "nombre": "Visa Infinite",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
-          "id": "bhd-visa-unique",
-          "nombre": "Visa UNIQUE",
-          "marca": "visa"
+          "id": "bhd-mastercard-black",
+          "nombre": "Mastercard Black",
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-visa-premia",
           "nombre": "Visa PREMIA",
-          "marca": "visa"
-        },
-        {
-          "id": "bhd-visa-mi-pais",
-          "nombre": "Visa Mi País",
-          "marca": "visa"
-        },
-        {
-          "id": "bhd-visa-now",
-          "nombre": "Visa NOW",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-visa-lifemiles",
           "nombre": "Visa LifeMiles",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "bhd-visa-now",
+          "nombre": "Visa NOW",
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "bhd-visa-open",
+          "nombre": "Visa Open",
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "bhd-visa-mi-pais",
+          "nombre": "Visa Mi País",
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-mastercard-mlb",
           "nombre": "Mastercard MLB",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-mastercard-mujer-red",
           "nombre": "Mastercard Mujer Red",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-mastercard-mujer-white",
           "nombre": "Mastercard Mujer White",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bhd-mastercard-mujer-black",
           "nombre": "Mastercard Mujer Black",
-          "marca": "mastercard"
-        },
-        {
-          "id": "bhd-edesur",
-          "nombre": "Edesur",
-          "marca": "otra"
-        },
-        {
-          "id": "bhd-la-cadena",
-          "nombre": "La Cadena",
-          "marca": "otra"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         }
       ]
     },
@@ -299,6 +328,11 @@
       "participacionActivosPct": 5.0,
       "emiteTarjetas": "confirmado",
       "productos": [
+        {
+          "id": "banco-santa-cruz-visa-clasica",
+          "nombre": "Visa Clásica",
+          "marca": "visa"
+        },
         {
           "id": "banco-santa-cruz-visa-gold",
           "nombre": "Visa Gold",
@@ -315,20 +349,24 @@
           "marca": "visa"
         },
         {
-          "id": "banco-santa-cruz-visa-full",
-          "nombre": "Visa Full",
+          "id": "banco-santa-cruz-visa-bravo-santa-cruz",
+          "nombre": "Visa Bravo Santa Cruz",
           "marca": "visa"
         },
         {
-          "id": "banco-santa-cruz-visa-car",
-          "nombre": "Visa Car",
+          "id": "banco-santa-cruz-visa-joven",
+          "nombre": "Visa Joven",
+          "marca": "visa"
+        },
+        {
+          "id": "banco-santa-cruz-visa-cecomsa",
+          "nombre": "Visa Cecomsa",
           "marca": "visa"
         },
         {
           "id": "banco-santa-cruz-visa-pricesmart-santa-cruz",
           "nombre": "Visa PriceSmart Santa Cruz",
-          "marca": "visa",
-          "monedaFacturacion": "doble_balance"
+          "marca": "visa"
         }
       ]
     },
@@ -342,8 +380,13 @@
       "emiteTarjetas": "confirmado",
       "productos": [
         {
-          "id": "apap-visa-sirena-apap",
-          "nombre": "Visa Sirena APAP",
+          "id": "apap-visa-clasica",
+          "nombre": "Visa Clásica",
+          "marca": "visa"
+        },
+        {
+          "id": "apap-visa-familiar",
+          "nombre": "Visa Familiar",
           "marca": "visa"
         },
         {
@@ -352,9 +395,19 @@
           "marca": "visa"
         },
         {
-          "id": "apap-premium-gold",
-          "nombre": "Premium Gold",
-          "marca": "otra"
+          "id": "apap-visa-sirena-apap",
+          "nombre": "Visa Sirena APAP",
+          "marca": "visa"
+        },
+        {
+          "id": "apap-visa-gold",
+          "nombre": "Visa Gold",
+          "marca": "visa"
+        },
+        {
+          "id": "apap-visa-premium-gold",
+          "nombre": "Visa Premium Gold",
+          "marca": "visa"
         },
         {
           "id": "apap-visa-platinum",
@@ -362,13 +415,8 @@
           "marca": "visa"
         },
         {
-          "id": "apap-mastercard-gold",
-          "nombre": "Mastercard Gold",
-          "marca": "mastercard"
-        },
-        {
-          "id": "apap-visa-gold",
-          "nombre": "Visa Gold",
+          "id": "apap-visa-infinite",
+          "nombre": "Visa Infinite",
           "marca": "visa"
         },
         {
@@ -377,9 +425,9 @@
           "marca": "mastercard"
         },
         {
-          "id": "apap-clasica",
-          "nombre": "Clásica",
-          "marca": "otra"
+          "id": "apap-mastercard-gold",
+          "nombre": "Mastercard Gold",
+          "marca": "mastercard"
         }
       ]
     },
@@ -403,8 +451,8 @@
           "marca": "amex"
         },
         {
-          "id": "scotiabank-the-platinum-card",
-          "nombre": "The Platinum Card",
+          "id": "scotiabank-the-platinum-card-american-express",
+          "nombre": "The Platinum Card American Express",
           "marca": "amex"
         },
         {
@@ -423,65 +471,10 @@
           "marca": "amex"
         },
         {
-          "id": "scotiabank-visa",
-          "nombre": "Visa",
-          "marca": "visa"
-        },
-        {
           "id": "scotiabank-visa-local",
           "nombre": "Visa Local",
           "marca": "visa",
           "monedaFacturacion": "solo_local"
-        },
-        {
-          "id": "scotiabank-visa-internacional",
-          "nombre": "Visa Internacional",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-visa-gold-internacional",
-          "nombre": "Visa Gold Internacional",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-visa-platinum",
-          "nombre": "Visa Platinum",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-visa-infinite",
-          "nombre": "Visa Infinite",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-visa-infinite-banca-premium",
-          "nombre": "Visa Infinite Banca Premium",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-aadvantage-visa",
-          "nombre": "AAdvantage Visa",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-aadvantage-gold-visa",
-          "nombre": "AAdvantage Gold Visa",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-aadvantage-platinum-visa",
-          "nombre": "AAdvantage Platinum Visa",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-bravo-visa",
-          "nombre": "Bravo Visa",
-          "marca": "visa"
-        },
-        {
-          "id": "scotiabank-mastercard",
-          "nombre": "Mastercard",
-          "marca": "mastercard"
         },
         {
           "id": "scotiabank-mastercard-local",
@@ -490,13 +483,23 @@
           "monedaFacturacion": "solo_local"
         },
         {
+          "id": "scotiabank-visa-internacional",
+          "nombre": "Visa Internacional",
+          "marca": "visa"
+        },
+        {
           "id": "scotiabank-mastercard-internacional",
           "nombre": "Mastercard Internacional",
           "marca": "mastercard"
         },
         {
-          "id": "scotiabank-mastercard-gold",
-          "nombre": "Mastercard Gold",
+          "id": "scotiabank-visa-gold-internacional",
+          "nombre": "Visa Gold Internacional",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-mastercard-gold-internacional",
+          "nombre": "Mastercard Gold Internacional",
           "marca": "mastercard"
         },
         {
@@ -510,13 +513,73 @@
           "marca": "mastercard"
         },
         {
+          "id": "scotiabank-scotiabank-visa",
+          "nombre": "Scotiabank Visa",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-scotiabank-mastercard",
+          "nombre": "Scotiabank Mastercard",
+          "marca": "mastercard"
+        },
+        {
+          "id": "scotiabank-scotiabank-gold-visa",
+          "nombre": "Scotiabank Gold Visa",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-scotiabank-gold-mastercard",
+          "nombre": "Scotiabank Gold Mastercard",
+          "marca": "mastercard"
+        },
+        {
+          "id": "scotiabank-scotiabank-platinum-visa",
+          "nombre": "Scotiabank Platinum Visa",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-scotiabank-platinum-mastercard",
+          "nombre": "Scotiabank Platinum Mastercard",
+          "marca": "mastercard"
+        },
+        {
+          "id": "scotiabank-scotiabank-visa-infinite",
+          "nombre": "Scotiabank Visa Infinite",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-scotiabank-visa-infinite-banca-premium",
+          "nombre": "Scotiabank Visa Infinite Banca Premium",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-aadvantage-visa",
+          "nombre": "AAdvantage Visa",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-aadvantage-gold-visa",
+          "nombre": "AAdvantage Gold Visa",
+          "marca": "visa"
+        },
+        {
           "id": "scotiabank-aadvantage-gold-mastercard",
           "nombre": "AAdvantage Gold Mastercard",
           "marca": "mastercard"
         },
         {
-          "id": "scotiabank-gold-mastercard-antes-orange",
-          "nombre": "Gold Mastercard (antes Orange)",
+          "id": "scotiabank-aadvantage-platinum-visa",
+          "nombre": "AAdvantage Platinum Visa",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-scotiabank-bravo-visa",
+          "nombre": "Scotiabank Bravo Visa",
+          "marca": "visa"
+        },
+        {
+          "id": "scotiabank-scotiabank-gold-mastercard-orange",
+          "nombre": "Scotiabank Gold Mastercard (Orange)",
           "marca": "mastercard"
         }
       ]
@@ -537,10 +600,29 @@
           "monedaFacturacion": "doble_balance"
         },
         {
+          "id": "asociacion-cibao-visa-ci-mas",
+          "nombre": "Visa Ci+",
+          "marca": "visa"
+        },
+        {
+          "id": "asociacion-cibao-visa-gold",
+          "nombre": "Visa Gold",
+          "marca": "visa"
+        },
+        {
+          "id": "asociacion-cibao-visa-platinum",
+          "nombre": "Visa Platinum",
+          "marca": "visa"
+        },
+        {
           "id": "asociacion-cibao-visa-infinite",
           "nombre": "Visa Infinite",
-          "marca": "visa",
-          "monedaFacturacion": "doble_balance"
+          "marca": "visa"
+        },
+        {
+          "id": "asociacion-cibao-visa-el-encanto",
+          "nombre": "Visa El Encanto",
+          "marca": "visa"
         }
       ]
     },
@@ -569,6 +651,16 @@
           "marca": "visa"
         },
         {
+          "id": "promerica-visa-gold-plus",
+          "nombre": "Visa Gold Plus",
+          "marca": "visa"
+        },
+        {
+          "id": "promerica-visa-mi-super",
+          "nombre": "Visa Mi Super",
+          "marca": "visa"
+        },
+        {
           "id": "promerica-visa-platinum",
           "nombre": "Visa Platinum",
           "marca": "visa"
@@ -584,13 +676,23 @@
           "marca": "visa"
         },
         {
-          "id": "promerica-iberia-infinite",
-          "nombre": "Iberia Infinite",
+          "id": "promerica-connectmiles-platinum",
+          "nombre": "ConnectMiles Platinum",
           "marca": "visa"
         },
         {
           "id": "promerica-connectmiles-infinite",
           "nombre": "ConnectMiles Infinite",
+          "marca": "visa"
+        },
+        {
+          "id": "promerica-iberia-platinum",
+          "nombre": "Iberia Platinum",
+          "marca": "visa"
+        },
+        {
+          "id": "promerica-iberia-infinite",
+          "nombre": "Iberia Infinite",
           "marca": "visa"
         }
       ]
@@ -616,6 +718,11 @@
           "marca": "visa"
         },
         {
+          "id": "banco-caribe-visa-e-card",
+          "nombre": "Visa E-Card",
+          "marca": "visa"
+        },
+        {
           "id": "banco-caribe-visa-oro",
           "nombre": "Visa Oro",
           "marca": "visa"
@@ -626,9 +733,9 @@
           "marca": "visa"
         },
         {
-          "id": "banco-caribe-insignia",
-          "nombre": "Insignia",
-          "marca": "otra"
+          "id": "banco-caribe-visa-insignia",
+          "nombre": "Visa Insignia",
+          "marca": "visa"
         }
       ]
     },
@@ -642,18 +749,18 @@
       "emiteTarjetas": "confirmado",
       "productos": [
         {
-          "id": "asociacion-la-nacional-confiamas",
-          "nombre": "ConfiaMás",
-          "marca": "otra"
-        },
-        {
           "id": "asociacion-la-nacional-clasica-internacional",
           "nombre": "Clásica Internacional",
           "marca": "otra"
         },
         {
-          "id": "asociacion-la-nacional-gold-internacional",
-          "nombre": "Gold Internacional",
+          "id": "asociacion-la-nacional-gold",
+          "nombre": "Gold",
+          "marca": "otra"
+        },
+        {
+          "id": "asociacion-la-nacional-confiamas",
+          "nombre": "ConfiaMás",
           "marca": "otra"
         },
         {
@@ -662,14 +769,25 @@
           "marca": "otra"
         },
         {
-          "id": "asociacion-la-nacional-unase",
-          "nombre": "Unase",
+          "id": "asociacion-la-nacional-confiador",
+          "nombre": "Confiador",
           "marca": "otra"
         },
         {
-          "id": "asociacion-la-nacional-union",
-          "nombre": "Unión",
-          "marca": "otra"
+          "id": "asociacion-la-nacional-visa-unase-local",
+          "nombre": "Visa Unase Local",
+          "marca": "visa",
+          "monedaFacturacion": "solo_local"
+        },
+        {
+          "id": "asociacion-la-nacional-visa-unase-internacional",
+          "nombre": "Visa Unase Internacional",
+          "marca": "visa"
+        },
+        {
+          "id": "asociacion-la-nacional-visa-union",
+          "nombre": "Visa Unión",
+          "marca": "visa"
         }
       ]
     },
@@ -682,6 +800,56 @@
       "participacionActivosPct": 1.2,
       "emiteTarjetas": "confirmado",
       "productos": [
+        {
+          "id": "banesco-visa-clasica",
+          "nombre": "Visa Clásica",
+          "marca": "visa"
+        },
+        {
+          "id": "banesco-visa-supercashback",
+          "nombre": "Visa SuperCashBack",
+          "marca": "visa"
+        },
+        {
+          "id": "banesco-visa-gold",
+          "nombre": "Visa Gold",
+          "marca": "visa"
+        },
+        {
+          "id": "banesco-visa-platinum",
+          "nombre": "Visa Platinum",
+          "marca": "visa"
+        },
+        {
+          "id": "banesco-visa-infinite",
+          "nombre": "Visa Infinite",
+          "marca": "visa"
+        },
+        {
+          "id": "banesco-visa-platinum-connect",
+          "nombre": "Visa Platinum Connect",
+          "marca": "visa"
+        },
+        {
+          "id": "banesco-mastercard-standard",
+          "nombre": "Mastercard Standard",
+          "marca": "mastercard"
+        },
+        {
+          "id": "banesco-mastercard-gold",
+          "nombre": "Mastercard Gold",
+          "marca": "mastercard"
+        },
+        {
+          "id": "banesco-mastercard-platinum",
+          "nombre": "Mastercard Platinum",
+          "marca": "mastercard"
+        },
+        {
+          "id": "banesco-mastercard-black",
+          "nombre": "Mastercard Black",
+          "marca": "mastercard"
+        },
         {
           "id": "banesco-mastercard-black-air-europa",
           "nombre": "Mastercard Black Air Europa",
@@ -714,18 +882,31 @@
           "marca": "visa"
         },
         {
+          "id": "bdi-visa-signature",
+          "nombre": "Visa Signature",
+          "marca": "visa"
+        },
+        {
           "id": "bdi-visa-clasica-anthony-s",
           "nombre": "Visa Clásica Anthony's",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bdi-visa-gold-anthony-s",
           "nombre": "Visa Gold Anthony's",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "bdi-visa-platinum-anthony-s",
           "nombre": "Visa Platinum Anthony's",
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
+        },
+        {
+          "id": "bdi-visa-santo-domingo-country-club",
+          "nombre": "Visa Santo Domingo Country Club",
           "marca": "visa"
         }
       ]
@@ -796,15 +977,10 @@
       "emiteTarjetas": "confirmado",
       "productos": [
         {
-          "id": "banco-ademi-visa-multimoneda",
-          "nombre": "Visa Multimoneda",
-          "marca": "visa"
-        },
-        {
-          "id": "banco-ademi-visa-clasica-local",
-          "nombre": "Visa Clásica Local",
+          "id": "banco-ademi-visa-clasica-multimoneda",
+          "nombre": "Visa Clásica Multimoneda",
           "marca": "visa",
-          "monedaFacturacion": "solo_local"
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-ademi-visa-clasica-internacional",
@@ -812,8 +988,8 @@
           "marca": "visa"
         },
         {
-          "id": "banco-ademi-visa-gold",
-          "nombre": "Visa Gold",
+          "id": "banco-ademi-visa-gold-internacional",
+          "nombre": "Visa Gold Internacional",
           "marca": "visa"
         },
         {
@@ -872,7 +1048,38 @@
       "grupo": 1,
       "participacionActivosPct": 0.5,
       "emiteTarjetas": "confirmado",
-      "productos": []
+      "productos": [
+        {
+          "id": "lafise-visa-clasica",
+          "nombre": "Visa Clásica",
+          "marca": "visa"
+        },
+        {
+          "id": "lafise-visa-gold",
+          "nombre": "Visa Gold",
+          "marca": "visa"
+        },
+        {
+          "id": "lafise-visa-platinum",
+          "nombre": "Visa Platinum",
+          "marca": "visa"
+        },
+        {
+          "id": "lafise-visa-infinite",
+          "nombre": "Visa Infinite",
+          "marca": "visa"
+        },
+        {
+          "id": "lafise-mastercard-standard",
+          "nombre": "Mastercard Standard",
+          "marca": "mastercard"
+        },
+        {
+          "id": "lafise-mastercard-black",
+          "nombre": "Mastercard Black",
+          "marca": "mastercard"
+        }
+      ]
     },
     {
       "id": "alaver",
@@ -912,7 +1119,13 @@
       "grupo": 1,
       "participacionActivosPct": 0.4,
       "emiteTarjetas": "confirmado",
-      "productos": []
+      "productos": [
+        {
+          "id": "qik-mastercard-gold",
+          "nombre": "Mastercard Gold",
+          "marca": "mastercard"
+        }
+      ]
     },
     {
       "id": "banco-adopem",
