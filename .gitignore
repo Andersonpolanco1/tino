@@ -14,3 +14,14 @@ android/
 .DS_Store
 CLAUDE.local.md
 __pycache__/
+
+# Expo y herramientas
+expo-env.d.ts
+.kotlin/
+*.orig.*
+*.key
+*.pem
+.metro-health-check*
+npm-debug.*
+*.tsbuildinfo
+coverage/
