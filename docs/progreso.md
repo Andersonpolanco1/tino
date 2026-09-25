@@ -190,4 +190,5 @@ Criterios de la especificación:
 | D17 | 2026-09-25 | El bloqueo usa la biometría o el PIN del propio teléfono, no un PIN de Tino | Más seguro y sin un PIN extra que recordar o recuperar |
 | D18 | 2026-09-25 | Los pasos de cobros y de permiso de notificaciones del onboarding se hacen en la etapa 5 | Es donde se construyen los ingresos y los avisos |
 | D19 | 2026-09-25 | La tarjeta de hoy en Inicio se construye en la etapa 4; en la etapa 3 la pestaña Tarjetas muestra lo registrado | La etapa 4 es la de la pantalla de inicio y sus componentes |
+| D20 | 2026-09-25 | Si el banco no indica sus reglas, el registro precarga "adelantar" (fecha límite en día no hábil) y "entra en ese corte" (compra el día del corte); el usuario puede cambiarlas | Son los valores prudentes: la app calcula menos días de gracia en vez de más, y nadie paga tarde por culpa de Tino |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |
