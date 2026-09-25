@@ -1,0 +1,409 @@
+{
+  "pais": "DO",
+  "version": "2026.09.1",
+  "generadoEn": "2026-09-25",
+  "fuente": "Listado de entidades autorizadas a operar de la Superintendencia de Bancos (corte de junio de 2026) y participación de mercado por activos publicada por la misma entidad.",
+  "nota": "productos vacío: se completa con el catálogo de productos por emisor, empezando por el grupo 1.",
+  "emisores": [
+    {
+      "id": "banreservas",
+      "nombreCorto": "Banreservas",
+      "nombreLegal": "BANCO DE RESERVAS DE LA REPUBLICA DOMINICANA-BANCO DE SERVIC",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 33.2,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "banco-popular",
+      "nombreCorto": "Banco Popular",
+      "nombreLegal": "BANCO POPULAR DOMINICANO, S. A. - BANCO MÚLTIPLE",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 21.6,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "bhd",
+      "nombreCorto": "BHD",
+      "nombreLegal": "BANCO MÚLTIPLE BHD, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 14.5,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "banco-santa-cruz",
+      "nombreCorto": "Banco Santa Cruz",
+      "nombreLegal": "BANCO MÚLTIPLE SANTA CRUZ, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 5.0,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "apap",
+      "nombreCorto": "APAP",
+      "nombreLegal": "ASOCIACIÓN POPULAR DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 1,
+      "participacionActivosPct": 4.2,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "scotiabank",
+      "nombreCorto": "Scotiabank",
+      "nombreLegal": "SCOTIABANK REPÚBLICA DOMINICANA, S. A. - BANCO MÚLTIPLE",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 3.9,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "asociacion-cibao",
+      "nombreCorto": "Asociación Cibao",
+      "nombreLegal": "ASOCIACIÓN CIBAO DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 1,
+      "participacionActivosPct": 2.6,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "promerica",
+      "nombreCorto": "Promerica",
+      "nombreLegal": "BANCO MÚLTIPLE PROMERICA DE LA REPÚBLICA DOMINICANA, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 2.0,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "banco-caribe",
+      "nombreCorto": "Banco Caribe",
+      "nombreLegal": "BANCO MULTIPLE CARIBE INTERNACIONAL, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 1.4,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "asociacion-la-nacional",
+      "nombreCorto": "Asociación La Nacional",
+      "nombreLegal": "ASOCIACIÓN LA NACIONAL DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 1,
+      "participacionActivosPct": 1.2,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banesco",
+      "nombreCorto": "Banesco",
+      "nombreLegal": "BANESCO BANCO MÚLTIPLE, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 1.2,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "bdi",
+      "nombreCorto": "BDI",
+      "nombreLegal": "BANCO MULTIPLE BDI, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.7,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "lopez-de-haro",
+      "nombreCorto": "López de Haro",
+      "nombreLegal": "BANCO MÚLTIPLE LÓPEZ DE HARO, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.7,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "banco-ademi",
+      "nombreCorto": "Banco Ademi",
+      "nombreLegal": "BANCO MÚLTIPLE ADEMI, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.6,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "vimenca",
+      "nombreCorto": "Vimenca",
+      "nombreLegal": "BANCO MÚLTIPLE VIMENCA, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.6,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "citibank",
+      "nombreCorto": "Citibank",
+      "nombreLegal": "CITIBANK, N. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.5,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "lafise",
+      "nombreCorto": "Lafise",
+      "nombreLegal": "BANCO MÚLTIPLE LAFISE, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.5,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "alaver",
+      "nombreCorto": "Alaver",
+      "nombreLegal": "ASOCIACIÓN LA VEGA REAL DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 1,
+      "participacionActivosPct": 0.4,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banfondesa",
+      "nombreCorto": "Banfondesa",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO FONDESA, S. A. (BANFONDESA)",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 1,
+      "participacionActivosPct": 0.4,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "motor-credito",
+      "nombreCorto": "Motor Crédito",
+      "nombreLegal": "MOTOR CRÉDITO, S. A. BANCO DE AHORRO Y CRÉDITO",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 1,
+      "participacionActivosPct": 0.4,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "qik",
+      "nombreCorto": "Qik",
+      "nombreLegal": "QIK BANCO DIGITAL DOMINICANO, S. A., BANCO MULTIPLE",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 1,
+      "participacionActivosPct": 0.4,
+      "emiteTarjetas": "confirmado",
+      "productos": []
+    },
+    {
+      "id": "banco-adopem",
+      "nombreCorto": "Banco Adopem",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO ADOPEM, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 1,
+      "participacionActivosPct": 0.3,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "asociacion-bonao-de-ahorros-y-prestamos",
+      "nombreCorto": "Asociación Bonao de Ahorros y Préstamos",
+      "nombreLegal": "ASOCIACIÓN BONAO DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "asociacion-duarte-de-ahorros-y-prestamos",
+      "nombreCorto": "Asociación Duarte de Ahorros y Préstamos",
+      "nombreLegal": "ASOCIACIÓN DUARTE DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "asociacion-maguana-de-ahorros-y-prestamos",
+      "nombreCorto": "Asociación Maguana de Ahorros y Préstamos",
+      "nombreLegal": "ASOCIACIÓN MAGUANA DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "asociacion-mocana-de-ahorros-y-prestamos",
+      "nombreCorto": "Asociación Mocana de Ahorros y Préstamos",
+      "nombreLegal": "ASOCIACIÓN MOCANA DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "asociacion-peravia-de-ahorros-y-prestamos",
+      "nombreCorto": "Asociación Peravia de Ahorros y Préstamos",
+      "nombreLegal": "ASOCIACIÓN PERAVIA DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "asociacion-romana-de-ahorros-y-prestamos",
+      "nombreCorto": "Asociación Romana de Ahorros y Préstamos",
+      "nombreLegal": "ASOCIACIÓN ROMANA DE AHORROS Y PRÉSTAMOS",
+      "tipoEntidad": "Asociaciones de ahorros y préstamos",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-atlantico-de-ahorro-y-credito",
+      "nombreCorto": "Banco Atlántico de Ahorro y Crédito",
+      "nombreLegal": "BANCO ATLÁNTICO DE AHORRO Y CRÉDITO, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-bacc",
+      "nombreCorto": "Banco BACC",
+      "nombreLegal": "BANCO BACC DE AHORRO Y CRÉDITO DEL CARIBE, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-de-ahorro-y-credito-bancotui",
+      "nombreCorto": "Banco de Ahorro y Crédito Bancotui",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO BANCOTUI, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-de-ahorro-y-credito-cofaci",
+      "nombreCorto": "Banco de Ahorro y Crédito Cofaci",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO COFACI, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-de-ahorro-y-credito-confisa",
+      "nombreCorto": "Banco de Ahorro y Crédito Confisa",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO CONFISA, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-de-ahorro-y-credito-fihogar",
+      "nombreCorto": "Banco de Ahorro y Crédito Fihogar",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO FIHOGAR, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-de-ahorro-y-credito-gruficorp",
+      "nombreCorto": "Banco de Ahorro y Crédito Gruficorp",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO GRUFICORP, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-de-ahorro-y-credito-union",
+      "nombreCorto": "Banco de Ahorro y Crédito Unión",
+      "nombreLegal": "BANCO DE AHORRO Y CRÉDITO UNIÓN, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "banco-optima-de-ahorro-y-credito",
+      "nombreCorto": "Banco Óptima de Ahorro y Crédito",
+      "nombreLegal": "BANCO ÓPTIMA DE AHORRO Y CRÉDITO, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "bonanza-banco-de-ahorro-y-credito",
+      "nombreCorto": "Bonanza Banco de Ahorro y Crédito",
+      "nombreLegal": "BONANZA BANCO DE AHORRO Y CRÉDITO, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "jmmb-bank",
+      "nombreCorto": "JMMB Bank",
+      "nombreLegal": "BANCO MÚLTIPLE JMMB BANK, S. A.",
+      "tipoEntidad": "Bancos múltiples",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    },
+    {
+      "id": "leasing-confisa-banco-de-ahorro-y-credito",
+      "nombreCorto": "Leasing Confisa, Banco de Ahorro y Credito",
+      "nombreLegal": "LEASING CONFISA, BANCO DE AHORRO Y CREDITO, S. A.",
+      "tipoEntidad": "Bancos de ahorro y crédito",
+      "grupo": 2,
+      "participacionActivosPct": null,
+      "emiteTarjetas": "por_verificar",
+      "productos": []
+    }
+  ]
+}

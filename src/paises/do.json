@@ -1,0 +1,15 @@
+{
+  "codigo": "DO",
+  "monedaPrincipal": "DOP",
+  "monedaSecundaria": "USD",
+  "idiomas": [
+    "es-DO"
+  ],
+  "feriados": [],
+  "feriadosNota": "Completar con el calendario oficial de días feriados del año, con los traslados que dispone la ley.",
+  "catalogoDisponible": true,
+  "funciones": {
+    "dobleBalance": true
+  },
+  "montoReferencia": 1000
+}

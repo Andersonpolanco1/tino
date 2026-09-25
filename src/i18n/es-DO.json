@@ -1,0 +1,56 @@
+{
+  "inicio": {
+    "titulo": "Tu tarjeta de hoy",
+    "diasParaPagar": "días para pagar",
+    "sePagaEl": "Se paga el {{fecha}}",
+    "porCadaMil": "{{valor}} por {{moneda}}1,000",
+    "enfoque": "Enfoque: {{modo}}",
+    "otrasTarjetas": "Tus otras tarjetas",
+    "proximoPago": "Próximo pago",
+    "tengoUnaCompra": "Tengo una compra"
+  },
+  "orden": {
+    "recomendado": "Recomendado",
+    "masDias": "Más días",
+    "masPuntos": "Más puntos",
+    "masCashback": "Más cashback"
+  },
+  "enfoque": {
+    "liquidez": "Liquidez",
+    "puntos": "Puntos",
+    "cashback": "Cashback",
+    "equilibrado": "Equilibrado",
+    "reducir_deuda": "Reducir deuda"
+  },
+  "semaforo": {
+    "verde": "Buen momento",
+    "amarillo": "Momento normal",
+    "rojo": "Espera"
+  },
+  "etiqueta": {
+    "cortaPronto": "Corta en {{dias}} días",
+    "venceAntesDelCobro": "Antes de tu cobro",
+    "enPausa": "En pausa",
+    "pesosYDolares": "Pesos y dólares",
+    "dolares": "Dólares",
+    "local": "Local"
+  },
+  "unaTarjeta": {
+    "invitacion": "¿Tienes otra tarjeta? Agrégala y te diremos cuál conviene cada día"
+  },
+  "registro": {
+    "banco": "Banco",
+    "producto": "Tipo de tarjeta",
+    "porQue": "Lo usamos para mostrarte solo las promociones de tu tarjeta y precargar sus fechas y beneficios. Nunca pedimos el número de tu tarjeta ni tus datos del banco.",
+    "noEstaEnLaLista": "Mi tarjeta no está en la lista",
+    "noSeElTipo": "No sé el tipo",
+    "pagoBalanceUsd": "¿Con qué pagas tu balance en dólares?",
+    "conPesos": "Con pesos",
+    "conDolares": "Con dólares"
+  },
+  "pro": {
+    "nombre": "Tino Pro",
+    "limiteGratis": "El plan gratis permite 2 tarjetas. Prueba Tino Pro gratis por 30 días para agregar más.",
+    "mensaje": "Tino Pro cuesta menos que un solo cargo por mora."
+  }
+}
