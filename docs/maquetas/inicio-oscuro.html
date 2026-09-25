@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tino, inicio en modo oscuro</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;700&amp;family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&amp;display=swap">
+<style>
+body{margin:0;background:#0D1B16}
+a{color:#2BD49A}a:hover{color:#5FE0B2}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #0D1B16; color: #E9F1ED; font-family: 'Atkinson Hyperlegible Next', 'Segoe UI', sans-serif; display: flex; flex-direction: column; overflow: hidden">
+  <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 16px; padding: 20px 20px 16px">
+    <div style="display: flex; justify-content: space-between; align-items: center">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 14px; color: #9DB3AA">Viernes 25 de septiembre</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 700">Tu tarjeta de hoy</span>
+      </div>
+      <button aria-label="Tengo una compra" style="width: 44px; height: 44px; border-radius: 22px; border: 1px solid #22382E; background: #15271F; color: #E9F1ED; display: flex; align-items: center; justify-content: center; padding: 0">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 7h12l-1 13H7L6 7z"></path><path d="M9 7a3 3 0 0 1 6 0"></path></svg>
+      </button>
+    </div>
+
+    <div style="background: #2BD49A; color: #0D1B16; border-radius: 24px; padding: 20px; display: flex; flex-direction: column; gap: 14px">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start">
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 18px; font-weight: 700">Visa Oro</span>
+          <span style="font-size: 14px">Banco A, termina en 4821</span>
+        </div>
+        <span style="display: flex; align-items: center; gap: 6px; background: rgba(13,27,22,0.12); border-radius: 999px; padding: 6px 12px; font-size: 14px; font-weight: 600">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"></path></svg>
+          Buen momento
+        </span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 10px">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 64px; font-weight: 700; line-height: 1">48</span>
+        <span style="font-size: 18px; font-weight: 600">días para pagar</span>
+      </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(13,27,22,0.2); padding-top: 12px; font-size: 14px">
+        <span>Se paga el 12 de noviembre</span>
+        <span style="display: flex; align-items: center; gap: 6px; font-weight: 600">
+          <svg width="14" height="14" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="#F2B33D" stroke="#0D1B16" stroke-width="2"></circle></svg>
+          15 pts por RD$1,000
+        </span>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <button style="align-self: flex-start; display: flex; align-items: center; gap: 6px; height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #22382E; background: #15271F; color: #E9F1ED; font-family: inherit; font-size: 15px">
+        Enfoque: <strong>Equilibrado</strong>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+      </button>
+      <div style="display: flex; gap: 8px; overflow: hidden">
+        <button style="flex-shrink: 0; height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #2BD49A; background: #2BD49A; color: #0D1B16; font-family: inherit; font-size: 14px; font-weight: 600">Recomendado</button>
+        <button style="flex-shrink: 0; height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #22382E; background: #15271F; color: #E9F1ED; font-family: inherit; font-size: 14px">Más días</button>
+        <button style="flex-shrink: 0; height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #22382E; background: #15271F; color: #E9F1ED; font-family: inherit; font-size: 14px">Más puntos</button>
+        <button style="flex-shrink: 0; height: 40px; padding: 0 14px; border-radius: 20px; border: 1px solid #22382E; background: #15271F; color: #E9F1ED; font-family: inherit; font-size: 14px">Más cashback</button>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <span style="font-size: 15px; font-weight: 700; color: #9DB3AA">Tus otras tarjetas</span>
+      <div style="background: #15271F; border: 1px solid #22382E; border-radius: 18px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 16px; font-weight: 700">Mastercard Black</span>
+          <span style="font-size: 13px; color: #9DB3AA">Banco B, 7702. Se paga el 27 de octubre</span>
+          <div style="display: flex; gap: 6px">
+            <span style="background: #2A2412; color: #F2B33D; border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 600">RD$20 cashback por RD$1,000</span>
+            <span style="background: #1C3229; color: #9DB3AA; border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 600">Pesos y dólares</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end">
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 700; line-height: 1">33</span>
+          <span style="font-size: 12px; color: #9DB3AA">días</span>
+        </div>
+      </div>
+      <div style="background: #15271F; border: 1px solid #22382E; border-radius: 18px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; gap: 12px">
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 16px; font-weight: 700">Visa Clásica</span>
+          <span style="font-size: 13px; color: #9DB3AA">Banco C, 3190. Se paga el 20 de octubre</span>
+          <div style="display: flex; gap: 6px">
+            <span style="background: #2A1B1C; color: #FF8589; border-radius: 8px; padding: 3px 8px; font-size: 12px; font-weight: 600">Corta en 2 días: espera</span>
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; align-items: flex-end">
+          <span style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 700; line-height: 1">25</span>
+          <span style="font-size: 12px; color: #9DB3AA">días</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; background: #15271F; border: 1px solid #22382E; border-radius: 18px; padding: 12px 16px">
+      <div style="display: flex; flex-direction: column; gap: 2px">
+        <span style="font-size: 13px; color: #9DB3AA">Próximo pago</span>
+        <span style="font-size: 15px; font-weight: 700">Mastercard Black, 27 de septiembre</span>
+      </div>
+      <span style="background: #2A1B1C; color: #FF8589; border-radius: 8px; padding: 4px 8px; font-size: 12px; font-weight: 600">Antes de tu cobro</span>
+    </div>
+  </div>
+
+  <nav aria-label="Navegación principal" style="display: flex; justify-content: space-around; align-items: center; height: 72px; background: #15271F; border-top: 1px solid #22382E">
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #2BD49A; text-decoration: none; font-size: 12px; font-weight: 700; min-width: 64px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-7 9 7"></path><path d="M5 10v10h14V10"></path></svg>
+      Inicio
+    </a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #9DB3AA; text-decoration: none; font-size: 12px; min-width: 64px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="2"></rect><path d="M3 10h18"></path></svg>
+      Tarjetas
+    </a>
+    <a href="#" style="display: flex; flex-direction: column; align-items: center; gap: 4px; color: #9DB3AA; text-decoration: none; font-size: 12px; min-width: 64px">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"></path><path d="M18 7h2"></path><circle cx="16" cy="7" r="2"></circle><path d="M4 17h4"></path><path d="M12 17h8"></path><circle cx="10" cy="17" r="2"></circle></svg>
+      Ajustes
+    </a>
+  </nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
