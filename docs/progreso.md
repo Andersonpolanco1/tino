@@ -57,7 +57,7 @@ Criterios de la especificación:
 Listo cuando: se registran 3 tarjetas en menos de 2 minutos.
 
 - [ ] Repositorios de tarjetas, ingresos y preferencias sobre la base cifrada
-- [ ] Catálogo: copia incluida en la app, descarga desde el servidor cada 24 horas, validación por esquema y caché (sección 7.1 técnica) **(asignada)**
+- [x] Catálogo: copia incluida en la app, descarga desde el servidor cada 24 horas, validación por esquema y caché (sección 7.1 técnica) **(asignada)**
 - [ ] Selector de banco y producto con "Otro" y "No sé el tipo"; modo sin catálogo fuera de RD
 - [ ] Fechas de corte y límite, ajuste de día no hábil y compra en día de corte
 - [ ] Moneda de facturación, reglas del doble balance y pregunta de pago en dólares (solo si el país lo activa)
@@ -163,6 +163,8 @@ Criterios de la especificación:
 - [ ] Cuentas de Apple Developer, Google Play Console y proyecto en Expo
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
+- [ ] Publicar el servidor de datos públicos (sección 7.1 técnica) y poner su dirección en `EXPO_PUBLIC_URL_DATOS_PUBLICOS` (secreto de EAS); mientras tanto la app usa la copia incluida
+- [ ] Descargar también la configuración del país (`/v1/paises/xx.json`) igual que el catálogo; hoy se usa la copia incluida en `src/paises/`
 - [ ] Actualizar en claude.ai la documentación técnica (sección 5.7 y 11): mencionar `generar_aleatorios.py` y los casos aleatorios, y reexportarla a `docs/`
 - [ ] Actualizar en claude.ai el ejemplo 7.4 de la especificación con los días reales (46, 35 y 50), como pide la nota de la sección 5.7 técnica
 

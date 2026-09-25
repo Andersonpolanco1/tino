@@ -50,4 +50,6 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 - Diagnóstico de dependencias: `npx expo-doctor`
 - Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py && python3 generar_aleatorios.py` (en Windows, `python`)
 
+Variables de entorno: `EXPO_PUBLIC_URL_DATOS_PUBLICOS` es la dirección del servidor de datos públicos (catálogo); vacía, la app usa solo la copia incluida.
+
 Notas del entorno: TypeScript 6 no carga tipos globales solos (están en `types` de `tsconfig.json`); RNTL 14 tiene `render` y `renderHook` asíncronos; `Tabs` se importa de `expo-router/js-tabs`. Las pruebas no pueden vivir dentro de `app/` porque Expo Router las trataría como rutas. Las transacciones exclusivas de expo-sqlite abren otra conexión: usa siempre `base.transaccion(...)` de `src/datos`, que le aplica la clave.
