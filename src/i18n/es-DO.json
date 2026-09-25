@@ -177,5 +177,13 @@
     "puntos": "Acumular más puntos.",
     "cashback": "Recibir más dinero de vuelta.",
     "equilibrado": "Un poco de todo."
+  },
+  "bloqueo": {
+    "titulo": "Tino está bloqueado",
+    "motivo": "Desbloquea Tino para ver tus tarjetas",
+    "desbloquear": "Desbloquear"
+  },
+  "permisos": {
+    "faceId": "Tino usa Face ID para que solo tú veas tus tarjetas."
   }
 }

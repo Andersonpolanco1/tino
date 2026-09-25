@@ -1,5 +1,6 @@
 import type { ExpoConfig } from 'expo/config';
 import tokens from './src/diseno/tokens.json';
+import textos from './src/i18n/es-DO.json';
 
 // Los colores de arranque salen de los tokens, igual que en las pantallas.
 const { claro, oscuro } = tokens.color;
@@ -31,6 +32,7 @@ const config: ExpoConfig = {
     'expo-font',
     'expo-localization',
     'expo-secure-store',
+    ['expo-local-authentication', { faceIDPermission: textos.permisos.faceId }],
     ['expo-sqlite', { useSQLCipher: true }],
     [
       'expo-splash-screen',

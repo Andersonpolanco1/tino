@@ -10,6 +10,7 @@ import { ProveedorPais, usePais } from '@/paises';
 import { ProveedorDatos, useEstadoDatos } from '@/datos';
 import { ProveedorAlmacen, useAlmacen } from '@/estado';
 import { ProveedorCatalogo } from '@/catalogo';
+import { ProveedorBloqueo } from '@/seguridad/ProveedorBloqueo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -66,14 +67,16 @@ function Contenido() {
         <ProveedorAlmacen base={datos.base}>
           <ProveedorCatalogo pais={config.codigo} db={datos.base.db}>
             <CuandoCargue>
-              <Stack
-                screenOptions={{
-                  headerShown: false,
-                  contentStyle: { backgroundColor: tema.color.fondo },
-                  headerTitleStyle: { fontFamily: tema.texto.subtitulo.fontFamily },
-                  headerTintColor: tema.color.primario,
-                }}
-              />
+              <ProveedorBloqueo>
+                <Stack
+                  screenOptions={{
+                    headerShown: false,
+                    contentStyle: { backgroundColor: tema.color.fondo },
+                    headerTitleStyle: { fontFamily: tema.texto.subtitulo.fontFamily },
+                    headerTintColor: tema.color.primario,
+                  }}
+                />
+              </ProveedorBloqueo>
             </CuandoCargue>
           </ProveedorCatalogo>
         </ProveedorAlmacen>

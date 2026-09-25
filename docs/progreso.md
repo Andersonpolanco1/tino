@@ -65,15 +65,15 @@ Listo cuando: se registran 3 tarjetas en menos de 2 minutos.
 - [x] Interruptor En pausa
 - [x] Onboarding: bienvenida, registro y pregunta de enfoque (13.1 de la especificación) **(asignada)**; cobros y permiso de notificaciones en la etapa 5 (decisión D18)
 - [x] Validación: últimos 4 dígitos exactos y rechazo de 13 a 19 dígitos seguidos en cualquier campo **(asignada)**
-- [ ] Bloqueo con biometría o PIN del teléfono al abrir y al volver tras 1 minuto **(asignada)** (decisión D17)
-- [ ] Cubrir la pantalla al pasar a segundo plano **(asignada)**
+- [x] Bloqueo con biometría o PIN del teléfono al abrir y al volver tras 1 minuto **(asignada)** (decisión D17)
+- [x] Cubrir la pantalla al pasar a segundo plano **(asignada)**; en Android, ver la decisión pendiente sobre FLAG_SECURE
+- [ ] **Verificar en teléfono:** registrar 3 tarjetas en menos de 2 minutos (condición de "listo" de la etapa); requiere una compilación nueva por `expo-local-authentication`
 
 Criterios de la especificación:
 
 - [x] 14.1: registrar con producto "Otro" o "No sé el tipo" no bloquea el registro y la tarjeta aparece en el ranking
 - [x] 14.1: ningún campo permite guardar un número de tarjeta completo
-- [ ] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
-- [ ] 18.6: un usuario fuera de RD registra tarjetas en modo sin catálogo y ve el ranking completo
+- [ ] 18.6: un usuario fuera de RD registra tarjetas en modo sin catálogo y ve el ranking completo. El registro sin catálogo ya funciona; el ranking llega en la etapa 4
 - [x] 18.6: el doble balance solo aparece en países donde está activado
 
 ## Etapa 4. Pantalla de inicio
@@ -96,6 +96,7 @@ Criterios de la especificación:
 - [ ] 14.1: Más días, Más puntos o Más cashback reordenan al instante sin cambiar el enfoque guardado
 - [ ] 14.1: con una sola tarjeta se ven el semáforo y no la barra de orden
 - [ ] 14.1: con 2 o más tarjetas, cambiar el enfoque lo guarda al instante y actualiza el ranking (el widget y las notificaciones se verifican en las etapas 5 y 6); con una tarjeta el selector no aparece
+- [ ] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
 - [ ] 14.1: en una compra en dólares pagando con dólares, el doble balance queda por encima de una tarjeta equivalente solo en pesos, y la de solo uso local nunca aparece
 - [ ] 16.6: la tarjeta de hoy aparece en menos de 2 segundos en un Android de gama media
 - [ ] 16.6: reordenar y cambiar el enfoque se animan sin saltos
@@ -163,6 +164,9 @@ Criterios de la especificación:
 - [ ] Cuentas de Apple Developer, Google Play Console y proyecto en Expo
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
+- [ ] **Decidir:** en Android, la captura del selector de apps puede tomarse antes de que la cobertura se dibuje. La protección segura es FLAG_SECURE (`expo-screen-capture`), pero también impide al usuario tomar capturas de pantalla de Tino
+- [ ] Hacer configurable el tiempo de bloqueo (hoy 1 minuto fijo); necesita un campo nuevo en `Preferencias`
+- [ ] Si el teléfono no tiene ningún bloqueo configurado, Tino no puede exigir biometría ni PIN; decidir si se ofrece un PIN propio en ese caso
 - [ ] Publicar el servidor de datos públicos (sección 7.1 técnica) y poner su dirección en `EXPO_PUBLIC_URL_DATOS_PUBLICOS` (secreto de EAS); mientras tanto la app usa la copia incluida
 - [ ] Descargar también la configuración del país (`/v1/paises/xx.json`) igual que el catálogo; hoy se usa la copia incluida en `src/paises/`
 - [ ] Actualizar en claude.ai la documentación técnica (sección 5.7 y 11): mencionar `generar_aleatorios.py` y los casos aleatorios, y reexportarla a `docs/`
