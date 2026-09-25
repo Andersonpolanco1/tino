@@ -63,16 +63,15 @@ Listo cuando: se registran 3 tarjetas en menos de 2 minutos.
 - [ ] Moneda de facturación, reglas del doble balance y pregunta de pago en dólares (solo si el país lo activa)
 - [ ] Recompensas: tipo, tasa y valor del punto (precargado en 1.00)
 - [ ] Interruptor En pausa
-- [ ] Onboarding: bienvenida, registro, pregunta de enfoque y cobros opcionales (13.1 de la especificación) **(asignada)**
+- [ ] Onboarding: bienvenida, registro y pregunta de enfoque (13.1 de la especificación) **(asignada)**; cobros y permiso de notificaciones en la etapa 5 (decisión D18)
 - [ ] Validación: últimos 4 dígitos exactos y rechazo de 13 a 19 dígitos seguidos en cualquier campo **(asignada)**
-- [ ] Bloqueo con biometría o PIN al abrir y al volver tras 1 minuto **(asignada)**
+- [ ] Bloqueo con biometría o PIN del teléfono al abrir y al volver tras 1 minuto **(asignada)** (decisión D17)
 - [ ] Cubrir la pantalla al pasar a segundo plano **(asignada)**
 
 Criterios de la especificación:
 
 - [ ] 14.1: registrar con producto "Otro" o "No sé el tipo" no bloquea el registro y la tarjeta aparece en el ranking
 - [ ] 14.1: ningún campo permite guardar un número de tarjeta completo
-- [ ] 14.1: con solo banco, producto, corte y fecha límite, inicio muestra la tarjeta de hoy sin otra acción
 - [ ] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
 - [ ] 18.6: un usuario fuera de RD registra tarjetas en modo sin catálogo y ve el ranking completo
 - [ ] 18.6: el doble balance solo aparece en países donde está activado
@@ -93,6 +92,7 @@ Listo cuando: la pantalla coincide con las maquetas y cambia con el enfoque.
 
 Criterios de la especificación:
 
+- [ ] 14.1: con solo banco, producto, corte y fecha límite, inicio muestra la tarjeta de hoy sin otra acción (decisión D19)
 - [ ] 14.1: Más días, Más puntos o Más cashback reordenan al instante sin cambiar el enfoque guardado
 - [ ] 14.1: con una sola tarjeta se ven el semáforo y no la barra de orden
 - [ ] 14.1: con 2 o más tarjetas, cambiar el enfoque lo guarda al instante y actualiza el ranking (el widget y las notificaciones se verifican en las etapas 5 y 6); con una tarjeta el selector no aparece
@@ -111,7 +111,7 @@ Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con f
 - [ ] Registro de ingresos con las 5 frecuencias, incluida la personalizada con fechas estimadas
 - [ ] Etiqueta y alerta "Vence antes de tu cobro"
 - [ ] Notificaciones: cambio de tarjeta recomendada, fecha límite y resumen mensual de lo ganado
-- [ ] Permiso de notificaciones al terminar el onboarding
+- [ ] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18)
 - [ ] Sugerencias de datos contextuales (2.2 de la especificación)
 
 Criterios de la especificación:
@@ -128,6 +128,7 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 - [ ] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos (sección 7.2 técnica)
 - [ ] Tino Pro con prueba de 30 días y límite de 2 tarjetas en el plan gratis
 - [ ] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes
+- [ ] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación)
 - [ ] Reporte de fallos sin datos de tarjetas
 - [ ] Widget de Android
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
@@ -184,4 +185,7 @@ Criterios de la especificación:
 | D14 | 2026-09-25 | El catálogo trae solo nombre y marca, sin recompensas precargadas; las tasas por categoría (PREMIA, Insignia, ConnectMiles, etc.) quedan para v2 | El MVP solo maneja una tasa base; cargar una tasa de categoría como base distorsiona el ranking |
 | D15 | 2026-09-25 | Cada variante comercial es un producto propio; el doble saldo es atributo, no producto; fuera del catálogo las líneas de crédito y las tarjetas de empresa | Las variantes cambian beneficios; el MVP es para personas |
 | D16 | 2026-09-25 | El catálogo solo incluye productos que el emisor publica hoy, con su fuente registrada en `verificacion-emisores-do.md`; fuera las tarjetas de flotilla o combustible | La investigación preliminar tenía productos descontinuados y nombres equivocados; una tarjeta que solo sirve en gasolineras no debe competir en el ranking general |
+| D17 | 2026-09-25 | El bloqueo usa la biometría o el PIN del propio teléfono, no un PIN de Tino | Más seguro y sin un PIN extra que recordar o recuperar |
+| D18 | 2026-09-25 | Los pasos de cobros y de permiso de notificaciones del onboarding se hacen en la etapa 5 | Es donde se construyen los ingresos y los avisos |
+| D19 | 2026-09-25 | La tarjeta de hoy en Inicio se construye en la etapa 4; en la etapa 3 la pestaña Tarjetas muestra lo registrado | La etapa 4 es la de la pantalla de inicio y sus componentes |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |
