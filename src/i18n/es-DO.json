@@ -7,7 +7,8 @@
     "enfoque": "Enfoque: {{modo}}",
     "otrasTarjetas": "Tus otras tarjetas",
     "proximoPago": "Próximo pago",
-    "tengoUnaCompra": "Tengo una compra"
+    "tengoUnaCompra": "Tengo una compra",
+    "vacio": "Agrega tu primera tarjeta y te diremos cuál usar hoy."
   },
   "orden": {
     "recomendado": "Recomendado",
@@ -52,5 +53,27 @@
     "nombre": "Tino Pro",
     "limiteGratis": "El plan gratis permite 2 tarjetas. Prueba Tino Pro gratis por 30 días para agregar más.",
     "mensaje": "Tino Pro cuesta menos que un solo cargo por mora."
+  },
+  "pestanas": {
+    "inicio": "Inicio",
+    "tarjetas": "Tarjetas",
+    "ajustes": "Ajustes"
+  },
+  "tarjetas": {
+    "titulo": "Tus tarjetas",
+    "vacio": "Todavía no has agregado tarjetas."
+  },
+  "ajustes": {
+    "titulo": "Ajustes",
+    "pais": "País",
+    "moneda": "Moneda"
+  },
+  "paises": {
+    "DO": "República Dominicana",
+    "US": "Estados Unidos",
+    "otro": "Otro país ({{codigo}})"
+  },
+  "errores": {
+    "baseDatos": "No pudimos abrir tus datos guardados. Cierra la app y vuelve a abrirla."
   }
 }
