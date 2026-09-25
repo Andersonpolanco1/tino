@@ -1,5 +1,6 @@
 import { createStore } from 'zustand/vanilla';
-import type { Preferencias, Tarjeta } from '../tipos/tipos';
+import type { CodigoPais, Preferencias, Tarjeta } from '../tipos/tipos';
+import { preferenciasIniciales } from '../datos/preferencias';
 import type { RepositorioPreferencias, RepositorioTarjetas } from '../datos/repositorios';
 
 export interface Repositorios {
@@ -16,6 +17,7 @@ export interface EstadoApp {
   borrarTarjeta: (id: string) => Promise<void>;
   alternarPausa: (id: string) => Promise<void>;
   guardarPreferencias: (preferencias: Preferencias) => Promise<void>;
+  asegurarPreferencias: (pais: CodigoPais, idioma: string) => Promise<void>;
 }
 
 // Datos globales de la sección 3 técnica. Primero se guarda en la base y después se
@@ -51,6 +53,11 @@ export function crearAlmacen(repos: Repositorios, ahora: () => string = () => ne
     async guardarPreferencias(preferencias) {
       await repos.preferencias.guardar(preferencias, ahora());
       set({ preferencias });
+    },
+
+    // La primera vez que abre la app, las preferencias parten del país detectado.
+    async asegurarPreferencias(pais, idioma) {
+      if (!get().preferencias) await get().guardarPreferencias(preferenciasIniciales(pais, idioma));
     },
   }));
 }

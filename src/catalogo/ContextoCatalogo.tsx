@@ -37,6 +37,11 @@ export function ProveedorCatalogo({ pais, db, children }: { pais: CodigoPais; db
   return <ContextoCatalogo.Provider value={catalogo}>{children}</ContextoCatalogo.Provider>;
 }
 
+// Para pruebas de pantallas: un catálogo fijo, sin base ni servidor.
+export function ProveedorCatalogoDePrueba({ catalogo, children }: { catalogo: Catalogo | null; children: ReactNode }) {
+  return <ContextoCatalogo.Provider value={catalogo}>{children}</ContextoCatalogo.Provider>;
+}
+
 export function useCatalogo(): Catalogo | null {
   return useContext(ContextoCatalogo);
 }

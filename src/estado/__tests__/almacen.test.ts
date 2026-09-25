@@ -66,3 +66,12 @@ test('si la base rechaza el dato, el estado no cambia', async () => {
   await expect(almacen.getState().guardarTarjeta({ ...tarjeta, alias: '4111111111111111' })).rejects.toThrow();
   expect(almacen.getState().tarjetas).toEqual([]);
 });
+
+test('crea las preferencias iniciales una sola vez', async () => {
+  const { almacen } = await preparar();
+  await almacen.getState().cargar();
+  await almacen.getState().asegurarPreferencias('DO', 'es-DO');
+  await almacen.getState().guardarPreferencias({ ...almacen.getState().preferencias!, enfoque: { modo: 'puntos' } });
+  await almacen.getState().asegurarPreferencias('DO', 'es-DO');
+  expect(almacen.getState().preferencias?.enfoque.modo).toBe('puntos');
+});

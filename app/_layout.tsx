@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -6,8 +6,10 @@ import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { useTranslation } from 'react-i18next';
 import { archivosFuente, Pantalla, Texto, useTema, type Tema } from '@/diseno';
-import { ProveedorPais } from '@/paises';
+import { ProveedorPais, usePais } from '@/paises';
 import { ProveedorDatos, useEstadoDatos } from '@/datos';
+import { ProveedorAlmacen, useAlmacen } from '@/estado';
+import { ProveedorCatalogo } from '@/catalogo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,29 +44,63 @@ function Contenido() {
   const tema = useTema();
   const [fuentesListas, errorFuentes] = useFonts(archivosFuente);
   const datos = useEstadoDatos();
-  const listo = (fuentesListas || errorFuentes) && datos.estado !== 'cargando';
+  const { config } = usePais();
+  const fuentes = !!(fuentesListas || errorFuentes);
   const navegacion = useMemo(() => temaNavegacion(tema), [tema]);
 
   useEffect(() => {
     SystemUI.setBackgroundColorAsync(tema.color.fondo);
   }, [tema]);
 
-  useEffect(() => {
-    if (listo) SplashScreen.hideAsync();
-  }, [listo]);
-
-  if (!listo) return null;
+  // Sin fuentes o con la base abriendo, sigue la pantalla de arranque.
+  if (!fuentes || datos.estado === 'cargando') return null;
 
   return (
     <ThemeProvider value={navegacion}>
       <StatusBar style={tema.modo === 'oscuro' ? 'light' : 'dark'} />
       {datos.estado === 'error' ? (
-        <ErrorDatos />
+        <OcultarArranque>
+          <ErrorDatos />
+        </OcultarArranque>
       ) : (
-        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: tema.color.fondo } }} />
+        <ProveedorAlmacen base={datos.base}>
+          <ProveedorCatalogo pais={config.codigo} db={datos.base.db}>
+            <CuandoCargue>
+              <Stack
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: { backgroundColor: tema.color.fondo },
+                  headerTitleStyle: { fontFamily: tema.texto.subtitulo.fontFamily },
+                  headerTintColor: tema.color.primario,
+                }}
+              />
+            </CuandoCargue>
+          </ProveedorCatalogo>
+        </ProveedorAlmacen>
       )}
     </ThemeProvider>
   );
+}
+
+// Espera a tener tarjetas y preferencias, para no mostrar un instante la pantalla equivocada.
+function CuandoCargue({ children }: { children: ReactNode }) {
+  const cargado = useAlmacen(s => s.cargado);
+  const asegurarPreferencias = useAlmacen(s => s.asegurarPreferencias);
+  const { config, idioma } = usePais();
+
+  useEffect(() => {
+    if (cargado) asegurarPreferencias(config.codigo, idioma);
+  }, [cargado, asegurarPreferencias, config.codigo, idioma]);
+
+  if (!cargado) return null;
+  return <OcultarArranque>{children}</OcultarArranque>;
+}
+
+function OcultarArranque({ children }: { children: ReactNode }) {
+  useEffect(() => {
+    SplashScreen.hideAsync();
+  }, []);
+  return <>{children}</>;
 }
 
 function ErrorDatos() {

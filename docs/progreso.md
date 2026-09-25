@@ -56,25 +56,25 @@ Criterios de la especificación:
 
 Listo cuando: se registran 3 tarjetas en menos de 2 minutos.
 
-- [ ] Repositorios de tarjetas, ingresos y preferencias sobre la base cifrada
+- [x] Repositorios de tarjetas, ingresos y preferencias sobre la base cifrada
 - [x] Catálogo: copia incluida en la app, descarga desde el servidor cada 24 horas, validación por esquema y caché (sección 7.1 técnica) **(asignada)**
-- [ ] Selector de banco y producto con "Otro" y "No sé el tipo"; modo sin catálogo fuera de RD
-- [ ] Fechas de corte y límite, ajuste de día no hábil y compra en día de corte
-- [ ] Moneda de facturación, reglas del doble balance y pregunta de pago en dólares (solo si el país lo activa)
-- [ ] Recompensas: tipo, tasa y valor del punto (precargado en 1.00)
-- [ ] Interruptor En pausa
+- [x] Selector de banco y producto con "Otro" y "No sé el tipo"; modo sin catálogo fuera de RD
+- [x] Fechas de corte y límite, ajuste de día no hábil y compra en día de corte
+- [x] Moneda de facturación, reglas del doble balance y pregunta de pago en dólares (solo si el país lo activa)
+- [x] Recompensas: tipo, tasa y valor del punto (precargado en 1.00)
+- [x] Interruptor En pausa
 - [ ] Onboarding: bienvenida, registro y pregunta de enfoque (13.1 de la especificación) **(asignada)**; cobros y permiso de notificaciones en la etapa 5 (decisión D18)
-- [ ] Validación: últimos 4 dígitos exactos y rechazo de 13 a 19 dígitos seguidos en cualquier campo **(asignada)**
+- [x] Validación: últimos 4 dígitos exactos y rechazo de 13 a 19 dígitos seguidos en cualquier campo **(asignada)**
 - [ ] Bloqueo con biometría o PIN del teléfono al abrir y al volver tras 1 minuto **(asignada)** (decisión D17)
 - [ ] Cubrir la pantalla al pasar a segundo plano **(asignada)**
 
 Criterios de la especificación:
 
-- [ ] 14.1: registrar con producto "Otro" o "No sé el tipo" no bloquea el registro y la tarjeta aparece en el ranking
-- [ ] 14.1: ningún campo permite guardar un número de tarjeta completo
+- [x] 14.1: registrar con producto "Otro" o "No sé el tipo" no bloquea el registro y la tarjeta aparece en el ranking
+- [x] 14.1: ningún campo permite guardar un número de tarjeta completo
 - [ ] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
 - [ ] 18.6: un usuario fuera de RD registra tarjetas en modo sin catálogo y ve el ranking completo
-- [ ] 18.6: el doble balance solo aparece en países donde está activado
+- [x] 18.6: el doble balance solo aparece en países donde está activado
 
 ## Etapa 4. Pantalla de inicio
 
