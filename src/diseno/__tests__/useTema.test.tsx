@@ -4,7 +4,7 @@ import tokens from '../tokens.json';
 import { useTema } from '../useTema';
 import { Texto } from '../Texto';
 
-function simularEsquema(esquema: 'light' | 'dark' | null) {
+function simularEsquema(esquema: 'light' | 'dark' | 'unspecified') {
   jest.spyOn(ReactNative, 'useColorScheme').mockReturnValue(esquema);
 }
 
@@ -25,7 +25,7 @@ test('useTema devuelve los roles oscuros en modo oscuro', async () => {
 });
 
 test('sin preferencia del sistema usa el modo claro', async () => {
-  simularEsquema(null);
+  simularEsquema('unspecified');
   const { result } = await renderHook(() => useTema());
   expect(result.current.modo).toBe('claro');
 });

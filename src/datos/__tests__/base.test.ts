@@ -56,7 +56,7 @@ function baseSimulada(cipherVersion: string | null) {
       if (sql === 'PRAGMA user_version') return { user_version: 0 };
       return null;
     }),
-    withExclusiveTransactionAsync: jest.fn(async (tarea: (tx: unknown) => Promise<void>) => tarea(db)),
+    withExclusiveTransactionAsync: jest.fn(async (tarea: (tx: unknown) => Promise<void>): Promise<void> => tarea(db)),
     closeAsync: jest.fn(async () => {}),
   };
   sqlite.openDatabaseAsync.mockResolvedValue(db as unknown as SQLite.SQLiteDatabase);
