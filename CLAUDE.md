@@ -17,18 +17,15 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 ## Estado actual
 
 - Etapa actual: **2. Motor** (sección 13 de la documentación técnica).
-- Etapa 1 terminada en código: Expo SDK 57 con Expo Router (`app/`), tema claro y oscuro con `useTema()` y `Texto` (`src/diseno/`), fuentes incluidas, i18n con i18next (`src/i18n/`), país detectado por región con modo sin catálogo (`src/paises/`), base SQLCipher con clave en el almacén seguro y migraciones por `PRAGMA user_version` (`src/datos/`), y pestañas vacías.
-- Falta verificar la etapa 1 en teléfonos reales: SQLCipher no corre en Expo Go, así que hace falta una compilación de desarrollo (`npx eas-cli@latest build --profile development`) o `npx expo run:android`.
-- Identificador de paquete: `com.polanco.tino` (iOS y Android). Pendiente para la etapa 4: iconos de la barra de pestañas.
-- Pendiente de datos: feriados de RD de 2027 en `src/paises/do.json` (2026 ya está) y productos de tarjeta en `datos-publicos/emisores-do.json`.
-
-Actualiza esta sección al terminar cada etapa.
+- El seguimiento detallado está en `docs/progreso.md`: casillas por etapa, criterios de aceptación, pendientes fuera del código y decisiones tomadas. Es la lista que se va tachando.
+- Etapa 1 terminada en código; falta verificarla en teléfono (SQLCipher no corre en Expo Go: `npx expo run:android` o `npx eas-cli@latest build --profile development`).
 
 ## Cómo trabajar
 
 - Trabaja una etapa a la vez, en el orden de la sección 13. Al empezar una etapa, lee sus historias y los criterios de la especificación que cita.
 - Antes de escribir código de una etapa, propón un plan breve (archivos a crear o cambiar, dependencias a instalar) y espera confirmación.
 - Termina cada etapa con las pruebas pasando y una lista de lo que quedó hecho y lo pendiente.
+- Marca en `docs/progreso.md` cada casilla en el mismo commit que la completa. Toda decisión que se aparte de los documentos o complete un vacío va a su tabla de decisiones, y todo lo que quede pendiente va a su lista; nada pendiente vive solo en la conversación.
 - Haz commits pequeños con mensajes en español que digan qué cambió y por qué.
 
 ## Reglas que no se rompen
