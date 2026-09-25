@@ -21,12 +21,13 @@ Listo cuando: la app abre en iOS y Android con una pantalla vacía que respeta e
 - [x] Iconos de tienda e icono adaptativo de Android en `app.config.ts`
 - [x] Identificador de paquete `com.polanco.tino`
 - [x] Feriados de RD de 2026
-- [ ] **Verificar en teléfono:** la app abre en Android e iOS con la compilación de desarrollo (no corre en Expo Go)
+- [x] Verificado en Android: abre en el emulador Pixel 7 (API 35) con la base cifrada, el tema claro y oscuro y las tres pestañas
+- [ ] Verificar en iOS (por TestFlight o compilación de desarrollo con EAS)
 
 Criterios de la especificación:
 
 - [x] 16.6: los textos de los tokens cumplen 4.5:1 en modo claro y oscuro (prueba automática). Se vuelve a revisar en la etapa 4 con las pantallas reales.
-- [ ] 16.6: diseño idéntico en iOS y Android, en modo claro y oscuro. Falta verificarlo en teléfono.
+- [ ] 16.6: diseño idéntico en iOS y Android, en modo claro y oscuro. Verificado en Android; falta iOS.
 - [ ] 18.6: cambiar el país cambia moneda, feriados, textos y funciones sin tocar el código. Probado en la configuración; falta el selector de país en Ajustes (etapa 4).
 
 ## Etapa 2. Motor
@@ -173,4 +174,5 @@ Criterios de la especificación:
 | D8 | 2026-09-25 | El motor usa `pais.monedaSecundaria` donde la referencia escribe `'USD'` | Nada de RD va en el código; para RD el resultado es idéntico |
 | D9 | 2026-09-25 | Las funciones marcadas **(asignada)** se ubicaron en las etapas 3 y 4 | La tabla de etapas no las asignaba |
 | D10 | 2026-09-25 | Además de los 17 casos, el motor se compara con 200 casos aleatorios de la referencia (`motor.aleatorios.json`, semilla fija) | Los 17 casos documentan reglas; los aleatorios detectan diferencias de redondeo, meses cortos, feriados y cobros que nadie escribió a mano |
+| D12 | 2026-09-25 | Toda transacción exclusiva usa `base.transaccion(...)`, que aplica la clave en la conexión de la transacción | expo-sqlite abre una conexión nueva para cada transacción exclusiva; sin la clave, SQLCipher responde "file is not a database" (encontrado al probar en el emulador) |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

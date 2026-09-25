@@ -1,10 +1,9 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import type { SQLiteDatabase } from 'expo-sqlite';
-import { abrirBase } from './base';
+import { abrirBase, type BaseLocal } from './base';
 
 export type EstadoDatos =
   | { estado: 'cargando' }
-  | { estado: 'lista'; db: SQLiteDatabase }
+  | { estado: 'lista'; base: BaseLocal }
   | { estado: 'error'; error: unknown };
 
 const ContextoDatos = createContext<EstadoDatos>({ estado: 'cargando' });
@@ -15,8 +14,12 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
   useEffect(() => {
     let activo = true;
     abrirBase().then(
-      db => activo && setEstado({ estado: 'lista', db }),
-      error => activo && setEstado({ estado: 'error', error }),
+      base => activo && setEstado({ estado: 'lista', base }),
+      error => {
+        // Solo en desarrollo; el reporte de fallos llega en la etapa 6.
+        if (__DEV__) console.error('No se pudo abrir la base local', error);
+        if (activo) setEstado({ estado: 'error', error });
+      },
     );
     return () => {
       activo = false;

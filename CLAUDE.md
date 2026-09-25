@@ -18,7 +18,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 - Etapa actual: **3. Registro de tarjetas** (sección 13 de la documentación técnica). La etapa 2 (motor) está terminada.
 - El seguimiento detallado está en `docs/progreso.md`: casillas por etapa, criterios de aceptación, pendientes fuera del código y decisiones tomadas. Es la lista que se va tachando.
-- Etapa 1 terminada en código; falta verificarla en teléfono (SQLCipher no corre en Expo Go: `npx expo run:android` o `npx eas-cli@latest build --profile development`).
+- Etapa 1 verificada en Android (emulador `TantyPhone`, perfil Pixel 7); falta iOS.
 
 ## Cómo trabajar
 
@@ -44,10 +44,10 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 - Instalar dependencias: `npm install`. Para agregar paquetes usa `npx expo install <paquete>`, que elige versiones compatibles con el SDK.
 - Iniciar en desarrollo: `npx expo start` (requiere la compilación de desarrollo instalada; no sirve Expo Go)
-- Compilar y abrir en Android local: `npm run android`
+- Compilar y abrir en Android local: `npx expo run:android --device TantyPhone` (emulador Pixel 7). Para solo servir el código a la app ya instalada: `npx expo start --dev-client`
 - Pruebas: `npm test`
 - Tipos: `npm run typecheck`
 - Diagnóstico de dependencias: `npx expo-doctor`
 - Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py && python3 generar_aleatorios.py` (en Windows, `python`)
 
-Notas del entorno: TypeScript 6 no carga tipos globales solos (están en `types` de `tsconfig.json`); RNTL 14 tiene `render` y `renderHook` asíncronos; `Tabs` se importa de `expo-router/js-tabs`. Las pruebas no pueden vivir dentro de `app/` porque Expo Router las trataría como rutas.
+Notas del entorno: TypeScript 6 no carga tipos globales solos (están en `types` de `tsconfig.json`); RNTL 14 tiene `render` y `renderHook` asíncronos; `Tabs` se importa de `expo-router/js-tabs`. Las pruebas no pueden vivir dentro de `app/` porque Expo Router las trataría como rutas. Las transacciones exclusivas de expo-sqlite abren otra conexión: usa siempre `base.transaccion(...)` de `src/datos`, que le aplica la clave.

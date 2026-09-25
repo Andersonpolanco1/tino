@@ -45,10 +45,13 @@ describe('obtenerClaveBase', () => {
   });
 });
 
+// Como expo-sqlite, cada transacción exclusiva corre en una conexión nueva con sus propias sentencias.
 function baseSimulada(cipherVersion: string | null) {
   const sentencias: string[] = [];
+  const transacciones: string[][] = [];
   const db = {
     sentencias,
+    transacciones,
     execAsync: jest.fn(async (sql: string) => void sentencias.push(sql)),
     getFirstAsync: jest.fn(async (sql: string) => {
       sentencias.push(sql);
@@ -56,7 +59,11 @@ function baseSimulada(cipherVersion: string | null) {
       if (sql === 'PRAGMA user_version') return { user_version: 0 };
       return null;
     }),
-    withExclusiveTransactionAsync: jest.fn(async (tarea: (tx: unknown) => Promise<void>): Promise<void> => tarea(db)),
+    withExclusiveTransactionAsync: jest.fn(async (tarea: (tx: unknown) => Promise<void>): Promise<void> => {
+      const propias: string[] = [];
+      transacciones.push(propias);
+      await tarea({ execAsync: async (sql: string) => void propias.push(sql) });
+    }),
     closeAsync: jest.fn(async () => {}),
   };
   sqlite.openDatabaseAsync.mockResolvedValue(db as unknown as SQLite.SQLiteDatabase);
@@ -70,8 +77,18 @@ describe('abrirBase', () => {
     const db = baseSimulada('4.6.1 community');
     await abrirBase();
     expect(db.sentencias[0]).toBe(`PRAGMA key = "x'${CLAVE}'"`);
-    expect(db.sentencias).toContain('PRAGMA user_version = 1');
+    expect(db.transacciones.flat()).toContain('PRAGMA user_version = 1');
     expect(db.closeAsync).not.toHaveBeenCalled();
+  });
+
+  test('cada transacción aplica la clave en su conexión antes de tocar la base', async () => {
+    const db = baseSimulada('4.7.0 community');
+    const base = await abrirBase();
+    await base.transaccion(async tx => void (await tx.execAsync('SELECT 1')));
+    expect(db.transacciones.length).toBeGreaterThanOrEqual(2);
+    for (const sentencias of db.transacciones) {
+      expect(sentencias[0]).toBe(`PRAGMA key = "x'${CLAVE}'"`);
+    }
   });
 
   test('se niega a usar la base si SQLCipher no está activo', async () => {

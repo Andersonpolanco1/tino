@@ -1,28 +1,51 @@
 import { openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
 import { FORMATO_CLAVE, obtenerClaveBase } from './clave';
+import type { ConexionSql } from './conexion';
 import { migrar } from './migraciones';
 
 export const NOMBRE_BASE = 'tino.db';
 
 export class ErrorBaseCifrada extends Error {}
 
+export interface BaseLocal {
+  db: SQLiteDatabase;
+  // Toda transacción exclusiva debe pasar por aquí: expo-sqlite la corre en una
+  // conexión nueva, y esa conexión necesita la clave antes de leer la base.
+  transaccion: (tarea: (tx: SQLiteDatabase) => Promise<void>) => Promise<void>;
+}
+
+// Formato crudo (x'…'): evita pagar la derivación de clave al abrir.
+const sentenciaClave = (clave: string) => `PRAGMA key = "x'${clave}'"`;
+
 // Abre la base local cifrada con SQLCipher y la deja en la última versión del esquema.
 // Nunca abre ni crea una base sin cifrar.
-export async function abrirBase(): Promise<SQLiteDatabase> {
+export async function abrirBase(): Promise<BaseLocal> {
   const clave = await obtenerClaveBase();
   if (!FORMATO_CLAVE.test(clave)) throw new ErrorBaseCifrada('Clave con formato inválido');
 
   const db = await openDatabaseAsync(NOMBRE_BASE);
   try {
-    // La clave debe ser lo primero que se ejecuta sobre la conexión. Se usa en
-    // formato crudo (x'…') para no pagar la derivación de clave al abrir.
-    await db.execAsync(`PRAGMA key = "x'${clave}'"`);
+    // La clave debe ser lo primero que se ejecuta sobre la conexión.
+    await db.execAsync(sentenciaClave(clave));
     const cifrado = await db.getFirstAsync<{ cipher_version: string }>('PRAGMA cipher_version');
     if (!cifrado?.cipher_version) throw new ErrorBaseCifrada('SQLCipher no está activo en esta compilación');
     // Primera lectura real: falla si la clave no corresponde a la base.
     await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
-    await migrar(db);
-    return db;
+
+    // BEGIN no lee el archivo, así que la clave todavía se puede aplicar dentro de la transacción.
+    const transaccion: BaseLocal['transaccion'] = tarea =>
+      db.withExclusiveTransactionAsync(async tx => {
+        await tx.execAsync(sentenciaClave(clave));
+        await tarea(tx);
+      });
+
+    const conexion: ConexionSql = {
+      execAsync: sql => db.execAsync(sql),
+      getFirstAsync: sql => db.getFirstAsync(sql),
+      withExclusiveTransactionAsync: transaccion,
+    };
+    await migrar(conexion);
+    return { db, transaccion };
   } catch (error) {
     await db.closeAsync();
     throw error;
