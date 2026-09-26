@@ -11,7 +11,7 @@ interface Props {
   grande?: boolean;
 }
 
-// Botón redondo de solo ícono: atrás, cerrar, "Tengo una compra".
+// Botón redondo de solo ícono: atrás y cerrar.
 export function BotonCircular({ icono, etiqueta, onPress, plano = false, grande = false }: Props) {
   const tema = useTema();
   const lado = grande ? tema.toqueMinimo + tema.espacio.xs : tema.toqueMinimo;
@@ -31,7 +31,7 @@ export function BotonCircular({ icono, etiqueta, onPress, plano = false, grande 
         opacity: pressed ? 0.7 : 1,
       })}
     >
-      <Icono nombre={icono} color={plano ? 'textoSecundario' : 'texto'} tamano={grande ? 22 : 20} grosor={icono === 'compra' ? 2 : 2.2} />
+      <Icono nombre={icono} color={plano ? 'textoSecundario' : 'texto'} tamano={grande ? 22 : 20} grosor={2.2} />
     </Pressable>
   );
 }

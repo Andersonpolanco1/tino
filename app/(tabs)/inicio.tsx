@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Boton, BotonCircular, EtiquetaConInfo, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
+import { Boton, BotonPastilla, EtiquetaConInfo, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
 import { partesFechaLarga } from '@/i18n';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
@@ -29,17 +29,18 @@ export default function Inicio() {
 
   const abrir = (vista: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: { id: vista.tarjeta.id } });
 
+  // "Tengo una compra" va con texto junto a la fecha: un ícono solo había que adivinarlo.
   const encabezado = (
-    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: tema.espacio.m }}>
-      <View style={{ flexShrink: 1, gap: 2 }}>
+    <View style={{ gap: 2 }}>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.m }}>
         <Texto variante="apoyo" color="textoSecundario">
           {t('inicio.fechaHoy', partesFechaLarga(hoy, idioma))}
         </Texto>
-        <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 30, lineHeight: 36, letterSpacing: -0.5 }}>
-          {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
-        </Texto>
+        {hayTarjetas ? <BotonPastilla icono="compra" titulo={t('inicio.tengoUnaCompra')} onPress={() => router.push('/compra')} primario /> : null}
       </View>
-      {hayTarjetas ? <BotonCircular icono="compra" etiqueta={t('inicio.tengoUnaCompra')} onPress={() => router.push('/compra')} grande /> : null}
+      <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 30, lineHeight: 36, letterSpacing: -0.5 }}>
+        {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
+      </Texto>
     </View>
   );
 

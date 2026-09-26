@@ -4,10 +4,12 @@ import type { RolColor } from './tema';
 
 // Íconos de trazo copiados de las maquetas (rediseño en claude.ai), en una cuadrícula de 24.
 const TRAZOS = {
+  // Carrito: se reconoce como "comprar" mejor que la bolsa de las maquetas.
   compra: (
     <>
-      <Path d="M6 7h12l-1 13H7L6 7z" />
-      <Path d="M9 7a3 3 0 0 1 6 0" />
+      <Path d="M2.5 3h2.2l2.4 11.2a1.8 1.8 0 0 0 1.8 1.4h8.4a1.8 1.8 0 0 0 1.8-1.4L20.8 7H5.6" />
+      <Circle cx={9} cy={20} r={1.4} />
+      <Circle cx={17} cy={20} r={1.4} />
     </>
   ),
   check: <Path d="M5 12l5 5 9-10" />,

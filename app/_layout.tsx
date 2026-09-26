@@ -73,7 +73,10 @@ function Contenido() {
                   headerTitleStyle: { fontFamily: tema.texto.subtitulo.fontFamily },
                   headerTintColor: tema.color.primario,
                 }}
-              />
+              >
+                {/* "Tengo una compra" es una consulta rápida: sube desde abajo sobre Inicio. */}
+                <Stack.Screen name="compra" options={{ presentation: 'modal', animation: 'slide_from_bottom' }} />
+              </Stack>
             </CuandoCargue>
           </ProveedorCatalogo>
         </ProveedorAlmacen>

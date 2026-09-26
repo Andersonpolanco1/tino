@@ -115,6 +115,12 @@ test('el lector de pantalla oye el semáforo y las etiquetas en palabras (criter
   expect(fila.props.accessibilityLabel).toMatch(/pts por RD\$1,000/);
 });
 
+test('"Tengo una compra" es un botón con texto que abre la consulta', async () => {
+  await render(envolver(await almacenCon([A, B, C]), <Inicio />));
+  await fireEvent.press(screen.getByRole('button', { name: 'Tengo una compra' }));
+  expect(mockRouter.push).toHaveBeenCalledWith('/compra');
+});
+
 test('sin tarjetas invita a agregar la primera', async () => {
   await render(envolver(await almacenCon([]), <Inicio />));
   await fireEvent.press(screen.getByText('Agregar tarjeta'));

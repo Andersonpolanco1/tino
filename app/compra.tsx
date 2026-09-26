@@ -50,6 +50,7 @@ export default function Compra() {
             placeholder="0"
             placeholderTextColor={tema.color.textoSecundario}
             allowFontScaling
+            autoFocus
             style={[tema.texto.cifraGrande, { fontSize: 60, lineHeight: 68, minWidth: 120, color: tema.color.texto, padding: 0, letterSpacing: -1.5 }]}
           />
         </View>
