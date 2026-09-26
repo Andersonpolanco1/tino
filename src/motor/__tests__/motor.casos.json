@@ -177,7 +177,7 @@
     {
       "id": "ej-7.4-liquidez",
       "descripcion": "Mismo ejemplo en modo Liquidez",
-      "verifica": "C sigue primero por poco (83.6 frente a 82.5): Liquidez aún da 10% a puntos y 10% a cashback. El orden puro por días es el botón Más días de la barra de orden",
+      "verifica": "C sigue primero por poco (83.6 frente a 82.5): Liquidez aún da 10% a puntos y 10% a cashback. El orden puro por días sería el modo Liquidez sin puntos ni cashback",
       "entrada": {
         "hoy": "2026-10-06",
         "tarjetas": [
@@ -1752,6 +1752,528 @@
         "pesosAplicados": {
           "dias": 57.14,
           "puntos": 42.86,
+          "cashback": 0
+        }
+      }
+    },
+    {
+      "id": "cobro-cada-dos-semanas",
+      "descripcion": "Cobro cada 2 semanas que cae antes de la fecha límite",
+      "verifica": "Cobros viernes 9 y 23 de octubre: el 9 cae antes del pago de P (12 de octubre), sin etiqueta",
+      "entrada": {
+        "hoy": "2026-10-01",
+        "tarjetas": [
+          {
+            "id": "P",
+            "alias": "Pronto",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 2,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 12
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "ninguna"
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          },
+          {
+            "id": "A",
+            "alias": "Tarjeta A",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 5,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 25
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "puntos",
+              "regla": {
+                "tipo": "por_monto",
+                "puntos": 1,
+                "porCadaMonto": 100
+              },
+              "valorPunto": 0.5,
+              "valorPuntoConfirmado": true
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          }
+        ],
+        "ingresos": [
+          {
+            "id": "c",
+            "nombre": "Cobro",
+            "frecuencia": {
+              "tipo": "cada_dos_semanas",
+              "diaSemana": 5,
+              "referencia": "2026-09-25"
+            },
+            "ajusteDiaNoHabil": "ninguno"
+          }
+        ],
+        "preferencias": {
+          "pais": "DO",
+          "idioma": "es-DO",
+          "enfoque": {
+            "modo": "equilibrado"
+          },
+          "pagoBalanceUsd": null,
+          "diferencialCambiarioPct": 6,
+          "umbralCorteCercanoDias": 3,
+          "analiticaActiva": true,
+          "plan": "gratis"
+        },
+        "pais": {
+          "codigo": "DO",
+          "monedaPrincipal": "DOP",
+          "monedaSecundaria": "USD",
+          "idiomas": [
+            "es-DO"
+          ],
+          "feriados": [],
+          "catalogoDisponible": true,
+          "funciones": {
+            "dobleBalance": true
+          },
+          "montoReferencia": 1000
+        }
+      },
+      "esperado": {
+        "ranking": [
+          {
+            "tarjetaId": "A",
+            "diasGracia": 24,
+            "fechaPago": "2026-10-25",
+            "proximoCorte": "2026-10-05",
+            "diasParaCorte": 4,
+            "valorRecompensa": 5.0,
+            "normalizado": {
+              "dias": 100.0,
+              "puntos": 100.0,
+              "cashback": 0
+            },
+            "penalizacion": 0,
+            "puntaje": 100.0,
+            "etiquetas": [],
+            "semaforo": "amarillo"
+          },
+          {
+            "tarjetaId": "P",
+            "diasGracia": 11,
+            "fechaPago": "2026-10-12",
+            "proximoCorte": "2026-10-02",
+            "diasParaCorte": 1,
+            "valorRecompensa": 0,
+            "normalizado": {
+              "dias": 45.83,
+              "puntos": 0.0,
+              "cashback": 0
+            },
+            "penalizacion": 10,
+            "puntaje": 16.19,
+            "etiquetas": [
+              "corta_pronto"
+            ],
+            "semaforo": "rojo"
+          }
+        ],
+        "excluidas": [],
+        "pesosAplicados": {
+          "dias": 57.14,
+          "puntos": 42.86,
+          "cashback": 0
+        }
+      }
+    },
+    {
+      "id": "cobro-ultimo-dia-habil",
+      "descripcion": "Cobro el último día hábil del mes",
+      "verifica": "Octubre 2026: el 31 es sábado y el 30 feriado de prueba, así que se cobra el jueves 29; P vence el 12 antes de cualquier cobro",
+      "entrada": {
+        "hoy": "2026-10-01",
+        "tarjetas": [
+          {
+            "id": "Q",
+            "alias": "Quincena",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 25,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 30
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "ninguna"
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          },
+          {
+            "id": "P",
+            "alias": "Pronto",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 2,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 12
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "ninguna"
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          }
+        ],
+        "ingresos": [
+          {
+            "id": "c",
+            "nombre": "Cobro",
+            "frecuencia": {
+              "tipo": "mensual",
+              "dia": "ultimo_dia_habil"
+            },
+            "ajusteDiaNoHabil": "ninguno"
+          }
+        ],
+        "preferencias": {
+          "pais": "DO",
+          "idioma": "es-DO",
+          "enfoque": {
+            "modo": "equilibrado"
+          },
+          "pagoBalanceUsd": null,
+          "diferencialCambiarioPct": 6,
+          "umbralCorteCercanoDias": 3,
+          "analiticaActiva": true,
+          "plan": "gratis"
+        },
+        "pais": {
+          "codigo": "DO",
+          "monedaPrincipal": "DOP",
+          "monedaSecundaria": "USD",
+          "idiomas": [
+            "es-DO"
+          ],
+          "feriados": [
+            "2026-10-30"
+          ],
+          "catalogoDisponible": true,
+          "funciones": {
+            "dobleBalance": true
+          },
+          "montoReferencia": 1000
+        }
+      },
+      "esperado": {
+        "ranking": [
+          {
+            "tarjetaId": "Q",
+            "diasGracia": 29,
+            "fechaPago": "2026-10-30",
+            "proximoCorte": "2026-10-25",
+            "diasParaCorte": 24,
+            "valorRecompensa": 0,
+            "normalizado": {
+              "dias": 100.0,
+              "puntos": 0,
+              "cashback": 0
+            },
+            "penalizacion": 0,
+            "puntaje": 100.0,
+            "etiquetas": [],
+            "semaforo": "verde"
+          },
+          {
+            "tarjetaId": "P",
+            "diasGracia": 11,
+            "fechaPago": "2026-10-12",
+            "proximoCorte": "2026-10-02",
+            "diasParaCorte": 1,
+            "valorRecompensa": 0,
+            "normalizado": {
+              "dias": 37.93,
+              "puntos": 0,
+              "cashback": 0
+            },
+            "penalizacion": 25,
+            "puntaje": 12.93,
+            "etiquetas": [
+              "corta_pronto",
+              "vence_antes_del_cobro"
+            ],
+            "semaforo": "rojo"
+          }
+        ],
+        "excluidas": [],
+        "pesosAplicados": {
+          "dias": 100.0,
+          "puntos": 0,
+          "cashback": 0
+        }
+      }
+    },
+    {
+      "id": "cobro-personalizado",
+      "descripcion": "Cobros independientes con fechas estimadas",
+      "verifica": "El cobro del 10 cae antes del pago de P (12), sin etiqueta; A vence el 25 después del 20",
+      "entrada": {
+        "hoy": "2026-10-01",
+        "tarjetas": [
+          {
+            "id": "P",
+            "alias": "Pronto",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 2,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 12
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "ninguna"
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          },
+          {
+            "id": "A",
+            "alias": "Tarjeta A",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 5,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 25
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "puntos",
+              "regla": {
+                "tipo": "por_monto",
+                "puntos": 1,
+                "porCadaMonto": 100
+              },
+              "valorPunto": 0.5,
+              "valorPuntoConfirmado": true
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          }
+        ],
+        "ingresos": [
+          {
+            "id": "c",
+            "nombre": "Cobro",
+            "frecuencia": {
+              "tipo": "personalizada",
+              "fechas": [
+                {
+                  "fecha": "2026-10-20",
+                  "estimada": true
+                },
+                {
+                  "fecha": "2026-10-10",
+                  "estimada": false
+                }
+              ]
+            },
+            "ajusteDiaNoHabil": "ninguno"
+          }
+        ],
+        "preferencias": {
+          "pais": "DO",
+          "idioma": "es-DO",
+          "enfoque": {
+            "modo": "equilibrado"
+          },
+          "pagoBalanceUsd": null,
+          "diferencialCambiarioPct": 6,
+          "umbralCorteCercanoDias": 3,
+          "analiticaActiva": true,
+          "plan": "gratis"
+        },
+        "pais": {
+          "codigo": "DO",
+          "monedaPrincipal": "DOP",
+          "monedaSecundaria": "USD",
+          "idiomas": [
+            "es-DO"
+          ],
+          "feriados": [],
+          "catalogoDisponible": true,
+          "funciones": {
+            "dobleBalance": true
+          },
+          "montoReferencia": 1000
+        }
+      },
+      "esperado": {
+        "ranking": [
+          {
+            "tarjetaId": "A",
+            "diasGracia": 24,
+            "fechaPago": "2026-10-25",
+            "proximoCorte": "2026-10-05",
+            "diasParaCorte": 4,
+            "valorRecompensa": 5.0,
+            "normalizado": {
+              "dias": 100.0,
+              "puntos": 100.0,
+              "cashback": 0
+            },
+            "penalizacion": 0,
+            "puntaje": 100.0,
+            "etiquetas": [],
+            "semaforo": "amarillo"
+          },
+          {
+            "tarjetaId": "P",
+            "diasGracia": 11,
+            "fechaPago": "2026-10-12",
+            "proximoCorte": "2026-10-02",
+            "diasParaCorte": 1,
+            "valorRecompensa": 0,
+            "normalizado": {
+              "dias": 45.83,
+              "puntos": 0.0,
+              "cashback": 0
+            },
+            "penalizacion": 10,
+            "puntaje": 16.19,
+            "etiquetas": [
+              "corta_pronto"
+            ],
+            "semaforo": "rojo"
+          }
+        ],
+        "excluidas": [],
+        "pesosAplicados": {
+          "dias": 57.14,
+          "puntos": 42.86,
+          "cashback": 0
+        }
+      }
+    },
+    {
+      "id": "cobro-adelantado-a-la-ventana",
+      "descripcion": "Un cobro en sábado adelantado al viernes entra antes del pago",
+      "verifica": "El cobro del sábado 10 se adelanta al viernes 9, el mismo día del pago de F (corte 2, pago viernes 9): sin etiqueta",
+      "entrada": {
+        "hoy": "2026-10-01",
+        "tarjetas": [
+          {
+            "id": "F",
+            "alias": "Viernes",
+            "emisorId": null,
+            "productoId": null,
+            "productoDesconocido": false,
+            "diaCorte": 2,
+            "fechaLimite": {
+              "tipo": "dia_del_mes",
+              "dia": 9
+            },
+            "ajusteDiaNoHabil": "ninguno",
+            "compraEnDiaDeCorte": "entra_en_siguiente",
+            "monedaFacturacion": "solo_principal",
+            "recompensa": {
+              "tipo": "ninguna"
+            },
+            "enPausa": false,
+            "creadaEn": "2026-09-01"
+          }
+        ],
+        "ingresos": [
+          {
+            "id": "c",
+            "nombre": "Cobro",
+            "frecuencia": {
+              "tipo": "mensual",
+              "dia": 10
+            },
+            "ajusteDiaNoHabil": "adelantar"
+          }
+        ],
+        "preferencias": {
+          "pais": "DO",
+          "idioma": "es-DO",
+          "enfoque": {
+            "modo": "equilibrado"
+          },
+          "pagoBalanceUsd": null,
+          "diferencialCambiarioPct": 6,
+          "umbralCorteCercanoDias": 3,
+          "analiticaActiva": true,
+          "plan": "gratis"
+        },
+        "pais": {
+          "codigo": "DO",
+          "monedaPrincipal": "DOP",
+          "monedaSecundaria": "USD",
+          "idiomas": [
+            "es-DO"
+          ],
+          "feriados": [],
+          "catalogoDisponible": true,
+          "funciones": {
+            "dobleBalance": true
+          },
+          "montoReferencia": 1000
+        }
+      },
+      "esperado": {
+        "ranking": [
+          {
+            "tarjetaId": "F",
+            "diasGracia": 8,
+            "fechaPago": "2026-10-09",
+            "proximoCorte": "2026-10-02",
+            "diasParaCorte": 1,
+            "valorRecompensa": 0,
+            "normalizado": {
+              "dias": 100.0,
+              "puntos": 0,
+              "cashback": 0
+            },
+            "penalizacion": 10,
+            "puntaje": 90.0,
+            "etiquetas": [
+              "corta_pronto"
+            ],
+            "semaforo": "rojo"
+          }
+        ],
+        "excluidas": [],
+        "pesosAplicados": {
+          "dias": 100.0,
+          "puntos": 0,
           "cashback": 0
         }
       }

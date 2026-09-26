@@ -22,7 +22,7 @@ def caso(id,desc,hoy,tarjetas,preferencias,paisc=None,ingresos=(),compra=None,ve
     if compra: e['compra']=compra
     casos.append({'id':id,'descripcion':desc,'verifica':verifica,'entrada':e,'esperado':motor(e)})
 caso('ej-7.4-equilibrado','Ejemplo de la sección 7.4 de la especificación en modo Equilibrado','2026-10-06',[A,B,C],pref(),verifica='Orden C, B, A; días 46, 35 y 50')
-caso('ej-7.4-liquidez','Mismo ejemplo en modo Liquidez','2026-10-06',[A,B,C],pref('liquidez'),verifica='C sigue primero por poco (83.6 frente a 82.5): Liquidez aún da 10% a puntos y 10% a cashback. El orden puro por días es el botón Más días de la barra de orden')
+caso('ej-7.4-liquidez','Mismo ejemplo en modo Liquidez','2026-10-06',[A,B,C],pref('liquidez'),verifica='C sigue primero por poco (83.6 frente a 82.5): Liquidez aún da 10% a puntos y 10% a cashback. El orden puro por días sería el modo Liquidez sin puntos ni cashback')
 caso('ej-7.4-puntos','Mismo ejemplo en modo Puntos','2026-10-06',[A,B,C],pref('puntos'),verifica='B primero por mayor valor en puntos')
 caso('corte-31-febrero','Corte el día 31 en febrero se toma como el último día del mes','2027-02-10',[tarjeta('F','Febrero',31,despues(20))],pref(),verifica='Próximo corte 2027-02-28, fecha de pago 2027-03-20')
 caso('compra-dia-corte-siguiente','Compra el mismo día del corte entra en el siguiente estado','2026-10-05',[tarjeta('S','Siguiente',5,dia(25))],pref(),verifica='Próximo corte 2026-11-05, pago 2026-11-25, 51 días')
@@ -37,12 +37,19 @@ caso('corte-cercano','Tarjeta a 2 días del corte recibe penalización y semáfo
 caso('sin-recompensas','Ninguna tarjeta tiene recompensa: todo el peso pasa a días','2026-10-06',[tarjeta('X','X',5,dia(25)),tarjeta('Y','Y',20,dia(10))],pref(),verifica='Pesos aplicados 100/0/0')
 nomina=[{'id':'n','nombre':'Nómina','frecuencia':{'tipo':'quincenal_dias_fijos','dias':[15,30]},'ajusteDiaNoHabil':'adelantar'}]
 caso('vence-antes-del-cobro','Pago que vence antes de cualquier cobro','2026-10-01',[tarjeta('P','Pronto',2,dia(12)),A],pref(),ingresos=nomina,verifica='P: corte 2026-10-02, pago 2026-10-12, sin cobro entre medio: etiqueta vence_antes_del_cobro')
+# Etapa 5: frecuencias nuevas y cobros movidos por el ajuste de día no hábil.
+cobro=lambda fr,aj='ninguno':[{'id':'c','nombre':'Cobro','frecuencia':fr,'ajusteDiaNoHabil':aj}]
+P=tarjeta('P','Pronto',2,dia(12))
+caso('cobro-cada-dos-semanas','Cobro cada 2 semanas que cae antes de la fecha límite','2026-10-01',[P,A],pref(),ingresos=cobro({'tipo':'cada_dos_semanas','diaSemana':5,'referencia':'2026-09-25'}),verifica='Cobros viernes 9 y 23 de octubre: el 9 cae antes del pago de P (12 de octubre), sin etiqueta')
+caso('cobro-ultimo-dia-habil','Cobro el último día hábil del mes','2026-10-01',[tarjeta('Q','Quincena',25,dia(30)),P],pref(),paisc=pais(['2026-10-30']),ingresos=cobro({'tipo':'mensual','dia':'ultimo_dia_habil'}),verifica='Octubre 2026: el 31 es sábado y el 30 feriado de prueba, así que se cobra el jueves 29; P vence el 12 antes de cualquier cobro')
+caso('cobro-personalizado','Cobros independientes con fechas estimadas','2026-10-01',[P,A],pref(),ingresos=cobro({'tipo':'personalizada','fechas':[{'fecha':'2026-10-20','estimada':True},{'fecha':'2026-10-10','estimada':False}]}),verifica='El cobro del 10 cae antes del pago de P (12), sin etiqueta; A vence el 25 después del 20')
+caso('cobro-adelantado-a-la-ventana','Un cobro en sábado adelantado al viernes entra antes del pago','2026-10-01',[tarjeta('F','Viernes',2,dia(9))],pref(),ingresos=cobro({'tipo':'mensual','dia':10},'adelantar'),verifica='El cobro del sábado 10 se adelanta al viernes 9, el mismo día del pago de F (corte 2, pago viernes 9): sin etiqueta')
 DB=tarjeta('DB','Doble balance',5,dia(25),cb(1),moneda='doble_balance')
 SP=tarjeta('SP','Solo pesos',5,dia(25),cb(2),moneda='solo_principal')
 SL=tarjeta('SL','Solo local',5,dia(25),cb(3),moneda='solo_local')
 caso('usd-paga-con-dolares','Compra en dólares; el usuario paga su balance en dólares','2026-10-06',[DB,SP,SL],pref(pago='con_dolares'),compra={'monto':100,'moneda':'USD'},verifica='SL excluida; SP penalizada con 60; DB primero')
 caso('usd-paga-con-pesos','Compra en dólares; el usuario paga su balance con pesos','2026-10-06',[DB,SP,SL],pref(pago='con_pesos'),compra={'monto':100,'moneda':'USD'},verifica='SL excluida; SP sin penalización y primero por más cashback')
-json.dump({'version':'1','descripcion':'Casos de prueba del motor de recomendación de Tino. Generados con la implementación de referencia descrita en la sección 5 de la documentación técnica.','casos':casos},open('../../src/motor/__tests__/motor.casos.json','w'),ensure_ascii=False,indent=2)
+json.dump({'version':'1','descripcion':'Casos de prueba del motor de recomendación de Tino. Generados con la implementación de referencia descrita en la sección 5 de la documentación técnica.','casos':casos},open('../../src/motor/__tests__/motor.casos.json','w',encoding='utf-8'),ensure_ascii=False,indent=2)
 for c in casos:
     r=c['esperado']
     print(c['id'],[(x['tarjetaId'],x['diasGracia'],x['fechaPago'],x['puntaje'],x['etiquetas'],x['semaforo']) for x in r['ranking']],r['excluidas'],r['pesosAplicados'])

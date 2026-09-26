@@ -14,8 +14,8 @@ interface Caso {
 
 const casos = datos.casos as unknown as Caso[];
 
-test('hay 17 casos de referencia', () => {
-  expect(casos).toHaveLength(17);
+test('hay 21 casos de referencia', () => {
+  expect(casos).toHaveLength(21);
 });
 
 // Sección 5.7: la implementación reproduce cada resultado exactamente.

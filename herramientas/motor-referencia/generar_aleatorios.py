@@ -48,11 +48,19 @@ def tarjeta(i):
         t['recompensaUsd'] = recompensa()
     return t
 
+def cada_dos_semanas():
+    # La referencia es un día de cobro, así que su día de la semana es el del cobro.
+    referencia = fecha(date(2025, 1, 1), date(2026, 12, 31))
+    return {'tipo': 'cada_dos_semanas', 'diaSemana': (date.fromisoformat(referencia).weekday() + 1) % 7, 'referencia': referencia}
+
 def ingreso(i):
     frecuencia = rnd.choice([
         {'tipo': 'quincenal_dias_fijos', 'dias': [15, rnd.choice([28, 30, 31])]},
         {'tipo': 'mensual', 'dia': rnd.randint(1, 31)},
         {'tipo': 'semanal', 'diaSemana': rnd.randint(0, 6)},
+        {'tipo': 'mensual', 'dia': 'ultimo_dia_habil'},
+        cada_dos_semanas(),
+        {'tipo': 'personalizada', 'fechas': [{'fecha': fecha(date(2025, 12, 1), date(2029, 2, 28)), 'estimada': rnd.random() < 0.5} for _ in range(rnd.randint(1, 4))]},
     ])
     return {'id': f'i{i}', 'nombre': 'Cobro', 'frecuencia': frecuencia, 'ajusteDiaNoHabil': rnd.choice(['ninguno', 'adelantar', 'atrasar'])}
 

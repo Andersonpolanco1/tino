@@ -109,7 +109,7 @@ Criterios de la especificación:
 
 Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con fechas simuladas.
 
-- [ ] Completar `motor.py` con las 5 frecuencias, regenerar los casos y ajustar `ingresos.ts` (decisión D6)
+- [x] Completar `motor.py` con las 5 frecuencias, regenerar los casos y ajustar `ingresos.ts` (decisión D6): 21 casos, 4 de cobros (D37)
 - [ ] Registro de ingresos con las 5 frecuencias, incluida la personalizada con fechas estimadas
 - [ ] Etiqueta y alerta "Vence antes de tu cobro"
 - [ ] Notificaciones: cambio de tarjeta recomendada, fecha límite y resumen mensual de lo ganado
@@ -118,7 +118,7 @@ Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con f
 
 Criterios de la especificación:
 
-- [ ] 14.1: las 5 frecuencias generan las fechas de cobro correctas durante 12 meses, incluidos feriados
+- [x] 14.1: las 5 frecuencias generan las fechas de cobro correctas durante 12 meses, incluidos feriados (`src/motor/__tests__/ingresos.test.ts`)
 - [ ] 14.1: si la fecha límite cae antes del próximo cobro, aparece la etiqueta y se envía la alerta
 - [ ] 14.1: una sugerencia descartada dos veces no reaparece en 60 días
 - [ ] 14.1: el recordatorio de una tarjeta con doble balance menciona los dos pagos
@@ -212,4 +212,7 @@ Criterios de la especificación:
 | D34 | 2026-09-26 | La tarjeta de hoy y el detalle comparten piezas (`BloqueDias`, `LineaCiclo` y el semáforo al pie) con fondos distintos: verde solo para la recomendada, blanco en el detalle. La línea del ciclo usa meses cortos ("8 sept."). Bajo el nombre no se repite el banco si el alias ya lo trae | Quien aprende a leer una tarjeta lee la otra; pintar de verde una tarjeta en "Espera" diría que conviene usarla |
 | D35 | 2026-09-26 | La línea del ciclo es la misma en la tarjeta de hoy y en el detalle: Cortó, Hoy, Corta y Pagas, cada punto encima de su etiqueta y el relleno hasta "Hoy". En el detalle, el semáforo va arriba a la derecha de "Si la usas hoy" | Con la línea proporcional el relleno no llegaba a la etiqueta "Hoy" y parecía un error; el orden de los hitos nunca cambia, así que las posiciones fijas no engañan |
 | D36 | 2026-09-26 | La fecha límite "un día del mes" se elige en la misma cuadrícula de días que el corte; el contador queda solo para "días después del corte" | Con + y − llegar del 1 al 30 era incómodo; los días después casi siempre están cerca de los 20 precargados |
+| D37 | 2026-09-26 | Las 5 frecuencias de cobro en `motor.py` y `ingresos.ts`. Cada 2 semanas cobra el día de la semana cada 14 días desde la referencia; "último día hábil" ya es hábil y no se ajusta; la personalizada ajusta cada fecha y guarda si es estimada. Los cobros se buscan también 7 días a cada lado de la ventana, para contar el que el ajuste mete en ella (un sábado adelantado al viernes) y no contar el que saca | La referencia revisaba solo los días de la ventana antes de ajustar, y dejaba fuera un cobro adelantado al mismo día del pago; los 17 casos anteriores no cambian |
+| D38 | 2026-09-26 | El resumen mensual del MVP cuenta lo que Tino sabe sin compras registradas: cuántas tarjetas distintas recomendó y hasta cuántos días para pagar dio la tarjeta de cada día. Lo ganado en puntos y cashback llega con "La usé" (v2) | La especificación (sección 11) pide días aprovechados y lo ganado, pero sin compras registradas no se puede calcular |
+| D39 | 2026-09-26 | Sin la "ventaja" a las tarjetas que se pagan pocos días después de un cobro (sección 5.3 de la especificación); el MVP solo tiene la penalización de "vence antes del cobro" | La documentación técnica (5.3) y los casos de referencia no la definen; agregarla cambia las reglas del motor. Se reconsidera con los montos (nivel 3) |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

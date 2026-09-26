@@ -32,17 +32,31 @@ def valor_recompensa(r,M,por_tx):
     if g['tipo']=='por_porcentaje': return M*g['porcentaje']/100*vp,0
     return (g['puntos']*vp if por_tx else 0),0
 PESOS={'liquidez':(80,10,10),'puntos':(20,70,10),'cashback':(20,10,70),'equilibrado':(40,30,30)}
+def ultimo_habil(y,m,fer):
+    d=date(y,m,ultimo(y,m))
+    while not habil(d,fer): d-=timedelta(days=1)
+    return d
+def cobra(fr,d,fer):
+    t=fr['tipo']
+    if t=='quincenal_dias_fijos': return any(d==en_mes(d.year,d.month,x) for x in fr['dias'])
+    if t=='mensual':
+        if fr['dia']=='ultimo_dia_habil': return d==ultimo_habil(d.year,d.month,fer)
+        return d==en_mes(d.year,d.month,fr['dia'])
+    if t=='semanal': return (d.weekday()+1)%7==fr['diaSemana']
+    if t=='cada_dos_semanas': return (d.weekday()+1)%7==fr['diaSemana'] and (d-D(fr['referencia'])).days%14==0
+    if t=='personalizada': return any(d==D(x['fecha']) for x in fr['fechas'])
+    return False
+# Etapa 5: se revisan también los 7 días de cada lado, porque el ajuste por día no hábil
+# puede meter un cobro en la ventana (un sábado adelantado al viernes) o sacarlo de ella.
+MARGEN=7
 def cobros(ingresos,desde,hasta,fer):
     out=set()
-    d=desde
-    while d<=hasta:
+    d=desde-timedelta(days=MARGEN)
+    while d<=hasta+timedelta(days=MARGEN):
         for f in ingresos:
-            fr=f['frecuencia']; ok=False
-            if fr['tipo']=='quincenal_dias_fijos':
-                ok=any(d==en_mes(d.year,d.month,x) for x in fr['dias'])
-            elif fr['tipo']=='mensual' and isinstance(fr['dia'],int): ok= d==en_mes(d.year,d.month,fr['dia'])
-            elif fr['tipo']=='semanal': ok= (d.weekday()+1)%7==fr['diaSemana']
-            if ok: out.add(ajustar(d,f.get('ajusteDiaNoHabil','ninguno'),fer))
+            if cobra(f['frecuencia'],d,fer):
+                a=ajustar(d,f.get('ajusteDiaNoHabil','ninguno'),fer)
+                if desde<=a<=hasta: out.add(a)
         d+=timedelta(days=1)
     return out
 def motor(e):
