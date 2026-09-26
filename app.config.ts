@@ -2,7 +2,7 @@ import type { ExpoConfig } from 'expo/config';
 import tokens from './src/diseno/tokens.json';
 
 // Los colores de arranque salen de los tokens, igual que en las pantallas.
-const { claro, oscuro } = tokens.color;
+const { base, claro } = tokens.color;
 
 const config: ExpoConfig = {
   name: 'Tino',
@@ -37,14 +37,14 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        // El icono completo (fondo jade y tarjetas): la capa de primer plano sola se perdía sobre
-        // el fondo claro y tenía mucho margen, así que se veía pequeña.
+        // Pantalla completa en jade con las tarjetas del icono al centro, igual en claro y oscuro.
         image: './assets/iconos/splash.png',
-        imageWidth: 150,
-        backgroundColor: claro.fondo,
+        // 288 dp es todo el lienzo del icono de Android 12+; la imagen ya trae el margen para su círculo.
+        imageWidth: 288,
+        backgroundColor: base.jadeTino,
         dark: {
           image: './assets/iconos/splash.png',
-          backgroundColor: oscuro.fondo,
+          backgroundColor: base.jadeTino,
         },
       },
     ],

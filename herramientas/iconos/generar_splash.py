@@ -1,21 +1,11 @@
-# Dibuja el icono completo de assets/iconos/fuente-icono.svg (512) en assets/iconos/splash.png.
+# Dibuja las tarjetas del icono (la capa de primer plano de assets/iconos/fuente-icono.svg), sin
+# fondo y sin márgenes, en assets/iconos/splash.png; el splash pone el jade como fondo de pantalla.
 # Uso, desde la raíz del repositorio: python herramientas/iconos/generar_splash.py (requiere Pillow).
 from PIL import Image, ImageDraw, ImageFilter
 S = 8  # 512 * 8 = 4096, luego se reduce a 1024 para suavizar bordes
 N = 512 * S
 def c(v): return int(round(v * S))
 def hexa(h, a=255): return (int(h[1:3], 16), int(h[3:5], 16), int(h[5:7], 16), a)
-
-# Fondo: degradado vertical con esquinas redondeadas
-fondo = Image.new('RGBA', (N, N))
-top, bot = hexa('#12916A'), hexa('#0B6B4E')
-d = ImageDraw.Draw(fondo)
-for y in range(N):
-    t = y / (N - 1)
-    d.line([(0, y), (N, y)], fill=tuple(int(top[i] + (bot[i] - top[i]) * t) for i in range(3)) + (255,))
-mascara = Image.new('L', (N, N), 0)
-ImageDraw.Draw(mascara).rounded_rectangle([0, 0, N - 1, N - 1], radius=c(512 * 0.225), fill=255)
-fondo.putalpha(mascara)
 
 # Primer plano
 capa = Image.new('RGBA', (N, N), (0, 0, 0, 0))
@@ -37,7 +27,15 @@ alfa = capa.split()[3]
 sombra = Image.new('RGBA', (N, N), hexa('#0D1B16', 0))
 sombra.putalpha(alfa.point(lambda a: int(a * 0.35)))
 sombra = sombra.transform((N, N), Image.AFFINE, (1, 0, 0, 0, 1, -c(10))).filter(ImageFilter.GaussianBlur(c(12)))
-fondo_con_sombra = Image.alpha_composite(fondo, Image.composite(sombra, Image.new('RGBA', (N, N), (0, 0, 0, 0)), mascara))
-final = Image.alpha_composite(fondo_con_sombra, capa)
-final.resize((1024, 1024), Image.LANCZOS).save('assets/iconos/splash.png', optimize=True)
+final = Image.alpha_composite(sombra, capa)
+
+# Android 12+ recorta el icono del splash en un círculo de 2/3 del lienzo (192 de 288 dp).
+# Se centra el contenido en un lienzo donde su diagonal cabe en ese círculo, con un poco de aire.
+x0, y0, x1, y1 = capa.getbbox()  # sin la sombra, que puede quedar cortada sin que se note
+diagonal = ((x1 - x0) ** 2 + (y1 - y0) ** 2) ** 0.5
+lado = int(diagonal / (2 / 3) / 0.97)
+cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+lienzo = Image.new('RGBA', (lado, lado), (0, 0, 0, 0))
+lienzo.paste(final.crop((cx - lado // 2, cy - lado // 2, cx - lado // 2 + lado, cy - lado // 2 + lado)), (0, 0))
+lienzo.resize((1024, 1024), Image.LANCZOS).save('assets/iconos/splash.png', optimize=True)
 print('ok')
