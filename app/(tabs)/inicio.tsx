@@ -13,6 +13,7 @@ import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ControlEnfoque } from '@/inicio/SelectorEnfoque';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
+import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
 import { numeroDe } from '@/motor/fechas';
 
 // Sección 3 de la especificación, con el rediseño: la tarjeta de hoy al abrir la app.
@@ -134,6 +135,7 @@ export default function Inicio() {
           </Superficie>
         </Pressable>
         {invitacion}
+        <SugerenciaDatos />
       </Pantalla>
     );
   }
@@ -207,6 +209,7 @@ export default function Inicio() {
           <Icono nombre="derecha" color="textoSecundario" tamano={18} />
         </Pressable>
       </View>
+      <SugerenciaDatos />
     </Pantalla>
   );
 }

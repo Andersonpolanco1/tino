@@ -1,6 +1,6 @@
 import type { Tarjeta } from '../../tipos/tipos';
 import { migrar } from '../../datos/migraciones';
-import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '../../datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, repositorioTarjetas } from '../../datos/repositorios';
 import { preferenciasIniciales } from '../../datos/preferencias';
 import { basePrueba } from '../../pruebas/sqlitePrueba';
 import { crearAlmacen } from '../almacen';
@@ -24,7 +24,7 @@ const tarjeta: Tarjeta = {
 async function preparar() {
   const db = basePrueba();
   await migrar(db);
-  const repos = { tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db) };
+  const repos = { tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) };
   return { repos, almacen: crearAlmacen(repos, () => '2026-09-25T12:00:00Z') };
 }
 

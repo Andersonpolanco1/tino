@@ -114,13 +114,13 @@ Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con f
 - [x] Etiqueta y alerta "Vence antes de tu cobro": la etiqueta en la lista (motor) y el aviso en Por pagar y en el detalle, con la variante prudente para cobros estimados (5.2)
 - [x] Notificaciones: cambio de tarjeta recomendada, fecha límite, vence antes del cobro y resumen mensual (D38, D41), programadas con `expo-notifications` desde `src/notificaciones/`; falta verlas llegar en un teléfono
 - [x] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18): cobros con "Omitir por ahora" y avisos con "Ahora no"
-- [ ] Sugerencias de datos contextuales (2.2 de la especificación)
+- [x] Sugerencias de datos contextuales (2.2 de la especificación): agregar cobros cuando un pago está cerca y confirmar el valor del punto, en una tarjeta discreta de Inicio (D42)
 
 Criterios de la especificación:
 
 - [x] 14.1: las 5 frecuencias generan las fechas de cobro correctas durante 12 meses, incluidos feriados (`src/motor/__tests__/ingresos.test.ts`)
 - [x] 14.1: si la fecha límite cae antes del próximo cobro, aparece la etiqueta y se envía la alerta
-- [ ] 14.1: una sugerencia descartada dos veces no reaparece en 60 días
+- [x] 14.1: una sugerencia descartada dos veces no reaparece en 60 días (`src/sugerencias/__tests__/elegir.test.ts`)
 - [x] 14.1: el recordatorio de una tarjeta con doble balance menciona los dos pagos (`src/notificaciones/__tests__/planificar.test.ts`)
 
 ## Etapa 6. Pro, analítica y lanzamiento
@@ -170,6 +170,7 @@ Criterios de la especificación:
 - [ ] Publicar el servidor de datos públicos (sección 7.1 técnica) y poner su dirección en `EXPO_PUBLIC_URL_DATOS_PUBLICOS` (secreto de EAS); mientras tanto la app usa la copia incluida
 - [ ] Descargar también la configuración del país (`/v1/paises/xx.json`) igual que el catálogo; hoy se usa la copia incluida en `src/paises/`
 - [ ] Actualizar en claude.ai la documentación técnica (sección 5.7 y 11): mencionar `generar_aleatorios.py` y los casos aleatorios, y reexportarla a `docs/`
+- [ ] Verificar en un teléfono que los avisos llegan a las 9:00 en las fechas planificadas (etapa 5)
 - [ ] Actualizar en claude.ai el ejemplo 7.4 de la especificación con los días reales (46, 35 y 50), como pide la nota de la sección 5.7 técnica
 - [ ] Logos de los bancos en lugar de las iniciales: pospuesto hasta revisar el uso de las marcas (reglas de marca de cada banco y revisión de Apple). Plan listo: `assets/bancos/<id>.png` de 96 × 96 tomados del ícono para celulares de la web oficial, un mapa en `src/catalogo/logos.ts` y `ChipBanco` con las iniciales como respaldo
 
@@ -217,4 +218,5 @@ Criterios de la especificación:
 | D39 | 2026-09-26 | Sin la "ventaja" a las tarjetas que se pagan pocos días después de un cobro (sección 5.3 de la especificación); el MVP solo tiene la penalización de "vence antes del cobro" | La documentación técnica (5.3) y los casos de referencia no la definen; agregarla cambia las reglas del motor. Se reconsidera con los montos (nivel 3) |
 | D40 | 2026-09-26 | Registro de cobros en 3 pasos (frecuencia, días y nombre) con vista previa de los próximos 3 cobros. Quincenal viene con 15 y 30; en cada 2 semanas se elige cuál de los dos últimos días de esa semana fue de cobro, en vez de pedir una fecha; las fechas variables se agregan con mes y día tocables y la marca "estimada". Si el cobro cae en día no hábil, viene "se adelanta". El onboarding pasa a bienvenida, tarjetas, enfoque y cobros. El modo Liquidez se llama "Días" en toda la app | Mismo patrón que el registro de tarjetas y sin teclados de fecha; en inicio el control decía "Días" y Ajustes "Liquidez" |
 | D41 | 2026-09-26 | Avisos locales: se planifican 60 días hacia adelante (máximo 60, por el límite de 64 de iOS) a las 9:00, y se reprograman al cambiar tarjetas, cobros, preferencias o el día. El de cambio de tarjeta sale el día en que de verdad cambia la mejor, no "el día después de cada corte". Cada aviso tiene su interruptor en Ajustes (`Preferencias.avisos`, opcional para no migrar); el permiso se pide en el último paso del onboarding | Con las reglas del motor la mejor tarjeta cambia el mismo día del corte (la compra entra en el estado siguiente) o 3 días antes (corta pronto), así que "el día después" llegaba tarde o no llegaba |
+| D42 | 2026-09-26 | Las sugerencias de datos se muestran solo dentro de la app, en una tarjeta discreta al final de Inicio; la notificación de sugerencia de la sección 11 queda fuera del MVP. Su historial vive en una tabla nueva (`sugerencias`, migración 2). Semana a semana se muestra una sola; descartada, no aparece otra hasta la semana siguiente | Los avisos ya son cuatro y una sugerencia como notificación se siente insistente; en Inicio aparece justo cuando el usuario está mirando sus tarjetas |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { Recompensa, Tarjeta } from '@/tipos/tipos';
 import { ProveedorPais } from '@/paises';
 import { migrar } from '@/datos/migraciones';
-import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '@/datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, repositorioTarjetas } from '@/datos/repositorios';
 import { preferenciasIniciales } from '@/datos/preferencias';
 import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
@@ -42,7 +42,7 @@ const C = tarjeta('C', 1, 21, { tipo: 'cashback', porcentaje: 1 });
 async function almacenCon(tarjetas: Tarjeta[]) {
   const db = basePrueba();
   await migrar(db);
-  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db) });
+  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
   await almacen.getState().cargar();
   await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
   for (const t of tarjetas) await almacen.getState().guardarTarjeta(t);
@@ -126,6 +126,17 @@ test('"Por pagar" avisa si el pago vence antes del próximo cobro (criterio 14.1
   await almacen.getState().guardarIngreso({ id: 'n', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos', dias: [15, 30] }, ajusteDiaNoHabil: 'adelantar' });
   await render(envolver(almacen, <Inicio />));
   expect(screen.getByText('Cobras el 15 de octubre: aparta el dinero antes.')).toBeOnTheScreen();
+});
+
+test('sugerencia de datos: agregar los cobros cuando un pago está cerca, y se puede descartar (sección 2.2)', async () => {
+  const almacen = await almacenCon([A, B, C]);
+  await render(envolver(almacen, <Inicio />));
+  // B vence el 10 de octubre, en 4 días, y no hay cobros registrados.
+  expect(screen.getByText('Agrega tus fechas de cobro y te avisamos si un pago vence antes de que cobres.')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByLabelText('Descartar sugerencia'));
+  await act(async () => {});
+  expect(screen.queryByText(/Agrega tus fechas de cobro/)).toBeNull();
+  expect(almacen.getState().sugerencias.descartes.cobros?.veces).toBe(1);
 });
 
 test('"Tengo una compra" es un botón con texto que abre la consulta', async () => {

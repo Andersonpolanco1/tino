@@ -1,6 +1,7 @@
 import type { FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
 import { algunTextoConNumeroDeTarjeta } from '../validacion/tarjeta';
 import type { ConsultasSql } from './conexion';
+import type { EstadoSugerencias } from '../sugerencias/elegir';
 
 export class ErrorDatoProhibido extends Error {}
 
@@ -57,5 +58,23 @@ export function repositorioPreferencias(db: ConsultasSql) {
 }
 
 export type RepositorioTarjetas = ReturnType<typeof repositorioTarjetas>;
+// Una sola fila con el historial de sugerencias (migración 2).
+export function repositorioSugerencias(db: ConsultasSql) {
+  return {
+    async leer(): Promise<EstadoSugerencias | null> {
+      const fila = await db.getFirstAsync<{ datos: string }>('SELECT datos FROM sugerencias WHERE id = 1', []);
+      return fila ? (JSON.parse(fila.datos) as EstadoSugerencias) : null;
+    },
+    async guardar(estado: EstadoSugerencias, ahora: string): Promise<void> {
+      await db.runAsync(
+        `INSERT INTO sugerencias (id, datos, actualizadaEn) VALUES (1, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET datos = excluded.datos, actualizadaEn = excluded.actualizadaEn`,
+        [aJson(estado), ahora],
+      );
+    },
+  };
+}
+
+export type RepositorioSugerencias = ReturnType<typeof repositorioSugerencias>;
 export type RepositorioIngresos = ReturnType<typeof repositorioIngresos>;
 export type RepositorioPreferencias = ReturnType<typeof repositorioPreferencias>;

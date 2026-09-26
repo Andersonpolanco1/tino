@@ -39,7 +39,7 @@ test('una base nueva queda en la última versión con todas las tablas', async (
   const db = conexionDePrueba();
   expect(await migrar(db)).toEqual({ anterior: 0, actual: VERSION_ESQUEMA });
   expect(version(db)).toBe(VERSION_ESQUEMA);
-  expect(tablas(db)).toEqual(['cache_publica', 'fuentes_ingreso', 'preferencias', 'tarjetas']);
+  expect(tablas(db)).toEqual(['cache_publica', 'fuentes_ingreso', 'preferencias', 'sugerencias', 'tarjetas']);
 });
 
 test('migrar otra vez no cambia nada ni pierde datos', async () => {
@@ -89,7 +89,7 @@ test('no toca una base de una versión más nueva que la app', async () => {
 
 test('rechaza migraciones fuera de orden', async () => {
   const db = conexionDePrueba();
-  const saltada: Migracion = { version: 3, descripcion: 'saltada', aplicar: async () => {} };
+  const saltada: Migracion = { version: 5, descripcion: 'saltada', aplicar: async () => {} };
   await expect(migrar(db, [migraciones[0], saltada])).rejects.toThrow(ErrorVersionEsquema);
 });
 

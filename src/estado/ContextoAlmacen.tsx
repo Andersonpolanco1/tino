@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
 import { useStore } from 'zustand';
-import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '../datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, repositorioTarjetas } from '../datos/repositorios';
 import type { BaseLocal } from '../datos/base';
 import { crearAlmacen, type Almacen, type EstadoApp } from './almacen';
 
@@ -9,7 +9,7 @@ const ContextoAlmacen = createContext<Almacen | null>(null);
 // Se monta cuando la base cifrada ya abrió; carga tarjetas y preferencias una vez.
 export function ProveedorAlmacen({ base, children }: { base: BaseLocal; children: ReactNode }) {
   const [almacen] = useState(() =>
-    crearAlmacen({ tarjetas: repositorioTarjetas(base.db), ingresos: repositorioIngresos(base.db), preferencias: repositorioPreferencias(base.db) }),
+    crearAlmacen({ tarjetas: repositorioTarjetas(base.db), ingresos: repositorioIngresos(base.db), preferencias: repositorioPreferencias(base.db), sugerencias: repositorioSugerencias(base.db) }),
   );
   useEffect(() => {
     almacen.getState().cargar();

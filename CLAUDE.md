@@ -16,7 +16,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 ## Estado actual
 
-- Etapa actual: **5. Ingresos y avisos** (sección 13 de la documentación técnica). Las etapas 2 a 4 están terminadas en código; la 3 y la 4 faltan verificarlas en teléfono.
+- Etapa actual: **6. Pro, analítica y lanzamiento** (sección 13 de la documentación técnica). Las etapas 2 a 5 están terminadas en código; falta verificar en teléfono la 3, la 4 y que los avisos de la 5 llegan a su hora.
 - El seguimiento detallado está en `docs/progreso.md`: casillas por etapa, criterios de aceptación, pendientes fuera del código y decisiones tomadas. Es la lista que se va tachando.
 - Etapa 1 verificada en Android (emulador `TantyPhone`, perfil Pixel 7); falta iOS.
 

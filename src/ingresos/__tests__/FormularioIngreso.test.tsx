@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { migrar } from '@/datos/migraciones';
-import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '@/datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, repositorioTarjetas } from '@/datos/repositorios';
 import { preferenciasIniciales } from '@/datos/preferencias';
 import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
@@ -16,7 +16,7 @@ jest.mock('@/utilidades/fecha', () => ({ hoyLocal: () => '2026-09-26' }));
 async function preparar() {
   const db = basePrueba();
   await migrar(db);
-  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db) });
+  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
   await almacen.getState().cargar();
   await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
   return almacen;

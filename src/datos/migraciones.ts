@@ -39,6 +39,18 @@ export const migraciones: Migracion[] = [
         );
       `),
   },
+  {
+    version: 2,
+    descripcion: 'Historial de sugerencias de datos (sección 2.2): cuándo se mostraron y cuántas veces se descartaron',
+    aplicar: tx =>
+      tx.execAsync(`
+        CREATE TABLE sugerencias (
+          id INTEGER PRIMARY KEY NOT NULL CHECK (id = 1),
+          datos TEXT NOT NULL,
+          actualizadaEn TEXT NOT NULL
+        );
+      `),
+  },
 ];
 
 export const VERSION_ESQUEMA = migraciones[migraciones.length - 1].version;

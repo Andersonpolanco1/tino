@@ -489,5 +489,12 @@
     "resumenCuerpo_one": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjeta.",
     "resumenCuerpo_other": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjetas distintas.",
     "canal": "Avisos de pago"
+  },
+  "sugerencias": {
+    "cobros": "Agrega tus fechas de cobro y te avisamos si un pago vence antes de que cobres.",
+    "cobrosAccion": "Agregar mis cobros",
+    "valorPunto": "Confirma cuánto vale el punto de {{alias}} y la comparación con el cashback será exacta.",
+    "valorPuntoAccion": "Confirmar",
+    "descartar": "Descartar sugerencia"
   }
 }
