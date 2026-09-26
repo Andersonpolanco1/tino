@@ -504,11 +504,13 @@
   "pagos": {
     "yaPague": "Ya pagué",
     "yaPagueDe": "Ya pagué {{alias}}",
-    "pagada": "Pagada",
-    "pagadaDetalle": "Pagada · el estado vence el {{fecha}}",
     "deshacer": "Deshacer",
     "deshacerDe": "Deshacer el pago de {{alias}}",
-    "proximos": "Próximos pagos"
+    "proximos": "Próximos pagos",
+    "pagadoLinea": "Pagado · vence el {{fecha}}",
+    "estadoDeCuenta": "Estado de cuenta",
+    "pagado": "Pagado",
+    "venceEl": "Vence el {{fecha}}"
   },
   "enfoquePriorizando": {
     "equilibrado": "Buscando un equilibrio",

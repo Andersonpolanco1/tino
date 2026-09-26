@@ -8,7 +8,6 @@ import { useVistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
 import { pistaPrecision, precisionTarjeta } from '@/inicio/precision';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
-import { ChipBanco } from '@/inicio/ChipBanco';
 import { BloqueDias } from '@/inicio/BloqueDias';
 import { proximosPagos } from '@/pagos/pendientes';
 import { FilaPago } from '@/pagos/FilaPago';
@@ -69,18 +68,16 @@ export default function DetalleTarjeta() {
       }
     >
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
-        {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} grande /> : null}
-        <View style={{ flexShrink: 1 }}>
-          <Texto variante="titulo" accessibilityRole="header" style={{ letterSpacing: -0.4 }}>
-            {tarjeta.alias}
+      {/* Sin el recuadro de iniciales: el nombre ya dice el banco (decisión D52). */}
+      <View style={{ gap: 2 }}>
+        <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 26, lineHeight: 31, letterSpacing: -0.4 }}>
+          {tarjeta.alias}
+        </Texto>
+        {detalle ? (
+          <Texto variante="apoyo" color="textoSecundario">
+            {detalle}
           </Texto>
-          {detalle ? (
-            <Texto variante="apoyo" color="textoSecundario">
-              {detalle}
-            </Texto>
-          ) : null}
-        </View>
+        ) : null}
       </View>
       {tarjeta.enPausa ? <Etiqueta tipo="neutra" texto={t('detalle.enPausa')} /> : null}
       {puntoPorConfirmar ? <ConfirmarValorPunto tarjeta={tarjeta} onCambiar={editarRecompensa} /> : null}
@@ -95,7 +92,8 @@ export default function DetalleTarjeta() {
         </View>
         <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPago} />
         <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} />
-        {resultado.semaforo !== 'verde' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
+        {/* Solo el consejo de esperar: en amarillo el mensaje repetía los días de arriba (decisión D52). */}
+        {resultado.semaforo === 'rojo' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
         {aviso ? (
           <Texto variante="apoyo" color="alertaTexto">
             {t(aviso.tipo === 'antes' ? 'detalle.avisoHoyAntesDelCobro' : 'inicio.avisoCobroEstimado', { cobro: textoFecha(aviso.cobro, idioma) })}
@@ -104,7 +102,7 @@ export default function DetalleTarjeta() {
       </Superficie>
 
       {pendiente ? (
-        <ListaAgrupada titulo={t('inicio.porPagar')}>
+        <ListaAgrupada titulo={t('pagos.estadoDeCuenta')}>
           <FilaPago pago={pendiente} conNombre={false} />
         </ListaAgrupada>
       ) : null}
