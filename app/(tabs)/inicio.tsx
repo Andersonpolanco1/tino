@@ -18,6 +18,7 @@ import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
 import { pagosParaInicio, proximosPagos } from '@/pagos/pendientes';
 import { FilaPago } from '@/pagos/FilaPago';
 import { registrarInicioVisto } from '@/analitica';
+import { necesitaElegir } from '@/suscripciones';
 
 // Sección 3 de la especificación, con el rediseño: la tarjeta de hoy al abrir la app.
 export default function Inicio() {
@@ -33,6 +34,9 @@ export default function Inicio() {
   const unaSola = lista.length === 1;
   const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
   const cuantas = useAlmacen(s => s.tarjetas.length);
+  const todas = useAlmacen(s => s.tarjetas);
+  const preferencias = useAlmacen(s => s.preferencias);
+  const elegir = !!preferencias && necesitaElegir(todas, preferencias);
 
   // Un evento cada vez que se abre Inicio, con el enfoque y las tarjetas de ese momento.
   const actual = useRef({ modo, cuantas });
@@ -66,6 +70,15 @@ export default function Inicio() {
       {titulo}
     </View>
   );
+  // Pro venció con más de 2 tarjetas: mientras no elija, Tino usa las 2 más antiguas (15.2).
+  const avisoPlan = elegir ? (
+    <Superficie radio={tema.radio.lista} style={{ padding: tema.espacio.l, gap: tema.espacio.m }}>
+      <Texto variante="apoyo">{t('plan.avisoInicio')}</Texto>
+      <View style={{ alignItems: 'flex-start' }}>
+        <BotonPastilla icono="tarjetas" titulo={t('plan.avisoInicioAccion')} onPress={() => router.push('/plan/elegir')} />
+      </View>
+    </Superficie>
+  ) : null;
 
   if (!hayTarjetas) {
     return (
@@ -144,6 +157,7 @@ export default function Inicio() {
     return (
       <Pantalla conPestanas>
         {encabezado}
+        {avisoPlan}
         <Pressable accessibilityRole="button" onPress={() => abrir(primera)}>
           <Superficie radio={tema.radio.destacada} style={{ padding: 22, gap: 18 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
@@ -181,6 +195,7 @@ export default function Inicio() {
   return (
     <Pantalla conPestanas>
       {filaFecha}
+      {avisoPlan}
       {/* "Hoy te conviene usar", priorizando…, y la tarjeta que gana (decisión D48). */}
       <View style={{ gap: tema.espacio.m }}>
         <View>

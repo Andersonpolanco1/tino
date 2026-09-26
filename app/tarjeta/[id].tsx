@@ -14,6 +14,7 @@ import { FilaPago } from '@/pagos/FilaPago';
 import { LineaCiclo } from '@/inicio/LineaCiclo';
 import { avisoCobro, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
 import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
+import { useTarjetasEnPlan } from '@/suscripciones';
 
 // Detalle de tarjeta (sección 3.3) con el rediseño: semáforo, línea del ciclo, recompensa,
 // balance en dólares, En pausa y precisión.
@@ -28,6 +29,7 @@ export default function DetalleTarjeta() {
   const alternarPausa = useAlmacen(s => s.alternarPausa);
   const ingresos = useAlmacen(s => s.ingresos);
   const hayIngresos = ingresos.length > 0;
+  const enPlan = useTarjetasEnPlan();
   if (!vista) return null;
 
   const { tarjeta, resultado } = vista;
@@ -37,7 +39,9 @@ export default function DetalleTarjeta() {
   // Sección 5.3: si una compra de hoy vence antes del próximo cobro, se dice cuándo se cobra.
   const aviso = avisoCobro(resultado.fechaPago, hoy, ingresos, config);
   // El pago pendiente de esta tarjeta, con "Ya pagué" (decisión D45).
-  const [pendiente] = tarjeta.enPausa ? [] : proximosPagos([tarjeta], hoy, ingresos, config);
+  // Guardada fuera del plan gratis (15.2): igual que en pausa, sin pago pendiente ni avisos.
+  const fuera = !enPlan.some(x => x.id === tarjeta.id);
+  const [pendiente] = tarjeta.enPausa || fuera ? [] : proximosPagos([tarjeta], hoy, ingresos, config);
   const contextoPrecision = { hayIngresos, catalogoDisponible: config.catalogoDisponible };
   const precision = precisionTarjeta(tarjeta, contextoPrecision);
   const pista = pistaPrecision([tarjeta], contextoPrecision);
@@ -80,6 +84,7 @@ export default function DetalleTarjeta() {
         ) : null}
       </View>
       {tarjeta.enPausa ? <Etiqueta tipo="neutra" texto={t('detalle.enPausa')} /> : null}
+      {fuera ? <Etiqueta tipo="neutra" texto={t('plan.etiquetaFuera')} /> : null}
       {puntoPorConfirmar ? <ConfirmarValorPunto tarjeta={tarjeta} onCambiar={editarRecompensa} /> : null}
 
       {/* Mismas piezas que la tarjeta de hoy, en blanco: el verde queda para la recomendada. */}

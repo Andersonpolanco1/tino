@@ -1,15 +1,29 @@
+import { useState } from 'react';
 import { Stack, useRouter } from 'expo-router';
 import { FormularioTarjeta } from '@/registro/FormularioTarjeta';
+import { useAlmacen } from '@/estado';
+import { MuroPago, puedeAgregarTarjeta } from '@/suscripciones';
 
 export default function NuevaTarjeta() {
   const router = useRouter();
+  const tarjetas = useAlmacen(s => s.tarjetas);
+  const plan = useAlmacen(s => s.preferencias?.plan ?? 'gratis');
+  // Todas las entradas para agregar tarjeta pasan por aquí: con el límite del plan gratis se
+  // muestra la oferta de Pro, y al activarlo sigue el registro (15.5). Se decide al abrir, para
+  // que guardar la 2.ª tarjeta no muestre la oferta antes de cerrar.
+  const [alAbrir] = useState(() => puedeAgregarTarjeta(tarjetas, plan));
+  const permitido = alAbrir || plan === 'pro';
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      <FormularioTarjeta
-        onCerrar={() => router.back()}
-        onListo={(_tarjeta, preguntarPagoUsd) => (preguntarPagoUsd ? router.replace('/tarjeta/pago-usd') : router.back())}
-      />
+      {permitido ? (
+        <FormularioTarjeta
+          onCerrar={() => router.back()}
+          onListo={(_tarjeta, preguntarPagoUsd) => (preguntarPagoUsd ? router.replace('/tarjeta/pago-usd') : router.back())}
+        />
+      ) : (
+        <MuroPago motivo="tercera_tarjeta" onCerrar={() => router.back()} onPro={() => {}} />
+      )}
     </>
   );
 }

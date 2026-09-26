@@ -372,7 +372,7 @@ La analítica implementa la sección 17 de la especificación. Toda la lógica p
 | consulta\_compra | moneda de la compra (sin monto) |
 | widget\_visto | plataforma |
 | sugerencia\_mostrada, sugerencia\_aceptada, sugerencia\_descartada | tipo de dato sugerido |
-| muro\_pago\_visto | motivo (3.ª tarjeta, función avanzada) |
+| muro\_pago\_visto | motivo (3.ª tarjeta, función avanzada, voluntario) |
 | prueba\_iniciada, suscripcion\_iniciada, suscripcion\_cancelada | plan; vienen de la plataforma de suscripciones |
 
 Las ofertas (`oferta_vista`, `oferta_reportada`) se agregan en v2, junto con las promociones.

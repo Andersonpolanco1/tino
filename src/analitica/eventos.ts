@@ -80,6 +80,7 @@ export function registrarSugerenciaDescartada(tipo: TipoSugerencia) {
   enviar('sugerencia_descartada', { tipo });
 }
 
-export function registrarMuroPagoVisto(motivo: 'tercera_tarjeta' | 'funcion_avanzada') {
+// "voluntario": abierto desde Ajustes o al elegir tarjetas, sin que un límite lo pidiera (D58).
+export function registrarMuroPagoVisto(motivo: 'tercera_tarjeta' | 'funcion_avanzada' | 'voluntario') {
   enviar('muro_pago_visto', { motivo });
 }

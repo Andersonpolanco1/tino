@@ -13,6 +13,7 @@ import { ProveedorAlmacen, useAlmacen } from '@/estado';
 import { useAvisos } from '@/notificaciones/useAvisos';
 import { ProveedorCatalogo } from '@/catalogo';
 import { useAnalitica } from '@/analitica';
+import { useSincronizarPlan } from '@/suscripciones';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -111,6 +112,7 @@ function CuandoCargue({ children }: { children: ReactNode }) {
       <AparienciaGuardada />
       <AvisosProgramados />
       <AnaliticaSincronizada />
+      <PlanSincronizado />
       {children}
     </OcultarArranque>
   );
@@ -125,6 +127,12 @@ function AvisosProgramados() {
 // Sigue el interruptor de analítica y el país (sección 10 técnica); no dibuja nada.
 function AnaliticaSincronizada() {
   useAnalitica();
+  return null;
+}
+
+// Mantiene el plan (gratis o Pro) al día con la tienda; no dibuja nada.
+function PlanSincronizado() {
+  useSincronizarPlan();
   return null;
 }
 

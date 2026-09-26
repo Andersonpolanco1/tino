@@ -94,6 +94,9 @@ export interface Preferencias {
   umbralCorteCercanoDias: number;    // 3 por defecto
   analiticaActiva: boolean;
   plan: 'gratis' | 'pro';
+  // Sección 15.2: en el plan gratis, las 2 tarjetas que el usuario eligió al vencer Pro. Las
+  // demás quedan guardadas sin entrar al ranking ni a los avisos. Opcional para no migrar.
+  tarjetasDelPlan?: string[];
   // Etapa 5: qué avisos quiere el usuario (sección 11). Opcional para no migrar las
   // preferencias ya guardadas; si falta, todos están activos.
   avisos?: AjustesAvisos;

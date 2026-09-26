@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Linking, View } from 'react-native';
+import { Alert, Linking, Platform, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +15,7 @@ import { pistaPrecision, precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 import { reiniciarIdentificadorAnalitica } from '@/analitica';
+import { useComprasPro } from '@/suscripciones';
 
 // Anillo de 84: con 100% el número necesita aire dentro del trazo.
 const LADO_ANILLO = 84;
@@ -44,6 +45,7 @@ export default function Ajustes() {
   const preferencias = useAlmacen(s => s.preferencias);
   const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
   const permiso = usePermisoAvisos();
+  const compras = useComprasPro();
   const datos = useEstadoDatos();
   const reabrir = useReabrirDatos();
   const [hojaPais, setHojaPais] = useState(false);
@@ -85,6 +87,22 @@ export default function Ajustes() {
         },
       },
     ]);
+  }
+
+  // Pro se gestiona en la tienda (cancelar, cambiar de plan); Tino solo abre su página.
+  async function abrirPlan() {
+    if (preferencias?.plan !== 'pro') return router.push({ pathname: '/pro', params: { motivo: 'voluntario' } });
+    const url = await compras.urlGestion().catch(() => null);
+    if (url) Linking.openURL(url);
+  }
+
+  async function restaurarCompras() {
+    const tienda = t(`pro.tienda.${Platform.OS === 'ios' ? 'ios' : 'android'}`);
+    try {
+      Alert.alert((await compras.restaurar()) ? t('pro.restaurado') : t('pro.nadaQueRestaurar', { tienda }));
+    } catch {
+      Alert.alert(t('pro.errorCompra'));
+    }
   }
 
   function reiniciarIdentificador() {
@@ -144,6 +162,21 @@ export default function Ajustes() {
               onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
             />
           ))}
+        </ListaAgrupada>
+      ) : null}
+
+      {preferencias ? (
+        <ListaAgrupada titulo={t('ajustes.planTitulo')}>
+          <FilaLista
+            icono="estrella"
+            tono="recompensa"
+            titulo={t('pro.nombre')}
+            detalle={preferencias.plan === 'pro' ? t('ajustes.planProDetalle') : t('ajustes.planGratisDetalle')}
+            valor={preferencias.plan === 'pro' ? t('ajustes.planPro') : t('ajustes.planGratis')}
+            flecha
+            onPress={abrirPlan}
+          />
+          <FilaLista icono="reiniciar" titulo={t('pro.restaurar')} onPress={restaurarCompras} />
         </ListaAgrupada>
       ) : null}
 

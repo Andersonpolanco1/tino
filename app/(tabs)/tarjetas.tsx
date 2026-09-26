@@ -9,6 +9,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { usePais } from '@/paises';
 import { proximosPagos } from '@/pagos/pendientes';
 import { textoVence } from '@/pagos/FilaPago';
+import { useTarjetasEnPlan } from '@/suscripciones';
 
 // Lista de tarjetas registradas (rediseño): lista agrupada; tocar una abre su detalle.
 export default function Tarjetas() {
@@ -19,7 +20,8 @@ export default function Tarjetas() {
   const ingresos = useAlmacen(s => s.ingresos);
   const hoy = useHoy();
   const { config, idioma } = usePais();
-  const pagos = proximosPagos(tarjetas, hoy, ingresos, config);
+  const enPlan = useTarjetasEnPlan();
+  const pagos = proximosPagos(enPlan, hoy, ingresos, config);
 
   return (
     <Pantalla conPestanas>
@@ -36,11 +38,13 @@ export default function Tarjetas() {
             const pago = pagos.find(p => p.tarjeta.id === tarjeta.id);
             const fecha = pago ? textoFecha(pago.fecha, idioma) : '';
             const urgente = !!pago && !pago.pagado && (pago.dias <= 3 || pago.aviso?.tipo === 'antes');
-            const estado = !pago
-              ? t('registro.enPausa')
-              : pago.pagado
-                ? t('pagos.pagadoLinea', { fecha })
-                : textoVence(pago.dias, fecha, t as never);
+            const estado = !enPlan.includes(tarjeta)
+              ? t('plan.fueraDelPlan')
+              : !pago
+                ? t('registro.enPausa')
+                : pago.pagado
+                  ? t('pagos.pagadoLinea', { fecha })
+                  : textoVence(pago.dias, fecha, t as never);
             return (
               <FilaLista
                 key={tarjeta.id}

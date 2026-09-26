@@ -6,6 +6,7 @@ import { useHoy } from '../inicio/useHoy';
 import type { Traducir } from '../inicio/vista';
 import { planificarAvisos } from './planificar';
 import { programarAvisos } from './programar';
+import { useTarjetasEnPlan } from '../suscripciones/useSuscripcion';
 
 // Vuelve a programar los avisos cada vez que cambian las tarjetas, los cobros, las
 // preferencias o el día. Va en el layout raíz, una sola vez.
@@ -13,7 +14,8 @@ export function useAvisos() {
   const { t } = useTranslation();
   const { config, idioma } = usePais();
   const hoy = useHoy();
-  const tarjetas = useAlmacen(s => s.tarjetas);
+  // Las tarjetas guardadas fuera del plan gratis no generan avisos (15.2).
+  const tarjetas = useTarjetasEnPlan();
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
 

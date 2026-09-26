@@ -39,12 +39,13 @@ const A = tarjeta('A', 5, 25, { tipo: 'puntos', regla: { tipo: 'por_monto', punt
 const B = tarjeta('B', 20, 10, { tipo: 'puntos', regla: { tipo: 'por_porcentaje', porcentaje: 2 }, valorPunto: 1, valorPuntoConfirmado: true });
 const C = tarjeta('C', 1, 21, { tipo: 'cashback', porcentaje: 1 });
 
-async function almacenCon(tarjetas: Tarjeta[]) {
+// Con más de 2 tarjetas el ejemplo 7.4 necesita Pro (sección 15.2); el límite se prueba aparte.
+async function almacenCon(tarjetas: Tarjeta[], plan: 'gratis' | 'pro' = tarjetas.length > 2 ? 'pro' : 'gratis') {
   const db = basePrueba();
   await migrar(db);
   const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
   await almacen.getState().cargar();
-  await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
+  await almacen.getState().guardarPreferencias({ ...preferenciasIniciales('DO', 'es-DO'), plan });
   for (const t of tarjetas) await almacen.getState().guardarTarjeta(t);
   return almacen;
 }

@@ -209,8 +209,50 @@
   },
   "pro": {
     "nombre": "Tino Pro",
-    "limiteGratis": "El plan gratis permite 2 tarjetas. Prueba Tino Pro gratis por 30 días para agregar más.",
-    "mensaje": "Tino Pro cuesta menos que un solo cargo por mora."
+    "titulo": "Registra todas tus tarjetas",
+    "porLimite": "El plan gratis permite 2 tarjetas. Tus 2 tarjetas siguen funcionando igual.",
+    "voluntario": "Con Tino Pro, Tino compara todas las tarjetas que tengas.",
+    "beneficioTarjetas": "Tarjetas ilimitadas",
+    "beneficioTarjetasDetalle": "Tino las compara todas cada día y te dice cuál usar",
+    "beneficioDatos": "Tus datos se quedan en tu teléfono",
+    "beneficioDatosDetalle": "Si un día cancelas, no se borra nada",
+    "mensaje": "Tino Pro cuesta menos que un solo cargo por mora.",
+    "oferta": {
+      "lanzamiento": "Anual de lanzamiento",
+      "anual": "Anual",
+      "mensual": "Mensual"
+    },
+    "porAnio": "{{precio}} al año",
+    "porMes": "{{precio}} al mes",
+    "equivale": "equivale a {{precio}} al mes",
+    "lanzamientoDetalle": "Precio para los primeros usuarios",
+    "prueba": {
+      "dia_one": "{{count}} día gratis",
+      "dia_other": "{{count}} días gratis",
+      "semana_one": "{{count}} semana gratis",
+      "semana_other": "{{count}} semanas gratis",
+      "mes_one": "{{count}} mes gratis",
+      "mes_other": "{{count}} meses gratis",
+      "anio_one": "{{count}} año gratis",
+      "anio_other": "{{count}} años gratis"
+    },
+    "empezarPrueba": "Empezar prueba gratis",
+    "suscribirme": "Suscribirme",
+    "condiciones": "El cobro se hace en tu cuenta de {{tienda}} al terminar la prueba gratis, si la tiene, y se renueva solo al mismo precio hasta que lo canceles en {{tienda}}. Si cancelas durante la prueba, no se te cobra.",
+    "tienda": {
+      "ios": "App Store",
+      "android": "Google Play"
+    },
+    "restaurar": "Restaurar compras",
+    "restaurado": "Listo: Tino Pro está activo.",
+    "nadaQueRestaurar": "No encontramos una suscripción de Tino Pro en esta cuenta de {{tienda}}.",
+    "terminos": "Términos de uso",
+    "privacidad": "Política de privacidad",
+    "cargando": "Cargando los planes…",
+    "sinServicio": "Las compras no están disponibles en este momento. Inténtalo más tarde.",
+    "error": "No pudimos cargar los planes. Revisa tu conexión.",
+    "reintentar": "Reintentar",
+    "errorCompra": "No se pudo completar. Inténtalo de nuevo."
   },
   "pestanas": {
     "inicio": "Inicio",
@@ -254,6 +296,11 @@
     "cancelar": "Cancelar",
     "errorExportar": "No pudimos crear el archivo. Inténtalo de nuevo.",
     "precisionTitulo": "Precisión de recomendaciones",
+    "planTitulo": "Tu plan",
+    "planGratis": "Gratis",
+    "planPro": "Activo",
+    "planGratisDetalle": "Registra todas tus tarjetas",
+    "planProDetalle": "Cancela o cambia tu plan en la tienda",
     "general": "General",
     "enfoque": "Enfoque",
     "monedasDos": "{{principal}} y {{secundaria}}",
@@ -525,5 +572,16 @@
     "liquidez": "Priorizando días para pagar",
     "puntos": "Priorizando puntos",
     "cashback": "Priorizando cashback"
+  },
+  "plan": {
+    "elegirTitulo": "Elige tus 2 tarjetas",
+    "elegirTexto": "Tu Tino Pro terminó. Tino seguirá usando las 2 tarjetas que elijas; las demás quedan guardadas con todos sus datos y vuelven si renuevas.",
+    "elegidasN": "{{n}} de 2 elegidas",
+    "elegirGuardar": "Usar estas 2",
+    "renovar": "Renovar Tino Pro",
+    "avisoInicio": "Tu Tino Pro terminó. Elige las 2 tarjetas que Tino seguirá usando; las demás quedan guardadas.",
+    "avisoInicioAccion": "Elegir mis 2 tarjetas",
+    "fueraDelPlan": "Guardada · fuera del plan gratis",
+    "etiquetaFuera": "Fuera del plan gratis"
   }
 }

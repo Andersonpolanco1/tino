@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { BotonCircular, BotonPastilla, Icono, Superficie, Texto, useTema } from '../diseno';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
+import { useTarjetasEnPlan } from '../suscripciones/useSuscripcion';
 import { useHoy } from '../inicio/useHoy';
 import { proximoPago } from '../inicio/vista';
 import { valorPuntoPorConfirmar } from '../inicio/ConfirmarValorPunto';
@@ -24,7 +25,7 @@ export function SugerenciaDatos() {
   const router = useRouter();
   const hoy = useHoy();
   const { config } = usePais();
-  const tarjetas = useAlmacen(s => s.tarjetas);
+  const tarjetas = useTarjetasEnPlan();
   const ingresos = useAlmacen(s => s.ingresos);
   const estado = useAlmacen(s => s.sugerencias);
   const guardar = useAlmacen(s => s.guardarSugerencias);

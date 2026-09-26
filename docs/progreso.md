@@ -128,7 +128,7 @@ Criterios de la especificación:
 Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 
 - [x] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos: RevenueCat, PostHog y Sentry (sección 7.3 técnica, decisión D55)
-- [ ] Tino Pro con prueba de 30 días y límite de 2 tarjetas en el plan gratis
+- [x] Tino Pro con prueba gratis y límite de 2 tarjetas en el plan gratis: muro de pago, elegir 2 tarjetas al vencer, plan en Ajustes y restaurar compras (`src/suscripciones/`, D58); falta probar una compra real en el entorno de prueba de las tiendas
 - [x] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes (`src/analitica/`, D57). Verificado en el emulador: los eventos llegan a PostHog (UE) y el interruptor los detiene
 - [x] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación): `tarjeta_registrada` con emisor `otro` y producto `otro` o `no_se`
 - [ ] Reporte de fallos sin datos de tarjetas
@@ -139,9 +139,9 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 
 Criterios de la especificación:
 
-- [ ] 15.5: al intentar registrar la 3.ª tarjeta en el plan gratis aparece la oferta de Pro y las 2 existentes siguen funcionando
-- [ ] 15.5: una tarjeta con doble balance cuenta como una sola para el límite
-- [ ] 15.5: al vencer Pro no se borra ningún dato y el usuario elige qué 2 tarjetas quedan activas
+- [x] 15.5: al intentar registrar la 3.ª tarjeta en el plan gratis aparece la oferta de Pro y las 2 existentes siguen funcionando (`src/__tests__/plan.test.tsx`)
+- [x] 15.5: una tarjeta con doble balance cuenta como una sola para el límite
+- [x] 15.5: al vencer Pro no se borra ningún dato y el usuario elige qué 2 tarjetas quedan activas
 - [ ] 15.5: ningún dato comercial entra al ranking y todo contenido patrocinado lleva su etiqueta
 - [x] 17.5: ningún evento contiene montos, números de tarjeta, alias ni fechas exactas de ingresos (`src/analitica/__tests__/analitica.test.ts`)
 - [x] 17.5: desactivar la analítica detiene el envío de inmediato (prueba del módulo y verificado en el emulador con PostHog)
@@ -167,7 +167,12 @@ Criterios de la especificación:
 - [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS (`EXPO_PUBLIC_POSTHOG_KEY` ya la lee la app)
 - [x] Recompilar la app de desarrollo con `posthog-react-native`, `expo-application` y `expo-device`
 - [ ] Separar los datos de prueba en PostHog (el plan gratis tiene un solo proyecto): la clave de PostHog solo en `preview` y `production` de EAS, sin clave en `development` ni en `.env.local` salvo para probar la analítica, y los identificadores de los teléfonos de prueba en "Filter out internal and test users"
-- [ ] Productos de Tino Pro en App Store Connect y Google Play Console (mensual USD 2.49, anual USD 19.99, prueba de 30 días y precio de lanzamiento) y su configuración en RevenueCat
+- [ ] Productos de Tino Pro (D58), en un mismo grupo de suscripción: mensual USD 2.49, anual USD 19.99 y anual de lanzamiento USD 14.99, los tres con 1 mes gratis como oferta de introducción. Apple ofrece "1 mes", no 30 días
+- [ ] RevenueCat: derecho `pro` con los tres productos; oferta actual con los paquetes `$rc_monthly`, `$rc_annual` y uno propio `lanzamiento`. Para retirar el precio de lanzamiento se quita ese paquete de la oferta, sin actualizar la app
+- [ ] Claves públicas de RevenueCat como secretos de EAS: `EXPO_PUBLIC_REVENUECAT_IOS` y `EXPO_PUBLIC_REVENUECAT_ANDROID`
+- [ ] Integración de RevenueCat con PostHog para `prueba_iniciada`, `suscripcion_iniciada` y `suscripcion_cancelada`; decidir cómo unir los dos identificadores anónimos solo si la analítica está activa
+- [ ] Publicar términos de uso y política de privacidad, y poner sus direcciones en `EXPO_PUBLIC_URL_TERMINOS` y `EXPO_PUBLIC_URL_PRIVACIDAD` (el muro de pago los enlaza; Apple los exige)
+- [ ] Recompilar la app de desarrollo: `react-native-purchases` trae código nativo
 - [ ] Revisar con un contador el ITBIS sobre servicios digitales y la comisión de 15% del programa de pequeños desarrolladores (Apple y Google)
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
@@ -241,4 +246,5 @@ Criterios de la especificación:
 | D55 | 2026-09-26 | Proveedores: RevenueCat para suscripciones, PostHog (región UE) para analítica y Sentry (región UE) para fallos, con la configuración de privacidad de la sección 7.3 técnica | Los tres funcionan con Expo y tienen plan gratis suficiente para el lanzamiento; PostHog permite apagar toda captura automática y enviar solo la lista cerrada, y Sentry mide sesiones sin fallos y cierres nativos |
 | D56 | 2026-09-26 | Un solo interruptor, "Datos de uso anónimos", apaga a la vez la analítica y el reporte de fallos; la especificación solo pedía el de analítica | Es más fácil de explicar en la política de privacidad y en Ajustes; perder los fallos de quien lo apaga es un costo pequeño |
 | D57 | 2026-09-26 | Momentos y propiedades de la analítica: `inicio_visto` cada vez que Inicio toma el foco; `consulta_compra` una vez por consulta, al primer monto válido; `sugerencia_mostrada` al aparecer; `onboarding_completado` al salir del último paso, midiendo desde la bienvenida. `tarjeta_registrada` distingue producto `otro` de `no_se`, y banco fuera del catálogo o sin catálogo es emisor `otro`. "Borrar todo" también reinicia el identificador anónimo. PostHog solo recibe la versión de la app y del sistema, sin nombre ni modelo del teléfono | La sección 10 no fija cuándo sale cada evento; la métrica de producto desconocido (17.2) cuenta "Otro" y "No sé el tipo" por separado; tras borrar todo, los datos nuevos no deben unirse con los anteriores |
+| D58 | 2026-09-26 | Tino Pro: 1 mes gratis (lo que ofrecen las tiendas en vez de 30 días) en mensual y anual, y el precio de lanzamiento como un tercer producto anual de USD 14.99 que se muestra mientras su paquete esté en la oferta de RevenueCat; quien lo compra lo renueva a ese precio. Al vencer Pro, las 2 tarjetas que siguen activas se guardan en `Preferencias.tarjetasDelPlan` (campo opcional nuevo en `tipos.ts`); mientras el usuario no elige, Tino usa las 2 más antiguas y lo pide con un aviso en Inicio. Las guardadas fuera del plan se tratan como en pausa: fuera del ranking, los avisos, las sugerencias y los pagos. El muro de pago está hecho con los tokens y textos de Tino, no con las pantallas de RevenueCat, y `muro_pago_visto` suma el motivo `voluntario` (desde Ajustes o al elegir tarjetas) | Una suscripción admite una sola oferta de introducción, así que la prueba gratis y el primer año rebajado no caben en el mismo producto. Guardar la elección en las preferencias evita que editar una tarjeta la pierda |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

@@ -4,6 +4,7 @@ import { calcularRanking, ordenarRanking, type OrdenVista } from '../motor';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
 import { useHoy } from './useHoy';
+import { useTarjetasEnPlan } from '../suscripciones/useSuscripcion';
 
 interface Opciones {
   orden?: OrdenVista;
@@ -21,7 +22,8 @@ export interface Ranking {
 export function useRanking({ orden = 'recomendado', compra }: Opciones = {}): Ranking | null {
   const hoy = useHoy();
   const { config } = usePais();
-  const tarjetas = useAlmacen(s => s.tarjetas);
+  // Solo las tarjetas del plan (15.2); las guardadas fuera del plan gratis no compiten.
+  const tarjetas = useTarjetasEnPlan();
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
 
