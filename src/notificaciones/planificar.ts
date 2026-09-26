@@ -6,7 +6,7 @@ import { avisoCobro, diaConSemana, textoFecha, type Traducir } from '../inicio/v
 // Sección 11 de la especificación: los avisos del MVP, calculados sin tocar el sistema de
 // notificaciones, para poder probarlos con fechas simuladas. Nunca incluyen montos.
 
-export type TipoAviso = 'fechaLimite' | 'venceAntesDelCobro' | 'cambioTarjeta' | 'resumenMensual';
+export type TipoAviso = 'fechaLimite' | 'venceAntesDelCobro' | 'cambioTarjeta' | 'resumenMensual' | 'finPrueba';
 
 export interface Aviso {
   id: string;
@@ -23,6 +23,7 @@ export const HORIZONTE_DIAS = 60;
 export const MAXIMO_AVISOS = 60;
 export const DIAS_ANTES_FECHA_LIMITE = 3;
 export const DIAS_ANTES_COBRO = 5;
+export const DIAS_ANTES_FIN_PRUEBA = 2;
 
 export const AVISOS_PREDETERMINADOS: AjustesAvisos = { fechaLimite: true, venceAntesDelCobro: true, cambioTarjeta: true, resumenMensual: true };
 
@@ -141,6 +142,20 @@ export function planificarAvisos(e: EntradaAvisos): Aviso[] {
         cuerpo: t('avisos.resumenCuerpo', { mes: nombreMes, dias: maximo, count: usadas.size }),
       });
     }
+  }
+
+  // Fin de la prueba de Tino Pro, 2 días antes del cobro (decisión D59). Es lo que promete el
+  // muro de pago, así que no depende de los interruptores de avisos. Sin precio ni montos.
+  const finPrueba = e.preferencias.plan === 'pro' ? e.preferencias.finPruebaPro : undefined;
+  if (finPrueba) {
+    const fin = numeroDe(finPrueba);
+    agregar({
+      id: `finPrueba:${finPrueba}`,
+      tipo: 'finPrueba',
+      fecha: aFecha(fin - DIAS_ANTES_FIN_PRUEBA),
+      titulo: t('avisos.finPruebaTitulo'),
+      cuerpo: t('avisos.finPruebaCuerpo', { fecha: fecha(fin) }),
+    });
   }
 
   return avisos.sort((x, y) => (x.fecha < y.fecha ? -1 : x.fecha > y.fecha ? 1 : x.id < y.id ? -1 : 1)).slice(0, MAXIMO_AVISOS);

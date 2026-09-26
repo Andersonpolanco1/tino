@@ -1,4 +1,4 @@
-import type { Preferencias, Tarjeta } from '../tipos/tipos';
+import type { FechaISO, Preferencias, Tarjeta } from '../tipos/tipos';
 
 // Sección 15.2 de la especificación: el plan gratis permite 2 tarjetas; Tino Pro, ilimitadas.
 // Una tarjeta con doble balance es una sola tarjeta, y las que están en pausa también cuentan.
@@ -42,4 +42,14 @@ export function conPlan(preferencias: Preferencias, plan: Plan): Preferencias {
   if (plan === preferencias.plan) return preferencias;
   const { tarjetasDelPlan: _elegidas, ...resto } = preferencias;
   return { ...(plan === 'pro' ? resto : preferencias), plan };
+}
+
+// Aplica lo que informa la tienda: el plan y, si está en la prueba gratis, cuándo se cobra.
+// Sin cambios devuelve el mismo objeto, para no guardar de más.
+export function conEstadoPro(preferencias: Preferencias, estado: { pro: boolean; finPrueba: FechaISO | null }): Preferencias {
+  const conPro = conPlan(preferencias, estado.pro ? 'pro' : 'gratis');
+  const fin = estado.pro ? estado.finPrueba : null;
+  if ((conPro.finPruebaPro ?? null) === fin) return conPro;
+  const { finPruebaPro: _anterior, ...resto } = conPro;
+  return fin ? { ...resto, finPruebaPro: fin } : resto;
 }

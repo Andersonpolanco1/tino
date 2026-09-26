@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { Alert } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { Tarjeta } from '@/tipos/tipos';
@@ -8,7 +9,7 @@ import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, r
 import { preferenciasIniciales } from '@/datos/preferencias';
 import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
-import { usarServicioDePrueba, type ServicioSuscripciones } from '@/suscripciones/servicio';
+import { usarServicioDePrueba, type ResultadoCompra, type ServicioSuscripciones } from '@/suscripciones/servicio';
 import NuevaTarjeta from '../../app/tarjeta/nueva';
 import ElegirTarjetas from '../../app/plan/elegir';
 import Inicio from '../../app/(tabs)/inicio';
@@ -65,19 +66,21 @@ function envolver(almacen: Almacen, hijos: ReactNode) {
   );
 }
 
-function servicioFalso(): ServicioSuscripciones & { compras: string[] } {
+function servicioFalso(): ServicioSuscripciones & { compras: string[]; resultado: ResultadoCompra } {
   const s = {
     compras: [] as string[],
     ofertas: async () => [
-      { id: 'lanzamiento', tipo: 'lanzamiento' as const, precio: 'US$14.99', precioPorMes: 'US$1.25', prueba: { unidad: 'mes' as const, cantidad: 1 } },
-      { id: '$rc_monthly', tipo: 'mensual' as const, precio: 'US$2.49', precioPorMes: null, prueba: { unidad: 'mes' as const, cantidad: 1 } },
+      { id: 'lanzamiento', tipo: 'lanzamiento' as const, precio: 'US$14.99', precioValor: 14.99, precioPorMes: 'US$1.25', prueba: { unidad: 'mes' as const, cantidad: 1 } },
+      { id: '$rc_annual', tipo: 'anual' as const, precio: 'US$19.99', precioValor: 19.99, precioPorMes: 'US$1.67', prueba: null },
+      { id: '$rc_monthly', tipo: 'mensual' as const, precio: 'US$2.49', precioValor: 2.49, precioPorMes: null, prueba: { unidad: 'mes' as const, cantidad: 1 } },
     ],
+    resultado: 'pro' as ResultadoCompra,
     comprar: async (id: string) => {
-      s.compras.push(id);
-      return 'pro' as const;
+      if (s.resultado === 'pro') s.compras.push(id);
+      return s.resultado;
     },
     restaurar: async () => false,
-    tienePro: async () => false,
+    estado: async () => ({ pro: s.compras.length > 0, finPrueba: s.compras.length ? '2026-11-06' : null }),
     alCambiar: () => () => {},
     urlGestion: async () => null,
   };
@@ -98,13 +101,48 @@ describe('3.ª tarjeta en el plan gratis (15.5)', () => {
     expect(await screen.findByText('Registra todas tus tarjetas')).toBeOnTheScreen();
     expect(screen.getByText(/Tus 2 tarjetas siguen funcionando igual/)).toBeOnTheScreen();
     expect(await screen.findByText('Anual de lanzamiento')).toBeOnTheScreen();
-    expect(screen.getAllByText(/1 mes gratis/)).toHaveLength(2);
+    // Lo que se cobra se ve más que la prueba (norma 3.1.2 de Apple), y el ahorro del anual se calcula.
+    expect(screen.getByText('US$14.99')).toBeOnTheScreen();
+    expect(screen.getByText('1 mes gratis, luego US$14.99 al año')).toBeOnTheScreen();
+    expect(screen.getByText('Ahorra 50% · Precio para los primeros usuarios')).toBeOnTheScreen();
+    expect(screen.getByText('Ahorra 33%')).toBeOnTheScreen();
+    // Cómo funciona la prueba, con el aviso antes del cobro.
+    expect(screen.getByText('2 días antes de que termine')).toBeOnTheScreen();
+    expect(screen.getByText(/^Se cobra US\$14\.99 al año\. Si cancelas antes en (App Store|Google Play), no pagas nada.$/)).toBeOnTheScreen();
 
     await act(async () => fireEvent.press(screen.getByText('Empezar prueba gratis')));
     expect(servicio.compras).toEqual(['lanzamiento']);
     expect(almacen.getState().preferencias?.plan).toBe('pro');
-    // Con Pro activo sigue el registro de la tarjeta.
+    expect(almacen.getState().preferencias?.finPruebaPro).toBe('2026-11-06');
+    // Confirmación antes de seguir con el registro.
+    expect(screen.getByText('Ya tienes Tino Pro')).toBeOnTheScreen();
+    expect(screen.getByText('Tu prueba gratis empezó. Te avisamos 2 días antes de que termine.')).toBeOnTheScreen();
+    await act(async () => fireEvent.press(screen.getByText('Continuar')));
+    expect(screen.queryByText('Ya tienes Tino Pro')).toBeNull();
     expect(screen.queryByText('Registra todas tus tarjetas')).toBeNull();
+  });
+
+  it('sin prueba, el botón dice Suscribirme y no hay línea de tiempo', async () => {
+    usarServicioDePrueba(servicioFalso());
+    const almacen = await almacenCon([A, B]);
+    await render(envolver(almacen, <NuevaTarjeta />));
+    await act(async () => fireEvent.press(await screen.findByText('Anual')));
+    expect(screen.getByText('Suscribirme')).toBeOnTheScreen();
+    expect(screen.queryByText('Cómo funciona la prueba')).toBeNull();
+    expect(screen.getByText('equivale a US$1.67 al mes')).toBeOnTheScreen();
+  });
+
+  it('un pago pendiente lo explica y no activa Pro', async () => {
+    const servicio = servicioFalso();
+    servicio.resultado = 'pendiente';
+    usarServicioDePrueba(servicio);
+    const alerta = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+    const almacen = await almacenCon([A, B]);
+    await render(envolver(almacen, <NuevaTarjeta />));
+    await act(async () => fireEvent.press(await screen.findByText('Empezar prueba gratis')));
+    expect(alerta).toHaveBeenCalledWith('Tu pago está pendiente', expect.stringMatching(/cuando (App Store|Google Play) confirme el pago/));
+    expect(almacen.getState().preferencias?.plan).toBe('gratis');
+    alerta.mockRestore();
   });
 
   it('sin plataforma de compras lo dice y no deja comprar', async () => {

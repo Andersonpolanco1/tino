@@ -97,6 +97,9 @@ export interface Preferencias {
   // Sección 15.2: en el plan gratis, las 2 tarjetas que el usuario eligió al vencer Pro. Las
   // demás quedan guardadas sin entrar al ranking ni a los avisos. Opcional para no migrar.
   tarjetasDelPlan?: string[];
+  // Si Pro está en la prueba gratis y se va a cobrar, el día del cobro: Tino avisa 2 días antes
+  // (decisión D59). Lo informa la tienda; opcional para no migrar.
+  finPruebaPro?: FechaISO;
   // Etapa 5: qué avisos quiere el usuario (sección 11). Opcional para no migrar las
   // preferencias ya guardadas; si falta, todos están activos.
   avisos?: AjustesAvisos;

@@ -126,3 +126,21 @@ test('ordenados, dentro del límite y sin montos', () => {
   expect(avisos.every(a => a.fecha >= '2026-10-06')).toBe(true);
   expect(avisos.some(a => /RD\$|US\$/.test(a.titulo + a.cuerpo))).toBe(false);
 });
+
+// Decisión D59: lo que promete el muro de pago, 2 días antes del cobro de la prueba.
+test('fin de la prueba de Tino Pro: 2 días antes, aunque los demás avisos estén apagados', () => {
+  const apagados = { fechaLimite: false, venceAntesDelCobro: false, cambioTarjeta: false, resumenMensual: false };
+  const pro = { ...preferenciasIniciales('DO', 'es-DO'), plan: 'pro' as const, finPruebaPro: '2026-11-05', avisos: apagados };
+  expect(planificarAvisos(entrada({ preferencias: pro }))).toEqual([
+    {
+      id: 'finPrueba:2026-11-05',
+      tipo: 'finPrueba',
+      fecha: '2026-11-03',
+      titulo: 'Tu prueba de Tino Pro termina pronto',
+      cuerpo: 'Termina el 5 de noviembre. Si quieres seguir, no tienes que hacer nada; si no, cancélala en la tienda antes de esa fecha.',
+    },
+  ]);
+  // Sin Pro, o si ya pasó la fecha del aviso, no hay aviso.
+  expect(buscar('finPrueba:2026-11-05', entrada({ preferencias: { ...pro, plan: 'gratis' } }))).toBeUndefined();
+  expect(buscar('finPrueba:2026-10-07', entrada({ preferencias: { ...pro, finPruebaPro: '2026-10-07' } }))).toBeUndefined();
+});

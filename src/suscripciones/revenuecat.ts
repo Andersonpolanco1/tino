@@ -1,5 +1,13 @@
-import Purchases, { PACKAGE_TYPE, type CustomerInfo, type PurchasesPackage, type PurchasesStoreProduct } from 'react-native-purchases';
-import type { OfertaPro, PeriodoPrueba, ServicioSuscripciones, TipoOferta } from './servicio';
+import { Platform } from 'react-native';
+import Purchases, {
+  INTRO_ELIGIBILITY_STATUS,
+  PACKAGE_TYPE,
+  PURCHASES_ERROR_CODE,
+  type CustomerInfo,
+  type PurchasesPackage,
+  type PurchasesStoreProduct,
+} from 'react-native-purchases';
+import type { EstadoPro, OfertaPro, PeriodoPrueba, ServicioSuscripciones, TipoOferta } from './servicio';
 
 // Derecho de RevenueCat que desbloquea Pro, y paquete propio del precio de lanzamiento
 // (decisión D58). Quitar el paquete de la oferta en RevenueCat lo retira sin actualizar la app.
@@ -7,6 +15,31 @@ const DERECHO_PRO = 'pro';
 const PAQUETE_LANZAMIENTO = 'lanzamiento';
 
 const tienePro = (info: CustomerInfo) => !!info.entitlements.active[DERECHO_PRO];
+
+const fechaLocal = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+
+// Solo interesa el fin de una prueba que se va a cobrar: si ya la canceló, no hay nada que avisar.
+function estadoDe(info: CustomerInfo): EstadoPro {
+  const derecho = info.entitlements.active[DERECHO_PRO];
+  const enPrueba = !!derecho && derecho.periodType === 'TRIAL' && derecho.willRenew && !!derecho.expirationDate;
+  return { pro: !!derecho, finPrueba: enPrueba ? fechaLocal(new Date(derecho.expirationDate!)) : null };
+}
+
+// En iOS la prueba se da una vez por grupo de suscripción: prometerla a quien ya la usó es
+// engañoso y Apple lo rechaza. Si no se sabe, no se muestra. Android ya no ofrece la fase gratis.
+async function conElegibilidad(ofertas: OfertaPro[], productos: Map<string, string>): Promise<OfertaPro[]> {
+  if (Platform.OS !== 'ios' || !ofertas.some(o => o.prueba)) return ofertas;
+  try {
+    const elegibles = await Purchases.checkTrialOrIntroductoryPriceEligibility([...productos.values()]);
+    return ofertas.map(o => {
+      const estado = elegibles[productos.get(o.id) ?? '']?.status;
+      return estado === INTRO_ELIGIBILITY_STATUS.INTRO_ELIGIBILITY_STATUS_ELIGIBLE ? o : { ...o, prueba: null };
+    });
+  } catch {
+    return ofertas.map(o => ({ ...o, prueba: null }));
+  }
+}
 
 function tipoDe(p: PurchasesPackage): TipoOferta | null {
   if (p.identifier === PAQUETE_LANZAMIENTO) return 'lanzamiento';
@@ -45,12 +78,17 @@ export function crearServicioRevenueCat(clave: string): ServicioSuscripciones {
           id: p.identifier,
           tipo,
           precio: p.product.priceString,
+          precioValor: p.product.price,
           precioPorMes: tipo === 'mensual' ? null : p.product.pricePerMonthString,
           prueba: pruebaDe(p.product),
         });
       }
       const orden: TipoOferta[] = ['lanzamiento', 'anual', 'mensual'];
-      return lista.sort((a, b) => orden.indexOf(a.tipo) - orden.indexOf(b.tipo));
+      const productos = new Map(disponibles.map(p => [p.identifier, p.product.identifier]));
+      return conElegibilidad(
+        lista.sort((a, b) => orden.indexOf(a.tipo) - orden.indexOf(b.tipo)),
+        productos,
+      );
     },
 
     async comprar(id) {
@@ -60,7 +98,9 @@ export function crearServicioRevenueCat(clave: string): ServicioSuscripciones {
         const { customerInfo } = await Purchases.purchasePackage(paquete);
         return tienePro(customerInfo) ? 'pro' : 'sin_pro';
       } catch (e) {
-        if ((e as { userCancelled?: boolean | null }).userCancelled) return 'cancelada';
+        const error = e as { userCancelled?: boolean | null; code?: string };
+        if (error.userCancelled) return 'cancelada';
+        if (error.code === PURCHASES_ERROR_CODE.PAYMENT_PENDING_ERROR) return 'pendiente';
         throw e;
       }
     },
@@ -69,12 +109,12 @@ export function crearServicioRevenueCat(clave: string): ServicioSuscripciones {
       return tienePro(await Purchases.restorePurchases());
     },
 
-    async tienePro() {
-      return tienePro(await Purchases.getCustomerInfo());
+    async estado() {
+      return estadoDe(await Purchases.getCustomerInfo());
     },
 
     alCambiar(escuchar) {
-      const oyente = (info: CustomerInfo) => escuchar(tienePro(info));
+      const oyente = (info: CustomerInfo) => escuchar(estadoDe(info));
       Purchases.addCustomerInfoUpdateListener(oyente);
       return () => {
         Purchases.removeCustomerInfoUpdateListener(oyente);

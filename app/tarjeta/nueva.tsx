@@ -9,10 +9,11 @@ export default function NuevaTarjeta() {
   const tarjetas = useAlmacen(s => s.tarjetas);
   const plan = useAlmacen(s => s.preferencias?.plan ?? 'gratis');
   // Todas las entradas para agregar tarjeta pasan por aquí: con el límite del plan gratis se
-  // muestra la oferta de Pro, y al activarlo sigue el registro (15.5). Se decide al abrir, para
-  // que guardar la 2.ª tarjeta no muestre la oferta antes de cerrar.
+  // muestra la oferta de Pro, y tras la confirmación de compra sigue el registro (15.5). Se decide
+  // al abrir, para que guardar la 2.ª tarjeta no muestre la oferta antes de cerrar.
   const [alAbrir] = useState(() => puedeAgregarTarjeta(tarjetas, plan));
-  const permitido = alAbrir || plan === 'pro';
+  const [conPro, setConPro] = useState(false);
+  const permitido = alAbrir || conPro;
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -22,7 +23,7 @@ export default function NuevaTarjeta() {
           onListo={(_tarjeta, preguntarPagoUsd) => (preguntarPagoUsd ? router.replace('/tarjeta/pago-usd') : router.back())}
         />
       ) : (
-        <MuroPago motivo="tercera_tarjeta" onCerrar={() => router.back()} onPro={() => {}} />
+        <MuroPago motivo="tercera_tarjeta" onCerrar={() => router.back()} onPro={() => setConPro(true)} />
       )}
     </>
   );

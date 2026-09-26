@@ -226,16 +226,6 @@
     "porMes": "{{precio}} al mes",
     "equivale": "equivale a {{precio}} al mes",
     "lanzamientoDetalle": "Precio para los primeros usuarios",
-    "prueba": {
-      "dia_one": "{{count}} día gratis",
-      "dia_other": "{{count}} días gratis",
-      "semana_one": "{{count}} semana gratis",
-      "semana_other": "{{count}} semanas gratis",
-      "mes_one": "{{count}} mes gratis",
-      "mes_other": "{{count}} meses gratis",
-      "anio_one": "{{count}} año gratis",
-      "anio_other": "{{count}} años gratis"
-    },
     "empezarPrueba": "Empezar prueba gratis",
     "suscribirme": "Suscribirme",
     "condiciones": "El cobro se hace en tu cuenta de {{tienda}} al terminar la prueba gratis, si la tiene, y se renueva solo al mismo precio hasta que lo canceles en {{tienda}}. Si cancelas durante la prueba, no se te cobra.",
@@ -244,7 +234,7 @@
       "android": "Google Play"
     },
     "restaurar": "Restaurar compras",
-    "restaurado": "Listo: Tino Pro está activo.",
+    "restaurado": "Tu suscripción está activa otra vez.",
     "nadaQueRestaurar": "No encontramos una suscripción de Tino Pro en esta cuenta de {{tienda}}.",
     "terminos": "Términos de uso",
     "privacidad": "Política de privacidad",
@@ -252,7 +242,36 @@
     "sinServicio": "Las compras no están disponibles en este momento. Inténtalo más tarde.",
     "error": "No pudimos cargar los planes. Revisa tu conexión.",
     "reintentar": "Reintentar",
-    "errorCompra": "No se pudo completar. Inténtalo de nuevo."
+    "errorCompra": "No se pudo completar. Inténtalo de nuevo.",
+    "alMes": "al mes",
+    "alAnio": "al año",
+    "duracion": {
+      "dia_one": "{{count}} día",
+      "dia_other": "{{count}} días",
+      "semana_one": "{{count}} semana",
+      "semana_other": "{{count}} semanas",
+      "mes_one": "{{count}} mes",
+      "mes_other": "{{count}} meses",
+      "anio_one": "{{count}} año",
+      "anio_other": "{{count}} años"
+    },
+    "pruebaLuego": "{{duracion}} gratis, luego {{precio}}",
+    "ahorra": "Ahorra {{porcentaje}}%",
+    "comoFunciona": "Cómo funciona la prueba",
+    "pasoHoy": "Hoy",
+    "pasoHoyDetalle": "Registras todas tus tarjetas",
+    "pasoAviso_one": "{{count}} día antes de que termine",
+    "pasoAviso_other": "{{count}} días antes de que termine",
+    "pasoAvisoDetalle": "Te enviamos un aviso para que decidas",
+    "pasoCobro": "Al terminar la prueba ({{duracion}})",
+    "pasoCobroDetalle": "Se cobra {{precio}}. Si cancelas antes en {{tienda}}, no pagas nada.",
+    "pendienteTitulo": "Tu pago está pendiente",
+    "pendiente": "Tino Pro se activa cuando {{tienda}} confirme el pago. No tienes que hacer nada más.",
+    "listoTitulo": "Ya tienes Tino Pro",
+    "listoPrueba_one": "Tu prueba gratis empezó. Te avisamos {{count}} día antes de que termine.",
+    "listoPrueba_other": "Tu prueba gratis empezó. Te avisamos {{count}} días antes de que termine.",
+    "listoCompra": "Gracias por apoyar a Tino. Ya puedes registrar todas tus tarjetas.",
+    "continuar": "Continuar"
   },
   "pestanas": {
     "inicio": "Inicio",
@@ -548,7 +567,9 @@
     "resumenTitulo": "Tu resumen de {{mes}}",
     "resumenCuerpo_one": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjeta.",
     "resumenCuerpo_other": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjetas distintas.",
-    "canal": "Avisos de pago"
+    "canal": "Avisos de pago",
+    "finPruebaTitulo": "Tu prueba de Tino Pro termina pronto",
+    "finPruebaCuerpo": "Termina el {{fecha}}. Si quieres seguir, no tienes que hacer nada; si no, cancélala en la tienda antes de esa fecha."
   },
   "sugerencias": {
     "cobros": "Agrega tus fechas de cobro y te avisamos si un pago vence antes de que cobres.",

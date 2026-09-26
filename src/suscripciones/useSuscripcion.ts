@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useAlmacen } from '../estado';
-import { conPlan, tarjetasEnPlan } from './plan';
-import { obtenerServicio, type OfertaPro, type ResultadoCompra } from './servicio';
+import { conEstadoPro, tarjetasEnPlan } from './plan';
+import { obtenerServicio, type EstadoPro, type OfertaPro, type ResultadoCompra } from './servicio';
 
 // Las tarjetas que usa Tino según el plan: ranking, avisos, sugerencias y pagos (15.2).
 export function useTarjetasEnPlan() {
@@ -18,10 +18,10 @@ function useGuardarPlan() {
   const actual = useRef(preferencias);
   actual.current = preferencias;
   return useCallback(
-    (pro: boolean) => {
+    (estado: EstadoPro) => {
       const p = actual.current;
       if (!p) return;
-      const siguiente = conPlan(p, pro ? 'pro' : 'gratis');
+      const siguiente = conEstadoPro(p, estado);
       if (siguiente !== p) guardar(siguiente).catch(() => {});
     },
     [guardar],
@@ -38,7 +38,7 @@ export function useSincronizarPlan() {
     obtenerServicio()
       .then(async servicio => {
         if (!servicio || !vivo) return;
-        guardarPlan(await servicio.tienePro());
+        guardarPlan(await servicio.estado());
         if (vivo) dejar = servicio.alCambiar(guardarPlan);
       })
       .catch(() => {});
@@ -74,7 +74,7 @@ export function useComprasPro() {
       const servicio = await obtenerServicio();
       if (!servicio) return 'sin_pro';
       const resultado = await servicio.comprar(id);
-      if (resultado === 'pro') guardarPlan(true);
+      if (resultado === 'pro') guardarPlan(await servicio.estado());
       return resultado;
     },
     [guardarPlan],
@@ -85,7 +85,7 @@ export function useComprasPro() {
     const servicio = await obtenerServicio();
     if (!servicio) return false;
     const pro = await servicio.restaurar();
-    if (pro) guardarPlan(true);
+    if (pro) guardarPlan(await servicio.estado());
     return pro;
   }, [guardarPlan]);
 
