@@ -24,7 +24,9 @@ export async function abrirBase(): Promise<BaseLocal> {
   const clave = await obtenerClaveBase();
   if (!FORMATO_CLAVE.test(clave)) throw new ErrorBaseCifrada('Clave con formato inválido');
 
-  const db = await openDatabaseAsync(NOMBRE_BASE);
+  // Conexión nueva siempre: la que expo-sqlite guarda para las recargas en desarrollo puede
+  // quedar cerrada del lado nativo y fallar con NullPointerException.
+  const db = await openDatabaseAsync(NOMBRE_BASE, { useNewConnection: true });
   try {
     // La clave debe ser lo primero que se ejecuta sobre la conexión.
     await db.execAsync(sentenciaClave(clave));

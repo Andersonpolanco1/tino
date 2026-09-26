@@ -10,11 +10,11 @@ interface Props extends Omit<TextInputProps, 'style'> {
   error?: string;
 }
 
-// Campo de texto con etiqueta, ayuda y error, todo desde los tokens.
+// Campo de texto del rediseño: superficie con sombra suave, sin borde salvo cuando hay error.
 export function Campo({ etiqueta, ayuda, info, error, ...entrada }: Props) {
   const tema = useTema();
   return (
-    <View style={{ gap: tema.espacio.xs }}>
+    <View style={{ gap: tema.espacio.s }}>
       <EtiquetaConInfo etiqueta={etiqueta} info={info} />
       <TextInput
         {...entrada}
@@ -27,12 +27,13 @@ export function Campo({ etiqueta, ayuda, info, error, ...entrada }: Props) {
           {
             color: tema.color.texto,
             backgroundColor: tema.color.superficie,
-            borderColor: error ? tema.color.alertaTexto : tema.color.borde,
-            borderWidth: 1,
-            borderRadius: tema.radio.control,
-            minHeight: tema.toqueMinimo,
-            paddingHorizontal: tema.espacio.m,
-            paddingVertical: tema.espacio.s,
+            borderColor: error ? tema.color.alertaTexto : 'transparent',
+            borderWidth: 1.5,
+            borderRadius: tema.radio.segmento,
+            boxShadow: tema.sombra.tarjeta,
+            minHeight: 52,
+            paddingHorizontal: tema.espacio.l,
+            paddingVertical: tema.espacio.m,
           },
         ]}
       />

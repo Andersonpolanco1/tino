@@ -1,11 +1,13 @@
-import { Pressable, View } from 'react-native';
+import { View } from 'react-native';
 import { Texto } from './Texto';
 import { EtiquetaConInfo } from './EtiquetaConInfo';
+import { FilaLista, ListaAgrupada } from './ListaAgrupada';
 import { useTema } from './useTema';
 
 interface Opcion<T extends string> {
   valor: T;
   etiqueta: string;
+  detalle?: string;
 }
 
 interface Props<T extends string> {
@@ -17,36 +19,18 @@ interface Props<T extends string> {
   error?: string;
 }
 
-// Elección única en chips de un toque (como la BarraOrden de la sección 8.3 técnica).
+// Elección única como lista agrupada con marca de verificación (rediseño). Para 2 a 4
+// opciones cortas se usa ControlSegmentado.
 export function Opciones<T extends string>({ etiqueta, info, opciones, valor, onCambio, error }: Props<T>) {
   const tema = useTema();
   return (
-    <View style={{ gap: tema.espacio.xs }} accessibilityRole="radiogroup" accessibilityLabel={etiqueta}>
+    <View style={{ gap: tema.espacio.s }} accessibilityRole="radiogroup" accessibilityLabel={etiqueta}>
       {etiqueta ? <EtiquetaConInfo etiqueta={etiqueta} info={info} /> : null}
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tema.espacio.s }}>
-        {opciones.map(o => {
-          const activa = o.valor === valor;
-          return (
-            <Pressable
-              key={o.valor}
-              accessibilityRole="radio"
-              accessibilityState={{ selected: activa }}
-              onPress={() => onCambio(o.valor)}
-              style={{
-                minHeight: tema.toqueMinimo,
-                justifyContent: 'center',
-                paddingHorizontal: tema.espacio.l,
-                borderRadius: tema.radio.chip,
-                backgroundColor: activa ? tema.color.primario : tema.color.neutroFondo,
-              }}
-            >
-              <Texto variante="cuerpoFuerte" color={activa ? 'sobrePrimario' : 'texto'}>
-                {o.etiqueta}
-              </Texto>
-            </Pressable>
-          );
-        })}
-      </View>
+      <ListaAgrupada sangria={tema.espacio.l}>
+        {opciones.map(o => (
+          <FilaLista key={o.valor} titulo={o.etiqueta} detalle={o.detalle} seleccionada={o.valor === valor} onPress={() => onCambio(o.valor)} />
+        ))}
+      </ListaAgrupada>
       {error ? (
         <Texto variante="apoyo" color="alertaTexto" accessibilityLiveRegion="polite">
           {error}
