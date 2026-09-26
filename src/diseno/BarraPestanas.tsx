@@ -3,6 +3,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icono, type NombreIcono } from './Icono';
 import { Texto } from './Texto';
 import { useTema } from './useTema';
+import { conOpacidad } from './tema';
 
 export interface PestanaVista {
   clave: string;
@@ -35,7 +36,8 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta }: Props) {
         gap: 6,
         padding: 7,
         borderRadius: 33,
-        backgroundColor: tema.color.superficie,
+        // Un poco translúcida para que se intuya el contenido que pasa por debajo.
+        backgroundColor: conOpacidad(tema.color.superficie, tema.opacidad.barraPestanas),
         boxShadow: tema.sombra.flotante,
       }}
     >
