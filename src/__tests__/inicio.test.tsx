@@ -68,16 +68,16 @@ test('muestra la fecha, la tarjeta de hoy y las demás en orden de enfoque (ejem
   await render(envolver(await almacenCon([A, B, C]), <Inicio />));
   expect(screen.getByText('Martes 6 de octubre')).toBeOnTheScreen();
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta C\. 46 días para pagar, se paga el 21 de noviembre/);
-  expect(screen.getByText('Tus otras tarjetas')).toBeOnTheScreen();
+  expect(screen.getByText('Tus tarjetas')).toBeOnTheScreen();
   expect(screen.getByText('Tarjeta B')).toBeOnTheScreen();
   expect(screen.getByText('Tarjeta A')).toBeOnTheScreen();
-  expect(screen.getByText('RD$10 cashback por RD$1,000')).toBeOnTheScreen();
+  expect(screen.getByText('RD$10 por RD$1,000')).toBeOnTheScreen();
 });
 
 test('la barra de orden reordena sin cambiar el enfoque guardado (criterio 14.1)', async () => {
   const almacen = await almacenCon([A, B, C]);
   await render(envolver(almacen, <Inicio />));
-  await fireEvent.press(screen.getByText('Más días'));
+  await fireEvent.press(screen.getByText('Días'));
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta A\. 50 días/);
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('equilibrado');
 });
@@ -85,8 +85,8 @@ test('la barra de orden reordena sin cambiar el enfoque guardado (criterio 14.1)
 test('cambiar el enfoque lo guarda al instante y recalcula (criterio 14.1)', async () => {
   const almacen = await almacenCon([A, B, C]);
   await render(envolver(almacen, <Inicio />));
-  await fireEvent.press(screen.getByLabelText('Enfoque: Equilibrado'));
-  await fireEvent.press(within(screen.getByText('Elige tu enfoque').parent!.parent!).getByText('Puntos'));
+  await fireEvent.press(screen.getByLabelText('Enfoque: Equilibrado. Cambiar'));
+  await fireEvent.press(within(screen.getByText('Elige tu enfoque').parent!).getByText('Acumular más puntos.'));
   await act(async () => {});
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('puntos');
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta B\./);
@@ -94,11 +94,11 @@ test('cambiar el enfoque lo guarda al instante y recalcula (criterio 14.1)', asy
 
 test('con una sola tarjeta muestra el semáforo y oculta la barra y el selector (criterio 14.1)', async () => {
   await render(envolver(await almacenCon([A]), <Inicio />));
-  expect(screen.getByText('¿Es buen momento para usarla?')).toBeOnTheScreen();
+  expect(screen.getByText('¿Es buen momento?')).toBeOnTheScreen();
   expect(screen.getByLabelText('Buen momento')).toBeOnTheScreen();
-  expect(screen.queryByText('Más días')).toBeNull();
+  expect(screen.queryByText('Para ti')).toBeNull();
   expect(screen.queryByLabelText(/^Enfoque:/)).toBeNull();
-  expect(screen.getByText('¿Tienes otra tarjeta? Agrégala y te diremos cuál conviene cada día')).toBeOnTheScreen();
+  expect(screen.getByText('¿Tienes otra tarjeta?')).toBeOnTheScreen();
 });
 
 test('una tarjeta en pausa no aparece en el ranking (criterio 14.1)', async () => {

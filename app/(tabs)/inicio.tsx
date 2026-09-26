@@ -3,20 +3,21 @@ import { LayoutAnimation, Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import type { OrdenVista } from '@/motor';
-import { Boton, Icono, Pantalla, Texto, useTema } from '@/diseno';
+import { Boton, BotonCircular, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
 import { partesFechaLarga } from '@/i18n';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
-import { proximoPago, textoFecha } from '@/inicio/vista';
+import { fechaCorta, proximoPago, textoFecha, type Traducir } from '@/inicio/vista';
 import { TarjetaDestacada } from '@/inicio/TarjetaDestacada';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { BarraOrden } from '@/inicio/BarraOrden';
 import { SelectorEnfoque } from '@/inicio/SelectorEnfoque';
-import { Semaforo } from '@/inicio/Semaforo';
+import { PildoraSemaforo } from '@/inicio/Semaforo';
+import { ChipBanco } from '@/inicio/ChipBanco';
 
-// Sección 3 de la especificación y maquetas de inicio: la tarjeta de hoy al abrir la app.
+// Sección 3 de la especificación, con el rediseño: la tarjeta de hoy al abrir la app.
 export default function Inicio() {
   const { t } = useTranslation();
   const tema = useTema();
@@ -26,6 +27,8 @@ export default function Inicio() {
   const hayTarjetas = useAlmacen(s => s.tarjetas.length > 0);
   const [orden, setOrden] = useState<OrdenVista>('recomendado');
   const vistas = useVistas({ orden });
+  const lista = vistas?.tarjetas ?? [];
+  const unaSola = lista.length === 1;
 
   const abrir = (vista: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: { id: vista.tarjeta.id } });
   const cambiarOrden = (nuevo: OrdenVista) => {
@@ -36,50 +39,31 @@ export default function Inicio() {
 
   const encabezado = (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: tema.espacio.m }}>
-      <View style={{ flexShrink: 1, gap: tema.espacio.xs }}>
+      <View style={{ flexShrink: 1, gap: 2 }}>
         <Texto variante="apoyo" color="textoSecundario">
           {t('inicio.fechaHoy', partesFechaLarga(hoy, idioma))}
         </Texto>
-        <Texto variante="titulo" accessibilityRole="header">
-          {t('inicio.titulo')}
+        <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 30, lineHeight: 36, letterSpacing: -0.5 }}>
+          {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
         </Texto>
       </View>
-      {hayTarjetas ? (
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={t('inicio.tengoUnaCompra')}
-          onPress={() => router.push('/compra')}
-          style={{
-            width: tema.toqueMinimo,
-            height: tema.toqueMinimo,
-            borderRadius: tema.radio.circular,
-            borderWidth: 1,
-            borderColor: tema.color.borde,
-            backgroundColor: tema.color.superficie,
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Icono nombre="compra" />
-        </Pressable>
-      ) : null}
+      {hayTarjetas ? <BotonCircular icono="compra" etiqueta={t('inicio.tengoUnaCompra')} onPress={() => router.push('/compra')} grande /> : null}
     </View>
   );
 
   if (!hayTarjetas) {
     return (
-      <Pantalla>
+      <Pantalla conPestanas>
         {encabezado}
         <Texto color="textoSecundario">{t('inicio.vacio')}</Texto>
-        <Boton titulo={t('inicio.agregarTarjeta')} onPress={() => router.push('/tarjeta/nueva')} />
+        <Boton titulo={t('inicio.agregarTarjeta')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
       </Pantalla>
     );
   }
 
-  const lista = vistas?.tarjetas ?? [];
   if (!lista.length) {
     return (
-      <Pantalla>
+      <Pantalla conPestanas>
         {encabezado}
         <Texto color="textoSecundario">{t('inicio.todasEnPausa')}</Texto>
       </Pantalla>
@@ -87,78 +71,121 @@ export default function Inicio() {
   }
 
   const [primera, ...resto] = lista;
-  const pago = lista
-    .map(v => ({ vista: v, fecha: proximoPago(v.tarjeta, hoy, config) }))
-    .sort((a, b) => (a.fecha < b.fecha ? -1 : 1))[0];
-  const franjaPago = (
+  const pago = lista.map(v => ({ vista: v, fecha: proximoPago(v.tarjeta, hoy, config) })).sort((a, b) => (a.fecha < b.fecha ? -1 : 1))[0];
+  const invitacion = (
     <Pressable
       accessibilityRole="button"
-      onPress={() => abrir(pago.vista)}
-      style={{
-        backgroundColor: tema.color.superficie,
-        borderColor: tema.color.borde,
-        borderWidth: 1,
-        borderRadius: tema.radio.tarjeta,
-        paddingVertical: tema.espacio.m,
-        paddingHorizontal: tema.espacio.l,
-        gap: tema.espacio.xs,
-      }}
+      onPress={() => router.push('/tarjeta/nueva')}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 14, padding: tema.espacio.l, borderRadius: tema.radio.lista, backgroundColor: tema.color.neutroFondo }}
     >
-      <Texto variante="apoyo" color="textoSecundario">
-        {t('inicio.proximoPago')}
-      </Texto>
-      <Texto variante="cuerpoFuerte">
-        {t('inicio.proximoPagoDe', { alias: pago.vista.tarjeta.alias, fecha: textoFecha(pago.fecha, idioma) })}
-      </Texto>
+      <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: tema.color.primario, alignItems: 'center', justifyContent: 'center' }}>
+        <Icono nombre="mas" color="sobrePrimario" tamano={20} grosor={2.5} />
+      </View>
+      <View style={{ flex: 1, gap: 2 }}>
+        <Texto variante="cuerpoFuerte">{t('unaTarjeta.titulo')}</Texto>
+        <Texto variante="apoyo" color="textoSecundario">
+          {t('unaTarjeta.texto')}
+        </Texto>
+      </View>
     </Pressable>
   );
 
   // Sección 3.5: con una sola tarjeta la pregunta pasa de "¿qué tarjeta?" a "¿es buen momento?".
-  if (lista.length === 1) {
-    return (
-      <Pantalla>
-        {encabezado}
-        <View
-          style={{
-            backgroundColor: tema.color.superficie,
-            borderColor: tema.color.borde,
-            borderWidth: 1,
-            borderRadius: tema.radio.destacada,
-            padding: tema.espacio.xl,
-            gap: tema.espacio.m,
-          }}
-        >
+  if (unaSola) {
+    const { tarjeta, resultado, esperar } = primera;
+    const maximo = Math.max(resultado.diasGracia, esperar?.dias ?? 0, 1);
+    const barra = (etiqueta: string, dias: number, color: RolColor) => (
+      <View style={{ gap: 6 }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Texto variante="apoyo" color="textoSecundario">
-            {t('inicio.semaforoTitulo')}
+            {etiqueta}
           </Texto>
-          <Semaforo luz={primera.resultado.semaforo} grande />
-          <Texto>{primera.mensajeSemaforo}</Texto>
+          <Texto variante="apoyo" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+            {t('unaTarjeta.diasN', { dias })}
+          </Texto>
         </View>
-        <TarjetaDestacada vista={primera} onPress={() => abrir(primera)} />
-        {franjaPago}
-        <Texto color="textoSecundario">{t('unaTarjeta.invitacion')}</Texto>
-        <Boton titulo={t('inicio.agregarTarjeta')} variante="secundario" onPress={() => router.push('/tarjeta/nueva')} />
+        <View style={{ height: 10, borderRadius: 5, backgroundColor: tema.color.neutroFondo, overflow: 'hidden' }}>
+          <View style={{ width: `${Math.round((dias / maximo) * 100)}%`, height: 10, borderRadius: 5, backgroundColor: tema.color[color] }} />
+        </View>
+      </View>
+    );
+    return (
+      <Pantalla conPestanas>
+        {encabezado}
+        <Pressable accessibilityRole="button" onPress={() => abrir(primera)}>
+          <Superficie radio={tema.radio.destacada} style={{ padding: 22, gap: 18 }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
+              {primera.iniciales ? <ChipBanco iniciales={primera.iniciales} /> : null}
+              <Texto variante="cuerpoFuerte" style={{ flex: 1, fontSize: 17 }}>
+                {tarjeta.alias}
+              </Texto>
+              <PildoraSemaforo luz={resultado.semaforo} />
+            </View>
+            <Texto variante="titulo" style={{ fontSize: 24, lineHeight: 29, letterSpacing: -0.3 }}>
+              {primera.mensajeSemaforo}
+            </Texto>
+            <View style={{ gap: tema.espacio.m }}>
+              {barra(t('unaTarjeta.siLaUsasHoy'), resultado.diasGracia, esperar ? 'alertaTexto' : 'primario')}
+              {esperar ? barra(t('unaTarjeta.siEsperas', { dia: esperar.dia }), esperar.dias, 'primario') : null}
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', flexWrap: 'wrap', gap: tema.espacio.s, paddingTop: 14, borderTopWidth: 1, borderTopColor: tema.color.divisor }}>
+              <Texto variante="apoyo" color="textoSecundario">
+                {t('inicio.corta', { fecha: primera.ciclo.proximoCorta })}
+              </Texto>
+              <Texto variante="apoyo" color="textoSecundario">
+                {t('unaTarjeta.proximoPago', { fecha: fechaCorta(pago.fecha, idioma, t as unknown as Traducir) })}
+              </Texto>
+            </View>
+          </Superficie>
+        </Pressable>
+        {invitacion}
       </Pantalla>
     );
   }
 
   return (
-    <Pantalla>
+    <Pantalla conPestanas>
       {encabezado}
       <TarjetaDestacada vista={primera} onPress={() => abrir(primera)} />
-      <View style={{ gap: tema.espacio.s }}>
-        <SelectorEnfoque />
+      <View style={{ gap: tema.espacio.m }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Texto variante="subtitulo" accessibilityRole="header">
+            {t('inicio.otrasTarjetas')}
+          </Texto>
+          <SelectorEnfoque />
+        </View>
         <BarraOrden valor={orden} onCambio={cambiarOrden} />
+        <ListaAgrupada sangria={70}>
+          {resto.map(v => (
+            <FilaTarjeta key={v.tarjeta.id} vista={v} onPress={() => abrir(v)} />
+          ))}
+        </ListaAgrupada>
       </View>
-      <View style={{ gap: tema.espacio.s }}>
-        <Texto variante="cuerpoFuerte" color="textoSecundario">
-          {t('inicio.otrasTarjetas')}
-        </Texto>
-        {resto.map(v => (
-          <FilaTarjeta key={v.tarjeta.id} vista={v} onPress={() => abrir(v)} />
-        ))}
-      </View>
-      {franjaPago}
+      <Pressable
+        accessibilityRole="button"
+        onPress={() => abrir(pago.vista)}
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          gap: tema.espacio.m,
+          paddingVertical: tema.espacio.m,
+          paddingHorizontal: tema.espacio.l,
+          borderRadius: tema.radio.tarjeta,
+          backgroundColor: tema.color.superficie,
+          boxShadow: tema.sombra.tarjeta,
+        }}
+      >
+        <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
+          <Icono nombre="calendario" color="primario" tamano={20} />
+        </View>
+        <View style={{ flex: 1, gap: 1 }}>
+          <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
+            {t('inicio.proximoPago')}
+          </Texto>
+          <Texto variante="cuerpoFuerte">{t('inicio.proximoPagoDe', { alias: pago.vista.tarjeta.alias, fecha: textoFecha(pago.fecha, idioma) })}</Texto>
+        </View>
+        <Icono nombre="derecha" color="textoSecundario" tamano={18} />
+      </Pressable>
     </Pantalla>
   );
 }

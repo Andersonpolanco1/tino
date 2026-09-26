@@ -1,23 +1,41 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { Catalogo, ConfigPais, EntradaMotor, ResultadoMotor, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
+import type { Catalogo, ConfigPais, EntradaMotor, FechaISO, ResultadoMotor, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
 import { calcularRanking, type OrdenVista } from '../motor';
 import { useAlmacen } from '../estado';
 import { useCatalogo } from '../catalogo';
 import { buscarEmisor } from '../registro/borrador';
 import { usePais } from '../paises';
 import { useRanking } from './useRanking';
-import { etiquetasDe, mensajeSemaforo, textoFecha, textoRecompensa, type EtiquetaVista, type Traducir } from './vista';
+import {
+  cicloDe,
+  diaConSemana,
+  esperarA,
+  etiquetasDe,
+  fechaCorta,
+  inicialesBanco,
+  mensajeSemaforo,
+  textoFecha,
+  textoRecompensa,
+  type EtiquetaVista,
+  type Traducir,
+} from './vista';
 
 // Todo lo que necesita una tarjeta en pantalla, ya calculado y con textos.
 export interface VistaTarjeta {
   tarjeta: Tarjeta;
   resultado: ResultadoTarjeta;
   banco: string;
+  iniciales: string;
   fechaPago: string;
+  fechaPagoCorta: string;
   recompensa: string | null;
+  recompensaCorta: string | null;
   etiquetas: EtiquetaVista[];
   mensajeSemaforo: string;
+  ciclo: { anterior: FechaISO; anteriorCorta: string; proximoCorta: string; fraccion: number };
+  // Solo en rojo: esperar al día después del corte.
+  esperar: { fecha: FechaISO; dia: string; dias: number } | null;
 }
 
 export interface Vistas {
@@ -35,14 +53,26 @@ interface ContextoVista {
 
 export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c: ContextoVista): VistaTarjeta {
   const contexto = { t: c.t, pais: c.pais, idioma: c.idioma };
+  const banco = buscarEmisor(c.catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
+  const ciclo = cicloDe(tarjeta, resultado, c.entrada.hoy);
+  const esperar = resultado.semaforo === 'rojo' ? esperarA(tarjeta, resultado, c.entrada) : null;
   return {
     tarjeta,
     resultado,
-    banco: buscarEmisor(c.catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '',
+    banco,
+    iniciales: inicialesBanco(banco),
     fechaPago: textoFecha(resultado.fechaPago, c.idioma),
+    fechaPagoCorta: fechaCorta(resultado.fechaPago, c.idioma, c.t),
     recompensa: textoRecompensa(tarjeta, resultado, contexto, c.entrada.compra),
+    recompensaCorta: textoRecompensa(tarjeta, resultado, contexto, c.entrada.compra, true),
     etiquetas: etiquetasDe(tarjeta, resultado, contexto),
-    mensajeSemaforo: mensajeSemaforo(tarjeta, resultado, c.entrada, c.t),
+    mensajeSemaforo: mensajeSemaforo(tarjeta, resultado, c.entrada, c.t, c.idioma),
+    ciclo: {
+      ...ciclo,
+      anteriorCorta: fechaCorta(ciclo.anterior, c.idioma, c.t),
+      proximoCorta: fechaCorta(resultado.proximoCorte, c.idioma, c.t),
+    },
+    esperar: esperar ? { ...esperar, dia: diaConSemana(esperar.fecha, c.idioma, c.t) } : null,
   };
 }
 

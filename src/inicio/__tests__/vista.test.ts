@@ -127,7 +127,7 @@ describe('semáforo (sección 3.4)', () => {
     const t1 = tarjeta();
     const { entrada, resultado } = resultadoDe(t1, '2026-10-03');
     expect(resultado.semaforo).toBe('rojo');
-    expect(mensajeSemaforo(t1, resultado, entrada, t)).toBe('Si puedes, espera al día 6: pasarías de 22 a 50 días');
+    expect(mensajeSemaforo(t1, resultado, entrada, t)).toBe('Si puedes, espera al martes 6: tendrás más del doble de días para pagar.');
   });
 });
 

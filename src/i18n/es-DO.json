@@ -5,15 +5,15 @@
     "sePagaEl": "Se paga el {{fecha}}",
     "porCadaMil": "{{valor}} por {{moneda}}1,000",
     "enfoque": "Enfoque: {{modo}}",
-    "otrasTarjetas": "Tus otras tarjetas",
+    "otrasTarjetas": "Tus tarjetas",
     "proximoPago": "Próximo pago",
     "tengoUnaCompra": "Tengo una compra",
     "vacio": "Agrega tu primera tarjeta y te diremos cuál usar hoy.",
     "recompensaPuntos": "{{puntos}} pts por {{monto}}",
     "recompensaCashback": "{{valor}} cashback por {{monto}}",
-    "proximoPagoDe": "{{alias}}, {{fecha}}",
+    "proximoPagoDe": "{{alias}} · {{fecha}}",
     "precision": "Precisión de recomendaciones: {{porcentaje}}%",
-    "bancoTermina": "{{banco}}, termina en {{ultimos4}}",
+    "bancoTermina": "{{banco}} · termina en {{ultimos4}}",
     "detalleFila": "{{banco}}. Se paga el {{fecha}}",
     "detalleFilaUltimos4": "{{banco}}, {{ultimos4}}. Se paga el {{fecha}}",
     "dias": "días",
@@ -26,15 +26,21 @@
     "sinTarjetasTitulo": "Agrega tu primera tarjeta",
     "agregarTarjeta": "Agregar tarjeta",
     "todasEnPausa": "Todas tus tarjetas están en pausa. Actívalas en Tarjetas para ver cuál usar hoy.",
-    "semaforoTitulo": "¿Es buen momento para usarla?",
+    "semaforoTitulo": "¿Es buen momento?",
     "fechaHoy": "{{diaSemana}} {{dia}} de {{mes}}",
-    "verTarjeta": "Ver {{alias}}"
+    "verTarjeta": "Ver {{alias}}",
+    "detalleLista": "{{banco}} · se paga el {{fecha}}",
+    "recompensaCashbackCorta": "{{valor}} por {{monto}}",
+    "diasParaPagarDosLineas": "días\npara pagar",
+    "corto": "Cortó el {{fecha}}",
+    "corta": "Corta el {{fecha}}",
+    "enfoqueCambiar": "Enfoque: {{modo}}. Cambiar"
   },
   "orden": {
-    "recomendado": "Recomendado",
-    "masDias": "Más días",
-    "masPuntos": "Más puntos",
-    "masCashback": "Más cashback"
+    "recomendado": "Para ti",
+    "masDias": "Días",
+    "masPuntos": "Puntos",
+    "masCashback": "Cashback"
   },
   "enfoque": {
     "liquidez": "Liquidez",
@@ -49,7 +55,8 @@
     "rojo": "Espera",
     "mensajeVerde": "Buen momento: una compra de hoy se paga en {{dias}} días",
     "mensajeAmarillo": "Una compra de hoy se paga en {{dias}} días",
-    "mensajeRojo": "Si puedes, espera al día {{dia}}: pasarías de {{antes}} a {{despues}} días"
+    "mensajeRojo": "Si puedes, espera al {{dia}}: tendrás {{despues}} días para pagar en vez de {{antes}}.",
+    "mensajeRojoDoble": "Si puedes, espera al {{dia}}: tendrás más del doble de días para pagar."
   },
   "etiqueta": {
     "cortaPronto": "Corta en {{dias}} días",
@@ -61,7 +68,13 @@
     "aproximada": "Comparación aproximada"
   },
   "unaTarjeta": {
-    "invitacion": "¿Tienes otra tarjeta? Agrégala y te diremos cuál conviene cada día"
+    "titulo": "¿Tienes otra tarjeta?",
+    "texto": "Agrégala y te diremos cuál conviene cada día.",
+    "siLaUsasHoy": "Si la usas hoy",
+    "siEsperas": "Si esperas al {{dia}}",
+    "cortaEl": "Corta el {{dia}}",
+    "proximoPago": "Próximo pago: {{fecha}}",
+    "diasN": "{{dias}} días"
   },
   "registro": {
     "banco": "Banco",
@@ -88,8 +101,8 @@
     "productoDesconocido": "Tipo sin definir",
     "diaCorte": "Día de corte",
     "fechaLimite": "Fecha límite de pago",
-    "diaDelMes": "Día del mes",
-    "diasDespues": "Días después del corte",
+    "diaDelMes": "Un día del mes",
+    "diasDespues": "Días después",
     "diaDelMesValor": "Día",
     "diasDespuesValor": "Días",
     "moneda": "¿Tu estado de cuenta trae un balance en dólares aparte?",
@@ -130,7 +143,7 @@
     "errores": {
       "aliasVacio": "Ponle un nombre a la tarjeta.",
       "bancoVacio": "Elige o escribe tu banco.",
-      "diaCorteInvalido": "Escribe un día de corte entre 1 y 31.",
+      "diaCorteInvalido": "Elige tu día de corte.",
       "fechaLimiteInvalida": "Revisa la fecha límite: un día entre 1 y 31, o de 1 a 60 días después del corte.",
       "fechaLimiteUsdSinDobleBalance": "Solo las tarjetas con pesos y dólares tienen fecha límite en dólares.",
       "fechaLimiteUsdLejana": "La fecha límite en dólares debe estar a 5 días o menos de la de pesos.",
@@ -155,7 +168,7 @@
     "seccionRecompensa": "Recompensa",
     "tituloTarjeta": "¿Cómo quieres llamarla?",
     "tituloMoneda": "¿Tu estado de cuenta trae un balance en dólares aparte?",
-    "tituloFechas": "¿Cuándo corta y cuándo se paga?",
+    "tituloFechas": "¿Cuándo corta tu tarjeta?",
     "tituloRecompensa": "¿Qué te da esta tarjeta?",
     "resumenCorteDia": "Corte día {{dia}}",
     "resumenPagoDia": "pago día {{dia}}",
@@ -186,7 +199,12 @@
       "recompensaUsd": "Algunas tarjetas dan otra recompensa en las compras en dólares, por ejemplo más millas. Actívalo solo si tu banco lo indica.",
       "enPausa": "Una tarjeta en pausa sigue guardada, pero Tino no la recomienda. Sirve si la bloqueaste o no la quieres usar por un tiempo."
     },
-    "tipoRegla": "¿Cómo te da los puntos?"
+    "tipoRegla": "¿Cómo te da los puntos?",
+    "sePagaElDia": "Se paga el día",
+    "diasDespuesDelCorte": "Días después del corte",
+    "vistaPrevia": "Con estas fechas, una compra de hoy se paga en {{dias}} días.",
+    "tituloBanco": "¿De qué banco es?",
+    "tituloProducto": "¿Qué tarjeta es?"
   },
   "pro": {
     "nombre": "Tino Pro",
@@ -196,7 +214,8 @@
   "pestanas": {
     "inicio": "Inicio",
     "tarjetas": "Tarjetas",
-    "ajustes": "Ajustes"
+    "ajustes": "Ajustes",
+    "etiqueta": "Navegación principal"
   },
   "tarjetas": {
     "titulo": "Tus tarjetas",
@@ -214,7 +233,7 @@
     "precision": "Precisión de recomendaciones: {{porcentaje}}%",
     "precisionInfo": "Qué tan completa está la información de tus tarjetas. Sube si confirmas el valor del punto de cada tarjeta y, más adelante, si registras tus fechas de cobro.",
     "datosTitulo": "Tus datos",
-    "datosInfo": "Tus datos se guardan cifrados solo en este teléfono. Puedes sacar una copia o borrarlos cuando quieras.",
+    "datosInfo": "Tus datos se guardan cifrados solo en este teléfono. Nunca pedimos el número de tu tarjeta.",
     "exportar": "Exportar mis datos",
     "exportarTitulo": "Exportar tus datos",
     "exportarAviso": "Se crea un archivo con tus tarjetas y preferencias para que lo guardes donde quieras. El archivo no va cifrado: guárdalo en un lugar seguro.",
@@ -224,7 +243,13 @@
     "borrarAviso": "Se borran tus tarjetas, tus preferencias y la clave de cifrado de este teléfono. No se puede deshacer.",
     "borrarConfirmar": "Borrar todo",
     "cancelar": "Cancelar",
-    "errorExportar": "No pudimos crear el archivo. Inténtalo de nuevo."
+    "errorExportar": "No pudimos crear el archivo. Inténtalo de nuevo.",
+    "precisionTitulo": "Precisión de recomendaciones",
+    "precisionPista": "Confirma el valor del punto de tus tarjetas para subirla.",
+    "general": "General",
+    "monedas": "Monedas",
+    "enfoque": "Enfoque",
+    "monedasDos": "{{principal}} y {{secundaria}}"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -257,7 +282,13 @@
   },
   "comun": {
     "masInformacion": "Más información sobre {{tema}}",
-    "iconoInfo": "i"
+    "atras": "Atrás",
+    "cerrar": "Cerrar",
+    "fechaCorta": "{{dia}} de {{mes}}.",
+    "diaConSemana": "{{diaSemana}} {{dia}}",
+    "porcentaje": "{{valor}}%",
+    "menos": "Restar uno a {{etiqueta}}",
+    "mas": "Sumar uno a {{etiqueta}}"
   },
   "compra": {
     "titulo": "Tengo una compra",
@@ -271,7 +302,13 @@
     "excluidaLocal": "{{alias}} no aparece: es solo de uso local.",
     "excluidaPausa": "{{alias}} está en pausa.",
     "montoInvalido": "Escribe un monto mayor que cero.",
-    "info": "Tino compara cuántos días tendrías para pagar esta compra y cuánto te devuelve cada tarjeta. En compras en dólares también cuenta si la tarjeta tiene balance en dólares."
+    "info": "Tino compara cuántos días tendrías para pagar esta compra y cuánto te devuelve cada tarjeta. En compras en dólares también cuenta si la tarjeta tiene balance en dólares.",
+    "deCashback": "de cashback",
+    "enPuntos": "en esta compra",
+    "puntosCorto": "{{puntos}} pts",
+    "usaEsta": "Usa esta tarjeta",
+    "paraPagarla": "para pagarla",
+    "diasN": "{{dias}} días"
   },
   "monedas": {
     "DOP": "Pesos",
@@ -288,7 +325,18 @@
     "valorPunto": "1 punto vale {{valor}}",
     "precision": "Precisión de esta tarjeta: {{porcentaje}}%",
     "precisionInfo": "Qué tan completa está la información de esta tarjeta. Sube si confirmas el valor del punto y, más adelante, si registras tus fechas de cobro.",
-    "editar": "Editar tarjeta",
-    "enPausa": "Esta tarjeta está en pausa: no aparece en las recomendaciones."
+    "editar": "Editar",
+    "enPausa": "Esta tarjeta está en pausa: no aparece en las recomendaciones.",
+    "cashbackPorcentaje": "Cashback {{porcentaje}}%",
+    "puntos": "Puntos",
+    "sinRecompensaCorta": "Sin recompensa",
+    "pausaDetalle": "No aparece en las recomendaciones",
+    "precisionTitulo": "Precisión de esta tarjeta",
+    "precisionPunto": "Confirma el valor del punto para subirla.",
+    "precisionCobros": "Sube cuando registres tus fechas de cobro.",
+    "hitoCorto": "Cortó",
+    "hitoHoy": "Hoy",
+    "hitoCorta": "Corta",
+    "hitoPagas": "Pagas"
   }
 }
