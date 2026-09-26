@@ -260,7 +260,20 @@
     "confirmarPunto": "Confirmar el valor del punto",
     "cobrosN_one": "{{count}} cobro",
     "cobrosN_other": "{{count}} cobros",
-    "cobrosNinguno": "Agregar"
+    "cobrosNinguno": "Agregar",
+    "avisosTitulo": "Avisos",
+    "avisoFechaLimite": "Fecha límite próxima",
+    "avisoFechaLimiteDetalle": "3 días antes de cada pago",
+    "avisoVenceAntes": "Vence antes de tu cobro",
+    "avisoVenceAntesDetalle": "5 días antes, si registras tus cobros",
+    "avisoCambio": "Cambio de tarjeta",
+    "avisoCambioDetalle": "Cuando otra tarjeta pasa a ser la mejor",
+    "avisoResumen": "Resumen del mes",
+    "avisoResumenDetalle": "El día 1 de cada mes",
+    "activarAvisos": "Activar avisos",
+    "activarAvisosDetalle": "Tino necesita tu permiso para avisarte",
+    "avisosApagados": "Los avisos están apagados",
+    "avisosApagadosDetalle": "Actívalos en los ajustes del teléfono"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -286,7 +299,11 @@
     "dondeVivesAyuda": "Así te mostramos los bancos y las tarjetas de tu país. Puedes cambiarlo en Ajustes.",
     "cobrosTitulo": "¿Cuándo cobras?",
     "cobrosTexto": "Es opcional. Con tus fechas de cobro te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
-    "omitir": "Omitir por ahora"
+    "omitir": "Omitir por ahora",
+    "avisosTitulo": "¿Te avisamos?",
+    "avisosTexto": "Te avisamos antes de cada fecha límite y cuando te conviene cambiar de tarjeta. Nunca te mostramos montos en los avisos.",
+    "activarAvisos": "Activar avisos",
+    "ahoraNo": "Ahora no"
   },
   "enfoqueDescripcion": {
     "liquidez": "Más días para pagar sin intereses.",
@@ -457,5 +474,20 @@
     "explicacion": "Con tus fechas de cobro te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
     "vacio": "Todavía no tienes cobros registrados.",
     "proximo": "próximo: {{fecha}}"
+  },
+  "avisos": {
+    "fechaLimiteTitulo": "Tu pago vence el {{dia}}",
+    "fechaLimiteCuerpo": "{{alias}} vence el {{fecha}}. Págala completa y a tiempo para no pagar intereses.",
+    "fechaLimiteDoble": "{{alias}} vence el {{fecha}}. Recuerda pagar los dos balances: el de pesos y el de dólares.",
+    "fechaLimiteDobleFechas": "{{alias}}: el balance en pesos vence el {{fecha}} y el de dólares el {{fechaUsd}}. Recuerda pagar los dos.",
+    "venceAntesTitulo": "Vence antes de tu cobro",
+    "venceAntesCuerpo": "{{alias}} vence el {{fecha}} y cobras el {{cobro}}. Aparta el dinero antes.",
+    "venceAntesEstimado": "{{alias}} vence el {{fecha}}. Si tu cobro del {{cobro}} se retrasa, vence antes de que cobres.",
+    "cambioTitulo": "Cambia tu tarjeta de hoy",
+    "cambioCuerpo": "Desde hoy, usa {{alias}}: te da {{dias}} días para pagar.",
+    "resumenTitulo": "Tu resumen de {{mes}}",
+    "resumenCuerpo_one": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjeta.",
+    "resumenCuerpo_other": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjetas distintas.",
+    "canal": "Avisos de pago"
   }
 }

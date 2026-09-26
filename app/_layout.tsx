@@ -9,6 +9,7 @@ import { archivosFuente, Pantalla, Texto, useTema, type Tema } from '@/diseno';
 import { ProveedorPais, usePais } from '@/paises';
 import { ProveedorDatos, useEstadoDatos } from '@/datos';
 import { ProveedorAlmacen, useAlmacen } from '@/estado';
+import { useAvisos } from '@/notificaciones/useAvisos';
 import { ProveedorCatalogo } from '@/catalogo';
 
 SplashScreen.preventAutoHideAsync();
@@ -103,7 +104,18 @@ function CuandoCargue({ children }: { children: ReactNode }) {
   }, [cargado, paisGuardado, asegurarPreferencias, cambiarPais, config.codigo, idioma]);
 
   if (!sincronizado) return null;
-  return <OcultarArranque>{children}</OcultarArranque>;
+  return (
+    <OcultarArranque>
+      <AvisosProgramados />
+      {children}
+    </OcultarArranque>
+  );
+}
+
+// Programa los avisos locales con los datos actuales (sección 11); no dibuja nada.
+function AvisosProgramados() {
+  useAvisos();
+  return null;
 }
 
 function OcultarArranque({ children }: { children: ReactNode }) {

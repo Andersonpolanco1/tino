@@ -4,12 +4,12 @@ import { BarraSuperior, Boton, FilaLista, ListaAgrupada, Pantalla, Texto } from 
 import { useAlmacen } from '@/estado';
 import { resumenFrecuencia, type Traducir } from '@/ingresos/borrador';
 
-// Onboarding, paso 4: fechas de cobro, opcionales y con "Omitir" visible (sección 13.1).
+// Onboarding, paso 4 (luego vienen los avisos): fechas de cobro, opcionales y con "Omitir" visible (sección 13.1).
 export default function CobrosOnboarding() {
   const { t } = useTranslation();
   const router = useRouter();
   const ingresos = useAlmacen(s => s.ingresos);
-  const terminar = () => router.replace('/inicio');
+  const terminar = () => router.push('/onboarding/avisos');
   return (
     <Pantalla
       arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: () => router.back() }} />}

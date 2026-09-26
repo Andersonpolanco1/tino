@@ -32,6 +32,8 @@ const config: ExpoConfig = {
     'expo-localization',
     'expo-secure-store',
     ['expo-sqlite', { useSQLCipher: true }],
+    // Avisos locales programados en el teléfono (sección 11); el color sale del tema.
+    ['expo-notifications', { color: claro.primario }],
     [
       'expo-splash-screen',
       {

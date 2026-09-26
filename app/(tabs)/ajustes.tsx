@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, Linking, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { FilaLista, Hoja, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import { FilaLista, Hoja, ListaAgrupada, Palanca, type NombreIcono, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import type { AjustesAvisos } from '@/tipos/tipos';
+import { AVISOS_PREDETERMINADOS } from '@/notificaciones/planificar';
+import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
 import { nombrePais, usePais } from '@/paises';
 import { useAlmacen, useElegirPais } from '@/estado';
 import { borrarBase, useEstadoDatos, useReabrirDatos } from '@/datos';
@@ -13,6 +16,14 @@ import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 
 const RADIO_ANILLO = 30;
+
+// Los avisos del MVP (sección 11), cada uno con su interruptor.
+const FILAS_AVISOS: [keyof AjustesAvisos, NombreIcono, string, string][] = [
+  ['fechaLimite', 'calendario', 'ajustes.avisoFechaLimite', 'ajustes.avisoFechaLimiteDetalle'],
+  ['venceAntesDelCobro', 'reloj', 'ajustes.avisoVenceAntes', 'ajustes.avisoVenceAntesDetalle'],
+  ['cambioTarjeta', 'tarjetas', 'ajustes.avisoCambio', 'ajustes.avisoCambioDetalle'],
+  ['resumenMensual', 'moneda', 'ajustes.avisoResumen', 'ajustes.avisoResumenDetalle'],
+];
 const CIRCUNFERENCIA = 2 * Math.PI * RADIO_ANILLO;
 
 // Ajustes con el rediseño: precisión en un anillo y listas agrupadas.
@@ -25,6 +36,8 @@ export default function Ajustes() {
   const tarjetas = useAlmacen(s => s.tarjetas);
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
+  const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
+  const permiso = usePermisoAvisos();
   const datos = useEstadoDatos();
   const reabrir = useReabrirDatos();
   const [hojaPais, setHojaPais] = useState(false);
@@ -131,6 +144,34 @@ export default function Ajustes() {
           <FilaLista icono="ajustes" titulo={t('ajustes.enfoque')} valor={t(`enfoque.${preferencias.enfoque.modo}`)} flecha onPress={() => setHojaEnfoque(true)} />
         ) : null}
       </ListaAgrupada>
+
+      {preferencias ? (
+        <ListaAgrupada titulo={t('ajustes.avisosTitulo')}>
+          {permiso.estado === 'sin_preguntar' ? (
+            <FilaLista icono="alto" tono="alerta" titulo={t('ajustes.activarAvisos')} detalle={t('ajustes.activarAvisosDetalle')} flecha onPress={permiso.pedir} />
+          ) : permiso.estado === 'negado' ? (
+            <FilaLista icono="alto" tono="alerta" titulo={t('ajustes.avisosApagados')} detalle={t('ajustes.avisosApagadosDetalle')} flecha onPress={() => Linking.openSettings()} />
+          ) : null}
+          {FILAS_AVISOS.map(([clave, icono, titulo, detalle]) => {
+            const avisos = { ...AVISOS_PREDETERMINADOS, ...preferencias.avisos };
+            return (
+              <FilaLista
+                key={clave}
+                icono={icono}
+                titulo={t(titulo)}
+                detalle={t(detalle)}
+                derecha={
+                  <Palanca
+                    valor={avisos[clave]}
+                    etiqueta={t(titulo)}
+                    onCambio={valor => guardarPreferencias({ ...preferencias, avisos: { ...avisos, [clave]: valor } })}
+                  />
+                }
+              />
+            );
+          })}
+        </ListaAgrupada>
+      ) : null}
 
       <View style={{ gap: tema.espacio.s }}>
         <ListaAgrupada titulo={t('ajustes.datosTitulo')}>

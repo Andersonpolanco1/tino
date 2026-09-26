@@ -112,16 +112,16 @@ Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con f
 - [x] Completar `motor.py` con las 5 frecuencias, regenerar los casos y ajustar `ingresos.ts` (decisión D6): 21 casos, 4 de cobros (D37)
 - [x] Registro de ingresos con las 5 frecuencias, incluida la personalizada con fechas estimadas (Ajustes > Tus cobros)
 - [x] Etiqueta y alerta "Vence antes de tu cobro": la etiqueta en la lista (motor) y el aviso en Por pagar y en el detalle, con la variante prudente para cobros estimados (5.2)
-- [ ] Notificaciones: cambio de tarjeta recomendada, fecha límite y resumen mensual de lo ganado
-- [ ] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18): el de cobros ya está, con "Omitir por ahora"; falta el permiso
+- [x] Notificaciones: cambio de tarjeta recomendada, fecha límite, vence antes del cobro y resumen mensual (D38, D41), programadas con `expo-notifications` desde `src/notificaciones/`; falta verlas llegar en un teléfono
+- [x] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18): cobros con "Omitir por ahora" y avisos con "Ahora no"
 - [ ] Sugerencias de datos contextuales (2.2 de la especificación)
 
 Criterios de la especificación:
 
 - [x] 14.1: las 5 frecuencias generan las fechas de cobro correctas durante 12 meses, incluidos feriados (`src/motor/__tests__/ingresos.test.ts`)
-- [ ] 14.1: si la fecha límite cae antes del próximo cobro, aparece la etiqueta y se envía la alerta
+- [x] 14.1: si la fecha límite cae antes del próximo cobro, aparece la etiqueta y se envía la alerta
 - [ ] 14.1: una sugerencia descartada dos veces no reaparece en 60 días
-- [ ] 14.1: el recordatorio de una tarjeta con doble balance menciona los dos pagos
+- [x] 14.1: el recordatorio de una tarjeta con doble balance menciona los dos pagos (`src/notificaciones/__tests__/planificar.test.ts`)
 
 ## Etapa 6. Pro, analítica y lanzamiento
 
@@ -216,4 +216,5 @@ Criterios de la especificación:
 | D38 | 2026-09-26 | El resumen mensual del MVP cuenta lo que Tino sabe sin compras registradas: cuántas tarjetas distintas recomendó y hasta cuántos días para pagar dio la tarjeta de cada día. Lo ganado en puntos y cashback llega con "La usé" (v2) | La especificación (sección 11) pide días aprovechados y lo ganado, pero sin compras registradas no se puede calcular |
 | D39 | 2026-09-26 | Sin la "ventaja" a las tarjetas que se pagan pocos días después de un cobro (sección 5.3 de la especificación); el MVP solo tiene la penalización de "vence antes del cobro" | La documentación técnica (5.3) y los casos de referencia no la definen; agregarla cambia las reglas del motor. Se reconsidera con los montos (nivel 3) |
 | D40 | 2026-09-26 | Registro de cobros en 3 pasos (frecuencia, días y nombre) con vista previa de los próximos 3 cobros. Quincenal viene con 15 y 30; en cada 2 semanas se elige cuál de los dos últimos días de esa semana fue de cobro, en vez de pedir una fecha; las fechas variables se agregan con mes y día tocables y la marca "estimada". Si el cobro cae en día no hábil, viene "se adelanta". El onboarding pasa a bienvenida, tarjetas, enfoque y cobros. El modo Liquidez se llama "Días" en toda la app | Mismo patrón que el registro de tarjetas y sin teclados de fecha; en inicio el control decía "Días" y Ajustes "Liquidez" |
+| D41 | 2026-09-26 | Avisos locales: se planifican 60 días hacia adelante (máximo 60, por el límite de 64 de iOS) a las 9:00, y se reprograman al cambiar tarjetas, cobros, preferencias o el día. El de cambio de tarjeta sale el día en que de verdad cambia la mejor, no "el día después de cada corte". Cada aviso tiene su interruptor en Ajustes (`Preferencias.avisos`, opcional para no migrar); el permiso se pide en el último paso del onboarding | Con las reglas del motor la mejor tarjeta cambia el mismo día del corte (la compra entra en el estado siguiente) o 3 días antes (corta pronto), así que "el día después" llegaba tarde o no llegaba |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

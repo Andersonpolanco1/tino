@@ -91,6 +91,16 @@ export interface Preferencias {
   umbralCorteCercanoDias: number;    // 3 por defecto
   analiticaActiva: boolean;
   plan: 'gratis' | 'pro';
+  // Etapa 5: qué avisos quiere el usuario (sección 11). Opcional para no migrar las
+  // preferencias ya guardadas; si falta, todos están activos.
+  avisos?: AjustesAvisos;
+}
+
+export interface AjustesAvisos {
+  fechaLimite: boolean;              // 3 días antes de la fecha límite
+  venceAntesDelCobro: boolean;       // 5 días antes, si vence antes del próximo cobro
+  cambioTarjeta: boolean;            // el día después de un corte, si cambia la mejor tarjeta
+  resumenMensual: boolean;           // el día 1 de cada mes
 }
 
 export interface ConfigPais {

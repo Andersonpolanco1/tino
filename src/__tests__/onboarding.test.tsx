@@ -11,6 +11,7 @@ import { ProveedorPais } from '@/paises';
 import TarjetasOnboarding from '../../app/onboarding/tarjetas';
 import EnfoqueOnboarding from '../../app/onboarding/enfoque';
 import CobrosOnboarding from '../../app/onboarding/cobros';
+import AvisosOnboarding from '../../app/onboarding/avisos';
 
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter }));
@@ -74,11 +75,19 @@ test('elegir el enfoque lo guarda y sigue a los cobros en un toque', async () =>
   expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/cobros');
 });
 
-test('los cobros son opcionales: "Omitir" lleva a inicio (sección 13.1)', async () => {
+test('los cobros son opcionales: "Omitir" sigue a los avisos (sección 13.1)', async () => {
   const almacen = await preparar();
   await render(envolver(almacen, <CobrosOnboarding />));
   await fireEvent.press(screen.getByText('Agregar un cobro'));
   expect(mockRouter.push).toHaveBeenCalledWith('/cobros/nuevo');
   await fireEvent.press(screen.getByText('Omitir por ahora'));
+  expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/avisos');
+});
+
+test('el permiso de avisos se pide al final y "Ahora no" lleva a inicio', async () => {
+  const almacen = await preparar();
+  await render(envolver(almacen, <AvisosOnboarding />));
+  expect(screen.getByText('¿Te avisamos?')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByText('Ahora no'));
   expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
 });
