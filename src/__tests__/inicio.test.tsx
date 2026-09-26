@@ -68,8 +68,8 @@ test('muestra la fecha, la tarjeta de hoy y las demás en orden de enfoque (ejem
   await render(envolver(await almacenCon([A, B, C]), <Inicio />));
   expect(screen.getByText('Martes 6 de octubre')).toBeOnTheScreen();
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta C\. 46 días para pagar, se paga el 21 de noviembre/);
-  expect(screen.getByText('Tus tarjetas')).toBeOnTheScreen();
-  expect(screen.getByText('Tarjeta B')).toBeOnTheScreen();
+  expect(screen.getByText('Otras opciones')).toBeOnTheScreen();
+  expect(screen.getAllByText('Tarjeta B')).toHaveLength(2); // en Otras opciones y en Por pagar
   expect(screen.getByText('Tarjeta A')).toBeOnTheScreen();
   expect(screen.getByText('RD$10 por RD$1,000')).toBeOnTheScreen();
 });
@@ -91,7 +91,7 @@ test('el control de enfoque guarda el enfoque al instante y recalcula (decisión
 
 test('el ícono de información explica el enfoque', async () => {
   await render(envolver(await almacenCon([A, B, C]), <Inicio />));
-  await fireEvent.press(screen.getByLabelText('Más información sobre Tus tarjetas'));
+  await fireEvent.press(screen.getByLabelText('Más información sobre Tu enfoque'));
   expect(screen.getByText(/Tu enfoque decide qué tarjeta te recomendamos/)).toBeOnTheScreen();
 });
 
@@ -113,6 +113,12 @@ test('el lector de pantalla oye el semáforo y las etiquetas en palabras (criter
   const fila = screen.getAllByRole('button').find(b => /^Tarjeta A\./.test(b.props.accessibilityLabel ?? ''))!;
   expect(fila.props.accessibilityLabel).toMatch(/Buen momento|Momento normal|Espera/);
   expect(fila.props.accessibilityLabel).toMatch(/pts por RD\$1,000/);
+});
+
+test('"Por pagar" muestra el pago pendiente más cercano y cuánto falta', async () => {
+  await render(envolver(await almacenCon([A, B, C]), <Inicio />));
+  expect(screen.getByText('Por pagar')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Tarjeta B. Vence el 10 de octubre · en 4 días')).toBeOnTheScreen();
 });
 
 test('"Tengo una compra" es un botón con texto que abre la consulta', async () => {

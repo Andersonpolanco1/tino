@@ -13,6 +13,7 @@ import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ControlEnfoque } from '@/inicio/SelectorEnfoque';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
+import { numeroDe } from '@/motor/fechas';
 
 // Sección 3 de la especificación, con el rediseño: la tarjeta de hoy al abrir la app.
 export default function Inicio() {
@@ -136,44 +137,65 @@ export default function Inicio() {
     );
   }
 
+  // Por pagar: la deuda del estado ya cortado, distinta de cuándo se paga una compra de hoy.
+  const diasParaPago = numeroDe(pago.fecha) - numeroDe(hoy);
+  const vence =
+    diasParaPago === 0
+      ? t('inicio.venceHoy')
+      : diasParaPago === 1
+        ? t('inicio.venceManana', { fecha: textoFecha(pago.fecha, idioma) })
+        : t('inicio.venceEnDias', { fecha: textoFecha(pago.fecha, idioma), dias: diasParaPago });
+
+  // De arriba abajo: el enfoque, la tarjeta que gana con él, las demás y lo que queda por pagar.
   return (
     <Pantalla conPestanas>
       {encabezado}
+      <View style={{ gap: tema.espacio.s }}>
+        <EtiquetaConInfo etiqueta={t('inicio.tuEnfoque')} info={t('inicio.enfoqueInfo')} variante="apoyo" />
+        <ControlEnfoque />
+      </View>
       <TarjetaDestacada vista={primera} motivo={modo ? t(`inicio.motivo.${modo}`) : undefined} onPress={() => abrir(primera)} />
       <View style={{ gap: tema.espacio.m }}>
-        <EtiquetaConInfo etiqueta={t('inicio.otrasTarjetas')} info={t('inicio.enfoqueInfo')} variante="subtitulo" encabezado />
-        <ControlEnfoque />
+        <Texto variante="subtitulo" accessibilityRole="header">
+          {t('inicio.otrasOpciones')}
+        </Texto>
         <ListaAgrupada sangria={70}>
           {resto.map(v => (
             <FilaTarjeta key={v.tarjeta.id} vista={v} onPress={() => abrir(v)} />
           ))}
         </ListaAgrupada>
       </View>
-      <Pressable
-        accessibilityRole="button"
-        onPress={() => abrir(pago.vista)}
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: tema.espacio.m,
-          paddingVertical: tema.espacio.m,
-          paddingHorizontal: tema.espacio.l,
-          borderRadius: tema.radio.tarjeta,
-          backgroundColor: tema.color.superficie,
-          boxShadow: tema.sombra.tarjeta,
-        }}
-      >
-        <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-          <Icono nombre="calendario" color="primario" tamano={20} />
-        </View>
-        <View style={{ flex: 1, gap: 1 }}>
-          <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
-            {t('inicio.proximoPago')}
-          </Texto>
-          <Texto variante="cuerpoFuerte">{t('inicio.proximoPagoDe', { alias: pago.vista.tarjeta.alias, fecha: textoFecha(pago.fecha, idioma) })}</Texto>
-        </View>
-        <Icono nombre="derecha" color="textoSecundario" tamano={18} />
-      </Pressable>
+      <View style={{ gap: tema.espacio.m }}>
+        <Texto variante="subtitulo" accessibilityRole="header">
+          {t('inicio.porPagar')}
+        </Texto>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`${pago.vista.tarjeta.alias}. ${vence}`}
+          onPress={() => abrir(pago.vista)}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: tema.espacio.m,
+            paddingVertical: tema.espacio.m,
+            paddingHorizontal: tema.espacio.l,
+            borderRadius: tema.radio.tarjeta,
+            backgroundColor: tema.color.superficie,
+            boxShadow: tema.sombra.tarjeta,
+          }}
+        >
+          <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: diasParaPago <= 3 ? tema.color.alertaFondo : tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
+            <Icono nombre="calendario" color={diasParaPago <= 3 ? 'alertaTexto' : 'primario'} tamano={20} />
+          </View>
+          <View style={{ flex: 1, gap: 1 }}>
+            <Texto variante="cuerpoFuerte">{pago.vista.tarjeta.alias}</Texto>
+            <Texto variante="apoyo" color={diasParaPago <= 3 ? 'alertaTexto' : 'textoSecundario'}>
+              {vence}
+            </Texto>
+          </View>
+          <Icono nombre="derecha" color="textoSecundario" tamano={18} />
+        </Pressable>
+      </View>
     </Pantalla>
   );
 }

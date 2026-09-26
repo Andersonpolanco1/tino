@@ -5,13 +5,10 @@
     "sePagaEl": "Se paga el {{fecha}}",
     "porCadaMil": "{{valor}} por {{moneda}}1,000",
     "enfoque": "Enfoque: {{modo}}",
-    "otrasTarjetas": "Tus tarjetas",
-    "proximoPago": "Próximo pago",
     "tengoUnaCompra": "Tengo una compra",
     "vacio": "Agrega tu primera tarjeta y te diremos cuál usar hoy.",
     "recompensaPuntos": "{{puntos}} pts por {{monto}}",
     "recompensaCashback": "{{valor}} cashback por {{monto}}",
-    "proximoPagoDe": "{{alias}} · {{fecha}}",
     "precision": "Precisión de recomendaciones: {{porcentaje}}%",
     "bancoTermina": "{{banco}} · termina en {{ultimos4}}",
     "detalleFila": "{{banco}}. Se paga el {{fecha}}",
@@ -38,7 +35,13 @@
       "liquidez": "Tu mejor opción para tener más días para pagar",
       "puntos": "Tu mejor opción para acumular puntos",
       "cashback": "Tu mejor opción para recibir cashback"
-    }
+    },
+    "tuEnfoque": "Tu enfoque",
+    "otrasOpciones": "Otras opciones",
+    "porPagar": "Por pagar",
+    "venceHoy": "Vence hoy",
+    "venceManana": "Vence mañana, {{fecha}}",
+    "venceEnDias": "Vence el {{fecha}} · en {{dias}} días"
   },
   "enfoque": {
     "liquidez": "Liquidez",
