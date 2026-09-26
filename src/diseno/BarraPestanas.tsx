@@ -26,14 +26,9 @@ interface Props {
 export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDesenfoque }: Props) {
   const tema = useTema();
   const margenes = useSafeAreaInsets();
-  // El desenfoque se vuelve a montar al cambiar de pestaña, un momento después, cuando el
-  // BlurTargetView de esa pestaña ya existe; si no, no encuentra qué desenfocar.
-  const [lista, setLista] = useState<number | null>(null);
-  useEffect(() => {
-    setLista(null);
-    const espera = setTimeout(() => setLista(activa), 50);
-    return () => clearTimeout(espera);
-  }, [activa]);
+  // El desenfoque se monta después del contenido, cuando su BlurTargetView ya existe.
+  const [montada, setMontada] = useState(false);
+  useEffect(() => setMontada(true), []);
   return (
     <View
       accessibilityRole="tablist"
@@ -54,9 +49,8 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDe
       {/* Vidrio esmerilado: lo que pasa por debajo se desenfoca y un velo de la superficie da el
           color, para que no compita con las pestañas. */}
       <View style={[StyleSheet.absoluteFill, { borderRadius: 33, overflow: 'hidden' }]} pointerEvents="none">
-        {lista === activa ? (
+        {montada ? (
           <BlurView
-            key={activa}
             style={StyleSheet.absoluteFill}
             intensity={tema.desenfoque.barraPestanas}
             tint={tema.modo === 'oscuro' ? 'dark' : 'light'}

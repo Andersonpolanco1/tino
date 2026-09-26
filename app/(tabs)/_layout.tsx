@@ -1,43 +1,42 @@
-import { createRef, useRef, type RefObject } from 'react';
-import type { View } from 'react-native';
+import { useRef } from 'react';
+import { View } from 'react-native';
 import Tabs from 'expo-router/js-tabs';
+import { usePathname, useRouter } from 'expo-router';
 import { BlurTargetView } from 'expo-blur';
 import { useTranslation } from 'react-i18next';
 import { BarraPestanas, type NombreIcono } from '@/diseno';
 
-const ICONOS: Record<string, NombreIcono> = { inicio: 'inicio', tarjetas: 'tarjetas', ajustes: 'ajustes' };
+const PESTANAS: { nombre: 'inicio' | 'tarjetas' | 'ajustes'; icono: NombreIcono }[] = [
+  { nombre: 'inicio', icono: 'inicio' },
+  { nombre: 'tarjetas', icono: 'tarjetas' },
+  { nombre: 'ajustes', icono: 'ajustes' },
+];
 
-// Barra de pestañas flotante del rediseño en lugar de la barra del sistema.
+// Barra de pestañas flotante del rediseño en lugar de la barra del sistema. Las pestañas van
+// dentro de un BlurTargetView y la barra fuera, encima: así en Android la barra puede desenfocar
+// el contenido que pasa por debajo sin desenfocarse a sí misma.
 export default function LayoutPestanas() {
   const { t } = useTranslation();
-  // Cada pestaña va dentro de su BlurTargetView; la barra desenfoca la que está a la vista.
-  const objetivos = useRef<Record<string, RefObject<View | null>>>({});
-  const objetivoDe = (clave: string) => (objetivos.current[clave] ??= createRef<View>());
+  const router = useRouter();
+  const ruta = usePathname();
+  const objetivo = useRef<View>(null);
+  const activa = Math.max(0, PESTANAS.findIndex(p => ruta.startsWith(`/${p.nombre}`)));
   return (
-    <Tabs
-      screenOptions={{ headerShown: false }}
-      screenLayout={({ route, children }) => (
-        <BlurTargetView ref={objetivoDe(route.key)} style={{ flex: 1 }}>
-          {children}
-        </BlurTargetView>
-      )}
-      tabBar={({ state, navigation }) => (
-        <BarraPestanas
-          etiqueta={t('pestanas.etiqueta')}
-          activa={state.index}
-          objetivoDesenfoque={objetivoDe(state.routes[state.index].key)}
-          pestanas={state.routes.map(r => ({ clave: r.key, titulo: t(`pestanas.${r.name}`), icono: ICONOS[r.name] ?? 'inicio' }))}
-          onElegir={i => {
-            const ruta = state.routes[i];
-            const evento = navigation.emit({ type: 'tabPress', target: ruta.key, canPreventDefault: true });
-            if (state.index !== i && !evento.defaultPrevented) navigation.navigate(ruta.name);
-          }}
-        />
-      )}
-    >
-      <Tabs.Screen name="inicio" />
-      <Tabs.Screen name="tarjetas" />
-      <Tabs.Screen name="ajustes" />
-    </Tabs>
+    <View style={{ flex: 1 }}>
+      <BlurTargetView ref={objetivo} style={{ flex: 1 }}>
+        <Tabs screenOptions={{ headerShown: false }} tabBar={() => null}>
+          {PESTANAS.map(p => (
+            <Tabs.Screen key={p.nombre} name={p.nombre} />
+          ))}
+        </Tabs>
+      </BlurTargetView>
+      <BarraPestanas
+        etiqueta={t('pestanas.etiqueta')}
+        activa={activa}
+        objetivoDesenfoque={objetivo}
+        pestanas={PESTANAS.map(p => ({ clave: p.nombre, titulo: t(`pestanas.${p.nombre}`), icono: p.icono }))}
+        onElegir={i => i !== activa && router.navigate(`/${PESTANAS[i].nombre}`)}
+      />
+    </View>
   );
 }
