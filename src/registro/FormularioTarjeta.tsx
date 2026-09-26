@@ -37,6 +37,8 @@ interface Props {
   onListo: (tarjeta: Tarjeta, preguntarPagoUsd: boolean) => void;
   onBorrada?: () => void;
   onCerrar: () => void;
+  // Al editar, abre directo esa sección; guardar o volver cierra la pantalla (viene del detalle).
+  seccionInicial?: PasoRegistro;
 }
 
 type Vista = 'banco' | 'producto' | PasoRegistro | 'secciones';
@@ -52,7 +54,7 @@ const ORDEN_PASOS: PasoRegistro[] = ['tarjeta', 'moneda', 'fechas', 'recompensa'
 
 // Agregar: un paso por pantalla con barra de progreso (rediseño). Editar: la tarjeta en
 // secciones; cada una se abre y se guarda sola.
-export function FormularioTarjeta({ tarjeta, onListo, onBorrada, onCerrar }: Props) {
+export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada, onCerrar }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   const traducir = t as unknown as Traducir;
@@ -65,7 +67,7 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada, onCerrar }: Pro
   const editando = !!tarjeta;
   const [guardada, setGuardada] = useState<BorradorTarjeta>(() => (tarjeta ? borradorDesde(tarjeta) : borradorNuevo()));
   const [b, setB] = useState<BorradorTarjeta>(guardada);
-  const [vista, setVista] = useState<Vista>(editando ? 'secciones' : catalogo ? 'banco' : 'tarjeta');
+  const [vista, setVista] = useState<Vista>(editando ? (seccionInicial ?? 'secciones') : catalogo ? 'banco' : 'tarjeta');
   const [bancoAMano, setBancoAMano] = useState(() => !catalogo || (!!tarjeta && tarjeta.emisorId === null));
   const [errores, setErrores] = useState<ErrorRegistro[]>([]);
   const [guardando, setGuardando] = useState(false);
@@ -105,7 +107,7 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada, onCerrar }: Pro
       await guardarTarjeta(r.tarjeta);
       setB(borrador);
       setGuardada(borrador);
-      if (editando) ir('secciones');
+      if (editando) seccionInicial ? onCerrar() : ir('secciones');
       onListo(r.tarjeta, tieneDolares(r.tarjeta) && pagoBalanceUsd === null);
     } catch {
       Alert.alert(t('registro.errorGuardar'));
@@ -127,7 +129,7 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada, onCerrar }: Pro
   function atras(v: Vista) {
     if (editando) {
       setB(guardada);
-      return ir('secciones');
+      return seccionInicial ? onCerrar() : ir('secciones');
     }
     if (v === 'producto') return ir('banco');
     const i = pasos.indexOf(v as PasoRegistro);

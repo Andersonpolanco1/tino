@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Campo, ControlSegmentado, EtiquetaConInfo, Texto, useTema } from '../diseno';
+import { Boton, Campo, ControlSegmentado, EtiquetaConInfo, Icono, Texto, useTema } from '../diseno';
 import type { BorradorRecompensa } from './borrador';
 
 interface Props {
@@ -66,6 +66,17 @@ export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Pro
             onChangeText={x => cambiar({ valorPunto: decimal(x), valorPuntoConfirmado: true })}
             keyboardType="decimal-pad"
           />
+          {valor.valorPuntoConfirmado ? (
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.s }}>
+              <Icono nombre="check" color="primario" tamano={18} grosor={2.5} />
+              <Texto variante="apoyo" color="primario">
+                {t('registro.valorPuntoConfirmado')}
+              </Texto>
+            </View>
+          ) : (
+            // Si el valor precargado ya es el correcto, se confirma sin reescribirlo (sección 4.2).
+            <Boton titulo={t('registro.confirmarValorPunto')} variante="secundario" icono="check" onPress={() => cambiar({ valorPuntoConfirmado: true })} />
+          )}
         </View>
       ) : null}
       {valor.tipo === 'cashback' ? (

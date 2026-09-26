@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, View } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { FilaLista, Hoja, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { nombrePais, usePais } from '@/paises';
@@ -9,6 +10,7 @@ import { borrarBase, useEstadoDatos, useReabrirDatos } from '@/datos';
 import { compartirExportacion, datosParaExportar } from '@/datos/exportar';
 import { precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
+import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 
 const RADIO_ANILLO = 30;
 const CIRCUNFERENCIA = 2 * Math.PI * RADIO_ANILLO;
@@ -17,6 +19,7 @@ const CIRCUNFERENCIA = 2 * Math.PI * RADIO_ANILLO;
 export default function Ajustes() {
   const { t } = useTranslation();
   const tema = useTema();
+  const router = useRouter();
   const { config, opciones, idioma } = usePais();
   const elegirPais = useElegirPais();
   const tarjetas = useAlmacen(s => s.tarjetas);
@@ -25,6 +28,7 @@ export default function Ajustes() {
   const reabrir = useReabrirDatos();
   const [hojaPais, setHojaPais] = useState(false);
   const [hojaEnfoque, setHojaEnfoque] = useState(false);
+  const porConfirmar = tarjetas.filter(valorPuntoPorConfirmar);
   const precision = precisionGeneral(tarjetas, { hayIngresos: false, catalogoDisponible: config.catalogoDisponible });
   const nombreMoneda = (m: string) => t(`monedas.${m}`, { defaultValue: m });
   const monedas = config.monedaSecundaria
@@ -91,10 +95,25 @@ export default function Ajustes() {
           <View style={{ flex: 1, gap: tema.espacio.xs }} accessible accessibilityLabel={t('ajustes.precision', { porcentaje: precision })}>
             <Texto variante="cuerpoFuerte">{t('ajustes.precisionTitulo')}</Texto>
             <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-              {t('ajustes.precisionPista')}
+              {porConfirmar.length ? t('ajustes.precisionPistaPunto', { count: porConfirmar.length }) : t('ajustes.precisionPistaCobros')}
             </Texto>
           </View>
         </Superficie>
+      ) : null}
+      {porConfirmar.length ? (
+        <ListaAgrupada sangria={16}>
+          {porConfirmar.map(tarjeta => (
+            <FilaLista
+              key={tarjeta.id}
+              icono="moneda"
+              tono="recompensa"
+              titulo={tarjeta.alias}
+              detalle={t('ajustes.confirmarPunto')}
+              flecha
+              onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
+            />
+          ))}
+        </ListaAgrupada>
       ) : null}
 
       <ListaAgrupada titulo={t('ajustes.general')}>

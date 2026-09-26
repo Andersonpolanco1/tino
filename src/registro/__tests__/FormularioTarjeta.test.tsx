@@ -202,6 +202,26 @@ describe('editar tarjeta por secciones', () => {
     expect(almacen.getState().tarjetas[0].alias).toBe('Visa Clásica BHD');
   });
 
+  test('el valor del punto precargado se confirma sin reescribirlo (sección 4.2)', async () => {
+    const almacen = await preparar();
+    const onListo = jest.fn();
+    await render(envolver(almacen, rd, <FormularioTarjeta onListo={onListo} onCerrar={jest.fn()} />));
+    await presionar('Banreservas');
+    await presionar('Mi tarjeta no está en la lista');
+    await presionar('Siguiente');
+    await presionar('No, todo en pesos');
+    await presionar('Siguiente');
+    await elegirCorte(5);
+    await presionar('Siguiente');
+    await presionar('Puntos');
+    await presionar('Por porcentaje');
+    await fireEvent.changeText(screen.getByLabelText('Porcentaje (%)'), '1');
+    await presionar('Este valor es correcto');
+    expect(screen.getByText('Valor confirmado')).toBeOnTheScreen();
+    await presionar('Guardar');
+    expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ recompensa: expect.objectContaining({ valorPunto: 1, valorPuntoConfirmado: true }) }), false);
+  });
+
   test('pausar se guarda al instante', async () => {
     const almacen = await conTarjeta();
     const [tarjeta] = almacen.getState().tarjetas;

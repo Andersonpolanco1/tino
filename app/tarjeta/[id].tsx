@@ -11,6 +11,7 @@ import { fechaCorta, type Traducir } from '@/inicio/vista';
 import { precisionTarjeta } from '@/inicio/precision';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
+import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 
 // Detalle de tarjeta (sección 3.3) con el rediseño: semáforo, línea del ciclo, recompensa,
 // balance en dólares, En pausa y precisión.
@@ -28,6 +29,8 @@ export default function DetalleTarjeta() {
 
   const { tarjeta, resultado } = vista;
   const editar = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id } });
+  const editarRecompensa = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id, seccion: 'recompensa' } });
+  const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
   const precision = precisionTarjeta(tarjeta, { hayIngresos: false, catalogoDisponible: config.catalogoDisponible });
   const detalle = tarjeta.ultimos4 ? t('inicio.bancoTermina', { banco: vista.banco, ultimos4: tarjeta.ultimos4 }) : vista.banco;
 
@@ -103,6 +106,7 @@ export default function DetalleTarjeta() {
         </View>
       </View>
       {tarjeta.enPausa ? <Etiqueta tipo="neutra" texto={t('detalle.enPausa')} /> : null}
+      {puntoPorConfirmar ? <ConfirmarValorPunto tarjeta={tarjeta} onCambiar={editarRecompensa} /> : null}
 
       <Superficie radio={24} style={{ padding: tema.espacio.xl, gap: tema.espacio.l }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -146,7 +150,7 @@ export default function DetalleTarjeta() {
           titulo={resumenRecompensa}
           detalle={vista.recompensa ?? t('detalle.sinRecompensa')}
           flecha
-          onPress={editar}
+          onPress={editarRecompensa}
         />
         {config.funciones.dobleBalance ? (
           <FilaLista icono="dinero" titulo={t('registro.seccionMoneda')} detalle={resumenMoneda[tarjeta.monedaFacturacion]} flecha onPress={editar} />
@@ -171,7 +175,7 @@ export default function DetalleTarjeta() {
           <View style={{ width: `${precision}%`, height: 8, borderRadius: 4, backgroundColor: tema.color.primario }} />
         </View>
         <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-          {tarjeta.recompensa.tipo === 'puntos' && !tarjeta.recompensa.valorPuntoConfirmado ? t('detalle.precisionPunto') : t('detalle.precisionCobros')}
+          {puntoPorConfirmar ? t('detalle.precisionPunto') : t('detalle.precisionCobros')}
         </Texto>
       </Superficie>
     </Pantalla>
