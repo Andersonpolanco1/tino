@@ -1,14 +1,14 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Boton, Etiqueta, FilaLista, ListaAgrupada, Pantalla, Texto } from '@/diseno';
+import { Boton, FilaLista, ListaAgrupada, Pantalla, Texto } from '@/diseno';
 import { useAlmacen } from '@/estado';
 import { useCatalogo } from '@/catalogo';
 import { buscarEmisor } from '@/registro/borrador';
-import { inicialesBanco } from '@/inicio/vista';
+import { inicialesBanco, textoFecha } from '@/inicio/vista';
 import { useHoy } from '@/inicio/useHoy';
 import { usePais } from '@/paises';
 import { proximosPagos } from '@/pagos/pendientes';
-import { FilaPago } from '@/pagos/FilaPago';
+import { textoVence } from '@/pagos/FilaPago';
 
 // Lista de tarjetas registradas (rediseño): lista agrupada; tocar una abre su detalle.
 export default function Tarjetas() {
@@ -18,8 +18,7 @@ export default function Tarjetas() {
   const catalogo = useCatalogo();
   const ingresos = useAlmacen(s => s.ingresos);
   const hoy = useHoy();
-  const { config } = usePais();
-  // Decisión D44: todos los pagos pendientes, pagados o no, en orden de fecha.
+  const { config, idioma } = usePais();
   const pagos = proximosPagos(tarjetas, hoy, ingresos, config);
 
   return (
@@ -32,17 +31,29 @@ export default function Tarjetas() {
         <ListaAgrupada sangria={70}>
           {tarjetas.map(tarjeta => {
             const banco = buscarEmisor(catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
-            const pago =
-              tarjeta.fechaLimite.tipo === 'dia_del_mes'
-                ? t('registro.resumenPagoDia', { dia: tarjeta.fechaLimite.dia })
-                : t('registro.resumenPagoDias', { dias: tarjeta.fechaLimite.dias });
+            // Decisión D54: la fila dice el estado del pago de hoy; el corte y la fecha límite
+            // configurados siguen en el detalle. En pausa no hay pago que mostrar.
+            const pago = pagos.find(p => p.tarjeta.id === tarjeta.id);
+            const fecha = pago ? textoFecha(pago.fecha, idioma) : '';
+            const urgente = !!pago && !pago.pagado && (pago.dias <= 3 || pago.aviso?.tipo === 'antes');
+            const estado = !pago
+              ? t('registro.enPausa')
+              : pago.pagado
+                ? t('pagos.pagadoLinea', { fecha })
+                : textoVence(pago.dias, fecha, t as never);
             return (
               <FilaLista
                 key={tarjeta.id}
                 iniciales={inicialesBanco(banco) || tarjeta.alias.slice(0, 2).toUpperCase()}
                 titulo={tarjeta.alias}
-                detalle={`${t('registro.resumenCorteDia', { dia: tarjeta.diaCorte })} · ${pago}`}
-                derecha={tarjeta.enPausa ? <Etiqueta tipo="neutra" texto={t('registro.enPausa')} /> : undefined}
+                detalle={urgente ? undefined : estado}
+                debajo={
+                  urgente ? (
+                    <Texto variante="apoyo" color="alertaTexto" style={{ fontSize: 13 }}>
+                      {estado}
+                    </Texto>
+                  ) : undefined
+                }
                 flecha
                 onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
               />
@@ -51,13 +62,6 @@ export default function Tarjetas() {
         </ListaAgrupada>
       ) : null}
       <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
-      {pagos.length ? (
-        <ListaAgrupada titulo={t('pagos.proximos')}>
-          {pagos.map(p => (
-            <FilaPago key={p.tarjeta.id} pago={p} />
-          ))}
-        </ListaAgrupada>
-      ) : null}
     </Pantalla>
   );
 }

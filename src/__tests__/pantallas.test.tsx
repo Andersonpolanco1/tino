@@ -9,6 +9,11 @@ import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
 import Inicio from '../../app/(tabs)/inicio';
 import Ajustes from '../../app/(tabs)/ajustes';
+import Tarjetas from '../../app/(tabs)/tarjetas';
+import type { Tarjeta } from '@/tipos/tipos';
+import { hoyLocal } from '@/utilidades/fecha';
+import { proximoPago } from '@/inicio/vista';
+import paisDO from '@/paises/do.json';
 
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter }));
@@ -81,4 +86,31 @@ test('Apariencia: elegir Oscuro lo guarda en las preferencias (decisión D51)', 
   await fireEvent.press(screen.getByText('Oscuro'));
   await act(async () => {});
   expect(almacen.getState().preferencias?.tema).toBe('oscuro');
+});
+
+test('Tarjetas: cada fila dice el estado de su pago, sin una lista aparte (decisión D54)', async () => {
+  const almacen = await almacenCon('DO');
+  const base: Tarjeta = {
+    id: 'A',
+    alias: 'Visa A',
+    emisorId: null,
+    emisorTextoLibre: 'Banco A',
+    productoId: null,
+    productoDesconocido: false,
+    diaCorte: 5,
+    fechaLimite: { tipo: 'dia_del_mes', dia: 25 },
+    ajusteDiaNoHabil: 'ninguno',
+    compraEnDiaDeCorte: 'entra_en_siguiente',
+    monedaFacturacion: 'solo_principal',
+    recompensa: { tipo: 'ninguna' },
+    enPausa: false,
+    creadaEn: '2026-09-01',
+  };
+  const pagada = { ...base, id: 'B', alias: 'Visa B' };
+  await almacen.getState().guardarTarjeta(base);
+  await almacen.getState().guardarTarjeta({ ...pagada, pagoHecho: proximoPago(pagada, hoyLocal(), paisDO as never) });
+  await render(conPais([rd], almacen, <Tarjetas />));
+  expect(screen.getByText(/^(Vence hoy|Vence mañana|Vence el .* · en \d+ días)/)).toBeOnTheScreen();
+  expect(screen.getByText(/^Pagado · vence el /)).toBeOnTheScreen();
+  expect(screen.queryByText('Próximos pagos')).toBeNull();
 });

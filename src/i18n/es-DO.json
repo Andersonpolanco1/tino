@@ -507,7 +507,6 @@
     "yaPagueDe": "Ya pagué {{alias}}",
     "deshacer": "Deshacer",
     "deshacerDe": "Deshacer el pago de {{alias}}",
-    "proximos": "Próximos pagos",
     "pagadoLinea": "Pagado · vence el {{fecha}}",
     "estadoDeCuenta": "Estado de cuenta",
     "pagado": "Pagado",
