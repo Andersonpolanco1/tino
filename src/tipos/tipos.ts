@@ -97,7 +97,11 @@ export interface Preferencias {
   // Etapa 5: qué avisos quiere el usuario (sección 11). Opcional para no migrar las
   // preferencias ya guardadas; si falta, todos están activos.
   avisos?: AjustesAvisos;
+  // Decisión D51: apariencia de la app; sin el campo, sigue al teléfono.
+  tema?: TemaApp;
 }
+
+export type TemaApp = 'automatico' | 'claro' | 'oscuro';
 
 export interface AjustesAvisos {
   fechaLimite: boolean;              // 3 días antes de la fecha límite

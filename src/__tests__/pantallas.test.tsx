@@ -72,3 +72,13 @@ test('un teléfono con región de EE. UU. puede elegir República Dominicana y q
   expect(almacen.getState().preferencias).toMatchObject({ pais: 'DO', idioma: 'es-DO' });
   expect(screen.getByText('República Dominicana · Pesos y dólares')).toBeOnTheScreen();
 });
+
+test('Apariencia: elegir Oscuro lo guarda en las preferencias (decisión D51)', async () => {
+  const almacen = await almacenCon('DO');
+  await render(conPais([rd], almacen, <Ajustes />));
+  expect(screen.getByText('Automático')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByText('Apariencia'));
+  await fireEvent.press(screen.getByText('Oscuro'));
+  await act(async () => {});
+  expect(almacen.getState().preferencias?.tema).toBe('oscuro');
+});

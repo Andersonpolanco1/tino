@@ -13,6 +13,8 @@ const TRAZOS = {
     </>
   ),
   check: <Path d="M5 12l5 5 9-10" />,
+  // Apariencia (modo claro u oscuro).
+  luna: <Path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />,
   abajo: <Path d="M6 9l6 6 6-6" />,
   derecha: <Path d="M9 6l6 6-6 6" />,
   atras: <Path d="M15 6l-6 6 6 6" />,

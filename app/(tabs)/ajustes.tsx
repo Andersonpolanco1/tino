@@ -4,7 +4,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { FilaLista, Hoja, ListaAgrupada, Palanca, type NombreIcono, Pantalla, Superficie, Texto, useTema } from '@/diseno';
-import type { AjustesAvisos } from '@/tipos/tipos';
+import type { AjustesAvisos, TemaApp } from '@/tipos/tipos';
 import { AVISOS_PREDETERMINADOS } from '@/notificaciones/planificar';
 import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
 import { nombrePais, usePais } from '@/paises';
@@ -21,6 +21,8 @@ const GROSOR_ANILLO = 7;
 const RADIO_ANILLO = (LADO_ANILLO - GROSOR_ANILLO) / 2;
 
 // Los avisos del MVP (sección 11), cada uno con su interruptor.
+const TEMAS: TemaApp[] = ['automatico', 'claro', 'oscuro'];
+
 const FILAS_AVISOS: [keyof AjustesAvisos, NombreIcono, string, string][] = [
   ['fechaLimite', 'calendario', 'ajustes.avisoFechaLimite', 'ajustes.avisoFechaLimiteDetalle'],
   ['venceAntesDelCobro', 'reloj', 'ajustes.avisoVenceAntes', 'ajustes.avisoVenceAntesDetalle'],
@@ -45,6 +47,7 @@ export default function Ajustes() {
   const reabrir = useReabrirDatos();
   const [hojaPais, setHojaPais] = useState(false);
   const [hojaEnfoque, setHojaEnfoque] = useState(false);
+  const [hojaApariencia, setHojaApariencia] = useState(false);
   const porConfirmar = tarjetas.filter(valorPuntoPorConfirmar);
   const contextoPrecision = { hayIngresos: ingresos.length > 0, catalogoDisponible: config.catalogoDisponible };
   const precision = precisionGeneral(tarjetas, contextoPrecision);
@@ -146,6 +149,9 @@ export default function Ajustes() {
         {preferencias ? (
           <FilaLista icono="ajustes" titulo={t('ajustes.enfoque')} valor={t(`enfoque.${preferencias.enfoque.modo}`)} flecha onPress={() => setHojaEnfoque(true)} />
         ) : null}
+        {preferencias ? (
+          <FilaLista icono="luna" titulo={t('ajustes.apariencia')} valor={t(`ajustes.temas.${preferencias.tema ?? 'automatico'}`)} flecha onPress={() => setHojaApariencia(true)} />
+        ) : null}
         {/* Las monedas salen del país y no se eligen: van como detalle, sin fila propia. */}
         <FilaLista icono="globo" titulo={t('ajustes.pais')} detalle={t('ajustes.paisDetalle', { pais: nombrePais(t, config.codigo), monedas })} flecha onPress={() => setHojaPais(true)} />
       </ListaAgrupada>
@@ -207,6 +213,22 @@ export default function Ajustes() {
         </ListaAgrupada>
       </Hoja>
       <HojaEnfoque visible={hojaEnfoque} onCerrar={() => setHojaEnfoque(false)} />
+      <Hoja visible={hojaApariencia} titulo={t('ajustes.apariencia')} onCerrar={() => setHojaApariencia(false)} cerrarEtiqueta={t('inicio.cerrar')}>
+        <ListaAgrupada sangria={16}>
+          {TEMAS.map(tema => (
+            <FilaLista
+              key={tema}
+              titulo={t(`ajustes.temas.${tema}`)}
+              detalle={tema === 'automatico' ? t('ajustes.temaAutomaticoDetalle') : undefined}
+              seleccionada={(preferencias?.tema ?? 'automatico') === tema}
+              onPress={() => {
+                setHojaApariencia(false);
+                if (preferencias) guardarPreferencias({ ...preferencias, tema });
+              }}
+            />
+          ))}
+        </ListaAgrupada>
+      </Hoja>
     </Pantalla>
   );
 }

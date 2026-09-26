@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
+import { Appearance } from 'react-native';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -106,6 +107,7 @@ function CuandoCargue({ children }: { children: ReactNode }) {
   if (!sincronizado) return null;
   return (
     <OcultarArranque>
+      <AparienciaGuardada />
       <AvisosProgramados />
       {children}
     </OcultarArranque>
@@ -115,6 +117,17 @@ function CuandoCargue({ children }: { children: ReactNode }) {
 // Programa los avisos locales con los datos actuales (sección 11); no dibuja nada.
 function AvisosProgramados() {
   useAvisos();
+  return null;
+}
+
+// Aplica la apariencia elegida en Ajustes a toda la app, incluidos el teclado y los diálogos
+// del sistema (decisión D51).
+const ESQUEMA = { automatico: 'unspecified', claro: 'light', oscuro: 'dark' } as const;
+function AparienciaGuardada() {
+  const tema = useAlmacen(s => s.preferencias?.tema ?? 'automatico');
+  useEffect(() => {
+    Appearance.setColorScheme(ESQUEMA[tema]);
+  }, [tema]);
   return null;
 }
 

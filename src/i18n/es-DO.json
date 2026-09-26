@@ -272,7 +272,14 @@
       "producto": "Elige el tipo exacto de tus tarjetas para subirla.",
       "completa": "Tienes todo lo que Tino necesita para recomendarte bien."
     },
-    "paisDetalle": "{{pais}} · {{monedas}}"
+    "paisDetalle": "{{pais}} · {{monedas}}",
+    "apariencia": "Apariencia",
+    "temas": {
+      "automatico": "Automático",
+      "claro": "Claro",
+      "oscuro": "Oscuro"
+    },
+    "temaAutomaticoDetalle": "Igual que tu teléfono"
   },
   "paises": {
     "DO": "República Dominicana",
