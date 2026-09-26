@@ -65,9 +65,9 @@ Listo cuando: se registran 3 tarjetas en menos de 2 minutos.
 - [x] Interruptor En pausa
 - [x] Onboarding: bienvenida, registro y pregunta de enfoque (13.1 de la especificación) **(asignada)**; cobros y permiso de notificaciones en la etapa 5 (decisión D18)
 - [x] Validación: últimos 4 dígitos exactos y rechazo de 13 a 19 dígitos seguidos en cualquier campo **(asignada)**
-- [x] Bloqueo con biometría o PIN del teléfono al abrir y al volver tras 1 minuto **(asignada)** (decisión D17)
-- [x] Cubrir la pantalla al pasar a segundo plano **(asignada)**; en Android, ver la decisión pendiente sobre FLAG_SECURE
-- [ ] **Verificar en teléfono:** registrar 3 tarjetas en menos de 2 minutos (condición de "listo" de la etapa); requiere una compilación nueva por `expo-local-authentication`
+- ~~Bloqueo con biometría o PIN al abrir y al volver tras 1 minuto~~ Descartado (decisión D25)
+- ~~Cubrir la pantalla al pasar a segundo plano~~ Descartado (decisión D25)
+- [ ] **Verificar en teléfono:** registrar 3 tarjetas en menos de 2 minutos (condición de "listo" de la etapa)
 
 Criterios de la especificación:
 
@@ -165,9 +165,7 @@ Criterios de la especificación:
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
 - [ ] Confirmar la regla de fecha límite en día no laborable (¿se paga el siguiente día hábil sin cargo?). No aparece en el reglamento de la Superintendencia ni en los contratos de Promerica y Banesco; si se confirma, el valor por defecto pasa a "atrasar" y la pregunta se puede quitar
-- [ ] **Decidir:** en Android, la captura del selector de apps puede tomarse antes de que la cobertura se dibuje. La protección segura es FLAG_SECURE (`expo-screen-capture`), pero también impide al usuario tomar capturas de pantalla de Tino
-- [ ] Hacer configurable el tiempo de bloqueo (hoy 1 minuto fijo); necesita un campo nuevo en `Preferencias`
-- [ ] Si el teléfono no tiene ningún bloqueo configurado, Tino no puede exigir biometría ni PIN; decidir si se ofrece un PIN propio en ese caso
+- [ ] Actualizar en claude.ai la especificación (12.2) y la documentación técnica (sección 6): sin bloqueo propio ni cobertura en segundo plano (decisión D25)
 - [ ] Publicar el servidor de datos públicos (sección 7.1 técnica) y poner su dirección en `EXPO_PUBLIC_URL_DATOS_PUBLICOS` (secreto de EAS); mientras tanto la app usa la copia incluida
 - [ ] Descargar también la configuración del país (`/v1/paises/xx.json`) igual que el catálogo; hoy se usa la copia incluida en `src/paises/`
 - [ ] Actualizar en claude.ai la documentación técnica (sección 5.7 y 11): mencionar `generar_aleatorios.py` y los casos aleatorios, y reexportarla a `docs/`
@@ -192,7 +190,7 @@ Criterios de la especificación:
 | D14 | 2026-09-25 | El catálogo trae solo nombre y marca, sin recompensas precargadas; las tasas por categoría (PREMIA, Insignia, ConnectMiles, etc.) quedan para v2 | El MVP solo maneja una tasa base; cargar una tasa de categoría como base distorsiona el ranking |
 | D15 | 2026-09-25 | Cada variante comercial es un producto propio; el doble saldo es atributo, no producto; fuera del catálogo las líneas de crédito y las tarjetas de empresa | Las variantes cambian beneficios; el MVP es para personas |
 | D16 | 2026-09-25 | El catálogo solo incluye productos que el emisor publica hoy, con su fuente registrada en `verificacion-emisores-do.md`; fuera las tarjetas de flotilla o combustible | La investigación preliminar tenía productos descontinuados y nombres equivocados; una tarjeta que solo sirve en gasolineras no debe competir en el ranking general |
-| D17 | 2026-09-25 | El bloqueo usa la biometría o el PIN del propio teléfono, no un PIN de Tino | Más seguro y sin un PIN extra que recordar o recuperar |
+| D17 | 2026-09-25 | ~~El bloqueo usa la biometría o el PIN del propio teléfono~~ Reemplazada por D25 | — |
 | D18 | 2026-09-25 | Los pasos de cobros y de permiso de notificaciones del onboarding se hacen en la etapa 5 | Es donde se construyen los ingresos y los avisos |
 | D19 | 2026-09-25 | La tarjeta de hoy en Inicio se construye en la etapa 4; en la etapa 3 la pestaña Tarjetas muestra lo registrado | La etapa 4 es la de la pantalla de inicio y sus componentes |
 | D20 | 2026-09-25 | Si el banco no indica sus reglas, el registro precarga "adelantar" (fecha límite en día no hábil) y "entra en ese corte" (compra el día del corte); el usuario puede cambiarlas | Son los valores prudentes: la app calcula menos días de gracia en vez de más, y nadie paga tarde por culpa de Tino |
@@ -200,4 +198,5 @@ Criterios de la especificación:
 | D22 | 2026-09-25 | La compra el día del corte ya no se pregunta: entra en ese corte. La moneda se pregunta como "¿Tu estado de cuenta trae un balance en dólares aparte?" (Sí/No); solo dólares y solo uso local pasan a "Más opciones"; sin doble balance en el país no se pregunta | Es el estándar en RD según la ABA; la pregunta de moneda no se entendía y se buscó reducir el registro |
 | D23 | 2026-09-25 | Una tarjeta tiene un solo tipo de recompensa base (puntos o cashback) en el MVP; las combinaciones (cashback por categoría más puntos base, como BHD PREMIA) se modelan con las recompensas avanzadas de v2 | No se encontró una tarjeta de RD con puntos y cashback generales a la vez; soportarlo cambia tipos, motor y casos de referencia |
 | D24 | 2026-09-25 | Agregar tarjeta es un asistente de un paso por pantalla (banco, tipo, tu tarjeta, dólares, fechas, recompensa) con "Paso X de N"; editar es una lista de secciones con resumen que se abren y guardan por separado. Las explicaciones van detrás de un ícono ⓘ en vez de estar siempre a la vista | Una sola pantalla con todo junto mareaba; cada opción debe poder explicarse sin llenar la pantalla de texto |
+| D25 | 2026-09-25 | Tino no tiene bloqueo propio ni cubre la pantalla en segundo plano; se quitó `expo-local-authentication` | No guarda datos que permitan robar o suplantar (sin números, montos ni claves); la base ya está cifrada y iOS y Android permiten bloquear apps específicas a quien lo quiera. Se reconsidera cuando lleguen balances y montos (v2) |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |
