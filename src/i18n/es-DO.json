@@ -41,7 +41,9 @@
     "venceHoy": "Vence hoy",
     "venceManana": "Vence mañana, {{fecha}}",
     "venceEnDias": "Vence el {{fecha}} · en {{dias}} días",
-    "termina": "Termina en {{ultimos4}}"
+    "termina": "Termina en {{ultimos4}}",
+    "avisoAntesDelCobro": "Cobras el {{cobro}}: aparta el dinero antes.",
+    "avisoCobroEstimado": "Si tu cobro del {{cobro}} se retrasa, vence antes."
   },
   "enfoque": {
     "liquidez": "Días",
@@ -354,7 +356,8 @@
     "confirmarPuntoTitulo": "¿1 punto vale {{valor}}?",
     "confirmarPuntoTexto": "Lo pusimos nosotros para empezar. Revísalo en tu estado de cuenta o en la app de tu banco: con el valor real, Tino compara bien tus puntos con el cashback.",
     "confirmarPuntoSi": "Sí, es correcto",
-    "confirmarPuntoCambiar": "Cambiar el valor"
+    "confirmarPuntoCambiar": "Cambiar el valor",
+    "avisoHoyAntesDelCobro": "Una compra de hoy vence antes de tu próximo cobro, el {{cobro}}."
   },
   "enfoqueCorto": {
     "equilibrado": "Equilibrado",

@@ -2,7 +2,7 @@ import type { ConfigPais, EntradaMotor, Preferencias, Recompensa, Tarjeta } from
 import { calcularRanking } from '../../motor';
 import { iniciarI18n } from '../../i18n/i18n';
 import { precisionGeneral, precisionTarjeta } from '../precision';
-import { etiquetasDe, fechaMesCorto, mensajeSemaforo, proximoPago, subtituloTarjeta, textoRecompensa, type Traducir } from '../vista';
+import { avisoCobro, etiquetasDe, fechaMesCorto, mensajeSemaforo, proximoPago, subtituloTarjeta, textoRecompensa, type Traducir } from '../vista';
 import { msHastaMedianoche } from '../useHoy';
 
 const t = iniciarI18n('es-DO').t as unknown as Traducir;
@@ -159,4 +159,21 @@ describe('subtítulo de la tarjeta', () => {
 test('la línea del ciclo usa el mes corto para no partir las fechas', () => {
   expect(fechaMesCorto('2026-09-08', 'es-DO', t)).toBe('8 sept.');
   expect(fechaMesCorto('2026-11-19', 'es-DO', t)).toBe('19 nov.');
+});
+
+describe('aviso de cobro (sección 5.3)', () => {
+  const nomina = [{ id: 'n', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos' as const, dias: [15, 30] as [number, number] }, ajusteDiaNoHabil: 'adelantar' as const }];
+  test('vence antes del próximo cobro', () => {
+    expect(avisoCobro('2026-10-12', '2026-10-01', nomina, pais)).toEqual({ tipo: 'antes', cobro: '2026-10-15' });
+  });
+  test('sin aviso si cobra antes de que venza', () => {
+    expect(avisoCobro('2026-10-20', '2026-10-01', nomina, pais)).toBeNull();
+  });
+  test('aviso prudente si el cobro previo es estimado', () => {
+    const cliente = [{ id: 'c', nombre: 'Cliente', frecuencia: { tipo: 'personalizada' as const, fechas: [{ fecha: '2026-10-08', estimada: true }] }, ajusteDiaNoHabil: 'ninguno' as const }];
+    expect(avisoCobro('2026-10-12', '2026-10-01', cliente, pais)).toEqual({ tipo: 'estimado', cobro: '2026-10-08' });
+  });
+  test('sin cobros registrados no hay aviso', () => {
+    expect(avisoCobro('2026-10-12', '2026-10-01', [], pais)).toBeNull();
+  });
 });

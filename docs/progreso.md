@@ -111,7 +111,7 @@ Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con f
 
 - [x] Completar `motor.py` con las 5 frecuencias, regenerar los casos y ajustar `ingresos.ts` (decisión D6): 21 casos, 4 de cobros (D37)
 - [x] Registro de ingresos con las 5 frecuencias, incluida la personalizada con fechas estimadas (Ajustes > Tus cobros)
-- [ ] Etiqueta y alerta "Vence antes de tu cobro"
+- [x] Etiqueta y alerta "Vence antes de tu cobro": la etiqueta en la lista (motor) y el aviso en Por pagar y en el detalle, con la variante prudente para cobros estimados (5.2)
 - [ ] Notificaciones: cambio de tarjeta recomendada, fecha límite y resumen mensual de lo ganado
 - [ ] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18): el de cobros ya está, con "Omitir por ahora"; falta el permiso
 - [ ] Sugerencias de datos contextuales (2.2 de la especificación)

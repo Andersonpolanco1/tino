@@ -11,7 +11,7 @@ import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { BloqueDias } from '@/inicio/BloqueDias';
 import { LineaCiclo } from '@/inicio/LineaCiclo';
-import { subtituloTarjeta, type Traducir } from '@/inicio/vista';
+import { avisoCobro, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
 import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 
 // Detalle de tarjeta (sección 3.3) con el rediseño: semáforo, línea del ciclo, recompensa,
@@ -22,16 +22,19 @@ export default function DetalleTarjeta() {
   const router = useRouter();
   const hoy = useHoy();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { config } = usePais();
+  const { config, idioma } = usePais();
   const vista = useVistaTarjeta(id);
   const alternarPausa = useAlmacen(s => s.alternarPausa);
-  const hayIngresos = useAlmacen(s => s.ingresos.length > 0);
+  const ingresos = useAlmacen(s => s.ingresos);
+  const hayIngresos = ingresos.length > 0;
   if (!vista) return null;
 
   const { tarjeta, resultado } = vista;
   const editar = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id } });
   const editarRecompensa = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id, seccion: 'recompensa' } });
   const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
+  // Sección 5.3: si una compra de hoy vence antes del próximo cobro, se dice cuándo se cobra.
+  const aviso = avisoCobro(resultado.fechaPago, hoy, ingresos, config);
   const precision = precisionTarjeta(tarjeta, { hayIngresos, catalogoDisponible: config.catalogoDisponible });
   const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, tarjeta.ultimos4, t as unknown as Traducir);
 
@@ -87,6 +90,11 @@ export default function DetalleTarjeta() {
         <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPago} />
         <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} />
         {resultado.semaforo !== 'verde' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
+        {aviso ? (
+          <Texto variante="apoyo" color="alertaTexto">
+            {t(aviso.tipo === 'antes' ? 'detalle.avisoHoyAntesDelCobro' : 'inicio.avisoCobroEstimado', { cobro: textoFecha(aviso.cobro, idioma) })}
+          </Texto>
+        ) : null}
       </Superficie>
 
       <ListaAgrupada>

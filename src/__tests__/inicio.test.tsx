@@ -121,6 +121,13 @@ test('"Por pagar" muestra el pago pendiente más cercano y cuánto falta', async
   expect(screen.getByLabelText('Tarjeta B. Vence el 10 de octubre · en 4 días')).toBeOnTheScreen();
 });
 
+test('"Por pagar" avisa si el pago vence antes del próximo cobro (criterio 14.1)', async () => {
+  const almacen = await almacenCon([A, B, C]);
+  await almacen.getState().guardarIngreso({ id: 'n', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos', dias: [15, 30] }, ajusteDiaNoHabil: 'adelantar' });
+  await render(envolver(almacen, <Inicio />));
+  expect(screen.getByText('Cobras el 15 de octubre: aparta el dinero antes.')).toBeOnTheScreen();
+});
+
 test('"Tengo una compra" es un botón con texto que abre la consulta', async () => {
   await render(envolver(await almacenCon([A, B, C]), <Inicio />));
   await fireEvent.press(screen.getByRole('button', { name: 'Tengo una compra' }));

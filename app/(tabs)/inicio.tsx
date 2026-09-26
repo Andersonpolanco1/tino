@@ -7,7 +7,7 @@ import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
-import { fechaCorta, proximoPago, textoFecha, type Traducir } from '@/inicio/vista';
+import { avisoCobro, fechaCorta, proximoPago, textoFecha, type Traducir } from '@/inicio/vista';
 import { TarjetaDestacada } from '@/inicio/TarjetaDestacada';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ControlEnfoque } from '@/inicio/SelectorEnfoque';
@@ -23,6 +23,7 @@ export default function Inicio() {
   const hoy = useHoy();
   const { config, idioma } = usePais();
   const hayTarjetas = useAlmacen(s => s.tarjetas.length > 0);
+  const ingresos = useAlmacen(s => s.ingresos);
   const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
   const vistas = useVistas();
   const lista = vistas?.tarjetas ?? [];
@@ -139,6 +140,11 @@ export default function Inicio() {
 
   // Por pagar: la deuda del estado ya cortado, distinta de cuándo se paga una compra de hoy.
   const diasParaPago = numeroDe(pago.fecha) - numeroDe(hoy);
+  const aviso = avisoCobro(pago.fecha, hoy, ingresos, config);
+  const textoAviso = aviso
+    ? t(aviso.tipo === 'antes' ? 'inicio.avisoAntesDelCobro' : 'inicio.avisoCobroEstimado', { cobro: textoFecha(aviso.cobro, idioma) })
+    : null;
+  const urgente = diasParaPago <= 3 || aviso?.tipo === 'antes';
   const vence =
     diasParaPago === 0
       ? t('inicio.venceHoy')
@@ -171,7 +177,7 @@ export default function Inicio() {
         </Texto>
         <Pressable
           accessibilityRole="button"
-          accessibilityLabel={`${pago.vista.tarjeta.alias}. ${vence}`}
+          accessibilityLabel={[pago.vista.tarjeta.alias, vence, textoAviso].filter(Boolean).join('. ')}
           onPress={() => abrir(pago.vista)}
           style={{
             flexDirection: 'row',
@@ -184,14 +190,19 @@ export default function Inicio() {
             boxShadow: tema.sombra.tarjeta,
           }}
         >
-          <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: diasParaPago <= 3 ? tema.color.alertaFondo : tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-            <Icono nombre="calendario" color={diasParaPago <= 3 ? 'alertaTexto' : 'primario'} tamano={20} />
+          <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: urgente ? tema.color.alertaFondo : tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
+            <Icono nombre="calendario" color={urgente ? 'alertaTexto' : 'primario'} tamano={20} />
           </View>
           <View style={{ flex: 1, gap: 1 }}>
             <Texto variante="cuerpoFuerte">{pago.vista.tarjeta.alias}</Texto>
             <Texto variante="apoyo" color={diasParaPago <= 3 ? 'alertaTexto' : 'textoSecundario'}>
               {vence}
             </Texto>
+            {textoAviso ? (
+              <Texto variante="apoyo" color="alertaTexto">
+                {textoAviso}
+              </Texto>
+            ) : null}
           </View>
           <Icono nombre="derecha" color="textoSecundario" tamano={18} />
         </Pressable>

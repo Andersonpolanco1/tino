@@ -1,6 +1,7 @@
-import type { ConfigPais, EntradaMotor, FechaISO, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
+import type { ConfigPais, EntradaMotor, FechaISO, FuenteIngreso, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
 import { calcularRanking } from '../motor';
 import { aFecha, corteAnterior, fechaLimite, numeroDe, proximoCorte } from '../motor/fechas';
+import { proximoCobro } from '../motor/ingresos';
 import { formatearFecha, formatearMoneda, partesFechaLarga } from '../i18n/formato';
 
 export type Traducir = (clave: string, opciones?: Record<string, unknown>) => string;
@@ -143,6 +144,22 @@ export function proximoPago(tarjeta: Tarjeta, hoy: FechaISO, pais: ConfigPais): 
   const anterior = corteAnterior(siguiente, tarjeta.diaCorte);
   const pagoAnterior = fechaLimite(anterior, tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, feriados);
   return aFecha(pagoAnterior >= n ? pagoAnterior : fechaLimite(siguiente, tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, feriados));
+}
+
+// Sección 5.2 y 5.3: el aviso de un pago según los cobros. "antes": vence antes del próximo
+// cobro, hay que apartar el dinero. "estimado": el cobro previo es solo estimado y, si se
+// retrasa, el pago vence antes. Sin cobros registrados no hay aviso.
+export interface AvisoCobro {
+  tipo: 'antes' | 'estimado';
+  cobro: FechaISO;
+}
+
+export function avisoCobro(fechaPago: FechaISO, hoy: FechaISO, ingresos: FuenteIngreso[], pais: ConfigPais): AvisoCobro | null {
+  if (!ingresos.length) return null;
+  const cobro = proximoCobro(ingresos, numeroDe(hoy), new Set(pais.feriados));
+  if (!cobro) return null;
+  if (cobro.dia > numeroDe(fechaPago)) return { tipo: 'antes', cobro: aFecha(cobro.dia) };
+  return cobro.estimada ? { tipo: 'estimado', cobro: aFecha(cobro.dia) } : null;
 }
 
 export function textoFecha(fecha: FechaISO, idioma: string): string {
