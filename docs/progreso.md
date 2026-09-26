@@ -129,8 +129,8 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 
 - [x] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos: RevenueCat, PostHog y Sentry (sección 7.3 técnica, decisión D55)
 - [ ] Tino Pro con prueba de 30 días y límite de 2 tarjetas en el plan gratis
-- [ ] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes
-- [ ] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación)
+- [x] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes (`src/analitica/`, D57); falta ver los eventos llegar a PostHog desde un teléfono
+- [x] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación): `tarjeta_registrada` con emisor `otro` y producto `otro` o `no_se`
 - [ ] Reporte de fallos sin datos de tarjetas
 - [ ] Widget de Android
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
@@ -143,11 +143,11 @@ Criterios de la especificación:
 - [ ] 15.5: una tarjeta con doble balance cuenta como una sola para el límite
 - [ ] 15.5: al vencer Pro no se borra ningún dato y el usuario elige qué 2 tarjetas quedan activas
 - [ ] 15.5: ningún dato comercial entra al ranking y todo contenido patrocinado lleva su etiqueta
-- [ ] 17.5: ningún evento contiene montos, números de tarjeta, alias ni fechas exactas de ingresos
-- [ ] 17.5: desactivar la analítica detiene el envío de inmediato
+- [x] 17.5: ningún evento contiene montos, números de tarjeta, alias ni fechas exactas de ingresos (`src/analitica/__tests__/analitica.test.ts`)
+- [x] 17.5: desactivar la analítica detiene el envío de inmediato (prueba del módulo; con PostHog real se revisa junto con la llegada de eventos)
 - [ ] 17.5: el panel interno muestra ingreso recurrente, conversión, cancelación y retención por cohorte con máximo 24 horas de atraso
 - [ ] 17.5: cada regla de decisión de la tabla 17.3 se puede evaluar en el panel
-- [ ] 18.6: todos los eventos de analítica incluyen el país
+- [x] 18.6: todos los eventos de analítica incluyen el país
 - [ ] 14.1: una tarjeta en pausa no aparece en el widget
 
 ## Pendientes fuera del código
@@ -164,7 +164,8 @@ Criterios de la especificación:
 - [ ] Variantes oscura y tintada del icono de iOS
 - [x] Cuentas de Apple Developer y Google Play Console
 - [ ] Proyecto en Expo (EAS) vinculado: `eas init` para que `app.config.ts` tenga su `projectId`
-- [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS
+- [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS (`EXPO_PUBLIC_POSTHOG_KEY` ya la lee la app)
+- [ ] Recompilar la app de desarrollo: `posthog-react-native`, `expo-application` y `expo-device` traen código nativo
 - [ ] Productos de Tino Pro en App Store Connect y Google Play Console (mensual USD 2.49, anual USD 19.99, prueba de 30 días y precio de lanzamiento) y su configuración en RevenueCat
 - [ ] Revisar con un contador el ITBIS sobre servicios digitales y la comisión de 15% del programa de pequeños desarrolladores (Apple y Google)
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
@@ -238,4 +239,5 @@ Criterios de la especificación:
 | D54 | 2026-09-26 | La pestaña Tarjetas no tiene sección "Próximos pagos": cada fila muestra el estado del pago de esa tarjeta ("Vence el 19 de octubre · en 23 días", en coral si es urgente, o "Pagado · vence el 30 de septiembre"). "Ya pagué" y "Deshacer" quedan en el detalle y en Inicio. Ajusta D44 | "Próximos pagos" con todo pagado se contradecía y repetía cada tarjeta; el corte y el día de pago configurados siguen en el detalle |
 | D55 | 2026-09-26 | Proveedores: RevenueCat para suscripciones, PostHog (región UE) para analítica y Sentry (región UE) para fallos, con la configuración de privacidad de la sección 7.3 técnica | Los tres funcionan con Expo y tienen plan gratis suficiente para el lanzamiento; PostHog permite apagar toda captura automática y enviar solo la lista cerrada, y Sentry mide sesiones sin fallos y cierres nativos |
 | D56 | 2026-09-26 | Un solo interruptor, "Datos de uso anónimos", apaga a la vez la analítica y el reporte de fallos; la especificación solo pedía el de analítica | Es más fácil de explicar en la política de privacidad y en Ajustes; perder los fallos de quien lo apaga es un costo pequeño |
+| D57 | 2026-09-26 | Momentos y propiedades de la analítica: `inicio_visto` cada vez que Inicio toma el foco; `consulta_compra` una vez por consulta, al primer monto válido; `sugerencia_mostrada` al aparecer; `onboarding_completado` al salir del último paso, midiendo desde la bienvenida. `tarjeta_registrada` distingue producto `otro` de `no_se`, y banco fuera del catálogo o sin catálogo es emisor `otro`. "Borrar todo" también reinicia el identificador anónimo. PostHog solo recibe la versión de la app y del sistema, sin nombre ni modelo del teléfono | La sección 10 no fija cuándo sale cada evento; la métrica de producto desconocido (17.2) cuenta "Otro" y "No sé el tipo" por separado; tras borrar todo, los datos nuevos no deben unirse con los anteriores |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

@@ -365,7 +365,7 @@ La analítica implementa la sección 17 de la especificación. Toda la lógica p
 | Evento | Propiedades permitidas |
 | --- | --- |
 | onboarding\_completado | duración (rango), tarjetas (rango), ingresos registrados (sí o no) |
-| tarjeta\_registrada | emisorId u "otro", productoId u "otro", moneda de facturación, tipo de recompensa |
+| tarjeta\_registrada | emisorId u "otro", productoId, "otro" o "no\_se", moneda de facturación, tipo de recompensa |
 | inicio\_visto | modo de enfoque, tarjetas (rango) |
 | orden\_cambiado | orden elegido |
 | enfoque\_cambiado | modo anterior, modo nuevo |

@@ -13,6 +13,21 @@ const TRAZOS = {
     </>
   ),
   check: <Path d="M5 12l5 5 9-10" />,
+  // Datos de uso anónimos (Ajustes > Privacidad).
+  grafica: (
+    <>
+      <Path d="M5 20v-7" />
+      <Path d="M12 20V5" />
+      <Path d="M19 20v-10" />
+    </>
+  ),
+  // Reiniciar el identificador anónimo.
+  reiniciar: (
+    <>
+      <Path d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3" />
+      <Path d="M4.5 3.5v4h4" />
+    </>
+  ),
   // Apariencia (modo claro u oscuro).
   luna: <Path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />,
   abajo: <Path d="M6 9l6 6 6-6" />,

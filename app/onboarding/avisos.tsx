@@ -2,6 +2,8 @@ import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { BarraSuperior, Boton, FilaLista, ListaAgrupada, Pantalla, Texto } from '@/diseno';
 import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
+import { useAlmacen } from '@/estado';
+import { registrarOnboardingCompletado } from '@/analitica';
 
 // Onboarding, último paso: el permiso de avisos se pide al final, explicando para qué sirve
 // (sección 13.1 de la especificación y 6 técnica).
@@ -9,7 +11,13 @@ export default function AvisosOnboarding() {
   const { t } = useTranslation();
   const router = useRouter();
   const { pedir } = usePermisoAvisos();
-  const terminar = () => router.replace('/inicio');
+  const tarjetas = useAlmacen(s => s.tarjetas.length);
+  const hayIngresos = useAlmacen(s => s.ingresos.length > 0);
+  // Al terminar se ve la tarjeta de hoy por primera vez: ahí se completa el onboarding (17.4).
+  const terminar = () => {
+    registrarOnboardingCompletado({ tarjetas, hayIngresos });
+    router.replace('/inicio');
+  };
   return (
     <Pantalla
       arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: () => router.back() }} />}

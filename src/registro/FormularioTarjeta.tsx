@@ -30,6 +30,7 @@ import {
 } from './borrador';
 import { ListaBuscable } from './ListaBuscable';
 import { PasoFechas, PasoMoneda, PasoRecompensa, PasoTarjeta } from './Pasos';
+import { registrarTarjetaRegistrada } from '../analitica';
 
 interface Props {
   tarjeta?: Tarjeta;
@@ -104,6 +105,7 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
     setGuardando(true);
     try {
       await guardarTarjeta(r.tarjeta);
+      if (!editando) registrarTarjetaRegistrada(r.tarjeta);
       setB(borrador);
       setGuardada(borrador);
       if (editando) seccionInicial ? onCerrar() : ir('secciones');

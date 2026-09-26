@@ -14,6 +14,7 @@ import { compartirExportacion, datosParaExportar } from '@/datos/exportar';
 import { pistaPrecision, precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
+import { reiniciarIdentificadorAnalitica } from '@/analitica';
 
 // Anillo de 84: con 100% el número necesita aire dentro del trazo.
 const LADO_ANILLO = 84;
@@ -79,9 +80,17 @@ export default function Ajustes() {
         style: 'destructive',
         onPress: async () => {
           await borrarBase(datos.base);
+          await reiniciarIdentificadorAnalitica().catch(() => {});
           reabrir();
         },
       },
+    ]);
+  }
+
+  function reiniciarIdentificador() {
+    Alert.alert(t('ajustes.reiniciarIdTitulo'), t('ajustes.reiniciarIdAviso'), [
+      { text: t('ajustes.cancelar'), style: 'cancel' },
+      { text: t('ajustes.reiniciarIdConfirmar'), onPress: () => reiniciarIdentificadorAnalitica().catch(() => {}) },
     ]);
   }
 
@@ -182,6 +191,29 @@ export default function Ajustes() {
             );
           })}
         </ListaAgrupada>
+      ) : null}
+
+      {preferencias ? (
+        <View style={{ gap: tema.espacio.s }}>
+          <ListaAgrupada titulo={t('ajustes.privacidadTitulo')}>
+            <FilaLista
+              icono="grafica"
+              titulo={t('ajustes.analitica')}
+              detalle={t('ajustes.analiticaDetalle')}
+              derecha={
+                <Palanca
+                  valor={preferencias.analiticaActiva}
+                  etiqueta={t('ajustes.analitica')}
+                  onCambio={valor => guardarPreferencias({ ...preferencias, analiticaActiva: valor })}
+                />
+              }
+            />
+            <FilaLista icono="reiniciar" titulo={t('ajustes.reiniciarId')} onPress={reiniciarIdentificador} />
+          </ListaAgrupada>
+          <Texto variante="apoyo" color="textoSecundario" style={{ paddingHorizontal: tema.espacio.xs, fontSize: 13 }}>
+            {t('ajustes.privacidadInfo')}
+          </Texto>
+        </View>
       ) : null}
 
       <View style={{ gap: tema.espacio.s }}>

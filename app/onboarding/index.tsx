@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Boton, Opciones, Pantalla, Texto } from '@/diseno';
 import { nombrePais, usePais } from '@/paises';
 import { useElegirPais } from '@/estado';
+import { marcarInicioOnboarding } from '@/analitica';
 
 // Onboarding, paso 1: bienvenida (sección 13.1 de la especificación) y confirmación del país.
 export default function Bienvenida() {
@@ -10,6 +12,7 @@ export default function Bienvenida() {
   const router = useRouter();
   const { config, opciones } = usePais();
   const elegirPais = useElegirPais();
+  useEffect(() => marcarInicioOnboarding(), []);
   return (
     <Pantalla pie={<Boton titulo={t('onboarding.empezar')} onPress={() => router.push('/onboarding/tarjetas')} />}>
       <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>

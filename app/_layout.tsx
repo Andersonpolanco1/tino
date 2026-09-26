@@ -12,6 +12,7 @@ import { ProveedorDatos, useEstadoDatos } from '@/datos';
 import { ProveedorAlmacen, useAlmacen } from '@/estado';
 import { useAvisos } from '@/notificaciones/useAvisos';
 import { ProveedorCatalogo } from '@/catalogo';
+import { useAnalitica } from '@/analitica';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -109,6 +110,7 @@ function CuandoCargue({ children }: { children: ReactNode }) {
     <OcultarArranque>
       <AparienciaGuardada />
       <AvisosProgramados />
+      <AnaliticaSincronizada />
       {children}
     </OcultarArranque>
   );
@@ -117,6 +119,12 @@ function CuandoCargue({ children }: { children: ReactNode }) {
 // Programa los avisos locales con los datos actuales (sección 11); no dibuja nada.
 function AvisosProgramados() {
   useAvisos();
+  return null;
+}
+
+// Sigue el interruptor de analítica y el país (sección 10 técnica); no dibuja nada.
+function AnaliticaSincronizada() {
+  useAnalitica();
   return null;
 }
 

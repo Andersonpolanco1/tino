@@ -1,5 +1,6 @@
+import { useCallback, useRef } from 'react';
 import { Pressable, View } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Boton, BotonPastilla, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
 import { partesFechaLarga } from '@/i18n';
@@ -16,6 +17,7 @@ import { ChipBanco } from '@/inicio/ChipBanco';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
 import { pagosParaInicio, proximosPagos } from '@/pagos/pendientes';
 import { FilaPago } from '@/pagos/FilaPago';
+import { registrarInicioVisto } from '@/analitica';
 
 // Sección 3 de la especificación, con el rediseño: la tarjeta de hoy al abrir la app.
 export default function Inicio() {
@@ -29,6 +31,18 @@ export default function Inicio() {
   const vistas = useVistas();
   const lista = vistas?.tarjetas ?? [];
   const unaSola = lista.length === 1;
+  const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
+  const cuantas = useAlmacen(s => s.tarjetas.length);
+
+  // Un evento cada vez que se abre Inicio, con el enfoque y las tarjetas de ese momento.
+  const actual = useRef({ modo, cuantas });
+  actual.current = { modo, cuantas };
+  useFocusEffect(
+    useCallback(() => {
+      const { modo: enfoque, cuantas: tarjetas } = actual.current;
+      if (enfoque) registrarInicioVisto({ enfoque, tarjetas });
+    }, []),
+  );
 
   const abrir = (vista: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: { id: vista.tarjeta.id } });
 

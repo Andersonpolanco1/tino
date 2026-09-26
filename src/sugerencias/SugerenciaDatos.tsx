@@ -10,6 +10,7 @@ import { proximoPago } from '../inicio/vista';
 import { valorPuntoPorConfirmar } from '../inicio/ConfirmarValorPunto';
 import { numeroDe } from '../motor/fechas';
 import { descartarSugerencia, elegirSugerencia, type TipoSugerencia } from './elegir';
+import { registrarSugerenciaAceptada, registrarSugerenciaDescartada, registrarSugerenciaMostrada } from '../analitica';
 
 // Días antes de una fecha límite en que tiene sentido sugerir los cobros (sección 2.2:
 // "al acercarse una fecha límite").
@@ -42,11 +43,16 @@ export function SugerenciaDatos() {
   }, [eleccion, estado, guardar]);
 
   const tipo = eleccion.tipo;
+  useEffect(() => {
+    if (tipo) registrarSugerenciaMostrada(tipo);
+  }, [tipo]);
   if (!tipo) return null;
   const texto = tipo === 'cobros' ? t('sugerencias.cobros') : t('sugerencias.valorPunto', { alias: sinConfirmar?.alias ?? '' });
-  const accion = () =>
-    tipo === 'cobros' ? router.push('/cobros/nuevo') : sinConfirmar && router.push({ pathname: '/tarjeta/[id]', params: { id: sinConfirmar.id } });
-
+  const accion = () => {
+    registrarSugerenciaAceptada(tipo);
+    if (tipo === 'cobros') router.push('/cobros/nuevo');
+    else if (sinConfirmar) router.push({ pathname: '/tarjeta/[id]', params: { id: sinConfirmar.id } });
+  };
   return (
     <Superficie radio={tema.radio.lista} style={{ padding: tema.espacio.l, gap: tema.espacio.m }}>
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: tema.espacio.m }}>
@@ -57,7 +63,10 @@ export function SugerenciaDatos() {
           {texto}
         </Texto>
         <View style={{ marginTop: -tema.espacio.s, marginRight: -tema.espacio.s }}>
-          <BotonCircular icono="cerrar" plano etiqueta={t('sugerencias.descartar')} onPress={() => guardar(descartarSugerencia(estado, tipo, hoy)).catch(() => {})} />
+          <BotonCircular icono="cerrar" plano etiqueta={t('sugerencias.descartar')} onPress={() => {
+              registrarSugerenciaDescartada(tipo);
+              guardar(descartarSugerencia(estado, tipo, hoy)).catch(() => {});
+            }} />
         </View>
       </View>
       <View style={{ alignItems: 'flex-start' }}>

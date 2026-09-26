@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { ModoEnfoque } from '../tipos/tipos';
 import { FilaLista, Hoja, Icono, ListaAgrupada, Texto, useTema } from '../diseno';
 import { useAlmacen } from '../estado';
+import { registrarEnfoqueCambiado } from '../analitica';
 
 // Sección 6.2: los 4 modos del MVP.
 export const MODOS_ENFOQUE: ModoEnfoque[] = ['equilibrado', 'liquidez', 'puntos', 'cashback'];
@@ -22,6 +23,7 @@ export function HojaEnfoque({ visible, onCerrar }: { visible: boolean; onCerrar:
     // Sección 16.6: el reordenamiento se anima sin saltos.
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     await guardarPreferencias({ ...preferencias, enfoque: { modo } });
+    if (actual) registrarEnfoqueCambiado(actual, modo);
   }
 
   return (

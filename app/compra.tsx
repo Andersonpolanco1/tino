@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
 import { valorRecompensaCompra, type Traducir } from '@/inicio/vista';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ChipBanco } from '@/inicio/ChipBanco';
+import { registrarConsultaCompra } from '@/analitica';
 
 // "Tengo una compra" (sección 7.5) con el rediseño: el monto en grande y el resultado al
 // instante. La categoría llega en v2 (decisión D27).
@@ -25,6 +26,14 @@ export default function Compra() {
   const monto = Number(texto.replace(/,/g, ''));
   const compra = useMemo(() => (Number.isFinite(monto) && monto > 0 ? { monto, moneda } : undefined), [monto, moneda]);
   const vistas = useVistas({ compra });
+
+  // Una consulta por visita, al escribir el primer monto válido; solo la moneda sale del teléfono.
+  const consultada = useRef(false);
+  useEffect(() => {
+    if (!compra || consultada.current) return;
+    consultada.current = true;
+    registrarConsultaCompra(compra.moneda);
+  }, [compra]);
   const [mejor, ...otras] = compra && vistas ? vistas.tarjetas : [];
 
   const monedas = [config.monedaPrincipal, ...(config.monedaSecundaria ? [config.monedaSecundaria] : [])];
