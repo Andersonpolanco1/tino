@@ -127,7 +127,7 @@ Criterios de la especificación:
 
 Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 
-- [ ] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos (sección 7.2 técnica)
+- [x] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos: RevenueCat, PostHog y Sentry (sección 7.3 técnica, decisión D55)
 - [ ] Tino Pro con prueba de 30 días y límite de 2 tarjetas en el plan gratis
 - [ ] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes
 - [ ] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación)
@@ -162,7 +162,11 @@ Criterios de la especificación:
 - [ ] Verificar los emisores que siguen "por verificar": Alaver, Banfondesa, Motor Crédito, Adopem y Citibank en el grupo 1, y los del grupo 2
 - [ ] Búsqueda de marcas de "Tino" (1.1 de la especificación)
 - [ ] Variantes oscura y tintada del icono de iOS
-- [ ] Cuentas de Apple Developer, Google Play Console y proyecto en Expo
+- [x] Cuentas de Apple Developer y Google Play Console
+- [ ] Proyecto en Expo (EAS) vinculado: `eas init` para que `app.config.ts` tenga su `projectId`
+- [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS
+- [ ] Productos de Tino Pro en App Store Connect y Google Play Console (mensual USD 2.49, anual USD 19.99, prueba de 30 días y precio de lanzamiento) y su configuración en RevenueCat
+- [ ] Revisar con un contador el ITBIS sobre servicios digitales y la comisión de 15% del programa de pequeños desarrolladores (Apple y Google)
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
 - [ ] Confirmar la regla de fecha límite en día no laborable (¿se paga el siguiente día hábil sin cargo?). No aparece en el reglamento de la Superintendencia ni en los contratos de Promerica y Banesco; si se confirma, el valor por defecto pasa a "atrasar" y la pregunta se puede quitar
@@ -232,4 +236,6 @@ Criterios de la especificación:
 | D52 | 2026-09-26 | Detalle de tarjeta: el nombre sin el recuadro de iniciales y a 26 puntos; la sección de pago se llama "Estado de cuenta" y, pagado, dice "Pagado" con la fecha y "Deshacer" a la derecha; el mensaje del semáforo solo aparece en rojo, cuando aconseja esperar | "Por pagar" contradecía un pago hecho, "Pagada" salía dos veces, el recuadro repetía el banco y en amarillo el mensaje repetía los días |
 | D53 | 2026-09-26 | El campo de cashback pide solo el de todas las compras ("Cashback en todas tus compras (%)"), la ⓘ explica que el de ciertos comercios llega en una próxima versión, y por encima de 3% aparece una nota que pregunta si de verdad es en todas las compras, sin bloquear. Los puntos piden la tasa base | En RD casi todo el cashback es por categoría (supermercado, combustible); un 5% de supermercado escrito como general haría que Tino recomendara esa tarjeta de más. El general existe (Qik, 1%), así que el campo se mantiene |
 | D54 | 2026-09-26 | La pestaña Tarjetas no tiene sección "Próximos pagos": cada fila muestra el estado del pago de esa tarjeta ("Vence el 19 de octubre · en 23 días", en coral si es urgente, o "Pagado · vence el 30 de septiembre"). "Ya pagué" y "Deshacer" quedan en el detalle y en Inicio. Ajusta D44 | "Próximos pagos" con todo pagado se contradecía y repetía cada tarjeta; el corte y el día de pago configurados siguen en el detalle |
+| D55 | 2026-09-26 | Proveedores: RevenueCat para suscripciones, PostHog (región UE) para analítica y Sentry (región UE) para fallos, con la configuración de privacidad de la sección 7.3 técnica | Los tres funcionan con Expo y tienen plan gratis suficiente para el lanzamiento; PostHog permite apagar toda captura automática y enviar solo la lista cerrada, y Sentry mide sesiones sin fallos y cierres nativos |
+| D56 | 2026-09-26 | Un solo interruptor, "Datos de uso anónimos", apaga a la vez la analítica y el reporte de fallos; la especificación solo pedía el de analítica | Es más fácil de explicar en la política de privacidad y en Ajustes; perder los fallos de quien lo apaga es un costo pequeño |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

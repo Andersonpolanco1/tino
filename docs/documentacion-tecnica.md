@@ -257,13 +257,29 @@ En el MVP el servidor es un conjunto de archivos JSON estáticos detrás de una 
 
 | Servicio | Uso | Requisito |
 | --- | --- | --- |
-| Plataforma de suscripciones (por ejemplo, RevenueCat) | Tino Pro: compra, restauración, prueba de 30 días y estado del plan | Compatible con Expo; unifica App Store y Google Play |
-| Analítica de producto (por ejemplo, PostHog o Amplitude) | Eventos anónimos y cohortes de la sección 17 de la especificación | Identificador anónimo, sin datos personales; se desactiva desde Ajustes |
-| Reporte de fallos (por ejemplo, Sentry) | Errores y cierres inesperados | Sin datos de tarjetas en los reportes |
+| Plataforma de suscripciones (RevenueCat, sección 7.3) | Tino Pro: compra, restauración, prueba de 30 días y estado del plan | Compatible con Expo; unifica App Store y Google Play |
+| Analítica de producto (PostHog, sección 7.3) | Eventos anónimos y cohortes de la sección 17 de la especificación | Identificador anónimo, sin datos personales; se desactiva desde Ajustes |
+| Reporte de fallos (Sentry, sección 7.3) | Errores y cierres inesperados | Sin datos de tarjetas en los reportes |
 | Notificaciones | Avisos locales programados en el teléfono | En el MVP no hay notificaciones desde servidor |
 | EAS (Expo) | Compilación, firma, publicación y actualizaciones directas | Ver sección 12 |
 
-La elección final de cada proveedor se documenta aquí antes de la etapa 6 del plan (sección 13), comparando costo, cumplimiento de privacidad y compatibilidad con Expo.
+### 7.3 Proveedores elegidos
+
+Elegidos el 26 de septiembre de 2026 (decisión D55 de `docs/progreso.md`), comparando costo, cumplimiento de privacidad y compatibilidad con Expo. Los tres tienen plan gratis suficiente para el lanzamiento, así que el escenario mínimo de costos (sección 15.2 de la especificación) no cambia.
+
+| Servicio | Proveedor | Paquete | Costo al lanzar | Configuración de privacidad |
+| --- | --- | --- | --- | --- |
+| Suscripciones | RevenueCat | `react-native-purchases` | Gratis hasta USD 2,500 de ingreso mensual; luego 1% | Identificador anónimo de RevenueCat (sin cuentas propias); no se le envían atributos del usuario |
+| Analítica | PostHog, región de la Unión Europea (`eu.i.posthog.com`) | `posthog-react-native` | Gratis hasta 1 millón de eventos al mes | Sin captura automática (toques, pantallas ni ciclo de vida), sin grabación de sesiones, sin geolocalización por IP (`disableGeoip`); identificador anónimo propio por instalación; `optOut()` con el interruptor de Ajustes |
+| Reporte de fallos | Sentry, región de la Unión Europea | `@sentry/react-native` con su plugin de Expo | Gratis hasta 5,000 errores al mes | `sendDefaultPii: false`, sin grabación de sesiones y un filtro `beforeSend` que quita migas, textos de pantalla y cualquier secuencia de 13 a 19 dígitos |
+
+**Por qué estos:**
+
+- **RevenueCat:** es el estándar con Expo, une App Store y Google Play, maneja pruebas gratis, precios introductorios y restauración, y da las métricas de ingreso, conversión y cancelación que pide la sección 17.2. Sin servidor propio de validación de recibos.
+- **PostHog frente a Amplitude:** plan gratis mayor, control fino de lo que captura (se puede apagar todo lo automático y enviar solo la lista cerrada de la sección 10), `optOut()` inmediato, cohortes y retención para el panel interno, y región europea.
+- **Sentry:** captura cierres nativos y de JavaScript, sube los mapas de código con EAS y mide sesiones sin fallos (meta de 99.5%). PostHog también reporta excepciones, pero sus cierres nativos y la salud por versión están menos maduros.
+
+**Interruptor de privacidad:** "Datos de uso anónimos" en Ajustes controla PostHog y Sentry a la vez: apagado, no sale ningún evento ni reporte. Ambos se inicializan solo si su clave existe en las variables de entorno (`EXPO_PUBLIC_POSTHOG_KEY`, `EXPO_PUBLIC_SENTRY_DSN`, y las claves públicas de RevenueCat por plataforma); en desarrollo y en pruebas, sin claves, los módulos no envían nada.
 
 ## 8. Sistema de diseño e iconos
 
