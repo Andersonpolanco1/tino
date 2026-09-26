@@ -37,11 +37,13 @@ const config: ExpoConfig = {
     [
       'expo-splash-screen',
       {
-        image: './assets/iconos/android-primer-plano.png',
-        imageWidth: 200,
+        // El icono completo (fondo jade y tarjetas): la capa de primer plano sola se perdía sobre
+        // el fondo claro y tenía mucho margen, así que se veía pequeña.
+        image: './assets/iconos/splash.png',
+        imageWidth: 150,
         backgroundColor: claro.fondo,
         dark: {
-          image: './assets/iconos/android-primer-plano.png',
+          image: './assets/iconos/splash.png',
           backgroundColor: oscuro.fondo,
         },
       },
