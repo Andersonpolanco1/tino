@@ -37,7 +37,8 @@
     "venceEnDias": "Vence el {{fecha}} · en {{dias}} días",
     "termina": "Termina en {{ultimos4}}",
     "avisoAntesDelCobro": "Cobras el {{cobro}}: aparta el dinero antes.",
-    "avisoCobroEstimado": "Si tu cobro del {{cobro}} se retrasa, vence antes."
+    "avisoCobroEstimado": "Si tu cobro del {{cobro}} se retrasa, vence antes.",
+    "enfoqueCambiar": "Enfoque: {{modo}}. Cambiar"
   },
   "enfoque": {
     "liquidez": "Días",
@@ -378,12 +379,6 @@
       "completa": "Tienes todo lo que Tino necesita de esta tarjeta."
     }
   },
-  "enfoqueCorto": {
-    "equilibrado": "Equilibrado",
-    "liquidez": "Días",
-    "puntos": "Puntos",
-    "cashback": "Cashback"
-  },
   "cobros": {
     "titulo": "Tus cobros",
     "tituloEditar": "Editar cobro",
@@ -507,5 +502,11 @@
     "deshacer": "Deshacer",
     "deshacerDe": "Deshacer el pago de {{alias}}",
     "proximos": "Próximos pagos"
+  },
+  "enfoquePriorizando": {
+    "equilibrado": "Buscando un equilibrio",
+    "liquidez": "Priorizando días para pagar",
+    "puntos": "Priorizando puntos",
+    "cashback": "Priorizando cashback"
   }
 }

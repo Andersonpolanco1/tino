@@ -86,12 +86,12 @@ Al abrir la app, sin tocar nada, el usuario ve qué tarjeta usar hoy y cuántos 
 ### 3.1 Estructura
 
 - **Tarjeta destacada.** La mejor opción de hoy, en grande, con el motivo en una línea: "50 días para pagar · 1.5 puntos por cada 100".
-- **Control de enfoque.** Botones de un toque con los modos de enfoque: Equilibrado · Días · Puntos · Cashback (sección 6). Tocar uno cambia el enfoque guardado y recalcula la tarjeta de hoy y la lista al instante. Un ícono de información junto al título de la lista explica que cada enfoque combina días y recompensas con distinta prioridad.
+- **Selector de enfoque.** Bajo el título "Hoy te conviene usar", una línea con el enfoque activo ("Priorizando días para pagar ▾") y un ícono de información. Al tocarla se abre una hoja con los modos (Equilibrado, Días, Puntos y Cashback, sección 6) y su explicación; elegir uno cambia el enfoque guardado y recalcula la tarjeta de hoy y la lista al instante.
 - **Lista de tarjetas.** Cada fila muestra lo que se detalla en la tabla 3.2.
 - **Por pagar.** Al pie, en su propia sección y solo cuando pide actuar: los pagos sin marcar que vencen en 7 días o menos, o antes del próximo cobro ("Vence el 30 de septiembre · en 4 días") y, si hay nivel 3, su monto. Cada uno tiene "Ya pagué", que lo marca como pagado sin guardar montos y cancela sus avisos de ese ciclo. La lista completa, siempre visible, está en la pestaña Tarjetas como "Próximos pagos".
 - **Sugerencia de datos.** Como máximo una tarjeta discreta de sugerencia (sección 2.2), que se puede descartar.
 
-**Control de enfoque (con 2 o más tarjetas).** Es el único control de orden de la pantalla de inicio: no hay un orden temporal aparte, porque dos controles con las mismas palabras ("Puntos") confundían y el orden por un solo dato ignoraba las penalizaciones (por ejemplo, subía una tarjeta que corta mañana). El enfoque elegido también lo usan el widget y las notificaciones; como el control queda justo encima de la tarjeta destacada, el cambio se ve sin necesidad de un texto aparte. Los modos con balances (Reducir deuda) y los perfiles personalizados de Pro se agregan al mismo control o a Ajustes cuando existan. Con una sola tarjeta el control se oculta (sección 3.5).
+**Selector de enfoque (con 2 o más tarjetas).** Es el único control de orden de la pantalla de inicio: no hay un orden temporal aparte, porque dos controles con las mismas palabras ("Puntos") confundían y el orden por un solo dato ignoraba las penalizaciones (por ejemplo, subía una tarjeta que corta mañana). El enfoque elegido también lo usan el widget y las notificaciones; como el control queda justo encima de la tarjeta destacada, el cambio se ve sin necesidad de un texto aparte. Los modos con balances (Reducir deuda) y los perfiles personalizados de Pro se agregan al mismo control o a Ajustes cuando existan. Con una sola tarjeta el control se oculta (sección 3.5).
 
 ### 3.2 Información por tarjeta en la lista
 
@@ -599,7 +599,7 @@ Cada fase sube un nivel de datos y convierte la app de recomendador de tarjetas 
 
 - [ ] Con solo banco, producto, corte y fecha límite, la pantalla de inicio muestra la tarjeta de hoy al abrir la app, sin ninguna otra acción.
 - [ ] Los días de gracia son correctos en meses de 28, 29, 30 y 31 días, y con fechas límite en fin de semana.
-- [ ] Tocar un modo del control de enfoque lo guarda y recalcula la tarjeta de hoy y la lista al instante.
+- [ ] Elegir un modo en el selector de enfoque lo guarda y recalcula la tarjeta de hoy y la lista al instante.
 - [ ] Una tarjeta con "1 punto por cada 100" y otra con "2% en puntos" producen el valor por cada 1,000 esperado.
 - [ ] Una tarjeta sin recompensa aparece en el ranking, puntuada solo por días.
 - [ ] Las 5 frecuencias de ingreso generan las fechas de cobro correctas durante 12 meses, incluidos feriados.

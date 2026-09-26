@@ -10,7 +10,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { fechaCorta, proximoPago, type Traducir } from '@/inicio/vista';
 import { TarjetaDestacada } from '@/inicio/TarjetaDestacada';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
-import { ControlEnfoque } from '@/inicio/SelectorEnfoque';
+import { SelectorEnfoque } from '@/inicio/SelectorEnfoque';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
@@ -167,10 +167,12 @@ export default function Inicio() {
   return (
     <Pantalla conPestanas>
       {filaFecha}
-      {/* El enfoque va antes del título, que se lee de corrido con la tarjeta (decisión D47). */}
-      <ControlEnfoque />
+      {/* "Hoy te conviene usar", priorizando…, y la tarjeta que gana (decisión D48). */}
       <View style={{ gap: tema.espacio.m }}>
-        {titulo}
+        <View>
+          {titulo}
+          <SelectorEnfoque />
+        </View>
         <TarjetaDestacada vista={primera} mostrarUltimos4={lista.some(v => v !== primera && v.banco === primera.banco)} onPress={() => abrir(primera)} />
       </View>
       <View style={{ gap: tema.espacio.m }}>

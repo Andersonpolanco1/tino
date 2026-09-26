@@ -74,14 +74,18 @@ test('muestra la fecha, la tarjeta de hoy y las demás en orden de enfoque (ejem
   expect(screen.getByText('RD$10 por RD$1,000')).toBeOnTheScreen();
 });
 
-test('el control de enfoque guarda el enfoque al instante y recalcula (decisión D30)', async () => {
+test('"Priorizando…" abre la hoja de enfoques; elegir guarda al instante y recalcula (decisión D48)', async () => {
   const almacen = await almacenCon([A, B, C]);
   await render(envolver(almacen, <Inicio />));
-  await fireEvent.press(screen.getByRole('radio', { name: 'Puntos' }));
+  expect(screen.getByText('Buscando un equilibrio')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByLabelText('Enfoque: Equilibrado. Cambiar'));
+  await fireEvent.press(screen.getByText('Acumular más puntos.'));
   await act(async () => {});
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('puntos');
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta B\./);
-  await fireEvent.press(screen.getByRole('radio', { name: 'Días' }));
+  expect(screen.getByText('Priorizando puntos')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByLabelText('Enfoque: Puntos. Cambiar'));
+  await fireEvent.press(screen.getByText('Más días para pagar sin intereses.'));
   await act(async () => {});
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('liquidez');
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta C\./);
@@ -116,7 +120,7 @@ test('con una sola tarjeta muestra el semáforo y oculta la barra y el selector 
   await render(envolver(await almacenCon([A]), <Inicio />));
   expect(screen.getByText('¿Es buen momento?')).toBeOnTheScreen();
   expect(screen.getByLabelText('Buen momento')).toBeOnTheScreen();
-  expect(screen.queryByRole('radio', { name: 'Puntos' })).toBeNull();
+  expect(screen.queryByLabelText(/^Enfoque:/)).toBeNull();
   expect(screen.getByText('¿Tienes otra tarjeta?')).toBeOnTheScreen();
 });
 
