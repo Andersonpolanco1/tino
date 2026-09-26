@@ -257,7 +257,7 @@ En el MVP el servidor es un conjunto de archivos JSON estáticos detrás de una 
 
 | Servicio | Uso | Requisito |
 | --- | --- | --- |
-| Plataforma de suscripciones (RevenueCat, sección 7.3) | Tino Pro: compra, restauración, prueba de 30 días y estado del plan | Compatible con Expo; unifica App Store y Google Play |
+| Plataforma de suscripciones (RevenueCat, sección 7.3) | Tino Pro: compra, restauración, prueba gratis si se activa en las tiendas y estado del plan | Compatible con Expo; unifica App Store y Google Play |
 | Analítica de producto (PostHog, sección 7.3) | Eventos anónimos y cohortes de la sección 17 de la especificación | Identificador anónimo, sin datos personales; se desactiva desde Ajustes |
 | Reporte de fallos (Sentry, sección 7.3) | Errores y cierres inesperados | Sin datos de tarjetas en los reportes |
 | Notificaciones | Avisos locales programados en el teléfono | En el MVP no hay notificaciones desde servidor |

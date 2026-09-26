@@ -694,7 +694,7 @@ La curaduría de promociones es el costo que más pesa. Por eso las promociones 
 
 **Límite de 2 tarjetas en el plan gratis.** Con 1 tarjeta el usuario nunca ve el ranking, que es el valor central de la app. Con 3, muchos usuarios nunca llegarían al límite y en el MVP casi nadie tendría motivo para pagar. Con 2, el usuario ve el ranking funcionar con sus propias tarjetas, y quien tiene 3 o más (quien más sufre el problema) llega al límite justo cuando más valor recibe. Además es la decisión reversible: subir el límite más adelante es una buena noticia, y bajarlo generaría quejas. Desde el lanzamiento se mide cuántas tarjetas tienen los usuarios; si la mayoría tiene solo 2, la conversión dependerá más de las funciones avanzadas.
 
-**Prueba gratis.** 30 días de Pro al intentar registrar la 3.ª tarjeta o al completar el nivel 3 de datos, para que el usuario pruebe el valor con sus propios datos.
+**Sin prueba gratis en el MVP.** El plan gratis ya deja ver el ranking con 2 tarjetas propias y sin límite de tiempo, y en el MVP Pro solo suma más tarjetas, a un precio bajo. Lanzar sin prueba adelanta el primer ingreso y la señal de si el usuario paga, y evita el momento de perder tarjetas al terminarla. Si la conversión a Pro no llega a la meta (sección 17.3), se agrega una prueba desde las tiendas; la app ya la muestra y avisa antes del cobro cuando existe.
 
 **Si Pro vence.** El usuario conserva todas sus tarjetas y datos; nunca se borra nada. Elige cuáles 2 tarjetas siguen activas en el ranking, y las demás quedan guardadas hasta que renueve.
 
@@ -716,7 +716,7 @@ La curaduría de promociones es el costo que más pesa. Por eso las promociones 
 
 ### 15.5 Criterios de aceptación
 
-- [ ] En el plan gratis, al intentar registrar la 3.ª tarjeta se muestra la oferta de Pro con la prueba de 30 días, y las 2 tarjetas existentes siguen funcionando.
+- [ ] En el plan gratis, al intentar registrar la 3.ª tarjeta se muestra la oferta de Pro, y las 2 tarjetas existentes siguen funcionando.
 - [ ] Una tarjeta con doble balance cuenta como una sola tarjeta para el límite.
 - [ ] Al vencer Pro, no se borra ningún dato y el usuario elige qué 2 tarjetas quedan activas.
 - [ ] Ningún dato comercial o de socios entra al cálculo del ranking, y todo contenido patrocinado lleva su etiqueta.
@@ -854,7 +854,7 @@ Tino mide su uso desde el MVP para decidir con datos: qué construir, cuándo in
 | Datos | Sugerencias aceptadas | Sugerencias de datos completadas ÷ mostradas | 25% o más |
 | Datos | Tarjetas por usuario | Distribución en rangos | Referencia clave para el límite gratis |
 | Monetización | Conversión a Pro | Usuarios que se suscriben ÷ usuarios activos, por cohorte | 3% o más |
-| Monetización | Conversión de la prueba | Pruebas de 30 días que terminan en pago | 30% o más |
+| Monetización | Conversión de la prueba | Pruebas gratis que terminan en pago (solo si se activa una prueba; el MVP lanza sin ella) | 30% o más |
 | Monetización | Ingreso recurrente mensual | Ingreso bruto y neto mensual de suscripciones | Cubrir costos fijos (sección 15.2) |
 | Monetización | Mezcla de planes | Suscriptores anuales ÷ total | 50% o más |
 | Monetización | Cancelación mensual | Suscriptores que cancelan en el mes ÷ suscriptores al inicio | 6% o menos |
@@ -875,7 +875,7 @@ Cada métrica clave tiene asociada la decisión que dispara, para que los datos 
 | --- | --- |
 | Cancelación mensual mayor a 6% durante 2 meses | Priorizar retención (resumen mensual, notificaciones útiles, widget) antes que adquisición |
 | Más de 50% de los usuarios tiene 2 tarjetas o menos | La conversión dependerá de las funciones avanzadas: adelantar las de v2 |
-| Conversión a Pro menor a 2% después de 3 meses | Revisar la oferta: mensaje del muro de pago, duración de la prueba y precio, con pruebas A/B |
+| Conversión a Pro menor a 2% después de 3 meses | Revisar la oferta: mensaje del muro de pago, agregar una prueba gratis o cambiar su duración, y precio, con pruebas A/B |
 | Suscriptores anuales menos de 40% del total | Destacar más el plan anual o aumentar su descuento |
 | Un emisor del grupo 2 supera 2% de las tarjetas registradas | Pasa al grupo 1 del catálogo |
 | Más de 20% de "Otro" en un banco | Faltan productos de ese banco en el catálogo: completarlos |
