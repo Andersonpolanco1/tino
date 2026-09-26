@@ -129,7 +129,7 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 
 - [x] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos: RevenueCat, PostHog y Sentry (sección 7.3 técnica, decisión D55)
 - [ ] Tino Pro con prueba de 30 días y límite de 2 tarjetas en el plan gratis
-- [x] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes (`src/analitica/`, D57); falta ver los eventos llegar a PostHog desde un teléfono
+- [x] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes (`src/analitica/`, D57). Verificado en el emulador: los eventos llegan a PostHog (UE) y el interruptor los detiene
 - [x] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación): `tarjeta_registrada` con emisor `otro` y producto `otro` o `no_se`
 - [ ] Reporte de fallos sin datos de tarjetas
 - [ ] Widget de Android
@@ -144,7 +144,7 @@ Criterios de la especificación:
 - [ ] 15.5: al vencer Pro no se borra ningún dato y el usuario elige qué 2 tarjetas quedan activas
 - [ ] 15.5: ningún dato comercial entra al ranking y todo contenido patrocinado lleva su etiqueta
 - [x] 17.5: ningún evento contiene montos, números de tarjeta, alias ni fechas exactas de ingresos (`src/analitica/__tests__/analitica.test.ts`)
-- [x] 17.5: desactivar la analítica detiene el envío de inmediato (prueba del módulo; con PostHog real se revisa junto con la llegada de eventos)
+- [x] 17.5: desactivar la analítica detiene el envío de inmediato (prueba del módulo y verificado en el emulador con PostHog)
 - [ ] 17.5: el panel interno muestra ingreso recurrente, conversión, cancelación y retención por cohorte con máximo 24 horas de atraso
 - [ ] 17.5: cada regla de decisión de la tabla 17.3 se puede evaluar en el panel
 - [x] 18.6: todos los eventos de analítica incluyen el país
@@ -165,7 +165,8 @@ Criterios de la especificación:
 - [x] Cuentas de Apple Developer y Google Play Console
 - [ ] Proyecto en Expo (EAS) vinculado: `eas init` para que `app.config.ts` tenga su `projectId`
 - [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS (`EXPO_PUBLIC_POSTHOG_KEY` ya la lee la app)
-- [ ] Recompilar la app de desarrollo: `posthog-react-native`, `expo-application` y `expo-device` traen código nativo
+- [x] Recompilar la app de desarrollo con `posthog-react-native`, `expo-application` y `expo-device`
+- [ ] Separar los datos de prueba en PostHog (el plan gratis tiene un solo proyecto): la clave de PostHog solo en `preview` y `production` de EAS, sin clave en `development` ni en `.env.local` salvo para probar la analítica, y los identificadores de los teléfonos de prueba en "Filter out internal and test users"
 - [ ] Productos de Tino Pro en App Store Connect y Google Play Console (mensual USD 2.49, anual USD 19.99, prueba de 30 días y precio de lanzamiento) y su configuración en RevenueCat
 - [ ] Revisar con un contador el ITBIS sobre servicios digitales y la comisión de 15% del programa de pequeños desarrolladores (Apple y Google)
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
