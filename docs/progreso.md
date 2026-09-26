@@ -171,6 +171,7 @@ Criterios de la especificación:
 - [ ] Descargar también la configuración del país (`/v1/paises/xx.json`) igual que el catálogo; hoy se usa la copia incluida en `src/paises/`
 - [ ] Actualizar en claude.ai la documentación técnica (sección 5.7 y 11): mencionar `generar_aleatorios.py` y los casos aleatorios, y reexportarla a `docs/`
 - [ ] Actualizar en claude.ai el ejemplo 7.4 de la especificación con los días reales (46, 35 y 50), como pide la nota de la sección 5.7 técnica
+- [ ] Logos de los bancos en lugar de las iniciales: pospuesto hasta revisar el uso de las marcas (reglas de marca de cada banco y revisión de Apple). Plan listo: `assets/bancos/<id>.png` de 96 × 96 tomados del ícono para celulares de la web oficial, un mapa en `src/catalogo/logos.ts` y `ChipBanco` con las iniciales como respaldo
 
 ## Decisiones
 
