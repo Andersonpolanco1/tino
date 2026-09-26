@@ -7,12 +7,13 @@ import type { VistaTarjeta } from './useVistas';
 
 // La tarjeta de hoy del rediseño: chip del banco, semáforo, días en grande, barra del ciclo,
 // fecha de pago y recompensa.
-export function TarjetaDestacada({ vista, onPress }: { vista: VistaTarjeta; onPress: () => void }) {
+// motivo: la línea que dice por qué ganó según el enfoque (sección 3.1).
+export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarjeta; motivo?: string; onPress: () => void }) {
   const tema = useTema();
   const { t } = useTranslation();
   const { tarjeta, resultado } = vista;
   const detalle = tarjeta.ultimos4 ? t('inicio.bancoTermina', { banco: vista.banco, ultimos4: tarjeta.ultimos4 }) : vista.banco;
-  const extra = [t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
+  const extra = [motivo, t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
   const translucido = tema.modo === 'oscuro' ? 0.15 : 0.22;
 
   return (
@@ -29,6 +30,11 @@ export function TarjetaDestacada({ vista, onPress }: { vista: VistaTarjeta; onPr
         transform: [{ scale: pressed ? 0.985 : 1 }],
       })}
     >
+      {motivo ? (
+        <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily, marginBottom: -tema.espacio.s }}>
+          {motivo}
+        </Texto>
+      ) : null}
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: tema.espacio.m }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m, flexShrink: 1 }}>
           {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} sobreDestacado /> : null}

@@ -37,7 +37,7 @@ export function ControlSegmentado<T extends string>({ etiqueta, opciones, valor,
               boxShadow: activa ? tema.sombra.segmento : undefined,
             }}
           >
-            <Texto variante={activa ? 'cuerpoFuerte' : 'apoyo'} color={activa ? 'texto' : 'textoSecundario'} numberOfLines={1} style={{ fontSize: 14 }}>
+            <Texto variante={activa ? 'cuerpoFuerte' : 'apoyo'} color={activa ? 'texto' : 'textoSecundario'} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.8} style={{ fontSize: 14 }}>
               {o.etiqueta}
             </Texto>
           </Pressable>

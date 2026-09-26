@@ -86,12 +86,12 @@ Al abrir la app, sin tocar nada, el usuario ve qué tarjeta usar hoy y cuántos 
 ### 3.1 Estructura
 
 - **Tarjeta destacada.** La mejor opción de hoy, en grande, con el motivo en una línea: "50 días para pagar · 1.5 puntos por cada 100".
-- **Barra de orden.** Botones de un toque: Recomendado · Más días · Más puntos · Más cashback. "Recomendado" usa el enfoque y los pesos configurados (sección 6) y es el orden por defecto. Tocar otro botón reordena la lista al instante, sin cambiar la configuración guardada.
+- **Control de enfoque.** Botones de un toque con los modos de enfoque: Equilibrado · Días · Puntos · Cashback (sección 6). Tocar uno cambia el enfoque guardado y recalcula la tarjeta de hoy y la lista al instante. Un ícono de información junto al título de la lista explica que cada enfoque combina días y recompensas con distinta prioridad.
 - **Lista de tarjetas.** Cada fila muestra lo que se detalla en la tabla 3.2.
 - **Franja de próximo pago.** Al pie, la fecha límite más cercana y, si hay nivel 3, su monto.
 - **Sugerencia de datos.** Como máximo una tarjeta discreta de sugerencia (sección 2.2), que se puede descartar.
 
-**Selector de enfoque (con 2 o más tarjetas).** Junto al botón "Recomendado" se muestra el enfoque activo, por ejemplo "Recomendado · Equilibrado". Al tocarlo se abre una hoja con los modos disponibles (Liquidez, Puntos, Cashback, Equilibrado y, con balances, Reducir deuda; en Pro, también los perfiles personalizados). El cambio se guarda al instante y la lista se recalcula en pantalla. La diferencia con la barra de orden es que el selector cambia el enfoque guardado, que también usan el widget y las notificaciones, mientras que la barra solo reordena la vista del momento. Con una sola tarjeta el selector se oculta (sección 3.5).
+**Control de enfoque (con 2 o más tarjetas).** Es el único control de orden de la pantalla de inicio: no hay un orden temporal aparte, porque dos controles con las mismas palabras ("Puntos") confundían y el orden por un solo dato ignoraba las penalizaciones (por ejemplo, subía una tarjeta que corta mañana). El enfoque elegido también lo usan el widget y las notificaciones, y el motivo de la tarjeta destacada lo nombra ("Tu mejor opción para acumular puntos"). Los modos con balances (Reducir deuda) y los perfiles personalizados de Pro se agregan al mismo control o a Ajustes cuando existan. Con una sola tarjeta el control se oculta (sección 3.5).
 
 ### 3.2 Información por tarjeta en la lista
 
@@ -135,7 +135,7 @@ Con una sola tarjeta registrada no hay ranking que mostrar, así que la pantalla
 - Las ofertas vigentes de esa tarjeta (sección 9, desde v2).
 - Una invitación discreta: "¿Tienes otra tarjeta? Agrégala y te diremos cuál conviene cada día".
 
-La barra de orden y los modos de enfoque se ocultan hasta que haya una segunda tarjeta.
+El control de enfoque se oculta hasta que haya una segunda tarjeta.
 
 ## 4. Datos de la tarjeta
 
@@ -381,7 +381,7 @@ Hoy es día 6 del mes, modo Equilibrado del MVP (40 / 30 / 30), rendimiento por 
 | B | Día 20 / día 10 | 34 | 2% en puntos, punto = 1.00 | 20.00 en puntos | 68 / 100 / 0 | 57 | 2.ª |
 | A | Día 5 / día 25 | 50 | 1 punto por cada 100, punto = 0.50 | 5.00 en puntos | 100 / 25 / 0 | 48 | 3.ª |
 
-En Recomendado gana C porque combina buenos días con recompensa. Al tocar "Más días" pasa A al primer lugar (50 días) y al tocar "Más puntos" pasa B (20.00 por cada 1,000). La tarjeta destacada explica el motivo: "C: 45 días y 10.00 de cashback por cada 1,000". Si el usuario registró que cobra el día 8, B no recibe penalización, porque su pago del día 10 cae después del cobro.
+En Equilibrado gana C porque combina buenos días con recompensa. En Liquidez C sigue primero por poco frente a A (50 días), y en Puntos pasa B (20.00 por cada 1,000). La tarjeta destacada explica el motivo: "C: 45 días y 10.00 de cashback por cada 1,000". Si el usuario registró que cobra el día 8, B no recibe penalización, porque su pago del día 10 cae después del cobro.
 
 ### 7.5 Consulta "Tengo una compra" y simulador
 
@@ -599,7 +599,7 @@ Cada fase sube un nivel de datos y convierte la app de recomendador de tarjetas 
 
 - [ ] Con solo banco, producto, corte y fecha límite, la pantalla de inicio muestra la tarjeta de hoy al abrir la app, sin ninguna otra acción.
 - [ ] Los días de gracia son correctos en meses de 28, 29, 30 y 31 días, y con fechas límite en fin de semana.
-- [ ] Tocar Más días, Más puntos o Más cashback reordena la lista al instante sin modificar el enfoque guardado.
+- [ ] Tocar un modo del control de enfoque lo guarda y recalcula la tarjeta de hoy y la lista al instante.
 - [ ] Una tarjeta con "1 punto por cada 100" y otra con "2% en puntos" producen el valor por cada 1,000 esperado.
 - [ ] Una tarjeta sin recompensa aparece en el ranking, puntuada solo por días.
 - [ ] Las 5 frecuencias de ingreso generan las fechas de cobro correctas durante 12 meses, incluidos feriados.
@@ -611,7 +611,7 @@ Cada fase sube un nivel de datos y convierte la app de recomendador de tarjetas 
 * [ ] Una tarjeta con doble balance muestra la etiqueta de ambas monedas, su recordatorio menciona los dos pagos; en una compra en dólares, si el usuario paga con dólares, queda por encima de una tarjeta equivalente solo en pesos, y una tarjeta de solo uso local nunca aparece.
 
 - [ ] Registrar una tarjeta con producto "Otro" o "No sé el tipo" no bloquea el registro, y la tarjeta aparece en el ranking.
-- [ ] Con una sola tarjeta, la pantalla de inicio muestra el semáforo del ciclo y oculta la barra de orden.
+- [ ] Con una sola tarjeta, la pantalla de inicio muestra el semáforo del ciclo y oculta el control de enfoque.
 - [ ] (v2) Ninguna promoción cambia el puntaje ni el orden del ranking; solo aparecen en Ofertas, en el detalle de la tarjeta y como nota en "Tengo una compra".
 - [ ] (v2) Solo se muestran promociones de productos que el usuario tiene registrados, cada una con enlace a su fuente oficial.
 
@@ -903,7 +903,6 @@ Cada métrica clave tiene asociada la decisión que dispara, para que los datos 
 | onboarding\_completado | Al ver la tarjeta de hoy por primera vez | Duración en rangos, número de tarjetas en rangos, ingresos registrados sí o no |
 | tarjeta\_registrada | Al guardar una tarjeta | Banco, producto u "Otro", moneda de facturación, tipo de recompensa |
 | inicio\_visto | Al abrir la pantalla de inicio | Modo de enfoque, número de tarjetas en rangos |
-| orden\_cambiado | Al tocar la barra de orden | Orden elegido |
 | enfoque\_cambiado | Al cambiar el enfoque | Modo anterior y nuevo |
 | consulta\_compra | Al usar "Tengo una compra" | Categoría, moneda (sin monto) |
 | widget\_visto | Al actualizarse o tocarse el widget | Plataforma |

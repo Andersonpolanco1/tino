@@ -185,7 +185,7 @@ La penalización por conversión está calibrada para que un diferencial de 6% p
 - **Pesos del MVP** (días / puntos / cashback): Liquidez 80/10/10, Puntos 20/70/10, Cashback 20/10/70, Equilibrado 40/30/30.
 - **Dimensiones inactivas:** si ninguna tarjeta candidata tiene valor en una dimensión, su peso se reparte proporcionalmente entre las demás.
 - **Orden:** puntaje de mayor a menor; en empate, más días de gracia; luego alias en orden alfabético.
-- **Barra de orden:** "Más días", "Más puntos" y "Más cashback" ordenan por el valor bruto de esa dimensión, sin pesos. "Recomendado" usa el puntaje.
+- **Control de enfoque:** la pantalla de inicio ordena siempre por el puntaje del enfoque guardado; el orden por valor bruto de una dimensión (`ordenarRanking`) queda en el motor pero no se muestra (decisión D30 de `docs/progreso.md`).
 
 ### 5.5 Semáforo del ciclo
 
@@ -293,8 +293,7 @@ Ambas se cargan con el sistema de fuentes de Expo y se incluyen en la app, no se
 | TarjetaDestacada | La tarjeta de hoy: días de gracia, fecha de pago, recompensa y semáforo | Maquetas de inicio |
 | FilaTarjeta | Cada tarjeta del ranking con días, fecha y etiquetas | Maquetas de inicio |
 | Etiqueta | Recompensa (oro), alerta (coral), neutra | Maquetas de inicio |
-| BarraOrden | Chips de un toque con desplazamiento horizontal | Maquetas de inicio |
-| SelectorEnfoque | Botón que abre la hoja de modos | Maquetas de inicio |
+| ControlEnfoque | Control segmentado con los modos de enfoque; guarda al tocar | Maquetas de inicio |
 | Semaforo | Punto de color más texto ("Buen momento", "Espera") | Sección 3.4 de la especificación |
 | Hoja | Hojas deslizables para enfoque, detalle y consulta de compra | — |
 | BotonPrimario | Acción principal en jade con texto de contraste | — |
@@ -420,7 +419,7 @@ Cada etapa termina con algo que funciona en el teléfono y se puede probar. Las 
 | 1. Base | Proyecto que compila y corre en ambos teléfonos | Crear proyecto Expo con TypeScript y Expo Router; cargar tokens, fuentes y tema claro y oscuro; base local cifrada con migraciones; configuración por país y textos de i18n; iconos | 16.6 (contraste, modos), 18.6 (país como configuración) | La app abre en iOS y Android con una pantalla vacía que respeta el tema y el país |
 | 2. Motor | Motor completo y probado | Implementar fechas, recompensas, penalizaciones, puntaje y semáforo; pasar los 17 casos | 14.1 (días en meses de 28 a 31, valor de puntos) | `npm test` pasa todos los casos del motor |
 | 3. Registro de tarjetas | Registrar tarjetas en 30 segundos | Catálogo con caché y copia incluida; selector de banco y producto con "Otro" y "No sé el tipo"; fechas, moneda de facturación y recompensas; pregunta de pago en dólares; interruptor En pausa | 14.1 (registro sin bloqueos), 4.3 (reglas del doble balance) | Se registran 3 tarjetas en menos de 2 minutos |
-| 4. Pantalla de inicio | La tarjeta de hoy al abrir | TarjetaDestacada, ranking, barra de orden, selector de enfoque, semáforo, modo una tarjeta, detalle de tarjeta, consulta "Tengo una compra" | 14.1 (reordenar sin cambiar el enfoque, modo una tarjeta) | La pantalla coincide con las maquetas y cambia con el enfoque |
+| 4. Pantalla de inicio | La tarjeta de hoy al abrir | TarjetaDestacada, ranking, control de enfoque, semáforo, modo una tarjeta, detalle de tarjeta, consulta "Tengo una compra" | 14.1 (reordenar sin cambiar el enfoque, modo una tarjeta) | La pantalla coincide con las maquetas y cambia con el enfoque |
 | 5. Ingresos y avisos | Avisos útiles sin montos | Frecuencias de cobro; etiqueta y alerta "Vence antes de tu cobro"; notificaciones de cambio de tarjeta, fecha límite y resumen mensual; sugerencias de datos | 14.1 (frecuencias durante 12 meses, alerta por fechas) | Las notificaciones llegan en las fechas correctas en pruebas con fechas simuladas |
 | 6. Pro, analítica y lanzamiento | Publicar en las tiendas | Tino Pro con prueba de 30 días y límite de 2 tarjetas; analítica y reporte de fallos; widget de Android; fichas de tiendas; lista de verificación | 15.5, 17 (eventos sin datos personales) | Versión 1.0.0 aprobada en App Store y Google Play |
 

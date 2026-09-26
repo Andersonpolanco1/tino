@@ -71,7 +71,7 @@ export function etiquetasDe(tarjeta: Tarjeta, resultado: ResultadoTarjeta, { t }
   return etiquetas;
 }
 
-// "21 de nov." (rediseño).
+// "21 de noviembre", sin el día de la semana (rediseño).
 export function fechaCorta(fecha: FechaISO, idioma: string, t: Traducir): string {
   const { dia, mes } = partesFechaLarga(fecha, idioma);
   return t('comun.fechaCorta', { dia, mes });

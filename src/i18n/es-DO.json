@@ -19,10 +19,8 @@
     "dias": "días",
     "accesibleTarjeta": "{{alias}}. {{dias}} días para pagar, se paga el {{fecha}}. {{extra}}",
     "cortaEn": "Corta en {{dias}} días",
-    "enfoqueBoton": "Enfoque: ",
     "elegirEnfoque": "Elige tu enfoque",
     "cerrar": "Cerrar",
-    "ordenEtiqueta": "Ordenar tarjetas",
     "sinTarjetasTitulo": "Agrega tu primera tarjeta",
     "agregarTarjeta": "Agregar tarjeta",
     "todasEnPausa": "Todas tus tarjetas están en pausa. Actívalas en Tarjetas para ver cuál usar hoy.",
@@ -34,13 +32,13 @@
     "diasParaPagarDosLineas": "días\npara pagar",
     "corto": "Cortó el {{fecha}}",
     "corta": "Corta el {{fecha}}",
-    "enfoqueCambiar": "Enfoque: {{modo}}. Cambiar"
-  },
-  "orden": {
-    "recomendado": "Para ti",
-    "masDias": "Días",
-    "masPuntos": "Puntos",
-    "masCashback": "Cashback"
+    "enfoqueInfo": "Tu enfoque decide qué tarjeta te recomendamos. Cada uno combina los días para pagar con las recompensas, pero le da más peso a una cosa. Lo que elijas queda guardado.",
+    "motivo": {
+      "equilibrado": "Tu mejor opción entre días para pagar y recompensas",
+      "liquidez": "Tu mejor opción para tener más días para pagar",
+      "puntos": "Tu mejor opción para acumular puntos",
+      "cashback": "Tu mejor opción para recibir cashback"
+    }
   },
   "enfoque": {
     "liquidez": "Liquidez",
@@ -204,7 +202,9 @@
     "diasDespuesDelCorte": "Días después del corte",
     "vistaPrevia": "Con estas fechas, una compra de hoy se paga en {{dias}} días.",
     "tituloBanco": "¿De qué banco es?",
-    "tituloProducto": "¿Qué tarjeta es?"
+    "tituloProducto": "¿Qué tarjeta es?",
+    "confirmarValorPunto": "Este valor es correcto",
+    "valorPuntoConfirmado": "Valor confirmado"
   },
   "pro": {
     "nombre": "Tino Pro",
@@ -245,11 +245,14 @@
     "cancelar": "Cancelar",
     "errorExportar": "No pudimos crear el archivo. Inténtalo de nuevo.",
     "precisionTitulo": "Precisión de recomendaciones",
-    "precisionPista": "Confirma el valor del punto de tus tarjetas para subirla.",
     "general": "General",
     "monedas": "Monedas",
     "enfoque": "Enfoque",
-    "monedasDos": "{{principal}} y {{secundaria}}"
+    "monedasDos": "{{principal}} y {{secundaria}}",
+    "precisionPistaPunto_one": "Confirma el valor del punto de esta tarjeta para subirla.",
+    "precisionPistaPunto_other": "Confirma el valor del punto de estas {{count}} tarjetas para subirla.",
+    "precisionPistaCobros": "Subirá cuando registres cuándo cobras.",
+    "confirmarPunto": "Confirmar el valor del punto"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -284,7 +287,7 @@
     "masInformacion": "Más información sobre {{tema}}",
     "atras": "Atrás",
     "cerrar": "Cerrar",
-    "fechaCorta": "{{dia}} de {{mes}}.",
+    "fechaCorta": "{{dia}} de {{mes}}",
     "diaConSemana": "{{diaSemana}} {{dia}}",
     "porcentaje": "{{valor}}%",
     "menos": "Restar uno a {{etiqueta}}",
@@ -337,6 +340,16 @@
     "hitoCorto": "Cortó",
     "hitoHoy": "Hoy",
     "hitoCorta": "Corta",
-    "hitoPagas": "Pagas"
+    "hitoPagas": "Pagas",
+    "confirmarPuntoTitulo": "¿1 punto vale {{valor}}?",
+    "confirmarPuntoTexto": "Lo pusimos nosotros para empezar. Revísalo en tu estado de cuenta o en la app de tu banco: con el valor real, Tino compara bien tus puntos con el cashback.",
+    "confirmarPuntoSi": "Sí, es correcto",
+    "confirmarPuntoCambiar": "Cambiar el valor"
+  },
+  "enfoqueCorto": {
+    "equilibrado": "Equilibrado",
+    "liquidez": "Días",
+    "puntos": "Puntos",
+    "cashback": "Cashback"
   }
 }

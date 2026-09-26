@@ -61,7 +61,7 @@ Listo cuando: se registran 3 tarjetas en menos de 2 minutos.
 - [x] Selector de banco y producto con "Otro" y "No sé el tipo"; modo sin catálogo fuera de RD
 - [x] Fechas de corte y límite, ajuste de día no hábil y compra en día de corte
 - [x] Moneda de facturación, reglas del doble balance y pregunta de pago en dólares (solo si el país lo activa)
-- [x] Recompensas: tipo, tasa y valor del punto (precargado en 1.00)
+- [x] Recompensas: tipo, tasa y valor del punto (precargado en 1.00, con botón para confirmarlo sin reescribirlo)
 - [x] Interruptor En pausa
 - [x] Onboarding: bienvenida, registro y pregunta de enfoque (13.1 de la especificación) **(asignada)**; cobros y permiso de notificaciones en la etapa 5 (decisión D18)
 - [x] Validación: últimos 4 dígitos exactos y rechazo de 13 a 19 dígitos seguidos en cualquier campo **(asignada)**
@@ -80,8 +80,8 @@ Criterios de la especificación:
 
 Listo cuando: la pantalla coincide con las maquetas y cambia con el enfoque.
 
-- [x] TarjetaDestacada, FilaTarjeta, Etiqueta, BarraOrden, SelectorEnfoque, Semaforo, Hoja y BotonPrimario
-- [x] Ranking con barra de orden y selector de enfoque
+- [x] TarjetaDestacada, FilaTarjeta, Etiqueta, ControlEnfoque, Semaforo, Hoja y BotonPrimario
+- [x] Ranking con control de enfoque de un toque (D30)
 - [x] Modo una tarjeta
 - [x] Detalle de tarjeta con semáforo del ciclo
 - [x] Consulta "Tengo una compra"
@@ -94,8 +94,8 @@ Listo cuando: la pantalla coincide con las maquetas y cambia con el enfoque.
 Criterios de la especificación:
 
 - [x] 14.1: con solo banco, producto, corte y fecha límite, inicio muestra la tarjeta de hoy sin otra acción (decisión D19)
-- [x] 14.1: Más días, Más puntos o Más cashback reordenan al instante sin cambiar el enfoque guardado
-- [x] 14.1: con una sola tarjeta se ven el semáforo y no la barra de orden
+- [x] 14.1: tocar un modo del control de enfoque lo guarda y recalcula al instante (D30)
+- [x] 14.1: con una sola tarjeta se ven el semáforo y no el control de enfoque
 - [x] 14.1: con 2 o más tarjetas, cambiar el enfoque lo guarda al instante y actualiza el ranking (el widget y las notificaciones se verifican en las etapas 5 y 6); con una tarjeta el selector no aparece
 - [x] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
 - [x] 14.1: en una compra en dólares pagando con dólares, el doble balance queda por encima de una tarjeta equivalente solo en pesos, y la de solo uso local nunca aparece
@@ -204,4 +204,6 @@ Criterios de la especificación:
 | D27 | 2026-09-25 | "Tengo una compra" pide monto y moneda; la categoría llega con las recompensas avanzadas en v2 | La categoría solo sirve con multiplicadores por categoría (decisión D23) |
 | D28 | 2026-09-25 | El botón "La usé" queda para v2 | Así lo ubica la hoja de ruta de la especificación (sección 14) |
 | D29 | 2026-09-25 | Se aplica el rediseño aprobado (maquetas en claude.ai): barra de pestañas flotante, listas agrupadas, control segmentado para el orden, íconos de trazo propios, cuadrícula de días para el corte y contador para la fecha límite, que se precarga 20 días después del corte. Los tokens suman los roles `divisor`, `segmentoFondo`, `segmentoActivo`, `perilla`, `pistaApagada`, `recompensaPunto`, `velo` y sombras por modo | Las pantallas parecían una web antigua; la cuadrícula y el contador evitan escribir números y 20 días es el plazo más común en RD |
-| D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |
+| D30 | 2026-09-25 | En inicio, la barra de orden temporal y el selector de enfoque con hoja se unen en un solo control segmentado de enfoque (Equilibrado · Días · Puntos · Cashback) que guarda al tocar. La tarjeta destacada dice por qué ganó según el enfoque y un ícono ⓘ lo explica. Se quita el evento `orden_cambiado`; `ordenarRanking` queda en el motor sin usarse en pantalla. La especificación (secciones 3.1, 3.5, 7.4, 14.1 y 17) y la documentación técnica se corrigieron | Dos controles con las mismas palabras confundían; el orden por un solo dato ignoraba las penalizaciones y se perdía al salir |
+| D31 | 2026-09-25 | El valor del punto se confirma en un toque: "Este valor es correcto" en el registro, y en el detalle de la tarjeta una tarjeta "¿1 punto vale RD$1?" con "Sí, es correcto" o "Cambiar el valor" (abre directo la recompensa). Ajustes lista las tarjetas por confirmar y explica qué falta para subir la precisión | Antes solo se confirmaba reescribiendo el campo, y el aviso de precisión no decía dónde hacerlo |
+| D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

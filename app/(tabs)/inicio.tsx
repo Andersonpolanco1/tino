@@ -1,9 +1,7 @@
-import { useState } from 'react';
-import { LayoutAnimation, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import type { OrdenVista } from '@/motor';
-import { Boton, BotonCircular, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
+import { Boton, BotonCircular, EtiquetaConInfo, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
 import { partesFechaLarga } from '@/i18n';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
@@ -12,8 +10,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { fechaCorta, proximoPago, textoFecha, type Traducir } from '@/inicio/vista';
 import { TarjetaDestacada } from '@/inicio/TarjetaDestacada';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
-import { BarraOrden } from '@/inicio/BarraOrden';
-import { SelectorEnfoque } from '@/inicio/SelectorEnfoque';
+import { ControlEnfoque } from '@/inicio/SelectorEnfoque';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
 
@@ -25,17 +22,12 @@ export default function Inicio() {
   const hoy = useHoy();
   const { config, idioma } = usePais();
   const hayTarjetas = useAlmacen(s => s.tarjetas.length > 0);
-  const [orden, setOrden] = useState<OrdenVista>('recomendado');
-  const vistas = useVistas({ orden });
+  const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
+  const vistas = useVistas();
   const lista = vistas?.tarjetas ?? [];
   const unaSola = lista.length === 1;
 
   const abrir = (vista: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: { id: vista.tarjeta.id } });
-  const cambiarOrden = (nuevo: OrdenVista) => {
-    // Sección 16.6: el reordenamiento se anima sin saltos.
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    setOrden(nuevo);
-  };
 
   const encabezado = (
     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: tema.espacio.m }}>
@@ -146,15 +138,10 @@ export default function Inicio() {
   return (
     <Pantalla conPestanas>
       {encabezado}
-      <TarjetaDestacada vista={primera} onPress={() => abrir(primera)} />
+      <TarjetaDestacada vista={primera} motivo={modo ? t(`inicio.motivo.${modo}`) : undefined} onPress={() => abrir(primera)} />
       <View style={{ gap: tema.espacio.m }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Texto variante="subtitulo" accessibilityRole="header">
-            {t('inicio.otrasTarjetas')}
-          </Texto>
-          <SelectorEnfoque />
-        </View>
-        <BarraOrden valor={orden} onCambio={cambiarOrden} />
+        <EtiquetaConInfo etiqueta={t('inicio.otrasTarjetas')} info={t('inicio.enfoqueInfo')} variante="subtitulo" encabezado />
+        <ControlEnfoque />
         <ListaAgrupada sangria={70}>
           {resto.map(v => (
             <FilaTarjeta key={v.tarjeta.id} vista={v} onPress={() => abrir(v)} />

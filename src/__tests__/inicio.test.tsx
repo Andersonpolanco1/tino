@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import * as ReactNative from 'react-native';
-import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
+import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { Recompensa, Tarjeta } from '@/tipos/tipos';
 import { ProveedorPais } from '@/paises';
@@ -74,30 +74,32 @@ test('muestra la fecha, la tarjeta de hoy y las demás en orden de enfoque (ejem
   expect(screen.getByText('RD$10 por RD$1,000')).toBeOnTheScreen();
 });
 
-test('la barra de orden reordena sin cambiar el enfoque guardado (criterio 14.1)', async () => {
+test('el control de enfoque guarda el enfoque al instante y recalcula (decisión D30)', async () => {
   const almacen = await almacenCon([A, B, C]);
   await render(envolver(almacen, <Inicio />));
-  await fireEvent.press(screen.getByText('Días'));
-  expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta A\. 50 días/);
-  expect(almacen.getState().preferencias?.enfoque.modo).toBe('equilibrado');
-});
-
-test('cambiar el enfoque lo guarda al instante y recalcula (criterio 14.1)', async () => {
-  const almacen = await almacenCon([A, B, C]);
-  await render(envolver(almacen, <Inicio />));
-  await fireEvent.press(screen.getByLabelText('Enfoque: Equilibrado. Cambiar'));
-  await fireEvent.press(within(screen.getByText('Elige tu enfoque').parent!).getByText('Acumular más puntos.'));
+  expect(screen.getByText('Tu mejor opción entre días para pagar y recompensas')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByRole('radio', { name: 'Puntos' }));
   await act(async () => {});
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('puntos');
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta B\./);
+  expect(screen.getByText('Tu mejor opción para acumular puntos')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByRole('radio', { name: 'Días' }));
+  await act(async () => {});
+  expect(almacen.getState().preferencias?.enfoque.modo).toBe('liquidez');
+  expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta C\./);
+});
+
+test('el ícono de información explica el enfoque', async () => {
+  await render(envolver(await almacenCon([A, B, C]), <Inicio />));
+  await fireEvent.press(screen.getByLabelText('Más información sobre Tus tarjetas'));
+  expect(screen.getByText(/Tu enfoque decide qué tarjeta te recomendamos/)).toBeOnTheScreen();
 });
 
 test('con una sola tarjeta muestra el semáforo y oculta la barra y el selector (criterio 14.1)', async () => {
   await render(envolver(await almacenCon([A]), <Inicio />));
   expect(screen.getByText('¿Es buen momento?')).toBeOnTheScreen();
   expect(screen.getByLabelText('Buen momento')).toBeOnTheScreen();
-  expect(screen.queryByText('Para ti')).toBeNull();
-  expect(screen.queryByLabelText(/^Enfoque:/)).toBeNull();
+  expect(screen.queryByRole('radio', { name: 'Puntos' })).toBeNull();
   expect(screen.getByText('¿Tienes otra tarjeta?')).toBeOnTheScreen();
 });
 

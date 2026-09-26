@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { Pressable } from 'react-native';
+import { LayoutAnimation } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { ModoEnfoque } from '../tipos/tipos';
-import { FilaLista, Hoja, Icono, ListaAgrupada, Texto, useTema } from '../diseno';
+import { ControlSegmentado, FilaLista, Hoja, ListaAgrupada } from '../diseno';
 import { useAlmacen } from '../estado';
 
 // Sección 6.2: los 4 modos del MVP.
@@ -38,27 +37,24 @@ export function HojaEnfoque({ visible, onCerrar }: { visible: boolean; onCerrar:
   );
 }
 
-// "Equilibrado ▾" junto al título de la lista (rediseño).
-export function SelectorEnfoque() {
-  const tema = useTema();
+// Decisión D30: en inicio el enfoque se cambia con un control segmentado de un toque y queda
+// guardado; reemplaza a la barra de orden temporal y al enlace con hoja.
+export function ControlEnfoque() {
   const { t } = useTranslation();
-  const [abierto, setAbierto] = useState(false);
-  const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
-  if (!modo) return null;
+  const preferencias = useAlmacen(s => s.preferencias);
+  const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
+  if (!preferencias) return null;
   return (
-    <>
-      <Pressable
-        accessibilityRole="button"
-        accessibilityLabel={t('inicio.enfoqueCambiar', { modo: t(`enfoque.${modo}`) })}
-        onPress={() => setAbierto(true)}
-        style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.xs, minHeight: tema.toqueMinimo, paddingHorizontal: tema.espacio.xs }}
-      >
-        <Texto variante="cuerpoFuerte" color="primario">
-          {t(`enfoque.${modo}`)}
-        </Texto>
-        <Icono nombre="abajo" color="primario" tamano={16} grosor={2.5} />
-      </Pressable>
-      <HojaEnfoque visible={abierto} onCerrar={() => setAbierto(false)} />
-    </>
+    <ControlSegmentado
+      etiqueta={t('inicio.elegirEnfoque')}
+      valor={preferencias.enfoque.modo}
+      onCambio={modo => {
+        if (modo === preferencias.enfoque.modo) return;
+        // Sección 16.6: el reordenamiento se anima sin saltos.
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        guardarPreferencias({ ...preferencias, enfoque: { modo } });
+      }}
+      opciones={MODOS_ENFOQUE.map(modo => ({ valor: modo, etiqueta: t(`enfoqueCorto.${modo}`) }))}
+    />
   );
 }

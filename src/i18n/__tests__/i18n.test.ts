@@ -44,7 +44,12 @@ function archivosCodigo(dir: string): string[] {
   });
 }
 
+// Con plurales de i18next la clave existe como clave_one y clave_other.
 function existeClave(clave: string): boolean {
+  return existeExacta(clave) || (existeExacta(`${clave}_one`) && existeExacta(`${clave}_other`));
+}
+
+function existeExacta(clave: string): boolean {
   let nodo: unknown = esDO;
   for (const parte of clave.split('.')) {
     if (typeof nodo !== 'object' || nodo === null || !(parte in nodo)) return false;
