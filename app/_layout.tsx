@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, useState, type ReactNode } from 'react';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -86,16 +86,23 @@ function Contenido() {
 }
 
 // Espera a tener tarjetas y preferencias, para no mostrar un instante la pantalla equivocada.
+// El país guardado en las preferencias manda sobre la región del teléfono.
 function CuandoCargue({ children }: { children: ReactNode }) {
   const cargado = useAlmacen(s => s.cargado);
+  const paisGuardado = useAlmacen(s => s.preferencias?.pais);
   const asegurarPreferencias = useAlmacen(s => s.asegurarPreferencias);
-  const { config, idioma } = usePais();
+  const { config, idioma, cambiarPais } = usePais();
+  // Solo la primera vez se espera a que coincidan; después no se desmonta la navegación.
+  const [sincronizado, setSincronizado] = useState(false);
 
   useEffect(() => {
-    if (cargado) asegurarPreferencias(config.codigo, idioma);
-  }, [cargado, asegurarPreferencias, config.codigo, idioma]);
+    if (!cargado) return;
+    if (!paisGuardado) asegurarPreferencias(config.codigo, idioma);
+    else if (paisGuardado !== config.codigo) cambiarPais(paisGuardado);
+    else setSincronizado(true);
+  }, [cargado, paisGuardado, asegurarPreferencias, cambiarPais, config.codigo, idioma]);
 
-  if (!cargado) return null;
+  if (!sincronizado) return null;
   return <OcultarArranque>{children}</OcultarArranque>;
 }
 

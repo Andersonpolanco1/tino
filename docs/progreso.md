@@ -28,7 +28,7 @@ Criterios de la especificación:
 
 - [x] 16.6: los textos de los tokens cumplen 4.5:1 en modo claro y oscuro (prueba automática). Se vuelve a revisar en la etapa 4 con las pantallas reales.
 - [ ] 16.6: diseño idéntico en iOS y Android, en modo claro y oscuro. Verificado en Android; falta iOS.
-- [ ] 18.6: cambiar el país cambia moneda, feriados, textos y funciones sin tocar el código. Probado en la configuración; falta el selector de país en Ajustes (etapa 4).
+- [x] 18.6: cambiar el país cambia moneda, feriados, textos y funciones sin tocar el código. Selector en la bienvenida y en Ajustes (decisión D21).
 
 ## Etapa 2. Motor
 
@@ -87,7 +87,7 @@ Listo cuando: la pantalla coincide con las maquetas y cambia con el enfoque.
 - [ ] Consulta "Tengo una compra"
 - [ ] Indicador de precisión (2.1 de la especificación) **(asignada)**
 - [ ] Iconos de la barra de pestañas según las maquetas
-- [ ] Selector de país en Ajustes **(asignada)**
+- [x] Selector de país en Ajustes **(asignada)**; se adelantó a la etapa 3 (decisión D21)
 - [ ] Exportar datos y borrarlo todo, incluida la clave de cifrado (sección 6 técnica) **(asignada)**
 
 Criterios de la especificación:
@@ -195,4 +195,5 @@ Criterios de la especificación:
 | D18 | 2026-09-25 | Los pasos de cobros y de permiso de notificaciones del onboarding se hacen en la etapa 5 | Es donde se construyen los ingresos y los avisos |
 | D19 | 2026-09-25 | La tarjeta de hoy en Inicio se construye en la etapa 4; en la etapa 3 la pestaña Tarjetas muestra lo registrado | La etapa 4 es la de la pantalla de inicio y sus componentes |
 | D20 | 2026-09-25 | Si el banco no indica sus reglas, el registro precarga "adelantar" (fecha límite en día no hábil) y "entra en ese corte" (compra el día del corte); el usuario puede cambiarlas | Son los valores prudentes: la app calcula menos días de gracia en vez de más, y nadie paga tarde por culpa de Tino |
+| D21 | 2026-09-25 | El país se confirma en la bienvenida ("¿Dónde vives?") y se guarda en las preferencias; la región del teléfono solo lo preselecciona. El selector de Ajustes se adelanta a la etapa 3 | Muchos dominicanos tienen el teléfono en inglés o con región de EE. UU.; detectar solo por región los dejaba sin catálogo |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

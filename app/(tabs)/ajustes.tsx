@@ -1,11 +1,12 @@
 import { useTranslation } from 'react-i18next';
-import { Pantalla, Texto } from '@/diseno';
-import { usePais } from '@/paises';
+import { Opciones, Pantalla, Texto } from '@/diseno';
+import { nombrePais, usePais } from '@/paises';
+import { useElegirPais } from '@/estado';
 
 export default function Ajustes() {
   const { t } = useTranslation();
-  const { config } = usePais();
-  const nombrePais = t(`paises.${config.codigo}`, { defaultValue: t('paises.otro', { codigo: config.codigo }) });
+  const { config, opciones } = usePais();
+  const elegirPais = useElegirPais();
   const monedas = [config.monedaPrincipal, config.monedaSecundaria].filter(Boolean).join(' · ');
 
   return (
@@ -13,10 +14,15 @@ export default function Ajustes() {
       <Texto variante="titulo" accessibilityRole="header">
         {t('ajustes.titulo')}
       </Texto>
+      <Opciones
+        etiqueta={t('ajustes.pais')}
+        opciones={opciones.map(codigo => ({ valor: codigo, etiqueta: nombrePais(t, codigo) }))}
+        valor={config.codigo}
+        onCambio={elegirPais}
+      />
       <Texto variante="apoyo" color="textoSecundario">
-        {t('ajustes.pais')}
+        {t('ajustes.paisAyuda')}
       </Texto>
-      <Texto variante="cuerpoFuerte">{nombrePais}</Texto>
       <Texto variante="apoyo" color="textoSecundario">
         {t('ajustes.moneda')}
       </Texto>

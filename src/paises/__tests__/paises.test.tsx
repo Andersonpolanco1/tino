@@ -2,7 +2,7 @@ import { act, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import configDO from '../do.json';
-import { configPara, detectarPais, PAIS_PREDETERMINADO, type RegionDispositivo } from '../paises';
+import { configPara, detectarPais, opcionesDePais, PAIS_PREDETERMINADO, type RegionDispositivo } from '../paises';
 import { ProveedorPais, usePais } from '../ContextoPais';
 
 const telefonoRD: RegionDispositivo = { regionCode: 'DO', currencyCode: 'DOP', languageTag: 'es-DO' };
@@ -21,6 +21,16 @@ describe('detectarPais', () => {
   test('sin región usa el mercado inicial', () => {
     expect(detectarPais([{ regionCode: null, currencyCode: null, languageTag: 'es' }])).toBe(PAIS_PREDETERMINADO);
     expect(detectarPais([])).toBe(PAIS_PREDETERMINADO);
+  });
+});
+
+describe('opcionesDePais', () => {
+  test('ofrece los países con configuración y el de la región del teléfono', () => {
+    expect(opcionesDePais([{ regionCode: 'US', currencyCode: 'USD', languageTag: 'en-US' }])).toEqual(['DO', 'US']);
+  });
+
+  test('no repite el país si la región ya tiene configuración', () => {
+    expect(opcionesDePais([telefonoRD])).toEqual(['DO']);
   });
 });
 

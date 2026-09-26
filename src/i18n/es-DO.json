@@ -149,7 +149,8 @@
   "ajustes": {
     "titulo": "Ajustes",
     "pais": "País",
-    "moneda": "Moneda"
+    "moneda": "Moneda",
+    "paisAyuda": "Define los bancos, la moneda y los feriados que usa Tino."
   },
   "paises": {
     "DO": "República Dominicana",
@@ -170,7 +171,9 @@
     "agregarOtra": "Agregar otra tarjeta",
     "continuar": "Continuar",
     "enfoqueTitulo": "¿Qué te importa más?",
-    "enfoqueTexto": "Puedes cambiarlo cuando quieras desde la pantalla de inicio."
+    "enfoqueTexto": "Puedes cambiarlo cuando quieras desde la pantalla de inicio.",
+    "dondeVives": "¿Dónde vives?",
+    "dondeVivesAyuda": "Así te mostramos los bancos y las tarjetas de tu país. Puedes cambiarlo en Ajustes."
   },
   "enfoqueDescripcion": {
     "liquidez": "Más días para pagar sin intereses.",

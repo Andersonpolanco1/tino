@@ -25,6 +25,12 @@ export function detectarPais(regiones: RegionDispositivo[]): CodigoPais {
   return region ? region.toUpperCase() : PAIS_PREDETERMINADO;
 }
 
+// Opciones al elegir país: los que tienen configuración propia y, si es otro, el de la
+// región del teléfono (que entonces usa el modo sin catálogo).
+export function opcionesDePais(regiones: RegionDispositivo[]): CodigoPais[] {
+  return [...new Set([...Object.keys(configuraciones), detectarPais(regiones)])];
+}
+
 // Un país sin archivo usa el modo sin catálogo: sin feriados ni doble balance,
 // con la moneda y el idioma del teléfono.
 export function configPara(codigo: CodigoPais, regiones: RegionDispositivo[] = []): ConfigPais {
