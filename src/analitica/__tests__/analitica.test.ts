@@ -1,7 +1,7 @@
 import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import type { Tarjeta } from '../../tipos/tipos';
-import { configurarAnalitica, usarTransporte, type Propiedades, type Transporte } from '../cliente';
+import { configurarAnalitica, esperarTransporte, usarTransporte, type Propiedades, type Transporte } from '../cliente';
 import * as eventos from '../eventos';
 
 // Datos de ejemplo que nunca pueden salir del teléfono.
@@ -126,6 +126,26 @@ describe('interruptor de privacidad (17.5)', () => {
     usarTransporte(nuevo);
     expect(transporte.cerrar).toHaveBeenCalled();
     expect(nuevo.apagado).toBe(true);
+  });
+
+  it('mientras el servicio carga, los eventos esperan en memoria y salen al estar listo', () => {
+    usarTransporte(null);
+    esperarTransporte();
+    eventos.registrarInicioVisto({ enfoque: 'equilibrado', tarjetas: 2 });
+    const nuevo = transporteFalso();
+    usarTransporte(nuevo);
+    expect(nuevo.enviados).toEqual([{ evento: 'inicio_visto', propiedades: { enfoque: 'equilibrado', tarjetas: '2', pais: 'DO' } }]);
+  });
+
+  it('apagar la analítica mientras carga descarta lo que esperaba', () => {
+    usarTransporte(null);
+    esperarTransporte();
+    eventos.registrarInicioVisto({ enfoque: 'equilibrado', tarjetas: 2 });
+    configurarAnalitica({ activa: false, pais: 'DO' });
+    configurarAnalitica({ activa: true, pais: 'DO' });
+    const nuevo = transporteFalso();
+    usarTransporte(nuevo);
+    expect(nuevo.enviados).toEqual([]);
   });
 
   it('sin servicio configurado no se envía nada', () => {
