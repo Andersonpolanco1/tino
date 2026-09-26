@@ -23,3 +23,8 @@ export async function obtenerClaveBase(): Promise<string> {
   await SecureStore.setItemAsync(NOMBRE_CLAVE, clave, opciones);
   return clave;
 }
+
+// Parte de "Borrar todo" (sección 6 técnica): sin la clave, la base anterior no se puede leer.
+export async function borrarClaveBase(): Promise<void> {
+  await SecureStore.deleteItemAsync(NOMBRE_CLAVE, opciones);
+}

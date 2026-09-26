@@ -73,36 +73,37 @@ Criterios de la especificación:
 
 - [x] 14.1: registrar con producto "Otro" o "No sé el tipo" no bloquea el registro y la tarjeta aparece en el ranking
 - [x] 14.1: ningún campo permite guardar un número de tarjeta completo
-- [ ] 18.6: un usuario fuera de RD registra tarjetas en modo sin catálogo y ve el ranking completo. El registro sin catálogo ya funciona; el ranking llega en la etapa 4
+- [x] 18.6: un usuario fuera de RD registra tarjetas en modo sin catálogo y ve el ranking completo
 - [x] 18.6: el doble balance solo aparece en países donde está activado
 
 ## Etapa 4. Pantalla de inicio
 
 Listo cuando: la pantalla coincide con las maquetas y cambia con el enfoque.
 
-- [ ] TarjetaDestacada, FilaTarjeta, Etiqueta, BarraOrden, SelectorEnfoque, Semaforo, Hoja y BotonPrimario
-- [ ] Ranking con barra de orden y selector de enfoque
-- [ ] Modo una tarjeta
-- [ ] Detalle de tarjeta con semáforo del ciclo
-- [ ] Consulta "Tengo una compra"
-- [ ] Indicador de precisión (2.1 de la especificación) **(asignada)**
-- [ ] Iconos de la barra de pestañas según las maquetas
+- [x] TarjetaDestacada, FilaTarjeta, Etiqueta, BarraOrden, SelectorEnfoque, Semaforo, Hoja y BotonPrimario
+- [x] Ranking con barra de orden y selector de enfoque
+- [x] Modo una tarjeta
+- [x] Detalle de tarjeta con semáforo del ciclo
+- [x] Consulta "Tengo una compra"
+- [x] Indicador de precisión (2.1 de la especificación) **(asignada)**
+- [x] Iconos de la barra de pestañas según las maquetas
+- [ ] **Verificar en teléfono:** que la pantalla coincida con las maquetas en claro y oscuro (condición de "listo" de la etapa)
 - [x] Selector de país en Ajustes **(asignada)**; se adelantó a la etapa 3 (decisión D21)
-- [ ] Exportar datos y borrarlo todo, incluida la clave de cifrado (sección 6 técnica) **(asignada)**
+- [x] Exportar datos y borrarlo todo, incluida la clave de cifrado (sección 6 técnica) **(asignada)**
 
 Criterios de la especificación:
 
-- [ ] 14.1: con solo banco, producto, corte y fecha límite, inicio muestra la tarjeta de hoy sin otra acción (decisión D19)
-- [ ] 14.1: Más días, Más puntos o Más cashback reordenan al instante sin cambiar el enfoque guardado
-- [ ] 14.1: con una sola tarjeta se ven el semáforo y no la barra de orden
-- [ ] 14.1: con 2 o más tarjetas, cambiar el enfoque lo guarda al instante y actualiza el ranking (el widget y las notificaciones se verifican en las etapas 5 y 6); con una tarjeta el selector no aparece
-- [ ] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
-- [ ] 14.1: en una compra en dólares pagando con dólares, el doble balance queda por encima de una tarjeta equivalente solo en pesos, y la de solo uso local nunca aparece
+- [x] 14.1: con solo banco, producto, corte y fecha límite, inicio muestra la tarjeta de hoy sin otra acción (decisión D19)
+- [x] 14.1: Más días, Más puntos o Más cashback reordenan al instante sin cambiar el enfoque guardado
+- [x] 14.1: con una sola tarjeta se ven el semáforo y no la barra de orden
+- [x] 14.1: con 2 o más tarjetas, cambiar el enfoque lo guarda al instante y actualiza el ranking (el widget y las notificaciones se verifican en las etapas 5 y 6); con una tarjeta el selector no aparece
+- [x] 14.1: doble balance muestra la etiqueta de ambas monedas (el recordatorio de dos pagos va en la etapa 5)
+- [x] 14.1: en una compra en dólares pagando con dólares, el doble balance queda por encima de una tarjeta equivalente solo en pesos, y la de solo uso local nunca aparece
 - [ ] 16.6: la tarjeta de hoy aparece en menos de 2 segundos en un Android de gama media
 - [ ] 16.6: reordenar y cambiar el enfoque se animan sin saltos
 - [ ] 16.6: con el texto del sistema al máximo, ninguna fila se corta ni se superpone
-- [ ] 16.6: un lector de pantalla anuncia el semáforo y las etiquetas en palabras
-- [ ] 16.6: el oro solo se usa en recompensas y el coral solo en alertas
+- [x] 16.6: un lector de pantalla anuncia el semáforo y las etiquetas en palabras
+- [x] 16.6: el oro solo se usa en recompensas y el coral solo en alertas
 
 ## Etapa 5. Ingresos y avisos
 

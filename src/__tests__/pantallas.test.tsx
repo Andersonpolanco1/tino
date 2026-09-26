@@ -10,6 +10,12 @@ import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
 import Inicio from '../../app/(tabs)/inicio';
 import Ajustes from '../../app/(tabs)/ajustes';
 
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
+jest.mock('expo-router', () => ({ useRouter: () => mockRouter }));
+// Ajustes importa la base para "Borrar todo"; en estas pruebas no se abre.
+jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '' }));
+jest.mock('expo-sharing', () => ({ shareAsync: jest.fn() }));
+
 const medidas = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
   insets: { top: 0, left: 0, right: 0, bottom: 0 },

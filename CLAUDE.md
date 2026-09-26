@@ -16,7 +16,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 
 ## Estado actual
 
-- Etapa actual: **4. Pantalla de inicio** (sección 13 de la documentación técnica). Las etapas 2 (motor) y 3 (registro de tarjetas) están terminadas en código; la 3 falta verificarla en teléfono con una compilación nueva.
+- Etapa actual: **5. Ingresos y avisos** (sección 13 de la documentación técnica). Las etapas 2 a 4 están terminadas en código; la 3 y la 4 faltan verificarlas en teléfono.
 - El seguimiento detallado está en `docs/progreso.md`: casillas por etapa, criterios de aceptación, pendientes fuera del código y decisiones tomadas. Es la lista que se va tachando.
 - Etapa 1 verificada en Android (emulador `TantyPhone`, perfil Pixel 7); falta iOS.
 

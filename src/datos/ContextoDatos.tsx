@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import { abrirBase, type BaseLocal } from './base';
 
 export type EstadoDatos =
@@ -6,10 +6,17 @@ export type EstadoDatos =
   | { estado: 'lista'; base: BaseLocal }
   | { estado: 'error'; error: unknown };
 
-const ContextoDatos = createContext<EstadoDatos>({ estado: 'cargando' });
+interface ValorDatos {
+  estado: EstadoDatos;
+  // Vuelve a abrir la base; tras "Borrar todo" crea una base y una clave nuevas.
+  reabrir: () => void;
+}
+
+const ContextoDatos = createContext<ValorDatos>({ estado: { estado: 'cargando' }, reabrir: () => {} });
 
 export function ProveedorDatos({ children }: { children: ReactNode }) {
   const [estado, setEstado] = useState<EstadoDatos>({ estado: 'cargando' });
+  const [apertura, setApertura] = useState(0);
 
   useEffect(() => {
     let activo = true;
@@ -24,11 +31,20 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     return () => {
       activo = false;
     };
+  }, [apertura]);
+
+  const reabrir = useCallback(() => {
+    setEstado({ estado: 'cargando' });
+    setApertura(n => n + 1);
   }, []);
 
-  return <ContextoDatos.Provider value={estado}>{children}</ContextoDatos.Provider>;
+  return <ContextoDatos.Provider value={{ estado, reabrir }}>{children}</ContextoDatos.Provider>;
 }
 
 export function useEstadoDatos(): EstadoDatos {
-  return useContext(ContextoDatos);
+  return useContext(ContextoDatos).estado;
+}
+
+export function useReabrirDatos(): () => void {
+  return useContext(ContextoDatos).reabrir;
 }

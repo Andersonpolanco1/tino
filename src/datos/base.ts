@@ -1,5 +1,6 @@
-import { openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
-import { FORMATO_CLAVE, obtenerClaveBase } from './clave';
+import { defaultDatabaseDirectory, deleteDatabaseAsync, openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
+import { File } from 'expo-file-system';
+import { borrarClaveBase, FORMATO_CLAVE, obtenerClaveBase } from './clave';
 import type { ConexionSql } from './conexion';
 import { migrar } from './migraciones';
 
@@ -50,4 +51,17 @@ export async function abrirBase(): Promise<BaseLocal> {
     await db.closeAsync();
     throw error;
   }
+}
+
+// "Borrar todo": cierra la base, la borra junto con sus archivos del registro WAL y borra la
+// clave de cifrado. La próxima apertura crea una base y una clave nuevas.
+export async function borrarBase(base: BaseLocal): Promise<void> {
+  await base.db.execAsync('PRAGMA wal_checkpoint(TRUNCATE)').catch(() => {});
+  await base.db.closeAsync();
+  await deleteDatabaseAsync(NOMBRE_BASE);
+  for (const sufijo of ['-wal', '-shm']) {
+    const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);
+    if (archivo.exists) archivo.delete();
+  }
+  await borrarClaveBase();
 }
