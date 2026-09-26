@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { act, fireEvent, render, screen, within } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { migrar } from '../../datos/migraciones';
 import { repositorioPreferencias, repositorioTarjetas } from '../../datos/repositorios';
@@ -44,7 +44,12 @@ async function presionar(texto: string) {
 
 // El día de corte se toca en la cuadrícula; la fecha límite se precarga 20 días después.
 async function elegirCorte(dia: number) {
-  await fireEvent.press(screen.getByLabelText(String(dia)));
+  await fireEvent.press(within(screen.getByLabelText('Día de corte')).getByLabelText(String(dia)));
+}
+
+// La fecha límite "día del mes" también se toca en su cuadrícula.
+async function elegirPago(dia: number) {
+  await fireEvent.press(within(screen.getByLabelText('Se paga el día')).getByLabelText(String(dia)));
 }
 
 describe('agregar tarjeta paso a paso', () => {
@@ -188,6 +193,12 @@ describe('editar tarjeta por secciones', () => {
     await presionar('Guardar');
 
     expect(screen.getByText('Corte día 7 · pago día 25')).toBeOnTheScreen();
+    expect(almacen.getState().tarjetas[0]).toMatchObject({ id: tarjeta.id, diaCorte: 7, alias: 'Visa Clásica BHD' });
+
+    await presionar('Fechas');
+    await elegirPago(30);
+    await presionar('Guardar');
+    expect(screen.getByText('Corte día 7 · pago día 30')).toBeOnTheScreen();
     expect(almacen.getState().tarjetas[0]).toMatchObject({ id: tarjeta.id, diaCorte: 7, alias: 'Visa Clásica BHD' });
   });
 

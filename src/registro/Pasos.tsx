@@ -112,13 +112,13 @@ function EditorLimite({ etiqueta, info, valor, onCambio, error }: { etiqueta: st
           { valor: 'dias_despues_corte', etiqueta: t('registro.diasDespues') },
         ]}
       />
-      <Contador
-        etiqueta={esDia ? t('registro.sePagaElDia') : t('registro.diasDespuesDelCorte')}
-        valor={numero}
-        min={1}
-        max={esDia ? 31 : 60}
-        onCambio={n => onCambio({ ...valor, valor: String(n) })}
-      />
+      {/* Un día del mes se toca en la cuadrícula, como el corte: con + y − llegar al 30 era incómodo.
+          El contador queda para "días después del corte", que casi siempre está cerca de los 20 precargados. */}
+      {esDia ? (
+        <CuadriculaDias etiqueta={t('registro.sePagaElDia')} valor={numero} onCambio={n => onCambio({ ...valor, valor: String(n) })} />
+      ) : (
+        <Contador etiqueta={t('registro.diasDespuesDelCorte')} valor={numero} min={1} max={60} onCambio={n => onCambio({ ...valor, valor: String(n) })} />
+      )}
       {error ? (
         <Texto variante="apoyo" color="alertaTexto" accessibilityLiveRegion="polite" style={{ marginTop: -tema.espacio.xs }}>
           {error}
@@ -128,7 +128,7 @@ function EditorLimite({ etiqueta, info, valor, onCambio, error }: { etiqueta: st
   );
 }
 
-// Paso de fechas del rediseño: cuadrícula de días para el corte, fecha límite con contador y
+// Paso de fechas del rediseño: cuadrícula de días para el corte y la fecha límite, y
 // cuántos días tendría una compra de hoy con esas fechas.
 export function PasoFechas({ b, setB, error, pais, masOpciones }: PropsPaso & { pais: ConfigPais; masOpciones: boolean }) {
   const tema = useTema();
