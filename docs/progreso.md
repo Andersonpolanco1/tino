@@ -128,7 +128,7 @@ Criterios de la especificación:
 Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 
 - [x] Elegir y documentar proveedores de suscripciones, analítica y reporte de fallos: RevenueCat, PostHog y Sentry (sección 7.3 técnica, decisión D55)
-- [x] Tino Pro con prueba gratis y límite de 2 tarjetas en el plan gratis: muro de pago, elegir 2 tarjetas al vencer, plan en Ajustes y restaurar compras (`src/suscripciones/`, D58); falta probar una compra real en el entorno de prueba de las tiendas
+- [x] Tino Pro con prueba gratis y límite de 2 tarjetas en el plan gratis: muro de pago, elegir 2 tarjetas al vencer, plan en Ajustes y restaurar compras (`src/suscripciones/`, D58). Verificado en el emulador con la Test Store de RevenueCat: ofertas, compra cancelada, fallida y exitosa, paso a Pro y registro que continúa. Falta probar con el entorno de prueba de las tiendas
 - [x] Módulo de analítica con la lista cerrada de eventos, identificador anónimo e interruptor en Ajustes (`src/analitica/`, D57). Verificado en el emulador: los eventos llegan a PostHog (UE) y el interruptor los detiene
 - [x] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación): `tarjeta_registrada` con emisor `otro` y producto `otro` o `no_se`
 - [ ] Reporte de fallos sin datos de tarjetas
@@ -172,7 +172,9 @@ Criterios de la especificación:
 - [ ] Claves públicas de RevenueCat como secretos de EAS: `EXPO_PUBLIC_REVENUECAT_IOS` y `EXPO_PUBLIC_REVENUECAT_ANDROID`
 - [ ] Integración de RevenueCat con PostHog para `prueba_iniciada`, `suscripcion_iniciada` y `suscripcion_cancelada`; decidir cómo unir los dos identificadores anónimos solo si la analítica está activa
 - [ ] Publicar términos de uso y política de privacidad, y poner sus direcciones en `EXPO_PUBLIC_URL_TERMINOS` y `EXPO_PUBLIC_URL_PRIVACIDAD` (el muro de pago los enlaza; Apple los exige)
-- [ ] Recompilar la app de desarrollo: `react-native-purchases` trae código nativo
+- [x] Recompilar la app de desarrollo con `react-native-purchases`
+- [x] Proyecto en RevenueCat con la Test Store: derecho `pro`, productos `tino_pro_mensual` y `tino_pro_anual`, oferta por defecto
+- [ ] La clave de la Test Store (`test_…`) va solo en `.env.local`: una versión de producción que la encuentra se cierra a propósito. En `preview` y `production` de EAS van las claves de App Store y Google Play
 - [ ] Revisar con un contador el ITBIS sobre servicios digitales y la comisión de 15% del programa de pequeños desarrolladores (Apple y Google)
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
