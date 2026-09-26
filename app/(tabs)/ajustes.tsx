@@ -170,9 +170,9 @@ export default function Ajustes() {
           <FilaLista
             icono="estrella"
             tono="recompensa"
-            titulo={t('pro.nombre')}
+            titulo={preferencias.plan === 'pro' ? t('pro.nombre') : t('ajustes.planGratis')}
             detalle={preferencias.plan === 'pro' ? t('ajustes.planProDetalle') : t('ajustes.planGratisDetalle')}
-            valor={preferencias.plan === 'pro' ? t('ajustes.planPro') : t('ajustes.planGratis')}
+            valor={preferencias.plan === 'pro' ? t('ajustes.planPro') : undefined}
             flecha
             onPress={abrirPlan}
           />
