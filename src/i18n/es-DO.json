@@ -1,6 +1,6 @@
 {
   "inicio": {
-    "titulo": "Tu tarjeta de hoy",
+    "titulo": "Hoy te conviene usar",
     "diasParaPagar": "días para pagar",
     "sePagaEl": "Se paga el {{fecha}}",
     "porCadaMil": "{{valor}} por {{moneda}}1,000",

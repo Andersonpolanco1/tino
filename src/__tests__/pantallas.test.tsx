@@ -46,7 +46,7 @@ const us: RegionDispositivo = { regionCode: 'US', currencyCode: 'USD', languageT
 
 test('inicio muestra su título como encabezado', async () => {
   await render(conPais([rd], await almacenCon('DO'), <Inicio />));
-  expect(screen.getByRole('header')).toHaveTextContent('Tu tarjeta de hoy');
+  expect(screen.getByRole('header')).toHaveTextContent('Hoy te conviene usar');
 });
 
 test('ajustes muestra el país y las monedas de RD', async () => {
