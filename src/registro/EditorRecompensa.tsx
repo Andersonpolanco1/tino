@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Campo, Opciones, Texto, useTema } from '../diseno';
+import { Campo, ControlSegmentado, EtiquetaConInfo, Texto, useTema } from '../diseno';
 import type { BorradorRecompensa } from './borrador';
 
 interface Props {
@@ -14,16 +14,16 @@ interface Props {
 // Solo dígitos y un separador decimal.
 const decimal = (texto: string) => texto.replace(/[^\d.,]/g, '');
 
-// Sección 4.2: ninguna, puntos (por monto, porcentaje o compra, con valor del punto) o cashback.
+// Sección 4.2 con el rediseño: tipo y regla en controles segmentados, números en campos.
 export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   const cambiar = (cambios: Partial<BorradorRecompensa>) => onCambio({ ...valor, ...cambios });
   return (
-    <View style={{ gap: tema.espacio.m }}>
-      <Opciones
+    <View style={{ gap: tema.espacio.l }}>
+      <EtiquetaConInfo etiqueta={etiqueta} info={info} />
+      <ControlSegmentado
         etiqueta={etiqueta}
-        info={info}
         valor={valor.tipo}
         onCambio={tipo => cambiar({ tipo })}
         opciones={[
@@ -33,10 +33,10 @@ export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Pro
         ]}
       />
       {valor.tipo === 'puntos' ? (
-        <>
-          <Opciones
+        <View style={{ gap: tema.espacio.l }}>
+          <EtiquetaConInfo etiqueta={t('registro.tipoRegla')} info={t('registro.info.reglaPuntos')} />
+          <ControlSegmentado
             etiqueta={t('registro.tipoRegla')}
-            info={t('registro.info.reglaPuntos')}
             valor={valor.regla}
             onCambio={regla => cambiar({ regla })}
             opciones={[
@@ -51,28 +51,13 @@ export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Pro
                 <Campo etiqueta={t('registro.puntos')} value={valor.puntos} onChangeText={x => cambiar({ puntos: decimal(x) })} keyboardType="decimal-pad" />
               </View>
               <View style={{ flex: 1 }}>
-                <Campo
-                  etiqueta={t('registro.porCadaMonto')}
-                  value={valor.porCadaMonto}
-                  onChangeText={x => cambiar({ porCadaMonto: decimal(x) })}
-                  keyboardType="decimal-pad"
-                />
+                <Campo etiqueta={t('registro.porCadaMonto')} value={valor.porCadaMonto} onChangeText={x => cambiar({ porCadaMonto: decimal(x) })} keyboardType="decimal-pad" />
               </View>
             </View>
           ) : valor.regla === 'por_porcentaje' ? (
-            <Campo
-              etiqueta={t('registro.porcentaje')}
-              value={valor.porcentajePuntos}
-              onChangeText={x => cambiar({ porcentajePuntos: decimal(x) })}
-              keyboardType="decimal-pad"
-            />
+            <Campo etiqueta={t('registro.porcentaje')} value={valor.porcentajePuntos} onChangeText={x => cambiar({ porcentajePuntos: decimal(x) })} keyboardType="decimal-pad" />
           ) : (
-            <Campo
-              etiqueta={t('registro.puntosPorCompra')}
-              value={valor.puntos}
-              onChangeText={x => cambiar({ puntos: decimal(x) })}
-              keyboardType="decimal-pad"
-            />
+            <Campo etiqueta={t('registro.puntosPorCompra')} value={valor.puntos} onChangeText={x => cambiar({ puntos: decimal(x) })} keyboardType="decimal-pad" />
           )}
           <Campo
             etiqueta={t('registro.valorPunto')}
@@ -81,7 +66,7 @@ export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Pro
             onChangeText={x => cambiar({ valorPunto: decimal(x), valorPuntoConfirmado: true })}
             keyboardType="decimal-pad"
           />
-        </>
+        </View>
       ) : null}
       {valor.tipo === 'cashback' ? (
         <Campo

@@ -1,13 +1,14 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { randomUUID } from 'expo-crypto';
 import type { Tarjeta } from '../tipos/tipos';
-import { Boton, EtiquetaConInfo, Fila, Interruptor, Texto, useTema } from '../diseno';
+import { BarraSuperior, Boton, EtiquetaConInfo, FilaLista, ListaAgrupada, Palanca, Pantalla, Texto, useTema } from '../diseno';
 import { useCatalogo } from '../catalogo';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
 import { hoyLocal } from '../utilidades/fecha';
+import { inicialesBanco } from '../inicio/vista';
 import {
   aTarjeta,
   borradorDesde,
@@ -35,6 +36,7 @@ interface Props {
   // preguntarPagoUsd: es la primera tarjeta con dólares y aún no se sabe cómo paga ese balance.
   onListo: (tarjeta: Tarjeta, preguntarPagoUsd: boolean) => void;
   onBorrada?: () => void;
+  onCerrar: () => void;
 }
 
 type Vista = 'banco' | 'producto' | PasoRegistro | 'secciones';
@@ -48,9 +50,9 @@ const TITULOS: Record<PasoRegistro, string> = {
 
 const ORDEN_PASOS: PasoRegistro[] = ['tarjeta', 'moneda', 'fechas', 'recompensa'];
 
-// Agregar: un paso por pantalla (banco, tipo, tu tarjeta, dólares, fechas, recompensa).
-// Editar: una lista de secciones con su resumen; cada una se abre y se guarda sola.
-export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
+// Agregar: un paso por pantalla con barra de progreso (rediseño). Editar: la tarjeta en
+// secciones; cada una se abre y se guarda sola.
+export function FormularioTarjeta({ tarjeta, onListo, onBorrada, onCerrar }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   const traducir = t as unknown as Traducir;
@@ -67,20 +69,27 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
   const [bancoAMano, setBancoAMano] = useState(() => !catalogo || (!!tarjeta && tarjeta.emisorId === null));
   const [errores, setErrores] = useState<ErrorRegistro[]>([]);
   const [guardando, setGuardando] = useState(false);
+  const [masOpciones, setMasOpciones] = useState(false);
 
   const emisor = buscarEmisor(catalogo, b.emisorId);
   const producto = buscarProducto(catalogo, b.emisorId, b.productoId);
+  const nombreBanco = emisor?.nombreCorto ?? b.bancoLibre;
   const pasos = pasosDelRegistro(b, pais);
+  // Banco y tipo cuentan como el primer paso cuando hay catálogo.
+  const conPasoBanco = !!catalogo;
+  const total = pasos.length + (conPasoBanco ? 1 : 0);
+  const numeroDe = (v: Vista) => (v === 'banco' || v === 'producto' ? 1 : pasos.indexOf(v as PasoRegistro) + 1 + (conPasoBanco ? 1 : 0));
+
   const error = (...claves: ErrorRegistro[]) => {
     const encontrado = claves.find(c => errores.includes(c));
     return encontrado ? t(`registro.errores.${encontrado}`) : undefined;
   };
   const ir = (siguiente: Vista) => {
     setErrores([]);
+    setMasOpciones(false);
     setVista(siguiente);
   };
-  const resultado = (borrador: BorradorTarjeta = b) =>
-    aTarjeta(borrador, pais, tarjeta?.id ?? randomUUID(), tarjeta?.creadaEn ?? hoyLocal());
+  const resultado = (borrador: BorradorTarjeta = b) => aTarjeta(borrador, pais, tarjeta?.id ?? randomUUID(), tarjeta?.creadaEn ?? hoyLocal());
 
   async function guardar(borrador: BorradorTarjeta = b) {
     const r = resultado(borrador);
@@ -115,21 +124,60 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
     else ir(pasos[i + 1]);
   }
 
-  function atras(paso: PasoRegistro) {
-    const i = pasos.indexOf(paso);
+  function atras(v: Vista) {
+    if (editando) {
+      setB(guardada);
+      return ir('secciones');
+    }
+    if (v === 'producto') return ir('banco');
+    const i = pasos.indexOf(v as PasoRegistro);
     if (i > 0) ir(pasos[i - 1]);
     else if (catalogo) ir(bancoAMano ? 'banco' : 'producto');
+    else onCerrar();
   }
+
+  // Marco común de cada paso: barra, progreso, título en pregunta y botón fijo abajo.
+  const marco = (v: Vista, titulo: string, contenido: ReactNode, opciones: { pie?: ReactNode; info?: string; subtitulo?: string } = {}) => (
+    <Pantalla
+      arriba={
+        <View style={{ gap: 18 }}>
+          <BarraSuperior
+            izquierda={v === 'banco' && !editando ? { tipo: 'cerrar', onPress: onCerrar } : { tipo: 'atras', onPress: () => atras(v) }}
+            titulo={editando ? t('registro.tituloEditar') : t('registro.pasoDe', { actual: numeroDe(v), total })}
+            cerrar={!editando && v !== 'banco' ? onCerrar : undefined}
+          />
+          {!editando ? (
+            <View style={{ flexDirection: 'row', gap: 6 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+              {Array.from({ length: total }, (_, i) => (
+                <View key={i} style={{ flex: 1, height: 5, borderRadius: 3, backgroundColor: i < numeroDe(v) ? tema.color.primario : tema.color.pistaApagada }} />
+              ))}
+            </View>
+          ) : null}
+        </View>
+      }
+      pie={opciones.pie}
+    >
+      <View style={{ gap: tema.espacio.xs }}>
+        <EtiquetaConInfo etiqueta={titulo} info={opciones.info} variante="titulo" encabezado />
+        {opciones.subtitulo ? (
+          <Texto variante="apoyo" color="textoSecundario">
+            {opciones.subtitulo}
+          </Texto>
+        ) : null}
+      </View>
+      {contenido}
+    </Pantalla>
+  );
 
   // ---------- Banco y tipo ----------
 
   if (vista === 'banco' && catalogo) {
-    return (
+    return marco(
+      'banco',
+      t('registro.tituloBanco'),
       <ListaBuscable
-        titulo={t('registro.banco')}
-        ayuda={t('registro.porQue')}
         buscador={t('registro.buscarBanco')}
-        elementos={emisoresParaRegistro(catalogo).map(e => ({ id: e.id, titulo: e.nombreCorto, buscarEn: [e.nombreCorto, e.nombreLegal] }))}
+        elementos={emisoresParaRegistro(catalogo).map(e => ({ id: e.id, titulo: e.nombreCorto, iniciales: inicialesBanco(e.nombreCorto), buscarEn: [e.nombreCorto, e.nombreLegal] }))}
         onElegir={id => {
           setB(elegirEmisor(b, id, traducir, catalogo));
           setBancoAMano(false);
@@ -145,7 +193,8 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
             },
           },
         ]}
-      />
+      />,
+      { info: t('registro.porQue') },
     );
   }
 
@@ -156,10 +205,10 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
       if (editando) guardar(nuevo);
       else ir('tarjeta');
     };
-    return (
+    return marco(
+      'producto',
+      t('registro.tituloProducto'),
       <ListaBuscable
-        titulo={t('registro.producto')}
-        ayuda={emisor.nombreCorto}
         buscador={t('registro.buscarProducto')}
         elementos={emisor.productos.map(p => ({ id: p.id, titulo: p.nombre, buscarEn: [p.nombre, p.marca] }))}
         onElegir={id => despues(elegirProducto(b, id, traducir, catalogo))}
@@ -167,7 +216,8 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
           { titulo: t('registro.noEstaEnLaLista'), onPress: () => despues(productoFueraDeLista(b, false, traducir, catalogo)) },
           { titulo: t('registro.noSeElTipo'), onPress: () => despues(productoFueraDeLista(b, true, traducir, catalogo)) },
         ]}
-      />
+      />,
+      { subtitulo: emisor.nombreCorto },
     );
   }
 
@@ -176,45 +226,34 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
   if (vista === 'tarjeta' || vista === 'moneda' || vista === 'fechas' || vista === 'recompensa') {
     const paso = vista;
     const esUltimo = pasos.indexOf(paso) === pasos.length - 1;
-    return (
-      <View style={{ gap: tema.espacio.l }}>
-        {!editando ? (
-          <Texto variante="apoyo" color="textoSecundario">
-            {t('registro.pasoDe', { actual: pasos.indexOf(paso) + 1, total: pasos.length })}
-          </Texto>
+    const subtitulo = paso === 'tarjeta' ? nombreBanco : [b.alias, nombreBanco].filter(Boolean).join(' · ');
+    const contenido =
+      paso === 'tarjeta' ? (
+        <PasoTarjeta b={b} setB={setB} error={error} bancoAMano={bancoAMano} />
+      ) : paso === 'moneda' ? (
+        <PasoMoneda b={b} setB={setB} error={error} pais={pais} />
+      ) : paso === 'fechas' ? (
+        <PasoFechas b={b} setB={setB} error={error} pais={pais} masOpciones={masOpciones || errores.some(e => e.startsWith('fechaLimiteUsd'))} />
+      ) : (
+        <PasoRecompensa b={b} setB={setB} error={error} />
+      );
+    const pie = (
+      <>
+        {paso === 'fechas' ? (
+          <Boton titulo={masOpciones ? t('registro.menosOpciones') : t('registro.masOpciones')} variante="texto" onPress={() => setMasOpciones(!masOpciones)} />
         ) : null}
-        <EtiquetaConInfo etiqueta={t(TITULOS[paso])} info={paso === 'moneda' ? t('registro.info.moneda') : undefined} variante="titulo" encabezado />
-        {paso === 'tarjeta' ? (
-          <PasoTarjeta b={b} setB={setB} error={error} bancoAMano={bancoAMano} />
-        ) : paso === 'moneda' ? (
-          <PasoMoneda b={b} setB={setB} error={error} pais={pais} />
-        ) : paso === 'fechas' ? (
-          <PasoFechas b={b} setB={setB} error={error} />
-        ) : (
-          <PasoRecompensa b={b} setB={setB} error={error} />
-        )}
-        <View style={{ flexDirection: 'row', gap: tema.espacio.m }}>
-          <View style={{ flex: 1 }}>
-            <Boton
-              titulo={editando ? t('registro.cancelar') : t('registro.atras')}
-              variante="secundario"
-              onPress={() => {
-                if (!editando) return atras(paso);
-                setB(guardada);
-                ir('secciones');
-              }}
-            />
-          </View>
-          <View style={{ flex: 1 }}>
-            <Boton
-              titulo={editando || esUltimo ? t('registro.guardar') : t('registro.siguiente')}
-              onPress={() => (editando ? guardar() : siguiente(paso))}
-              deshabilitado={guardando}
-            />
-          </View>
-        </View>
-      </View>
+        <Boton
+          titulo={editando || esUltimo ? t('registro.guardar') : t('registro.siguiente')}
+          onPress={() => (editando ? guardar() : siguiente(paso))}
+          deshabilitado={guardando}
+        />
+      </>
     );
+    return marco(paso, t(TITULOS[paso]), contenido, {
+      pie,
+      info: paso === 'moneda' ? t('registro.info.moneda') : undefined,
+      subtitulo: subtitulo || undefined,
+    });
   }
 
   // ---------- Secciones (editar) ----------
@@ -253,31 +292,43 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
   }
 
   return (
-    <View style={{ gap: tema.espacio.m }}>
-      {catalogo && !bancoAMano ? (
-        <Fila titulo={t('registro.seccionBanco')} detalle={`${emisor?.nombreCorto ?? ''} · ${nombreProducto}`} onPress={() => ir('banco')} />
-      ) : null}
-      <Fila
-        titulo={t('registro.seccionTarjeta')}
-        detalle={`${b.alias} · ${b.ultimos4 ? t('registro.resumenUltimos4', { digitos: b.ultimos4 }) : t('registro.resumenSinUltimos4')}`}
-        onPress={() => ir('tarjeta')}
-      />
-      {pais.funciones.dobleBalance ? (
-        <Fila titulo={t('registro.seccionMoneda')} detalle={resumenMoneda[b.monedaFacturacion ?? 'solo_principal']} onPress={() => ir('moneda')} />
-      ) : null}
-      <Fila
-        titulo={t('registro.seccionFechas')}
-        detalle={`${t('registro.resumenCorteDia', { dia: b.diaCorte })} · ${resumenPago}`}
-        onPress={() => ir('fechas')}
-      />
-      <Fila titulo={t('registro.seccionRecompensa')} detalle={resumenRecompensa} onPress={() => ir('recompensa')} />
-      <Interruptor
-        etiqueta={t('registro.enPausa')}
-        info={t('registro.info.enPausa')}
-        valor={b.enPausa}
-        onCambio={enPausa => guardar({ ...b, enPausa })}
-      />
-      <Boton titulo={t('registro.borrar')} variante="alerta" onPress={confirmarBorrado} />
-    </View>
+    <Pantalla arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: onCerrar }} titulo={t('registro.tituloEditar')} />}>
+      <Texto variante="titulo" accessibilityRole="header">
+        {b.alias}
+      </Texto>
+      <ListaAgrupada>
+        {catalogo && !bancoAMano ? (
+          <FilaLista icono="tarjetas" titulo={t('registro.seccionBanco')} detalle={`${emisor?.nombreCorto ?? ''} · ${nombreProducto}`} flecha onPress={() => ir('banco')} />
+        ) : null}
+        <FilaLista
+          icono="editar"
+          titulo={t('registro.seccionTarjeta')}
+          detalle={`${b.alias} · ${b.ultimos4 ? t('registro.resumenUltimos4', { digitos: b.ultimos4 }) : t('registro.resumenSinUltimos4')}`}
+          flecha
+          onPress={() => ir('tarjeta')}
+        />
+        {pais.funciones.dobleBalance ? (
+          <FilaLista icono="dinero" titulo={t('registro.seccionMoneda')} detalle={resumenMoneda[b.monedaFacturacion ?? 'solo_principal']} flecha onPress={() => ir('moneda')} />
+        ) : null}
+        <FilaLista
+          icono="calendario"
+          titulo={t('registro.seccionFechas')}
+          detalle={`${t('registro.resumenCorteDia', { dia: b.diaCorte })} · ${resumenPago}`}
+          flecha
+          onPress={() => ir('fechas')}
+        />
+        <FilaLista icono="moneda" tono="recompensa" titulo={t('registro.seccionRecompensa')} detalle={resumenRecompensa} flecha onPress={() => ir('recompensa')} />
+      </ListaAgrupada>
+      <ListaAgrupada>
+        <FilaLista
+          icono="pausa"
+          tono="neutro"
+          titulo={t('registro.enPausa')}
+          detalle={t('detalle.pausaDetalle')}
+          derecha={<Palanca valor={b.enPausa} onCambio={enPausa => guardar({ ...b, enPausa })} etiqueta={t('registro.enPausa')} />}
+        />
+        <FilaLista icono="basura" titulo={t('registro.borrar')} destructiva onPress={confirmarBorrado} />
+      </ListaAgrupada>
+    </Pantalla>
   );
 }
