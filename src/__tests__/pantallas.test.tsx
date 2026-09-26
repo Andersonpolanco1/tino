@@ -51,25 +51,24 @@ test('inicio muestra su título como encabezado', async () => {
 
 test('ajustes muestra el país y las monedas de RD', async () => {
   await render(conPais([rd], await almacenCon('DO'), <Ajustes />));
-  expect(screen.getByText('República Dominicana')).toBeOnTheScreen();
-  expect(screen.getByText('Pesos y dólares')).toBeOnTheScreen();
+  // Las monedas van como detalle del país, sin fila propia.
+  expect(screen.getByText('República Dominicana · Pesos y dólares')).toBeOnTheScreen();
 });
 
 test('ajustes muestra un país sin catálogo con la moneda del teléfono', async () => {
   await render(conPais([mx], await almacenCon('MX'), <Ajustes />));
-  expect(screen.getByText('Otro país (MX)')).toBeOnTheScreen();
-  expect(screen.getByText('MXN')).toBeOnTheScreen();
+  expect(screen.getByText('Otro país (MX) · MXN')).toBeOnTheScreen();
 });
 
 test('un teléfono con región de EE. UU. puede elegir República Dominicana y queda guardado (criterio 18.6)', async () => {
   const almacen = await almacenCon('US');
   await render(conPais([us], almacen, <Ajustes />));
-  expect(screen.getByText('Dólares')).toBeOnTheScreen();
+  expect(screen.getByText(/· Dólares$/)).toBeOnTheScreen();
 
   await fireEvent.press(screen.getByText('País'));
   await fireEvent.press(screen.getByText('República Dominicana'));
   await act(async () => {});
 
   expect(almacen.getState().preferencias).toMatchObject({ pais: 'DO', idioma: 'es-DO' });
-  expect(screen.getByText('Pesos y dólares')).toBeOnTheScreen();
+  expect(screen.getByText('República Dominicana · Pesos y dólares')).toBeOnTheScreen();
 });

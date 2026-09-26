@@ -246,7 +246,6 @@
     "errorExportar": "No pudimos crear el archivo. Inténtalo de nuevo.",
     "precisionTitulo": "Precisión de recomendaciones",
     "general": "General",
-    "monedas": "Monedas",
     "enfoque": "Enfoque",
     "monedasDos": "{{principal}} y {{secundaria}}",
     "precisionPistaPunto_one": "Confirma el valor del punto de esta tarjeta para subirla.",
@@ -272,7 +271,8 @@
       "cobros": "Subirá cuando registres cuándo cobras.",
       "producto": "Elige el tipo exacto de tus tarjetas para subirla.",
       "completa": "Tienes todo lo que Tino necesita para recomendarte bien."
-    }
+    },
+    "paisDetalle": "{{pais}} · {{monedas}}"
   },
   "paises": {
     "DO": "República Dominicana",

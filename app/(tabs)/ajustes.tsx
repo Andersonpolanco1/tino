@@ -136,8 +136,6 @@ export default function Ajustes() {
       ) : null}
 
       <ListaAgrupada titulo={t('ajustes.general')}>
-        <FilaLista icono="globo" titulo={t('ajustes.pais')} valor={nombrePais(t, config.codigo)} flecha onPress={() => setHojaPais(true)} />
-        <FilaLista icono="dinero" titulo={t('ajustes.monedas')} valor={monedas} />
         <FilaLista
           icono="calendario"
           titulo={t('cobros.titulo')}
@@ -148,6 +146,8 @@ export default function Ajustes() {
         {preferencias ? (
           <FilaLista icono="ajustes" titulo={t('ajustes.enfoque')} valor={t(`enfoque.${preferencias.enfoque.modo}`)} flecha onPress={() => setHojaEnfoque(true)} />
         ) : null}
+        {/* Las monedas salen del país y no se eligen: van como detalle, sin fila propia. */}
+        <FilaLista icono="globo" titulo={t('ajustes.pais')} detalle={t('ajustes.paisDetalle', { pais: nombrePais(t, config.codigo), monedas })} flecha onPress={() => setHojaPais(true)} />
       </ListaAgrupada>
 
       {preferencias ? (
