@@ -1,6 +1,6 @@
 import { File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-import type { Preferencias, Tarjeta } from '../tipos/tipos';
+import type { FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
 
 export interface DatosExportados {
   formato: 'tino-exportacion';
@@ -8,12 +8,13 @@ export interface DatosExportados {
   exportadoEn: string;
   preferencias: Preferencias | null;
   tarjetas: Tarjeta[];
+  ingresos: FuenteIngreso[];
 }
 
 // Sección 6 técnica: el usuario puede sacar sus datos en un archivo. Nunca incluye nada que
 // la app no guarde (no hay números de tarjeta, montos ni claves).
-export function datosParaExportar(preferencias: Preferencias | null, tarjetas: Tarjeta[], ahora: Date): DatosExportados {
-  return { formato: 'tino-exportacion', version: 1, exportadoEn: ahora.toISOString(), preferencias, tarjetas };
+export function datosParaExportar(preferencias: Preferencias | null, tarjetas: Tarjeta[], ingresos: FuenteIngreso[], ahora: Date): DatosExportados {
+  return { formato: 'tino-exportacion', version: 1, exportadoEn: ahora.toISOString(), preferencias, tarjetas, ingresos };
 }
 
 // Escribe el JSON en la caché y abre el menú de compartir del sistema.

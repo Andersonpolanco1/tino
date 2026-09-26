@@ -3,7 +3,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { ReactNode } from 'react';
 import { ProveedorPais, type RegionDispositivo } from '@/paises';
 import { migrar } from '@/datos/migraciones';
-import { repositorioPreferencias, repositorioTarjetas } from '@/datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '@/datos/repositorios';
 import { preferenciasIniciales } from '@/datos/preferencias';
 import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
@@ -24,7 +24,7 @@ const medidas = {
 async function almacenCon(pais: string) {
   const db = basePrueba();
   await migrar(db);
-  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), preferencias: repositorioPreferencias(db) });
+  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db) });
   await almacen.getState().cargar();
   await almacen.getState().guardarPreferencias(preferenciasIniciales(pais, 'es-DO'));
   return almacen;

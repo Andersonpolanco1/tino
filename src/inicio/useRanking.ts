@@ -22,12 +22,12 @@ export function useRanking({ orden = 'recomendado', compra }: Opciones = {}): Ra
   const hoy = useHoy();
   const { config } = usePais();
   const tarjetas = useAlmacen(s => s.tarjetas);
+  const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
 
   return useMemo(() => {
     if (!preferencias) return null;
-    // Los ingresos se registran en la etapa 5; hasta entonces el motor no penaliza por cobros.
-    const entrada: EntradaMotor = { hoy, tarjetas, ingresos: [], preferencias, pais: config, ...(compra ? { compra } : {}) };
+    const entrada: EntradaMotor = { hoy, tarjetas, ingresos, preferencias, pais: config, ...(compra ? { compra } : {}) };
     const calculado = calcularRanking(entrada);
     const porId = new Map(tarjetas.map(t => [t.id, t]));
     return {
@@ -35,5 +35,5 @@ export function useRanking({ orden = 'recomendado', compra }: Opciones = {}): Ra
       resultado: { ...calculado, ranking: ordenarRanking(calculado.ranking, orden) },
       tarjetaDe: (id: string) => porId.get(id)!,
     };
-  }, [hoy, tarjetas, preferencias, config, compra, orden]);
+  }, [hoy, tarjetas, ingresos, preferencias, config, compra, orden]);
 }

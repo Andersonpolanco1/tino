@@ -1,21 +1,26 @@
 import { createStore } from 'zustand/vanilla';
-import type { CodigoPais, Preferencias, Tarjeta } from '../tipos/tipos';
+import type { CodigoPais, FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
 import { preferenciasIniciales } from '../datos/preferencias';
-import type { RepositorioPreferencias, RepositorioTarjetas } from '../datos/repositorios';
+import type { RepositorioIngresos, RepositorioPreferencias, RepositorioTarjetas } from '../datos/repositorios';
 
 export interface Repositorios {
   tarjetas: RepositorioTarjetas;
+  ingresos: RepositorioIngresos;
   preferencias: RepositorioPreferencias;
 }
 
 export interface EstadoApp {
   cargado: boolean;
   tarjetas: Tarjeta[];
+  // Fuentes de ingreso (sección 5): solo fechas de cobro en el MVP.
+  ingresos: FuenteIngreso[];
   preferencias: Preferencias | null;
   cargar: () => Promise<void>;
   guardarTarjeta: (tarjeta: Tarjeta) => Promise<void>;
   borrarTarjeta: (id: string) => Promise<void>;
   alternarPausa: (id: string) => Promise<void>;
+  guardarIngreso: (ingreso: FuenteIngreso) => Promise<void>;
+  borrarIngreso: (id: string) => Promise<void>;
   guardarPreferencias: (preferencias: Preferencias) => Promise<void>;
   asegurarPreferencias: (pais: CodigoPais, idioma: string) => Promise<void>;
 }
@@ -27,11 +32,12 @@ export function crearAlmacen(repos: Repositorios, ahora: () => string = () => ne
   return createStore<EstadoApp>()((set, get) => ({
     cargado: false,
     tarjetas: [],
+    ingresos: [],
     preferencias: null,
 
     async cargar() {
-      const [tarjetas, preferencias] = await Promise.all([repos.tarjetas.listar(), repos.preferencias.leer()]);
-      set({ tarjetas, preferencias, cargado: true });
+      const [tarjetas, ingresos, preferencias] = await Promise.all([repos.tarjetas.listar(), repos.ingresos.listar(), repos.preferencias.leer()]);
+      set({ tarjetas, ingresos, preferencias, cargado: true });
     },
 
     async guardarTarjeta(tarjeta) {
@@ -48,6 +54,17 @@ export function crearAlmacen(repos: Repositorios, ahora: () => string = () => ne
     async alternarPausa(id) {
       const tarjeta = get().tarjetas.find(t => t.id === id);
       if (tarjeta) await get().guardarTarjeta({ ...tarjeta, enPausa: !tarjeta.enPausa });
+    },
+
+    async guardarIngreso(ingreso) {
+      await repos.ingresos.guardar(ingreso, ahora());
+      const existe = get().ingresos.some(i => i.id === ingreso.id);
+      set({ ingresos: existe ? get().ingresos.map(i => (i.id === ingreso.id ? ingreso : i)) : [...get().ingresos, ingreso] });
+    },
+
+    async borrarIngreso(id) {
+      await repos.ingresos.borrar(id);
+      set({ ingresos: get().ingresos.filter(i => i.id !== id) });
     },
 
     async guardarPreferencias(preferencias) {

@@ -1,6 +1,6 @@
 import type { Tarjeta } from '../../tipos/tipos';
 import { migrar } from '../../datos/migraciones';
-import { repositorioPreferencias, repositorioTarjetas } from '../../datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '../../datos/repositorios';
 import { preferenciasIniciales } from '../../datos/preferencias';
 import { basePrueba } from '../../pruebas/sqlitePrueba';
 import { crearAlmacen } from '../almacen';
@@ -24,7 +24,7 @@ const tarjeta: Tarjeta = {
 async function preparar() {
   const db = basePrueba();
   await migrar(db);
-  const repos = { tarjetas: repositorioTarjetas(db), preferencias: repositorioPreferencias(db) };
+  const repos = { tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db) };
   return { repos, almacen: crearAlmacen(repos, () => '2026-09-25T12:00:00Z') };
 }
 
@@ -40,6 +40,19 @@ test('guarda en la base antes de actualizar el estado, y lo recupera al cargar',
   await otro.getState().cargar();
   expect(otro.getState().tarjetas).toEqual([tarjeta]);
   expect(otro.getState().preferencias?.pais).toBe('DO');
+});
+
+test('guarda, edita y borra fuentes de ingreso', async () => {
+  const { repos, almacen } = await preparar();
+  await almacen.getState().cargar();
+  const nomina = { id: 'n', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos' as const, dias: [15, 30] as [number, number] }, ajusteDiaNoHabil: 'adelantar' as const };
+  await almacen.getState().guardarIngreso(nomina);
+  await almacen.getState().guardarIngreso({ ...nomina, nombre: 'Sueldo' });
+  const otro = crearAlmacen(repos);
+  await otro.getState().cargar();
+  expect(otro.getState().ingresos).toEqual([{ ...nomina, nombre: 'Sueldo' }]);
+  await almacen.getState().borrarIngreso('n');
+  expect(almacen.getState().ingresos).toEqual([]);
 });
 
 test('editar reemplaza la tarjeta sin cambiar el orden', async () => {

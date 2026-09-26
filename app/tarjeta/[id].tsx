@@ -25,13 +25,14 @@ export default function DetalleTarjeta() {
   const { config } = usePais();
   const vista = useVistaTarjeta(id);
   const alternarPausa = useAlmacen(s => s.alternarPausa);
+  const hayIngresos = useAlmacen(s => s.ingresos.length > 0);
   if (!vista) return null;
 
   const { tarjeta, resultado } = vista;
   const editar = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id } });
   const editarRecompensa = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id, seccion: 'recompensa' } });
   const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
-  const precision = precisionTarjeta(tarjeta, { hayIngresos: false, catalogoDisponible: config.catalogoDisponible });
+  const precision = precisionTarjeta(tarjeta, { hayIngresos, catalogoDisponible: config.catalogoDisponible });
   const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, tarjeta.ultimos4, t as unknown as Traducir);
 
   const resumenRecompensa =

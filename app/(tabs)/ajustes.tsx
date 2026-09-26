@@ -23,13 +23,14 @@ export default function Ajustes() {
   const { config, opciones, idioma } = usePais();
   const elegirPais = useElegirPais();
   const tarjetas = useAlmacen(s => s.tarjetas);
+  const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
   const datos = useEstadoDatos();
   const reabrir = useReabrirDatos();
   const [hojaPais, setHojaPais] = useState(false);
   const [hojaEnfoque, setHojaEnfoque] = useState(false);
   const porConfirmar = tarjetas.filter(valorPuntoPorConfirmar);
-  const precision = precisionGeneral(tarjetas, { hayIngresos: false, catalogoDisponible: config.catalogoDisponible });
+  const precision = precisionGeneral(tarjetas, { hayIngresos: ingresos.length > 0, catalogoDisponible: config.catalogoDisponible });
   const nombreMoneda = (m: string) => t(`monedas.${m}`, { defaultValue: m });
   const monedas = config.monedaSecundaria
     ? t('ajustes.monedasDos', { principal: nombreMoneda(config.monedaPrincipal), secundaria: nombreMoneda(config.monedaSecundaria).toLocaleLowerCase(idioma) })
@@ -41,7 +42,7 @@ export default function Ajustes() {
       {
         text: t('ajustes.exportarConfirmar'),
         onPress: () =>
-          compartirExportacion(datosParaExportar(preferencias, tarjetas, new Date()), t('ajustes.exportarTitulo')).catch(() =>
+          compartirExportacion(datosParaExportar(preferencias, tarjetas, ingresos, new Date()), t('ajustes.exportarTitulo')).catch(() =>
             Alert.alert(t('ajustes.errorExportar')),
           ),
       },

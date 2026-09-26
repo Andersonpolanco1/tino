@@ -57,4 +57,5 @@ export function repositorioPreferencias(db: ConsultasSql) {
 }
 
 export type RepositorioTarjetas = ReturnType<typeof repositorioTarjetas>;
+export type RepositorioIngresos = ReturnType<typeof repositorioIngresos>;
 export type RepositorioPreferencias = ReturnType<typeof repositorioPreferencias>;

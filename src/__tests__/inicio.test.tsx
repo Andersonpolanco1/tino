@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { Recompensa, Tarjeta } from '@/tipos/tipos';
 import { ProveedorPais } from '@/paises';
 import { migrar } from '@/datos/migraciones';
-import { repositorioPreferencias, repositorioTarjetas } from '@/datos/repositorios';
+import { repositorioIngresos, repositorioPreferencias, repositorioTarjetas } from '@/datos/repositorios';
 import { preferenciasIniciales } from '@/datos/preferencias';
 import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
@@ -42,7 +42,7 @@ const C = tarjeta('C', 1, 21, { tipo: 'cashback', porcentaje: 1 });
 async function almacenCon(tarjetas: Tarjeta[]) {
   const db = basePrueba();
   await migrar(db);
-  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), preferencias: repositorioPreferencias(db) });
+  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db) });
   await almacen.getState().cargar();
   await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
   for (const t of tarjetas) await almacen.getState().guardarTarjeta(t);
