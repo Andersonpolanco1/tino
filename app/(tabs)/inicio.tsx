@@ -33,17 +33,23 @@ export default function Inicio() {
   const abrir = (vista: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: { id: vista.tarjeta.id } });
 
   // "Tengo una compra" va con texto junto a la fecha: un ícono solo había que adivinarlo.
+  const filaFecha = (
+    <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.m }}>
+      <Texto variante="apoyo" color="textoSecundario">
+        {t('inicio.fechaHoy', partesFechaLarga(hoy, idioma))}
+      </Texto>
+      {hayTarjetas ? <BotonPastilla icono="compra" titulo={t('inicio.tengoUnaCompra')} onPress={() => router.push('/compra')} primario /> : null}
+    </View>
+  );
+  const titulo = (
+    <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 30, lineHeight: 36, letterSpacing: -0.5 }}>
+      {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
+    </Texto>
+  );
   const encabezado = (
     <View style={{ gap: 2 }}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.m }}>
-        <Texto variante="apoyo" color="textoSecundario">
-          {t('inicio.fechaHoy', partesFechaLarga(hoy, idioma))}
-        </Texto>
-        {hayTarjetas ? <BotonPastilla icono="compra" titulo={t('inicio.tengoUnaCompra')} onPress={() => router.push('/compra')} primario /> : null}
-      </View>
-      <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 30, lineHeight: 36, letterSpacing: -0.5 }}>
-        {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
-      </Texto>
+      {filaFecha}
+      {titulo}
     </View>
   );
 
@@ -157,12 +163,16 @@ export default function Inicio() {
     );
   }
 
-  // De arriba abajo: el enfoque, la tarjeta que gana con él, las demás y lo que queda por pagar.
+  // De arriba abajo: el enfoque, "Hoy te conviene usar" con la tarjeta que gana, las demás y lo que queda por pagar.
   return (
     <Pantalla conPestanas>
-      {encabezado}
+      {filaFecha}
+      {/* El enfoque va antes del título, que se lee de corrido con la tarjeta (decisión D47). */}
       <ControlEnfoque />
-      <TarjetaDestacada vista={primera} mostrarUltimos4={lista.some(v => v !== primera && v.banco === primera.banco)} onPress={() => abrir(primera)} />
+      <View style={{ gap: tema.espacio.m }}>
+        {titulo}
+        <TarjetaDestacada vista={primera} mostrarUltimos4={lista.some(v => v !== primera && v.banco === primera.banco)} onPress={() => abrir(primera)} />
+      </View>
       <View style={{ gap: tema.espacio.m }}>
         <Texto variante="subtitulo" accessibilityRole="header">
           {t('inicio.otrasOpciones')}
