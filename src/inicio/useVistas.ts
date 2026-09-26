@@ -33,7 +33,7 @@ export interface VistaTarjeta {
   recompensaCorta: string | null;
   etiquetas: EtiquetaVista[];
   mensajeSemaforo: string;
-  ciclo: { anterior: FechaISO; anteriorCorta: string; proximoCorta: string; fraccion: number };
+  ciclo: { anterior: FechaISO; proximoCorta: string; fraccion: number };
   // Solo en rojo: esperar al día después del corte.
   esperar: { fecha: FechaISO; dia: string; dias: number } | null;
 }
@@ -69,7 +69,6 @@ export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c:
     mensajeSemaforo: mensajeSemaforo(tarjeta, resultado, c.entrada, c.t, c.idioma),
     ciclo: {
       ...ciclo,
-      anteriorCorta: fechaCorta(ciclo.anterior, c.idioma, c.t),
       proximoCorta: fechaCorta(resultado.proximoCorte, c.idioma, c.t),
     },
     esperar: esperar ? { ...esperar, dia: diaConSemana(esperar.fecha, c.idioma, c.t) } : null,

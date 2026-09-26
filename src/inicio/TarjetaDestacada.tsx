@@ -1,9 +1,13 @@
-import { Pressable, StyleSheet, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { Texto, useTema } from '../diseno';
 import { PildoraSemaforo } from './Semaforo';
 import { ChipBanco } from './ChipBanco';
+import { BloqueDias } from './BloqueDias';
+import { LineaCiclo } from './LineaCiclo';
+import { useHoy } from './useHoy';
 import type { VistaTarjeta } from './useVistas';
+import { subtituloTarjeta, type Traducir } from './vista';
 
 // La tarjeta de hoy del rediseño: chip del banco, semáforo, días en grande, barra del ciclo,
 // fecha de pago y recompensa.
@@ -11,18 +15,10 @@ import type { VistaTarjeta } from './useVistas';
 export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarjeta; motivo?: string; onPress: () => void }) {
   const tema = useTema();
   const { t } = useTranslation();
+  const hoy = useHoy();
   const { tarjeta, resultado } = vista;
-  // El alias casi siempre ya trae el banco ("Visa Clásica Banreservas"): no se repite debajo.
-  const aliasConBanco = !!vista.banco && tarjeta.alias.toLocaleLowerCase().includes(vista.banco.toLocaleLowerCase());
-  const detalle = tarjeta.ultimos4
-    ? aliasConBanco
-      ? t('inicio.termina', { ultimos4: tarjeta.ultimos4 })
-      : t('inicio.bancoTermina', { banco: vista.banco, ultimos4: tarjeta.ultimos4 })
-    : aliasConBanco
-      ? ''
-      : vista.banco;
+  const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, tarjeta.ultimos4, t as unknown as Traducir);
   const extra = [motivo, t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
-  const translucido = tema.modo === 'oscuro' ? 0.15 : 0.22;
 
   return (
     <Pressable
@@ -59,34 +55,8 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
         </View>
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
-        <Texto variante="cifraGrande" color="sobreDestacado" style={{ fontSize: 64, lineHeight: 66, letterSpacing: -1.5 }}>
-          {resultado.diasGracia}
-        </Texto>
-        <View style={{ flex: 1 }}>
-          <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17 }}>
-            {t('inicio.diasParaPagar')}
-          </Texto>
-          <Texto variante="apoyo" color="sobreDestacado">
-            {t('inicio.sePagaEl', { fecha: vista.fechaPagoCorta })}
-          </Texto>
-        </View>
-      </View>
-
-      <View style={{ gap: 6 }}>
-        <View style={{ height: 6, borderRadius: 3, overflow: 'hidden' }}>
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: tema.color.sobreDestacado, opacity: translucido }]} />
-          <View style={{ width: `${Math.round(vista.ciclo.fraccion * 100)}%`, height: 6, borderRadius: 3, backgroundColor: tema.color.sobreDestacado }} />
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: tema.espacio.s }}>
-          <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
-            {t('inicio.corto', { fecha: vista.ciclo.anteriorCorta })}
-          </Texto>
-          <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily, textAlign: 'right' }}>
-            {t('inicio.corta', { fecha: vista.ciclo.proximoCorta })}
-          </Texto>
-        </View>
-      </View>
+      <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPagoCorta} sobreDestacado />
+      <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} sobreDestacado />
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.s }}>
         {vista.recompensaCorta ? (

@@ -294,7 +294,8 @@
     "diaConSemana": "{{diaSemana}} {{dia}}",
     "porcentaje": "{{valor}}%",
     "menos": "Restar uno a {{etiqueta}}",
-    "mas": "Sumar uno a {{etiqueta}}"
+    "mas": "Sumar uno a {{etiqueta}}",
+    "fechaMesCorto": "{{dia}} {{mes}}."
   },
   "compra": {
     "titulo": "Tengo una compra",

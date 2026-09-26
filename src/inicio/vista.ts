@@ -77,6 +77,21 @@ export function fechaCorta(fecha: FechaISO, idioma: string, t: Traducir): string
   return t('comun.fechaCorta', { dia, mes });
 }
 
+// Línea bajo el nombre de la tarjeta. El alias casi siempre ya trae el banco
+// ("Visa Clásica Banreservas"), y entonces no se repite: solo "Termina en 3044".
+export function subtituloTarjeta(alias: string, banco: string, ultimos4: string | undefined, t: Traducir): string {
+  const aliasConBanco = !!banco && alias.toLocaleLowerCase().includes(banco.toLocaleLowerCase());
+  if (ultimos4) return aliasConBanco ? t('inicio.termina', { ultimos4 }) : t('inicio.bancoTermina', { banco, ultimos4 });
+  return aliasConBanco ? '' : banco;
+}
+
+// "8 sept." para la línea del ciclo, donde el mes completo partía las fechas en dos líneas.
+export function fechaMesCorto(fecha: FechaISO, idioma: string, t: Traducir): string {
+  const partes = new Intl.DateTimeFormat(idioma, { day: 'numeric', month: 'short', timeZone: 'UTC' }).formatToParts(new Date(`${fecha}T00:00:00Z`));
+  const parte = (tipo: string) => partes.find(p => p.type === tipo)?.value ?? '';
+  return t('comun.fechaMesCorto', { dia: parte('day'), mes: parte('month').replace(/\.$/, '') });
+}
+
 // "martes 6".
 export function diaConSemana(fecha: FechaISO, idioma: string, t: Traducir): string {
   const { diaSemana, dia } = partesFechaLarga(fecha, idioma);

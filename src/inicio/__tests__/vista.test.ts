@@ -2,7 +2,7 @@ import type { ConfigPais, EntradaMotor, Preferencias, Recompensa, Tarjeta } from
 import { calcularRanking } from '../../motor';
 import { iniciarI18n } from '../../i18n/i18n';
 import { precisionGeneral, precisionTarjeta } from '../precision';
-import { etiquetasDe, mensajeSemaforo, proximoPago, textoRecompensa, type Traducir } from '../vista';
+import { etiquetasDe, fechaMesCorto, mensajeSemaforo, proximoPago, subtituloTarjeta, textoRecompensa, type Traducir } from '../vista';
 import { msHastaMedianoche } from '../useHoy';
 
 const t = iniciarI18n('es-DO').t as unknown as Traducir;
@@ -143,4 +143,20 @@ describe('próximo pago', () => {
 
 test('milisegundos hasta la medianoche', () => {
   expect(msHastaMedianoche(new Date(2026, 8, 25, 23, 0, 0))).toBe(3_600_000);
+});
+
+describe('subtítulo de la tarjeta', () => {
+  test('no repite el banco si el nombre ya lo trae', () => {
+    expect(subtituloTarjeta('Visa Clásica Banreservas', 'Banreservas', '0108', t)).toBe('Termina en 0108');
+    expect(subtituloTarjeta('Visa Clásica Banreservas', 'Banreservas', undefined, t)).toBe('');
+  });
+  test('muestra el banco si el nombre no lo trae', () => {
+    expect(subtituloTarjeta('Mi Visa', 'Banreservas', '0108', t)).toBe('Banreservas · termina en 0108');
+    expect(subtituloTarjeta('Mi Visa', 'Banreservas', undefined, t)).toBe('Banreservas');
+  });
+});
+
+test('la línea del ciclo usa el mes corto para no partir las fechas', () => {
+  expect(fechaMesCorto('2026-09-08', 'es-DO', t)).toBe('8 sept.');
+  expect(fechaMesCorto('2026-11-19', 'es-DO', t)).toBe('19 nov.');
 });

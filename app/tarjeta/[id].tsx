@@ -4,25 +4,25 @@ import { useTranslation } from 'react-i18next';
 import { BarraSuperior, BotonPastilla, Etiqueta, FilaLista, ListaAgrupada, Palanca, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
-import { numeroDe } from '@/motor/fechas';
 import { useVistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
-import { fechaCorta, type Traducir } from '@/inicio/vista';
 import { precisionTarjeta } from '@/inicio/precision';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
+import { BloqueDias } from '@/inicio/BloqueDias';
+import { LineaCiclo } from '@/inicio/LineaCiclo';
+import { subtituloTarjeta, type Traducir } from '@/inicio/vista';
 import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 
 // Detalle de tarjeta (sección 3.3) con el rediseño: semáforo, línea del ciclo, recompensa,
 // balance en dólares, En pausa y precisión.
 export default function DetalleTarjeta() {
   const { t } = useTranslation();
-  const traducir = t as unknown as Traducir;
   const tema = useTema();
   const router = useRouter();
   const hoy = useHoy();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { config, idioma } = usePais();
+  const { config } = usePais();
   const vista = useVistaTarjeta(id);
   const alternarPausa = useAlmacen(s => s.alternarPausa);
   if (!vista) return null;
@@ -32,22 +32,7 @@ export default function DetalleTarjeta() {
   const editarRecompensa = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id, seccion: 'recompensa' } });
   const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
   const precision = precisionTarjeta(tarjeta, { hayIngresos: false, catalogoDisponible: config.catalogoDisponible });
-  const detalle = tarjeta.ultimos4 ? t('inicio.bancoTermina', { banco: vista.banco, ultimos4: tarjeta.ultimos4 }) : vista.banco;
-
-  // Línea del ciclo: del último corte a la fecha de pago de una compra de hoy.
-  const inicio = numeroDe(vista.ciclo.anterior);
-  const fin = numeroDe(resultado.fechaPago);
-  const posicion = (fecha: string) => `${Math.round(((numeroDe(fecha) - inicio) / Math.max(1, fin - inicio)) * 100)}%` as const;
-  const hito = (etiqueta: string, fecha: string, alineacion: 'left' | 'center' | 'right') => (
-    <View style={{ flex: 1 }}>
-      <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily, textAlign: alineacion }}>
-        {etiqueta}
-      </Texto>
-      <Texto variante="etiqueta" style={{ textAlign: alineacion }}>
-        {fechaCorta(fecha, idioma, traducir)}
-      </Texto>
-    </View>
-  );
+  const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, tarjeta.ultimos4, t as unknown as Traducir);
 
   const resumenRecompensa =
     tarjeta.recompensa.tipo === 'cashback'
@@ -90,38 +75,16 @@ export default function DetalleTarjeta() {
       {tarjeta.enPausa ? <Etiqueta tipo="neutra" texto={t('detalle.enPausa')} /> : null}
       {puntoPorConfirmar ? <ConfirmarValorPunto tarjeta={tarjeta} onCambiar={editarRecompensa} /> : null}
 
-      <Superficie radio={24} style={{ padding: tema.espacio.xl, gap: tema.espacio.l }}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+      {/* Mismas piezas que la tarjeta de hoy, en blanco: el verde queda para la recomendada. */}
+      <Superficie radio={tema.radio.destacada} style={{ padding: 20, gap: tema.espacio.m }}>
+        <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
+          {t('detalle.siUsasHoy')}
+        </Texto>
+        <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPago} />
+        <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} completa />
+        <View style={{ gap: tema.espacio.s, alignItems: 'flex-start' }}>
           <PildoraSemaforo luz={resultado.semaforo} />
-          <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-            {t('detalle.siUsasHoy')}
-          </Texto>
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 10 }}>
-          <Texto variante="cifraGrande" style={{ lineHeight: 64, letterSpacing: -1.5 }}>
-            {resultado.diasGracia}
-          </Texto>
-          <View style={{ paddingBottom: 2, flexShrink: 1 }}>
-            <Texto variante="cuerpoFuerte">{t('inicio.diasParaPagar')}</Texto>
-            <Texto color="textoSecundario">{t('inicio.sePagaEl', { fecha: vista.fechaPago })}</Texto>
-          </View>
-        </View>
-        {resultado.semaforo !== 'verde' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
-        <View style={{ gap: 10 }}>
-          <View style={{ height: 24 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-            <View style={{ position: 'absolute', left: 6, right: 6, top: 10, height: 4, borderRadius: 2, backgroundColor: tema.color.neutroFondo }} />
-            <View style={{ position: 'absolute', left: 6, width: posicion(hoy), top: 10, height: 4, borderRadius: 2, backgroundColor: tema.color.primario }} />
-            <View style={{ position: 'absolute', left: 0, top: 6, width: 12, height: 12, borderRadius: 6, backgroundColor: tema.color.primario }} />
-            <View style={{ position: 'absolute', left: posicion(hoy), marginLeft: -4, top: 2, width: 20, height: 20, borderRadius: 10, borderWidth: 4, borderColor: tema.color.primario, backgroundColor: tema.color.superficie }} />
-            <View style={{ position: 'absolute', left: posicion(resultado.proximoCorte), top: 6, width: 12, height: 12, borderRadius: 6, borderWidth: 2, borderColor: tema.color.textoSecundario, backgroundColor: tema.color.superficie }} />
-            <View style={{ position: 'absolute', right: 0, top: 6, width: 12, height: 12, borderRadius: 6, backgroundColor: tema.color.recompensaPunto }} />
-          </View>
-          <View style={{ flexDirection: 'row', gap: tema.espacio.xs }}>
-            {hito(t('detalle.hitoCorto'), vista.ciclo.anterior, 'left')}
-            {hito(t('detalle.hitoHoy'), hoy, 'left')}
-            {hito(t('detalle.hitoCorta'), resultado.proximoCorte, 'center')}
-            {hito(t('detalle.hitoPagas'), resultado.fechaPago, 'right')}
-          </View>
+          {resultado.semaforo !== 'verde' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
         </View>
       </Superficie>
 
