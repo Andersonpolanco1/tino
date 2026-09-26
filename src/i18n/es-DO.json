@@ -8,7 +8,11 @@
     "otrasTarjetas": "Tus otras tarjetas",
     "proximoPago": "Próximo pago",
     "tengoUnaCompra": "Tengo una compra",
-    "vacio": "Agrega tu primera tarjeta y te diremos cuál usar hoy."
+    "vacio": "Agrega tu primera tarjeta y te diremos cuál usar hoy.",
+    "recompensaPuntos": "{{puntos}} pts por {{monto}}",
+    "recompensaCashback": "{{valor}} cashback por {{monto}}",
+    "proximoPagoDe": "{{alias}}, {{fecha}}",
+    "precision": "Precisión de recomendaciones: {{porcentaje}}%"
   },
   "orden": {
     "recomendado": "Recomendado",
@@ -26,7 +30,10 @@
   "semaforo": {
     "verde": "Buen momento",
     "amarillo": "Momento normal",
-    "rojo": "Espera"
+    "rojo": "Espera",
+    "mensajeVerde": "Buen momento: una compra de hoy se paga en {{dias}} días",
+    "mensajeAmarillo": "Una compra de hoy se paga en {{dias}} días",
+    "mensajeRojo": "Si puedes, espera al día {{dia}}: pasarías de {{antes}} a {{despues}} días"
   },
   "etiqueta": {
     "cortaPronto": "Corta en {{dias}} días",
@@ -34,7 +41,8 @@
     "enPausa": "En pausa",
     "pesosYDolares": "Pesos y dólares",
     "dolares": "Dólares",
-    "local": "Local"
+    "local": "Local",
+    "aproximada": "Comparación aproximada"
   },
   "unaTarjeta": {
     "invitacion": "¿Tienes otra tarjeta? Agrégala y te diremos cuál conviene cada día"
