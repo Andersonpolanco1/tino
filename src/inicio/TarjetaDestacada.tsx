@@ -12,7 +12,15 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
   const tema = useTema();
   const { t } = useTranslation();
   const { tarjeta, resultado } = vista;
-  const detalle = tarjeta.ultimos4 ? t('inicio.bancoTermina', { banco: vista.banco, ultimos4: tarjeta.ultimos4 }) : vista.banco;
+  // El alias casi siempre ya trae el banco ("Visa Clásica Banreservas"): no se repite debajo.
+  const aliasConBanco = !!vista.banco && tarjeta.alias.toLocaleLowerCase().includes(vista.banco.toLocaleLowerCase());
+  const detalle = tarjeta.ultimos4
+    ? aliasConBanco
+      ? t('inicio.termina', { ultimos4: tarjeta.ultimos4 })
+      : t('inicio.bancoTermina', { banco: vista.banco, ultimos4: tarjeta.ultimos4 })
+    : aliasConBanco
+      ? ''
+      : vista.banco;
   const extra = [motivo, t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
   const translucido = tema.modo === 'oscuro' ? 0.15 : 0.22;
 
@@ -24,41 +32,45 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
       style={({ pressed }) => ({
         backgroundColor: tema.color.destacado,
         borderRadius: tema.radio.destacada,
-        padding: 22,
-        gap: tema.espacio.l,
+        padding: 20,
+        gap: tema.espacio.m,
         boxShadow: tema.sombra.destacada,
         transform: [{ scale: pressed ? 0.985 : 1 }],
       })}
     >
       {motivo ? (
-        <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily, marginBottom: -tema.espacio.s }}>
+        <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
           {motivo}
         </Texto>
       ) : null}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: tema.espacio.m }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m, flexShrink: 1 }}>
-          {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} sobreDestacado /> : null}
-          <View style={{ flexShrink: 1 }}>
-            <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17 }}>
-              {tarjeta.alias}
+
+      {/* Compacta: nombre a todo el ancho, días con su fecha al lado, y semáforo con la recompensa al pie. */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
+        {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} sobreDestacado /> : null}
+        <View style={{ flex: 1 }}>
+          <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17 }} numberOfLines={2}>
+            {tarjeta.alias}
+          </Texto>
+          {detalle ? (
+            <Texto variante="apoyo" color="sobreDestacado" style={{ fontSize: 13 }} numberOfLines={1}>
+              {detalle}
             </Texto>
-            {detalle ? (
-              <Texto variante="apoyo" color="sobreDestacado" style={{ fontSize: 13 }}>
-                {detalle}
-              </Texto>
-            ) : null}
-          </View>
+          ) : null}
         </View>
-        <PildoraSemaforo luz={resultado.semaforo} sobreDestacado />
       </View>
 
-      <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: tema.espacio.m }}>
-        <Texto variante="cifraGrande" color="sobreDestacado" style={{ fontSize: 80, lineHeight: 80, letterSpacing: -2 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
+        <Texto variante="cifraGrande" color="sobreDestacado" style={{ fontSize: 64, lineHeight: 66, letterSpacing: -1.5 }}>
           {resultado.diasGracia}
         </Texto>
-        <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17, paddingBottom: tema.espacio.s }}>
-          {t('inicio.diasParaPagarDosLineas')}
-        </Texto>
+        <View style={{ flex: 1 }}>
+          <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17 }}>
+            {t('inicio.diasParaPagar')}
+          </Texto>
+          <Texto variante="apoyo" color="sobreDestacado">
+            {t('inicio.sePagaEl', { fecha: vista.fechaPagoCorta })}
+          </Texto>
+        </View>
       </View>
 
       <View style={{ gap: 6 }}>
@@ -66,33 +78,28 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
           <View style={[StyleSheet.absoluteFill, { backgroundColor: tema.color.sobreDestacado, opacity: translucido }]} />
           <View style={{ width: `${Math.round(vista.ciclo.fraccion * 100)}%`, height: 6, borderRadius: 3, backgroundColor: tema.color.sobreDestacado }} />
         </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: tema.espacio.s }}>
           <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
             {t('inicio.corto', { fecha: vista.ciclo.anteriorCorta })}
           </Texto>
-          <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
+          <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily, textAlign: 'right' }}>
             {t('inicio.corta', { fecha: vista.ciclo.proximoCorta })}
           </Texto>
         </View>
       </View>
 
-      <View>
-        <View style={{ height: 1, marginBottom: 14 }}>
-          <View style={[StyleSheet.absoluteFill, { backgroundColor: tema.color.sobreDestacado, opacity: translucido }]} />
-        </View>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.s }}>
-          <Texto variante="apoyo" color="sobreDestacado">
-            {t('inicio.sePagaEl', { fecha: vista.fechaPagoCorta })}
-          </Texto>
-          {vista.recompensaCorta ? (
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: tema.color.recompensaPunto }} />
-              <Texto variante="apoyo" color="sobreDestacado" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
-                {vista.recompensaCorta}
-              </Texto>
-            </View>
-          ) : null}
-        </View>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.s }}>
+        {vista.recompensaCorta ? (
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: tema.color.recompensaPunto }} />
+            <Texto variante="apoyo" color="sobreDestacado" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+              {vista.recompensaCorta}
+            </Texto>
+          </View>
+        ) : (
+          <View />
+        )}
+        <PildoraSemaforo luz={resultado.semaforo} sobreDestacado />
       </View>
     </Pressable>
   );

@@ -26,7 +26,6 @@
     "verTarjeta": "Ver {{alias}}",
     "detalleLista": "{{banco}} · se paga el {{fecha}}",
     "recompensaCashbackCorta": "{{valor}} por {{monto}}",
-    "diasParaPagarDosLineas": "días\npara pagar",
     "corto": "Cortó el {{fecha}}",
     "corta": "Corta el {{fecha}}",
     "enfoqueInfo": "Tu enfoque decide qué tarjeta te recomendamos. Cada uno combina los días para pagar con las recompensas, pero le da más peso a una cosa. Lo que elijas queda guardado.",
@@ -41,7 +40,8 @@
     "porPagar": "Por pagar",
     "venceHoy": "Vence hoy",
     "venceManana": "Vence mañana, {{fecha}}",
-    "venceEnDias": "Vence el {{fecha}} · en {{dias}} días"
+    "venceEnDias": "Vence el {{fecha}} · en {{dias}} días",
+    "termina": "Termina en {{ultimos4}}"
   },
   "enfoque": {
     "liquidez": "Liquidez",
