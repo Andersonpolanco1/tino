@@ -1,7 +1,7 @@
 import type { ConfigPais, EntradaMotor, Preferencias, Recompensa, Tarjeta } from '../../tipos/tipos';
 import { calcularRanking } from '../../motor';
 import { iniciarI18n } from '../../i18n/i18n';
-import { precisionGeneral, precisionTarjeta } from '../precision';
+import { pistaPrecision, precisionGeneral, precisionTarjeta } from '../precision';
 import { avisoCobro, etiquetasDe, fechaMesCorto, mensajeSemaforo, proximoPago, subtituloTarjeta, textoRecompensa, type Traducir } from '../vista';
 import { msHastaMedianoche } from '../useHoy';
 
@@ -86,6 +86,13 @@ describe('precisión (decisión D26)', () => {
   test('en Ajustes, el promedio; sin tarjetas no hay precisión', () => {
     expect(precisionGeneral([tarjeta(), tarjeta({ recompensa: puntos(false) })], c)).toBe(63);
     expect(precisionGeneral([], c)).toBeNull();
+  });
+
+  test('la pista dice lo que falta, y "completa" con cobros registrados', () => {
+    expect(pistaPrecision([tarjeta({ recompensa: puntos(false) })], { ...c, hayIngresos: true })).toBe('punto');
+    expect(pistaPrecision([tarjeta()], c)).toBe('cobros');
+    expect(pistaPrecision([tarjeta({ productoId: null })], { ...c, hayIngresos: true })).toBe('producto');
+    expect(pistaPrecision([tarjeta()], { ...c, hayIngresos: true })).toBe('completa');
   });
 });
 

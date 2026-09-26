@@ -6,7 +6,7 @@ import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
-import { precisionTarjeta } from '@/inicio/precision';
+import { pistaPrecision, precisionTarjeta } from '@/inicio/precision';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { BloqueDias } from '@/inicio/BloqueDias';
@@ -35,7 +35,9 @@ export default function DetalleTarjeta() {
   const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
   // Sección 5.3: si una compra de hoy vence antes del próximo cobro, se dice cuándo se cobra.
   const aviso = avisoCobro(resultado.fechaPago, hoy, ingresos, config);
-  const precision = precisionTarjeta(tarjeta, { hayIngresos, catalogoDisponible: config.catalogoDisponible });
+  const contextoPrecision = { hayIngresos, catalogoDisponible: config.catalogoDisponible };
+  const precision = precisionTarjeta(tarjeta, contextoPrecision);
+  const pista = pistaPrecision([tarjeta], contextoPrecision);
   const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, tarjeta.ultimos4, t as unknown as Traducir);
 
   const resumenRecompensa =
@@ -129,7 +131,7 @@ export default function DetalleTarjeta() {
           <View style={{ width: `${precision}%`, height: 8, borderRadius: 4, backgroundColor: tema.color.primario }} />
         </View>
         <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-          {puntoPorConfirmar ? t('detalle.precisionPunto') : t('detalle.precisionCobros')}
+          {t(`detalle.precisionPista.${pista}`)}
         </Texto>
       </Superficie>
     </Pantalla>

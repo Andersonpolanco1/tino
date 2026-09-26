@@ -256,7 +256,6 @@
     "monedasDos": "{{principal}} y {{secundaria}}",
     "precisionPistaPunto_one": "Confirma el valor del punto de esta tarjeta para subirla.",
     "precisionPistaPunto_other": "Confirma el valor del punto de estas {{count}} tarjetas para subirla.",
-    "precisionPistaCobros": "Subirá cuando registres cuándo cobras.",
     "confirmarPunto": "Confirmar el valor del punto",
     "cobrosN_one": "{{count}} cobro",
     "cobrosN_other": "{{count}} cobros",
@@ -273,7 +272,12 @@
     "activarAvisos": "Activar avisos",
     "activarAvisosDetalle": "Tino necesita tu permiso para avisarte",
     "avisosApagados": "Los avisos están apagados",
-    "avisosApagadosDetalle": "Actívalos en los ajustes del teléfono"
+    "avisosApagadosDetalle": "Actívalos en los ajustes del teléfono",
+    "precisionPista": {
+      "cobros": "Subirá cuando registres cuándo cobras.",
+      "producto": "Elige el tipo exacto de tus tarjetas para subirla.",
+      "completa": "Tienes todo lo que Tino necesita para recomendarte bien."
+    }
   },
   "paises": {
     "DO": "República Dominicana",
@@ -364,8 +368,6 @@
     "sinRecompensaCorta": "Sin recompensa",
     "pausaDetalle": "No aparece en las recomendaciones",
     "precisionTitulo": "Precisión de esta tarjeta",
-    "precisionPunto": "Confirma el valor del punto para subirla.",
-    "precisionCobros": "Sube cuando registres tus fechas de cobro.",
     "hitoCorto": "Cortó",
     "hitoHoy": "Hoy",
     "hitoCorta": "Corta",
@@ -374,7 +376,13 @@
     "confirmarPuntoTexto": "Lo pusimos nosotros para empezar. Revísalo en tu estado de cuenta o en la app de tu banco: con el valor real, Tino compara bien tus puntos con el cashback.",
     "confirmarPuntoSi": "Sí, es correcto",
     "confirmarPuntoCambiar": "Cambiar el valor",
-    "avisoHoyAntesDelCobro": "Una compra de hoy vence antes de tu próximo cobro, el {{cobro}}."
+    "avisoHoyAntesDelCobro": "Una compra de hoy vence antes de tu próximo cobro, el {{cobro}}.",
+    "precisionPista": {
+      "punto": "Confirma el valor del punto para subirla.",
+      "cobros": "Sube cuando registres tus fechas de cobro.",
+      "producto": "Elige el tipo exacto de esta tarjeta para subirla.",
+      "completa": "Tienes todo lo que Tino necesita de esta tarjeta."
+    }
   },
   "enfoqueCorto": {
     "equilibrado": "Equilibrado",

@@ -11,11 +11,14 @@ import { nombrePais, usePais } from '@/paises';
 import { useAlmacen, useElegirPais } from '@/estado';
 import { borrarBase, useEstadoDatos, useReabrirDatos } from '@/datos';
 import { compartirExportacion, datosParaExportar } from '@/datos/exportar';
-import { precisionGeneral } from '@/inicio/precision';
+import { pistaPrecision, precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 
-const RADIO_ANILLO = 30;
+// Anillo de 84: con 100% el número necesita aire dentro del trazo.
+const LADO_ANILLO = 84;
+const GROSOR_ANILLO = 7;
+const RADIO_ANILLO = (LADO_ANILLO - GROSOR_ANILLO) / 2;
 
 // Los avisos del MVP (sección 11), cada uno con su interruptor.
 const FILAS_AVISOS: [keyof AjustesAvisos, NombreIcono, string, string][] = [
@@ -43,7 +46,9 @@ export default function Ajustes() {
   const [hojaPais, setHojaPais] = useState(false);
   const [hojaEnfoque, setHojaEnfoque] = useState(false);
   const porConfirmar = tarjetas.filter(valorPuntoPorConfirmar);
-  const precision = precisionGeneral(tarjetas, { hayIngresos: ingresos.length > 0, catalogoDisponible: config.catalogoDisponible });
+  const contextoPrecision = { hayIngresos: ingresos.length > 0, catalogoDisponible: config.catalogoDisponible };
+  const precision = precisionGeneral(tarjetas, contextoPrecision);
+  const pista = pistaPrecision(tarjetas, contextoPrecision);
   const nombreMoneda = (m: string) => t(`monedas.${m}`, { defaultValue: m });
   const monedas = config.monedaSecundaria
     ? t('ajustes.monedasDos', { principal: nombreMoneda(config.monedaPrincipal), secundaria: nombreMoneda(config.monedaSecundaria).toLocaleLowerCase(idioma) })
@@ -85,23 +90,23 @@ export default function Ajustes() {
 
       {precision !== null ? (
         <Superficie radio={24} style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.l, padding: 18 }}>
-          <View style={{ width: 72, height: 72 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-            <Svg width={72} height={72} viewBox="0 0 72 72">
-              <Circle cx={36} cy={36} r={RADIO_ANILLO} fill="none" stroke={tema.color.neutroFondo} strokeWidth={8} />
+          <View style={{ width: LADO_ANILLO, height: LADO_ANILLO }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+            <Svg width={LADO_ANILLO} height={LADO_ANILLO} viewBox={`0 0 ${LADO_ANILLO} ${LADO_ANILLO}`}>
+              <Circle cx={LADO_ANILLO / 2} cy={LADO_ANILLO / 2} r={RADIO_ANILLO} fill="none" stroke={tema.color.neutroFondo} strokeWidth={GROSOR_ANILLO} />
               <Circle
-                cx={36}
-                cy={36}
+                cx={LADO_ANILLO / 2}
+                cy={LADO_ANILLO / 2}
                 r={RADIO_ANILLO}
                 fill="none"
                 stroke={tema.color.primario}
-                strokeWidth={8}
+                strokeWidth={GROSOR_ANILLO}
                 strokeLinecap="round"
                 strokeDasharray={`${(precision / 100) * CIRCUNFERENCIA} ${CIRCUNFERENCIA}`}
-                transform="rotate(-90 36 36)"
+                transform={`rotate(-90 ${LADO_ANILLO / 2} ${LADO_ANILLO / 2})`}
               />
             </Svg>
             <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
-              <Texto variante="cifra" style={{ fontSize: 20 }}>
+              <Texto variante="cifra" style={{ fontSize: 17 }}>
                 {t('comun.porcentaje', { valor: precision })}
               </Texto>
             </View>
@@ -109,7 +114,7 @@ export default function Ajustes() {
           <View style={{ flex: 1, gap: tema.espacio.xs }} accessible accessibilityLabel={t('ajustes.precision', { porcentaje: precision })}>
             <Texto variante="cuerpoFuerte">{t('ajustes.precisionTitulo')}</Texto>
             <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-              {porConfirmar.length ? t('ajustes.precisionPistaPunto', { count: porConfirmar.length }) : t('ajustes.precisionPistaCobros')}
+              {pista === 'punto' ? t('ajustes.precisionPistaPunto', { count: porConfirmar.length }) : t(`ajustes.precisionPista.${pista}`)}
             </Texto>
           </View>
         </Superficie>
