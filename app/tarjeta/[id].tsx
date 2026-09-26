@@ -77,15 +77,15 @@ export default function DetalleTarjeta() {
 
       {/* Mismas piezas que la tarjeta de hoy, en blanco: el verde queda para la recomendada. */}
       <Superficie radio={tema.radio.destacada} style={{ padding: 20, gap: tema.espacio.m }}>
-        <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
-          {t('detalle.siUsasHoy')}
-        </Texto>
-        <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPago} />
-        <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} completa />
-        <View style={{ gap: tema.espacio.s, alignItems: 'flex-start' }}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: tema.espacio.s }}>
+          <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily, flexShrink: 1 }}>
+            {t('detalle.siUsasHoy')}
+          </Texto>
           <PildoraSemaforo luz={resultado.semaforo} />
-          {resultado.semaforo !== 'verde' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
         </View>
+        <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPago} />
+        <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} />
+        {resultado.semaforo !== 'verde' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
       </Superficie>
 
       <ListaAgrupada>
