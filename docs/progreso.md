@@ -164,6 +164,7 @@ Criterios de la especificación:
 - [ ] Cuentas de Apple Developer, Google Play Console y proyecto en Expo
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
+- [ ] Confirmar la regla de fecha límite en día no laborable (¿se paga el siguiente día hábil sin cargo?). No aparece en el reglamento de la Superintendencia ni en los contratos de Promerica y Banesco; si se confirma, el valor por defecto pasa a "atrasar" y la pregunta se puede quitar
 - [ ] **Decidir:** en Android, la captura del selector de apps puede tomarse antes de que la cobertura se dibuje. La protección segura es FLAG_SECURE (`expo-screen-capture`), pero también impide al usuario tomar capturas de pantalla de Tino
 - [ ] Hacer configurable el tiempo de bloqueo (hoy 1 minuto fijo); necesita un campo nuevo en `Preferencias`
 - [ ] Si el teléfono no tiene ningún bloqueo configurado, Tino no puede exigir biometría ni PIN; decidir si se ofrece un PIN propio en ese caso
@@ -196,4 +197,6 @@ Criterios de la especificación:
 | D19 | 2026-09-25 | La tarjeta de hoy en Inicio se construye en la etapa 4; en la etapa 3 la pestaña Tarjetas muestra lo registrado | La etapa 4 es la de la pantalla de inicio y sus componentes |
 | D20 | 2026-09-25 | Si el banco no indica sus reglas, el registro precarga "adelantar" (fecha límite en día no hábil) y "entra en ese corte" (compra el día del corte); el usuario puede cambiarlas | Son los valores prudentes: la app calcula menos días de gracia en vez de más, y nadie paga tarde por culpa de Tino |
 | D21 | 2026-09-25 | El país se confirma en la bienvenida ("¿Dónde vives?") y se guarda en las preferencias; la región del teléfono solo lo preselecciona. El selector de Ajustes se adelanta a la etapa 3 | Muchos dominicanos tienen el teléfono en inglés o con región de EE. UU.; detectar solo por región los dejaba sin catálogo |
+| D22 | 2026-09-25 | La compra el día del corte ya no se pregunta: entra en ese corte. La moneda se pregunta como "¿Tu estado de cuenta trae un balance en dólares aparte?" (Sí/No); solo dólares y solo uso local pasan a "Más opciones"; sin doble balance en el país no se pregunta | Es el estándar en RD según la ABA; la pregunta de moneda no se entendía y se buscó reducir el registro |
+| D23 | 2026-09-25 | Una tarjeta tiene un solo tipo de recompensa base (puntos o cashback) en el MVP; las combinaciones (cashback por categoría más puntos base, como BHD PREMIA) se modelan con las recompensas avanzadas de v2 | No se encontró una tarjeta de RD con puntos y cashback generales a la vez; soportarlo cambia tipos, motor y casos de referencia |
 | D11 | 2026-09-25 | La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

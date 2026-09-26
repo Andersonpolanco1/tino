@@ -56,8 +56,9 @@ export interface BorradorTarjeta {
 
 export type Traducir = (clave: string, opciones?: Record<string, string>) => string;
 
-// Valores prudentes cuando el banco no los indica (decisión D20): mejor calcular menos
-// días de gracia que hacer que alguien pague tarde.
+// Valores cuando el banco no los indica. Ajuste de día no hábil: el prudente (decisión D20),
+// mejor calcular menos días de gracia que hacer que alguien pague tarde. Compra el día del
+// corte: entra en ese corte, que es el estándar en RD y ya no se pregunta (decisión D22).
 const AJUSTE_PREDETERMINADO: AjusteDiaNoHabil = 'adelantar';
 const COMPRA_EN_CORTE_PREDETERMINADA: CompraEnDiaDeCorte = 'entra_en_corte_actual';
 
@@ -250,7 +251,10 @@ export type ResultadoRegistro = { ok: true; tarjeta: Tarjeta } | { ok: false; er
 
 // Convierte el borrador en Tarjeta y la valida. La moneda de facturación no se adivina:
 // si el catálogo no la trae, el usuario la elige (decisión D13).
-export function aTarjeta(b: BorradorTarjeta, pais: ConfigPais, id: string, creadaEn: FechaISO): ResultadoRegistro {
+// Donde el país no tiene doble balance no se pregunta: por defecto, todo en la moneda principal.
+export function aTarjeta(borrador: BorradorTarjeta, pais: ConfigPais, id: string, creadaEn: FechaISO): ResultadoRegistro {
+  const b: BorradorTarjeta =
+    !borrador.monedaFacturacion && !pais.funciones.dobleBalance ? { ...borrador, monedaFacturacion: 'solo_principal' } : borrador;
   if (!b.monedaFacturacion) {
     return { ok: false, errores: ['monedaVacia'] };
   }

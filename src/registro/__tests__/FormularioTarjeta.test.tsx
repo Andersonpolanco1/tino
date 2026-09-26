@@ -63,7 +63,7 @@ test('registra una tarjeta del catálogo en pocos toques y pide la pregunta de d
   expect(almacen.getState().tarjetas).toHaveLength(1);
 });
 
-test('"Mi tarjeta no está en la lista" pide la moneda y luego guarda (criterio 14.1)', async () => {
+test('"Mi tarjeta no está en la lista" pregunta por el balance en dólares y luego guarda (criterio 14.1)', async () => {
   const almacen = await preparar();
   const onListo = jest.fn();
   await render(envolver(almacen, rd, <FormularioTarjeta onListo={onListo} />));
@@ -72,10 +72,10 @@ test('"Mi tarjeta no está en la lista" pide la moneda y luego guarda (criterio 
   await fireEvent.press(screen.getByText('Mi tarjeta no está en la lista'));
   await escribirFechas();
   await guardar();
-  expect(screen.getByText('Elige en qué moneda te facturan.')).toBeOnTheScreen();
+  expect(screen.getByText('Responde si tu estado de cuenta trae un balance en dólares aparte.')).toBeOnTheScreen();
   expect(onListo).not.toHaveBeenCalled();
 
-  await fireEvent.press(screen.getByText('Solo pesos'));
+  await fireEvent.press(screen.getByText('No'));
   await guardar();
   expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ productoId: null, alias: 'Tarjeta Banreservas' }), false);
 });
@@ -89,7 +89,7 @@ test('un número de tarjeta en el alias no se guarda (criterio 14.1)', async () 
   await fireEvent.press(screen.getByText('No sé el tipo'));
   await fireEvent.changeText(screen.getByLabelText('Nombre en Tino'), '4111 1111 1111 1111');
   await escribirFechas();
-  await fireEvent.press(screen.getByText('Solo pesos'));
+  await fireEvent.press(screen.getByText('No'));
   await guardar();
 
   expect(screen.getByText('Parece un número de tarjeta. Nunca lo escribas en Tino.')).toBeOnTheScreen();
@@ -97,18 +97,30 @@ test('un número de tarjeta en el alias no se guarda (criterio 14.1)', async () 
   expect(almacen.getState().tarjetas).toEqual([]);
 });
 
-test('fuera de RD: banco a mano y sin la opción de pesos y dólares (criterio 18.6)', async () => {
+test('fuera de RD: banco a mano, sin pregunta de dólares y facturación normal (criterio 18.6)', async () => {
   const almacen = await preparar(mx);
   const onListo = jest.fn();
   await render(envolver(almacen, mx, <FormularioTarjeta onListo={onListo} />));
 
-  expect(screen.queryByText('Pesos y dólares')).toBeNull();
+  expect(screen.queryByText('¿Tu estado de cuenta trae un balance en dólares aparte?')).toBeNull();
   await fireEvent.changeText(screen.getByLabelText('Nombre en Tino'), 'Mi tarjeta');
   await escribirFechas();
-  await fireEvent.press(screen.getByText('Solo pesos'));
   await guardar();
 
-  expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ emisorId: null, alias: 'Mi tarjeta' }), false);
+  expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ emisorId: null, alias: 'Mi tarjeta', monedaFacturacion: 'solo_principal' }), false);
+});
+
+test('la compra el día del corte ya no se pregunta y entra en ese corte', async () => {
+  const almacen = await preparar();
+  const onListo = jest.fn();
+  await render(envolver(almacen, rd, <FormularioTarjeta onListo={onListo} />));
+  await fireEvent.press(screen.getByText('BHD'));
+  await fireEvent.press(screen.getByText('Visa Clásica'));
+  await fireEvent.press(screen.getByText('Más opciones'));
+  expect(screen.queryByText('Una compra el mismo día del corte')).toBeNull();
+  await escribirFechas();
+  await guardar();
+  expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ compraEnDiaDeCorte: 'entra_en_corte_actual' }), true);
 });
 
 test('editar una tarjeta conserva sus datos y permite pausarla', async () => {

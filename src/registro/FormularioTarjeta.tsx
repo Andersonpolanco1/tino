@@ -65,14 +65,17 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
     return encontrado ? t(`registro.errores.${encontrado}`) : undefined;
   };
 
-  const monedas = useMemo(() => {
-    const lista: { valor: MonedaFacturacion; etiqueta: string }[] = [{ valor: 'solo_principal', etiqueta: t('registro.monedaSoloPesos') }];
-    // Sección 9 técnica: el doble balance solo aparece donde el país lo activa.
-    if (pais.funciones.dobleBalance) lista.push({ valor: 'doble_balance', etiqueta: t('registro.monedaPesosYDolares') });
+  // Formas de facturación poco comunes; van en "Más opciones".
+  const otrasFacturaciones = useMemo(() => {
+    const lista: { valor: MonedaFacturacion; etiqueta: string }[] = [];
+    // Sin doble balance en el país no hay pregunta principal: "Normal" permite volver a solo pesos.
+    if (!pais.funciones.dobleBalance) lista.push({ valor: 'solo_principal', etiqueta: t('registro.monedaNormal') });
     if (pais.monedaSecundaria) lista.push({ valor: 'solo_usd', etiqueta: t('registro.monedaSoloDolares') });
     lista.push({ valor: 'solo_local', etiqueta: t('registro.monedaSoloLocal') });
     return lista;
   }, [pais, t]);
+  const respuestaDolares = b.monedaFacturacion === 'doble_balance' ? 'si' : b.monedaFacturacion === 'solo_principal' ? 'no' : null;
+  const facturacionPocoComun = b.monedaFacturacion === 'solo_usd' || b.monedaFacturacion === 'solo_local';
 
   if (paso === 'banco' && catalogo) {
     return (
@@ -205,13 +208,23 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
         error={error('fechaLimiteInvalida')}
       />
 
-      <Opciones
-        etiqueta={t('registro.moneda')}
-        opciones={monedas}
-        valor={b.monedaFacturacion}
-        onCambio={moneda => setB(elegirMoneda(b, moneda))}
-        error={error('monedaVacia', 'dobleBalanceNoDisponible')}
-      />
+      {pais.funciones.dobleBalance ? (
+        <View style={{ gap: tema.espacio.xs }}>
+          <Opciones
+            etiqueta={t('registro.moneda')}
+            opciones={[
+              { valor: 'si', etiqueta: t('registro.si') },
+              { valor: 'no', etiqueta: t('registro.no') },
+            ]}
+            valor={respuestaDolares}
+            onCambio={respuesta => setB(elegirMoneda(b, respuesta === 'si' ? 'doble_balance' : 'solo_principal'))}
+            error={error('monedaVacia', 'dobleBalanceNoDisponible')}
+          />
+          <Texto variante="apoyo" color="textoSecundario">
+            {facturacionPocoComun ? t('registro.monedaOtraElegida') : t('registro.monedaAyuda')}
+          </Texto>
+        </View>
+      ) : null}
 
       <EditorRecompensa
         etiqueta={t('registro.recompensa')}
@@ -248,13 +261,10 @@ export function FormularioTarjeta({ tarjeta, onListo, onBorrada }: Props) {
             ]}
           />
           <Opciones
-            etiqueta={t('registro.compraEnCorte')}
-            valor={b.compraEnDiaDeCorte}
-            onCambio={compraEnDiaDeCorte => setB({ ...b, compraEnDiaDeCorte })}
-            opciones={[
-              { valor: 'entra_en_corte_actual', etiqueta: t('registro.compraEnCorteActual') },
-              { valor: 'entra_en_siguiente', etiqueta: t('registro.compraEnCorteSiguiente') },
-            ]}
+            etiqueta={t('registro.otraFacturacion')}
+            valor={b.monedaFacturacion}
+            onCambio={moneda => setB(elegirMoneda(b, moneda))}
+            opciones={otrasFacturaciones}
           />
           {b.monedaFacturacion === 'doble_balance' ? (
             <>

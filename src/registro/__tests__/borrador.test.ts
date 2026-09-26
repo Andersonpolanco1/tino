@@ -124,6 +124,12 @@ describe('aTarjeta', () => {
     expect(aTarjeta({ ...base(), monedaFacturacion: null }, pais, 'id1', '2026-09-25')).toEqual({ ok: false, errores: ['monedaVacia'] });
   });
 
+  test('en un país sin doble balance no se pregunta: queda en la moneda principal', () => {
+    const sinDoble = { ...pais, funciones: { dobleBalance: false } };
+    const r = aTarjeta({ ...base(), monedaFacturacion: null }, sinDoble, 'id1', '2026-09-25');
+    expect(r.ok && r.tarjeta.monedaFacturacion).toBe('solo_principal');
+  });
+
   test('convierte recompensas, aceptando coma decimal', () => {
     const b = { ...base(), recompensa: { ...base().recompensa, tipo: 'cashback' as const, porcentajeCashback: '1,5' } };
     const r = aTarjeta(b, pais, 'id1', '2026-09-25');

@@ -70,10 +70,8 @@
     "diasDespues": "Días después del corte",
     "diaDelMesValor": "Día",
     "diasDespuesValor": "Días",
-    "moneda": "¿En qué moneda te facturan?",
-    "monedaAyuda": "Aparece en tu estado de cuenta.",
-    "monedaSoloPesos": "Solo pesos",
-    "monedaPesosYDolares": "Pesos y dólares",
+    "moneda": "¿Tu estado de cuenta trae un balance en dólares aparte?",
+    "monedaAyuda": "Responde Sí si lo que compras en dólares te llega en dólares y lo pagas por separado.",
     "monedaSoloDolares": "Solo dólares",
     "monedaSoloLocal": "Solo uso local",
     "recompensa": "Recompensa",
@@ -98,9 +96,6 @@
     "ajusteAdelantar": "Se paga el día hábil anterior",
     "ajusteAtrasar": "Se paga el día hábil siguiente",
     "ajusteNinguno": "Se queda igual",
-    "compraEnCorte": "Una compra el mismo día del corte",
-    "compraEnCorteActual": "Entra en ese corte",
-    "compraEnCorteSiguiente": "Entra en el siguiente",
     "separarFechaUsd": "El balance en dólares tiene otra fecha límite",
     "fechaLimiteUsd": "Fecha límite del balance en dólares",
     "recompensaUsdDistinta": "Las compras en dólares tienen otra recompensa",
@@ -125,8 +120,13 @@
       "ultimos4Invalido": "Escribe exactamente 4 números, o deja el campo vacío.",
       "recompensaInvalida": "Revisa los números de la recompensa.",
       "numeroDeTarjeta": "Parece un número de tarjeta. Nunca lo escribas en Tino.",
-      "monedaVacia": "Elige en qué moneda te facturan."
-    }
+      "monedaVacia": "Responde si tu estado de cuenta trae un balance en dólares aparte."
+    },
+    "si": "Sí",
+    "no": "No",
+    "otraFacturacion": "Otra forma de facturación (poco común)",
+    "monedaOtraElegida": "Elegiste otra forma de facturación en Más opciones.",
+    "monedaNormal": "Normal"
   },
   "pro": {
     "nombre": "Tino Pro",
