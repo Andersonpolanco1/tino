@@ -1,4 +1,6 @@
-import { Pressable, View } from 'react-native';
+import { useEffect, useState, type RefObject } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Icono, type NombreIcono } from './Icono';
 import { Texto } from './Texto';
@@ -16,12 +18,17 @@ interface Props {
   activa: number;
   onElegir: (indice: number) => void;
   etiqueta: string;
+  // En Android el desenfoque necesita la vista de contenido que pasa por debajo (BlurTargetView).
+  objetivoDesenfoque?: RefObject<View | null>;
 }
 
 // Barra de pestañas flotante del rediseño: una píldora con sombra y la pestaña activa en jade.
-export function BarraPestanas({ pestanas, activa, onElegir, etiqueta }: Props) {
+export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDesenfoque }: Props) {
   const tema = useTema();
   const margenes = useSafeAreaInsets();
+  // El desenfoque se monta después de la pantalla, cuando su BlurTargetView ya existe.
+  const [montada, setMontada] = useState(false);
+  useEffect(() => setMontada(true), []);
   return (
     <View
       accessibilityRole="tablist"
@@ -36,11 +43,23 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta }: Props) {
         gap: 6,
         padding: 7,
         borderRadius: 33,
-        // Un poco translúcida para que se intuya el contenido que pasa por debajo.
-        backgroundColor: conOpacidad(tema.color.superficie, tema.opacidad.barraPestanas),
         boxShadow: tema.sombra.flotante,
       }}
     >
+      {/* Vidrio esmerilado: lo que pasa por debajo se desenfoca y un velo de la superficie da el
+          color, para que no compita con las pestañas. */}
+      <View style={[StyleSheet.absoluteFill, { borderRadius: 33, overflow: 'hidden' }]} pointerEvents="none">
+        {montada ? (
+          <BlurView
+            style={StyleSheet.absoluteFill}
+            intensity={tema.desenfoque.barraPestanas}
+            tint={tema.modo === 'oscuro' ? 'dark' : 'light'}
+            blurMethod="dimezisBlurViewSdk31Plus"
+            blurTarget={objetivoDesenfoque}
+          />
+        ) : null}
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: conOpacidad(tema.color.superficie, tema.opacidad.barraPestanas) }]} />
+      </View>
       {pestanas.map((p, i) => {
         const elegida = i === activa;
         return (

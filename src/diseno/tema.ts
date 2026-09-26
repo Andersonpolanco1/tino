@@ -15,6 +15,7 @@ export interface Tema {
   espacio: typeof tokens.espacio;
   radio: typeof tokens.radio;
   opacidad: typeof tokens.opacidad;
+  desenfoque: typeof tokens.desenfoque;
   // Valores de boxShadow listos para el estilo; '' = sin sombra en ese modo.
   sombra: Record<NivelSombra, string>;
   toqueMinimo: number;
@@ -55,7 +56,7 @@ const texto = estilosTexto();
 // Las pantallas solo usan los roles semánticos del modo, nunca los colores base.
 const crear = (modo: ModoTema): Tema => {
   const color = tokens.color[modo] as Record<RolColor, string>;
-  return { modo, color, texto, espacio: tokens.espacio, radio: tokens.radio, opacidad: tokens.opacidad, sombra: sombras(modo, color), toqueMinimo: tokens.toque.minimo };
+  return { modo, color, texto, espacio: tokens.espacio, radio: tokens.radio, opacidad: tokens.opacidad, desenfoque: tokens.desenfoque, sombra: sombras(modo, color), toqueMinimo: tokens.toque.minimo };
 };
 
 export const temas: Record<ModoTema, Tema> = { claro: crear('claro'), oscuro: crear('oscuro') };
