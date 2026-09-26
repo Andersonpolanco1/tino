@@ -29,12 +29,6 @@
     "corto": "Cortó el {{fecha}}",
     "corta": "Corta el {{fecha}}",
     "enfoqueInfo": "Tu enfoque decide qué tarjeta te recomendamos. Cada uno combina los días para pagar con las recompensas, pero le da más peso a una cosa. Lo que elijas queda guardado.",
-    "motivo": {
-      "equilibrado": "Tu mejor opción entre días para pagar y recompensas",
-      "liquidez": "Tu mejor opción para tener más días para pagar",
-      "puntos": "Tu mejor opción para acumular puntos",
-      "cashback": "Tu mejor opción para recibir cashback"
-    },
     "tuEnfoque": "Tu enfoque",
     "otrasOpciones": "Otras opciones",
     "porPagar": "Por pagar",

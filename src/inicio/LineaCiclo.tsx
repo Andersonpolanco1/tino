@@ -12,12 +12,14 @@ interface Props {
   corte: FechaISO;
   pago: FechaISO;
   sobreDestacado?: boolean;
+  // La tarjeta de hoy no rotula el corte anterior: no ayuda a decidir (decisión D43).
+  sinCorteAnterior?: boolean;
 }
 
 // Línea del ciclo compartida por la tarjeta de hoy y el detalle: Cortó, Hoy, Corta y Pagas.
 // Cada punto va encima de su etiqueta (4 columnas iguales) y la línea se llena hasta Hoy;
 // el orden siempre es Cortó ≤ Hoy ≤ Corta < Pagas (decisión D35).
-export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false }: Props) {
+export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false, sinCorteAnterior = false }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   const { idioma } = usePais();
@@ -67,7 +69,7 @@ export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false 
         ) : null}
       </View>
       <View style={{ flexDirection: 'row' }}>
-        {hito(t('detalle.hitoCorto'), anterior, 'left')}
+        {sinCorteAnterior ? <View style={{ flex: 1 }} /> : hito(t('detalle.hitoCorto'), anterior, 'left')}
         {hito(t('detalle.hitoHoy'), hoy, 'center')}
         {hito(t('detalle.hitoCorta'), corte, 'center')}
         {hito(t('detalle.hitoPagas'), pago, 'right')}

@@ -1,7 +1,7 @@
 import { Pressable, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Boton, BotonPastilla, EtiquetaConInfo, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
+import { Boton, BotonPastilla, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema, type RolColor } from '@/diseno';
 import { partesFechaLarga } from '@/i18n';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
@@ -25,7 +25,6 @@ export default function Inicio() {
   const { config, idioma } = usePais();
   const hayTarjetas = useAlmacen(s => s.tarjetas.length > 0);
   const ingresos = useAlmacen(s => s.ingresos);
-  const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
   const vistas = useVistas();
   const lista = vistas?.tarjetas ?? [];
   const unaSola = lista.length === 1;
@@ -158,11 +157,8 @@ export default function Inicio() {
   return (
     <Pantalla conPestanas>
       {encabezado}
-      <View style={{ gap: tema.espacio.s }}>
-        <EtiquetaConInfo etiqueta={t('inicio.tuEnfoque')} info={t('inicio.enfoqueInfo')} variante="apoyo" />
-        <ControlEnfoque />
-      </View>
-      <TarjetaDestacada vista={primera} motivo={modo ? t(`inicio.motivo.${modo}`) : undefined} onPress={() => abrir(primera)} />
+      <ControlEnfoque />
+      <TarjetaDestacada vista={primera} mostrarUltimos4={lista.some(v => v !== primera && v.banco === primera.banco)} onPress={() => abrir(primera)} />
       <View style={{ gap: tema.espacio.m }}>
         <Texto variante="subtitulo" accessibilityRole="header">
           {t('inicio.otrasOpciones')}

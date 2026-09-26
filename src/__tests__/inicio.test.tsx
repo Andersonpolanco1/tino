@@ -77,16 +77,33 @@ test('muestra la fecha, la tarjeta de hoy y las demás en orden de enfoque (ejem
 test('el control de enfoque guarda el enfoque al instante y recalcula (decisión D30)', async () => {
   const almacen = await almacenCon([A, B, C]);
   await render(envolver(almacen, <Inicio />));
-  expect(screen.getByText('Tu mejor opción entre días para pagar y recompensas')).toBeOnTheScreen();
   await fireEvent.press(screen.getByRole('radio', { name: 'Puntos' }));
   await act(async () => {});
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('puntos');
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta B\./);
-  expect(screen.getByText('Tu mejor opción para acumular puntos')).toBeOnTheScreen();
   await fireEvent.press(screen.getByRole('radio', { name: 'Días' }));
   await act(async () => {});
   expect(almacen.getState().preferencias?.enfoque.modo).toBe('liquidez');
   expect(destacada().props.accessibilityLabel).toMatch(/^Tarjeta C\./);
+});
+
+test('la tarjeta de hoy solo muestra lo que ayuda a decidir (decisión D43)', async () => {
+  await render(envolver(await almacenCon([A, B, C]), <Inicio />));
+  // C está en verde: sin la píldora; sin "Cortó" ni la fecha repetida bajo el número.
+  expect(destacada().props.accessibilityLabel).toMatch(/Buen momento/);
+  expect(screen.queryByText('Buen momento')).toBeNull();
+  expect(screen.queryByText('Cortó')).toBeNull();
+  expect(screen.queryByText(/^Se paga el/)).toBeNull();
+  expect(screen.getByText('Pagas')).toBeOnTheScreen();
+});
+
+test('los últimos 4 aparecen solo si hay otra tarjeta del mismo banco', async () => {
+  const conUltimos = { ...C, ultimos4: '3044' };
+  await render(envolver(await almacenCon([A, B, conUltimos]), <Inicio />));
+  expect(screen.queryByText('Termina en 3044')).toBeNull();
+  await screen.unmount();
+  await render(envolver(await almacenCon([A, { ...B, emisorTextoLibre: 'Banco C' }, conUltimos]), <Inicio />));
+  expect(screen.getByText('Banco C · termina en 3044')).toBeOnTheScreen();
 });
 
 test('el ícono de información explica el enfoque', async () => {

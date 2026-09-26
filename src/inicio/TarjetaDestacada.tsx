@@ -9,16 +9,17 @@ import { useHoy } from './useHoy';
 import type { VistaTarjeta } from './useVistas';
 import { subtituloTarjeta, type Traducir } from './vista';
 
-// La tarjeta de hoy del rediseño: chip del banco, semáforo, días en grande, barra del ciclo,
-// fecha de pago y recompensa.
-// motivo: la línea que dice por qué ganó según el enfoque (sección 3.1).
-export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarjeta; motivo?: string; onPress: () => void }) {
+// La tarjeta de hoy, en cuatro capas (decisión D43): nombre, días, línea del ciclo y recompensa.
+// Lo que no ayuda a decidir queda en el detalle y en lo que anuncia el lector de pantalla: el
+// corte anterior, el semáforo en verde y los últimos 4 dígitos, salvo que haya otra tarjeta
+// del mismo banco (mostrarUltimos4).
+export function TarjetaDestacada({ vista, mostrarUltimos4, onPress }: { vista: VistaTarjeta; mostrarUltimos4: boolean; onPress: () => void }) {
   const tema = useTema();
   const { t } = useTranslation();
   const hoy = useHoy();
   const { tarjeta, resultado } = vista;
-  const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, tarjeta.ultimos4, t as unknown as Traducir);
-  const extra = [motivo, t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
+  const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, mostrarUltimos4 ? tarjeta.ultimos4 : undefined, t as unknown as Traducir);
+  const extra = [tarjeta.ultimos4 ? t('inicio.termina', { ultimos4: tarjeta.ultimos4 }) : null, t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
 
   return (
     <Pressable
@@ -34,13 +35,6 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
         transform: [{ scale: pressed ? 0.985 : 1 }],
       })}
     >
-      {motivo ? (
-        <Texto variante="etiqueta" color="sobreDestacado" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
-          {motivo}
-        </Texto>
-      ) : null}
-
-      {/* Compacta: nombre a todo el ancho, días con su fecha al lado, y semáforo con la recompensa al pie. */}
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
         {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} sobreDestacado /> : null}
         <View style={{ flex: 1 }}>
@@ -55,8 +49,8 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
         </View>
       </View>
 
-      <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPagoCorta} sobreDestacado />
-      <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} sobreDestacado />
+      <BloqueDias dias={resultado.diasGracia} sobreDestacado />
+      <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} sobreDestacado sinCorteAnterior />
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.s }}>
         {vista.recompensaCorta ? (
@@ -69,7 +63,8 @@ export function TarjetaDestacada({ vista, motivo, onPress }: { vista: VistaTarje
         ) : (
           <View />
         )}
-        <PildoraSemaforo luz={resultado.semaforo} sobreDestacado />
+        {/* El semáforo solo aparece cuando advierte algo; en verde lo dice el lector de pantalla. */}
+        {resultado.semaforo !== 'verde' ? <PildoraSemaforo luz={resultado.semaforo} sobreDestacado /> : null}
       </View>
     </Pressable>
   );
