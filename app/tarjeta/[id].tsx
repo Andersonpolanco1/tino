@@ -10,6 +10,8 @@ import { pistaPrecision, precisionTarjeta } from '@/inicio/precision';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { BloqueDias } from '@/inicio/BloqueDias';
+import { proximosPagos } from '@/pagos/pendientes';
+import { FilaPago } from '@/pagos/FilaPago';
 import { LineaCiclo } from '@/inicio/LineaCiclo';
 import { avisoCobro, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
 import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
@@ -35,6 +37,8 @@ export default function DetalleTarjeta() {
   const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
   // Sección 5.3: si una compra de hoy vence antes del próximo cobro, se dice cuándo se cobra.
   const aviso = avisoCobro(resultado.fechaPago, hoy, ingresos, config);
+  // El pago pendiente de esta tarjeta, con "Ya pagué" (decisión D45).
+  const [pendiente] = tarjeta.enPausa ? [] : proximosPagos([tarjeta], hoy, ingresos, config);
   const contextoPrecision = { hayIngresos, catalogoDisponible: config.catalogoDisponible };
   const precision = precisionTarjeta(tarjeta, contextoPrecision);
   const pista = pistaPrecision([tarjeta], contextoPrecision);
@@ -98,6 +102,12 @@ export default function DetalleTarjeta() {
           </Texto>
         ) : null}
       </Superficie>
+
+      {pendiente ? (
+        <ListaAgrupada titulo={t('inicio.porPagar')}>
+          <FilaPago pago={pendiente} conNombre={false} />
+        </ListaAgrupada>
+      ) : null}
 
       <ListaAgrupada>
         <FilaLista

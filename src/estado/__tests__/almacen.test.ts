@@ -55,6 +55,16 @@ test('guarda, edita y borra fuentes de ingreso', async () => {
   expect(almacen.getState().ingresos).toEqual([]);
 });
 
+test('marcar y desmarcar un pago', async () => {
+  const { almacen } = await preparar();
+  await almacen.getState().cargar();
+  await almacen.getState().guardarTarjeta(tarjeta);
+  await almacen.getState().marcarPagado(tarjeta.id, '2026-10-25');
+  expect(almacen.getState().tarjetas[0].pagoHecho).toBe('2026-10-25');
+  await almacen.getState().marcarPagado(tarjeta.id, null);
+  expect(almacen.getState().tarjetas[0]).toEqual(tarjeta);
+});
+
 test('editar reemplaza la tarjeta sin cambiar el orden', async () => {
   const { almacen } = await preparar();
   await almacen.getState().guardarTarjeta(tarjeta);

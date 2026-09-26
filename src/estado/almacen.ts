@@ -1,5 +1,5 @@
 import { createStore } from 'zustand/vanilla';
-import type { CodigoPais, FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
+import type { CodigoPais, FechaISO, FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
 import { preferenciasIniciales } from '../datos/preferencias';
 import type { RepositorioIngresos, RepositorioPreferencias, RepositorioSugerencias, RepositorioTarjetas } from '../datos/repositorios';
 import { ESTADO_INICIAL, type EstadoSugerencias } from '../sugerencias/elegir';
@@ -23,6 +23,8 @@ export interface EstadoApp {
   guardarTarjeta: (tarjeta: Tarjeta) => Promise<void>;
   borrarTarjeta: (id: string) => Promise<void>;
   alternarPausa: (id: string) => Promise<void>;
+  // Marca (o desmarca con null) como pagado el estado que vence en esa fecha.
+  marcarPagado: (id: string, fecha: FechaISO | null) => Promise<void>;
   guardarIngreso: (ingreso: FuenteIngreso) => Promise<void>;
   borrarIngreso: (id: string) => Promise<void>;
   guardarPreferencias: (preferencias: Preferencias) => Promise<void>;
@@ -65,6 +67,13 @@ export function crearAlmacen(repos: Repositorios, ahora: () => string = () => ne
     async alternarPausa(id) {
       const tarjeta = get().tarjetas.find(t => t.id === id);
       if (tarjeta) await get().guardarTarjeta({ ...tarjeta, enPausa: !tarjeta.enPausa });
+    },
+
+    async marcarPagado(id, fecha) {
+      const tarjeta = get().tarjetas.find(t => t.id === id);
+      if (!tarjeta) return;
+      const { pagoHecho: _anterior, ...resto } = tarjeta;
+      await get().guardarTarjeta(fecha ? { ...resto, pagoHecho: fecha } : resto);
     },
 
     async guardarIngreso(ingreso) {

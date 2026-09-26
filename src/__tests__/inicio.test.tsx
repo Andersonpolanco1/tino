@@ -135,7 +135,8 @@ test('el lector de pantalla oye el semáforo y las etiquetas en palabras (criter
 test('"Por pagar" muestra el pago pendiente más cercano y cuánto falta', async () => {
   await render(envolver(await almacenCon([A, B, C]), <Inicio />));
   expect(screen.getByText('Por pagar')).toBeOnTheScreen();
-  expect(screen.getByLabelText('Tarjeta B. Vence el 10 de octubre · en 4 días')).toBeOnTheScreen();
+  expect(screen.getByText('Vence el 10 de octubre · en 4 días')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Ya pagué Tarjeta B')).toBeOnTheScreen();
 });
 
 test('"Por pagar" avisa si el pago vence antes del próximo cobro (criterio 14.1)', async () => {
@@ -154,6 +155,18 @@ test('sugerencia de datos: agregar los cobros cuando un pago está cerca, y se p
   await act(async () => {});
   expect(screen.queryByText(/Agrega tus fechas de cobro/)).toBeNull();
   expect(almacen.getState().sugerencias.descartes.cobros?.veces).toBe(1);
+});
+
+test('"Por pagar" solo muestra lo que vence pronto, y "Ya pagué" lo quita (decisiones D44 y D45)', async () => {
+  const almacen = await almacenCon([A, B, C]);
+  await render(envolver(almacen, <Inicio />));
+  // B vence en 4 días; A (19) y C (15) no aparecen.
+  expect(screen.getByLabelText('Ya pagué Tarjeta B')).toBeOnTheScreen();
+  expect(screen.queryByLabelText('Ya pagué Tarjeta A')).toBeNull();
+  await fireEvent.press(screen.getByLabelText('Ya pagué Tarjeta B'));
+  await act(async () => {});
+  expect(almacen.getState().tarjetas.find(x => x.id === 'B')?.pagoHecho).toBe('2026-10-10');
+  expect(screen.queryByText('Por pagar')).toBeNull();
 });
 
 test('"Tengo una compra" es un botón con texto que abre la consulta', async () => {

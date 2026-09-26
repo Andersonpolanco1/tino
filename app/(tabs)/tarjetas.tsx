@@ -5,6 +5,10 @@ import { useAlmacen } from '@/estado';
 import { useCatalogo } from '@/catalogo';
 import { buscarEmisor } from '@/registro/borrador';
 import { inicialesBanco } from '@/inicio/vista';
+import { useHoy } from '@/inicio/useHoy';
+import { usePais } from '@/paises';
+import { proximosPagos } from '@/pagos/pendientes';
+import { FilaPago } from '@/pagos/FilaPago';
 
 // Lista de tarjetas registradas (rediseño): lista agrupada; tocar una abre su detalle.
 export default function Tarjetas() {
@@ -12,6 +16,11 @@ export default function Tarjetas() {
   const router = useRouter();
   const tarjetas = useAlmacen(s => s.tarjetas);
   const catalogo = useCatalogo();
+  const ingresos = useAlmacen(s => s.ingresos);
+  const hoy = useHoy();
+  const { config } = usePais();
+  // Decisión D44: todos los pagos pendientes, pagados o no, en orden de fecha.
+  const pagos = proximosPagos(tarjetas, hoy, ingresos, config);
 
   return (
     <Pantalla conPestanas>
@@ -42,6 +51,13 @@ export default function Tarjetas() {
         </ListaAgrupada>
       ) : null}
       <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
+      {pagos.length ? (
+        <ListaAgrupada titulo={t('pagos.proximos')}>
+          {pagos.map(p => (
+            <FilaPago key={p.tarjeta.id} pago={p} />
+          ))}
+        </ListaAgrupada>
+      ) : null}
     </Pantalla>
   );
 }

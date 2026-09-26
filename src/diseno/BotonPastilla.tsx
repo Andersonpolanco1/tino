@@ -9,15 +9,18 @@ interface Props {
   onPress: () => void;
   // "primario": en jade, para la acción que se quiere destacar ("Tengo una compra").
   primario?: boolean;
+  // Cuando el texto solo no basta (por ejemplo, "Ya pagué" en una lista de tarjetas).
+  etiquetaAccesible?: string;
 }
 
 // Botón compacto con ícono y texto, en forma de pastilla: "Editar", "Tengo una compra".
-export function BotonPastilla({ icono, titulo, onPress, primario = false }: Props) {
+export function BotonPastilla({ icono, titulo, onPress, primario = false, etiquetaAccesible }: Props) {
   const tema = useTema();
   const texto = primario ? 'sobrePrimario' : 'texto';
   return (
     <Pressable
       accessibilityRole="button"
+      accessibilityLabel={etiquetaAccesible}
       onPress={onPress}
       style={({ pressed }) => ({
         flexDirection: 'row',

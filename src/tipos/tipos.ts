@@ -49,6 +49,9 @@ export interface Tarjeta {
   recompensaUsd?: Recompensa;       // si el banco da otra regla en compras en dólares
   enPausa: boolean;
   creadaEn: FechaISO;
+  // "Ya pagué" (decisión D45): la fecha límite del estado que el usuario marcó como pagado.
+  // Sin montos; el motor no lo usa. Con el siguiente corte, el pago pendiente cambia solo.
+  pagoHecho?: FechaISO;
 }
 
 // ---------- Ingresos (nivel 2) ----------

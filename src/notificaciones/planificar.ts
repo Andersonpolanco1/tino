@@ -72,6 +72,8 @@ export function planificarAvisos(e: EntradaAvisos): Aviso[] {
 
   for (const tarjeta of activas) {
     for (const { pago, pagoUsd } of pagosEnHorizonte(tarjeta, hoy, hasta, feriados)) {
+      // "Ya pagué" (decisión D45): ese estado ya no avisa.
+      if (tarjeta.pagoHecho === aFecha(pago)) continue;
       // Fecha límite próxima, 3 días antes. Con doble balance menciona los dos pagos (criterio 14.1).
       if (ajustes.fechaLimite) {
         const dia = aFecha(pago - DIAS_ANTES_FECHA_LIMITE);

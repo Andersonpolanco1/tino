@@ -105,6 +105,13 @@ test('resumen mensual el día 1, sin montos (decisión D38)', () => {
   expect(resumen?.cuerpo).toMatch(/^En octubre, la tarjeta de cada día te dio hasta \d+ días para pagar\. Tino te recomendó \d tarjetas? ?(distintas)?\.$/);
 });
 
+test('un pago marcado con "Ya pagué" ya no avisa (decisión D45)', () => {
+  const e = entrada({ tarjetas: [A, { ...B, pagoHecho: '2026-10-10' }, C] });
+  expect(buscar('fechaLimite:B:2026-10-10', e)).toBeUndefined();
+  // El estado siguiente sí avisa.
+  expect(buscar('fechaLimite:B:2026-11-10', e)).toBeDefined();
+});
+
 test('cada aviso se puede apagar y las tarjetas en pausa no avisan', () => {
   const preferencias = { ...preferenciasIniciales('DO', 'es-DO'), avisos: { fechaLimite: false, venceAntesDelCobro: true, cambioTarjeta: false, resumenMensual: false } };
   const avisos = planificarAvisos(entrada({ preferencias }));

@@ -498,5 +498,14 @@
     "valorPunto": "Confirma cuánto vale el punto de {{alias}} y la comparación con el cashback será exacta.",
     "valorPuntoAccion": "Confirmar",
     "descartar": "Descartar sugerencia"
+  },
+  "pagos": {
+    "yaPague": "Ya pagué",
+    "yaPagueDe": "Ya pagué {{alias}}",
+    "pagada": "Pagada",
+    "pagadaDetalle": "Pagada · el estado vence el {{fecha}}",
+    "deshacer": "Deshacer",
+    "deshacerDe": "Deshacer el pago de {{alias}}",
+    "proximos": "Próximos pagos"
   }
 }

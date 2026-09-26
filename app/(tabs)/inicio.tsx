@@ -7,14 +7,15 @@ import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
-import { avisoCobro, fechaCorta, proximoPago, textoFecha, type Traducir } from '@/inicio/vista';
+import { fechaCorta, proximoPago, type Traducir } from '@/inicio/vista';
 import { TarjetaDestacada } from '@/inicio/TarjetaDestacada';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ControlEnfoque } from '@/inicio/SelectorEnfoque';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
-import { numeroDe } from '@/motor/fechas';
+import { pagosParaInicio, proximosPagos } from '@/pagos/pendientes';
+import { FilaPago } from '@/pagos/FilaPago';
 
 // Sección 3 de la especificación, con el rediseño: la tarjeta de hoy al abrir la app.
 export default function Inicio() {
@@ -85,6 +86,22 @@ export default function Inicio() {
     </Pressable>
   );
 
+  // Por pagar (decisión D44): solo los pagos sin marcar que vencen en 7 días o menos, o antes
+  // del próximo cobro. La lista completa está en la pestaña Tarjetas.
+  const porPagar = pagosParaInicio(proximosPagos(lista.map(v => v.tarjeta), hoy, ingresos, config));
+  const seccionPorPagar = porPagar.length ? (
+    <View style={{ gap: tema.espacio.m }}>
+      <Texto variante="subtitulo" accessibilityRole="header">
+        {t('inicio.porPagar')}
+      </Texto>
+      <ListaAgrupada>
+        {porPagar.map(p => (
+          <FilaPago key={p.tarjeta.id} pago={p} />
+        ))}
+      </ListaAgrupada>
+    </View>
+  ) : null;
+
   // Sección 3.5: con una sola tarjeta la pregunta pasa de "¿qué tarjeta?" a "¿es buen momento?".
   if (unaSola) {
     const { tarjeta, resultado, esperar } = primera;
@@ -134,24 +151,11 @@ export default function Inicio() {
           </Superficie>
         </Pressable>
         {invitacion}
+        {seccionPorPagar}
         <SugerenciaDatos />
       </Pantalla>
     );
   }
-
-  // Por pagar: la deuda del estado ya cortado, distinta de cuándo se paga una compra de hoy.
-  const diasParaPago = numeroDe(pago.fecha) - numeroDe(hoy);
-  const aviso = avisoCobro(pago.fecha, hoy, ingresos, config);
-  const textoAviso = aviso
-    ? t(aviso.tipo === 'antes' ? 'inicio.avisoAntesDelCobro' : 'inicio.avisoCobroEstimado', { cobro: textoFecha(aviso.cobro, idioma) })
-    : null;
-  const urgente = diasParaPago <= 3 || aviso?.tipo === 'antes';
-  const vence =
-    diasParaPago === 0
-      ? t('inicio.venceHoy')
-      : diasParaPago === 1
-        ? t('inicio.venceManana', { fecha: textoFecha(pago.fecha, idioma) })
-        : t('inicio.venceEnDias', { fecha: textoFecha(pago.fecha, idioma), dias: diasParaPago });
 
   // De arriba abajo: el enfoque, la tarjeta que gana con él, las demás y lo que queda por pagar.
   return (
@@ -169,42 +173,7 @@ export default function Inicio() {
           ))}
         </ListaAgrupada>
       </View>
-      <View style={{ gap: tema.espacio.m }}>
-        <Texto variante="subtitulo" accessibilityRole="header">
-          {t('inicio.porPagar')}
-        </Texto>
-        <Pressable
-          accessibilityRole="button"
-          accessibilityLabel={[pago.vista.tarjeta.alias, vence, textoAviso].filter(Boolean).join('. ')}
-          onPress={() => abrir(pago.vista)}
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            gap: tema.espacio.m,
-            paddingVertical: tema.espacio.m,
-            paddingHorizontal: tema.espacio.l,
-            borderRadius: tema.radio.tarjeta,
-            backgroundColor: tema.color.superficie,
-            boxShadow: tema.sombra.tarjeta,
-          }}
-        >
-          <View style={{ width: 38, height: 38, borderRadius: 12, backgroundColor: urgente ? tema.color.alertaFondo : tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-            <Icono nombre="calendario" color={urgente ? 'alertaTexto' : 'primario'} tamano={20} />
-          </View>
-          <View style={{ flex: 1, gap: 1 }}>
-            <Texto variante="cuerpoFuerte">{pago.vista.tarjeta.alias}</Texto>
-            <Texto variante="apoyo" color={diasParaPago <= 3 ? 'alertaTexto' : 'textoSecundario'}>
-              {vence}
-            </Texto>
-            {textoAviso ? (
-              <Texto variante="apoyo" color="alertaTexto">
-                {textoAviso}
-              </Texto>
-            ) : null}
-          </View>
-          <Icono nombre="derecha" color="textoSecundario" tamano={18} />
-        </Pressable>
-      </View>
+      {seccionPorPagar}
       <SugerenciaDatos />
     </Pantalla>
   );
