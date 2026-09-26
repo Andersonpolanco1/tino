@@ -12,7 +12,23 @@
     "recompensaPuntos": "{{puntos}} pts por {{monto}}",
     "recompensaCashback": "{{valor}} cashback por {{monto}}",
     "proximoPagoDe": "{{alias}}, {{fecha}}",
-    "precision": "Precisión de recomendaciones: {{porcentaje}}%"
+    "precision": "Precisión de recomendaciones: {{porcentaje}}%",
+    "bancoTermina": "{{banco}}, termina en {{ultimos4}}",
+    "detalleFila": "{{banco}}. Se paga el {{fecha}}",
+    "detalleFilaUltimos4": "{{banco}}, {{ultimos4}}. Se paga el {{fecha}}",
+    "dias": "días",
+    "accesibleTarjeta": "{{alias}}. {{dias}} días para pagar, se paga el {{fecha}}. {{extra}}",
+    "cortaEn": "Corta en {{dias}} días",
+    "enfoqueBoton": "Enfoque: ",
+    "elegirEnfoque": "Elige tu enfoque",
+    "cerrar": "Cerrar",
+    "ordenEtiqueta": "Ordenar tarjetas",
+    "sinTarjetasTitulo": "Agrega tu primera tarjeta",
+    "agregarTarjeta": "Agregar tarjeta",
+    "todasEnPausa": "Todas tus tarjetas están en pausa. Actívalas en Tarjetas para ver cuál usar hoy.",
+    "semaforoTitulo": "¿Es buen momento para usarla?",
+    "fechaHoy": "{{diaSemana}} {{dia}} de {{mes}}",
+    "verTarjeta": "Ver {{alias}}"
   },
   "orden": {
     "recomendado": "Recomendado",
@@ -194,7 +210,21 @@
     "titulo": "Ajustes",
     "pais": "País",
     "moneda": "Moneda",
-    "paisAyuda": "Define los bancos, la moneda y los feriados que usa Tino."
+    "paisAyuda": "Define los bancos, la moneda y los feriados que usa Tino.",
+    "precision": "Precisión de recomendaciones: {{porcentaje}}%",
+    "precisionInfo": "Qué tan completa está la información de tus tarjetas. Sube si confirmas el valor del punto de cada tarjeta y, más adelante, si registras tus fechas de cobro.",
+    "datosTitulo": "Tus datos",
+    "datosInfo": "Tus datos se guardan cifrados solo en este teléfono. Puedes sacar una copia o borrarlos cuando quieras.",
+    "exportar": "Exportar mis datos",
+    "exportarTitulo": "Exportar tus datos",
+    "exportarAviso": "Se crea un archivo con tus tarjetas y preferencias para que lo guardes donde quieras. El archivo no va cifrado: guárdalo en un lugar seguro.",
+    "exportarConfirmar": "Exportar",
+    "borrar": "Borrar todo",
+    "borrarTitulo": "¿Borrar todos tus datos?",
+    "borrarAviso": "Se borran tus tarjetas, tus preferencias y la clave de cifrado de este teléfono. No se puede deshacer.",
+    "borrarConfirmar": "Borrar todo",
+    "cancelar": "Cancelar",
+    "errorExportar": "No pudimos crear el archivo. Inténtalo de nuevo."
   },
   "paises": {
     "DO": "República Dominicana",
@@ -228,5 +258,37 @@
   "comun": {
     "masInformacion": "Más información sobre {{tema}}",
     "iconoInfo": "i"
+  },
+  "compra": {
+    "titulo": "Tengo una compra",
+    "monto": "¿Cuánto vas a gastar?",
+    "moneda": "¿En qué moneda?",
+    "calcular": "Ver qué tarjeta usar",
+    "ganasPuntos": "{{puntos}} pts en esta compra",
+    "ganasCashback": "{{valor}} de cashback en esta compra",
+    "mejor": "Usa esta tarjeta",
+    "otras": "Otras opciones",
+    "excluidaLocal": "{{alias}} no aparece: es solo de uso local.",
+    "excluidaPausa": "{{alias}} está en pausa.",
+    "montoInvalido": "Escribe un monto mayor que cero.",
+    "info": "Tino compara cuántos días tendrías para pagar esta compra y cuánto te devuelve cada tarjeta. En compras en dólares también cuenta si la tarjeta tiene balance en dólares."
+  },
+  "monedas": {
+    "DOP": "Pesos",
+    "USD": "Dólares"
+  },
+  "detalle": {
+    "siUsasHoy": "Si la usas hoy",
+    "cicloTitulo": "Tu ciclo",
+    "corteAnterior": "Último corte",
+    "proximoCorte": "Próximo corte",
+    "pagoPendiente": "Próximo pago",
+    "recompensaTitulo": "Recompensa",
+    "sinRecompensa": "Esta tarjeta no da recompensas; compite por los días para pagar.",
+    "valorPunto": "1 punto vale {{valor}}",
+    "precision": "Precisión de esta tarjeta: {{porcentaje}}%",
+    "precisionInfo": "Qué tan completa está la información de esta tarjeta. Sube si confirmas el valor del punto y, más adelante, si registras tus fechas de cobro.",
+    "editar": "Editar tarjeta",
+    "enPausa": "Esta tarjeta está en pausa: no aparece en las recomendaciones."
   }
 }

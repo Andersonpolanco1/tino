@@ -8,4 +8,7 @@ export { Opciones } from './Opciones';
 export { Interruptor } from './Interruptor';
 export { Fila } from './Fila';
 export { EtiquetaConInfo } from './EtiquetaConInfo';
+export { Icono, type NombreIcono } from './Icono';
+export { Etiqueta, type TipoEtiqueta } from './Etiqueta';
+export { Hoja } from './Hoja';
 export type { Tema, ModoTema, RolColor, VarianteTexto } from './tema';

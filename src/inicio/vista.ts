@@ -18,17 +18,30 @@ interface Contexto {
   idioma: string;
 }
 
-// "15 pts por RD$1,000" o "RD$20 cashback por RD$1,000" (tabla 3.2 de la especificación).
+// Recompensa que corresponde: la de dólares si la compra es en la moneda secundaria y la tarjeta la tiene.
+function recompensaAplicada(tarjeta: Tarjeta, pais: ConfigPais, compra?: EntradaMotor['compra']) {
+  const enSecundaria = !!compra && pais.monedaSecundaria !== null && compra.moneda === pais.monedaSecundaria;
+  return enSecundaria && tarjeta.recompensaUsd ? tarjeta.recompensaUsd : tarjeta.recompensa;
+}
+
+// Ranking de hoy: "15 pts por RD$1,000" o "RD$20 cashback por RD$1,000" (tabla 3.2).
+// Tengo una compra: "15 pts en esta compra" o "RD$20 de cashback en esta compra".
 // Los puntos se muestran en puntos; el motor los compara por su valor en dinero.
-export function textoRecompensa(tarjeta: Tarjeta, resultado: ResultadoTarjeta, { t, pais, idioma }: Contexto): string | null {
-  const r = tarjeta.recompensa;
+export function textoRecompensa(
+  tarjeta: Tarjeta,
+  resultado: ResultadoTarjeta,
+  { t, pais, idioma }: Contexto,
+  compra?: EntradaMotor['compra'],
+): string | null {
+  const r = recompensaAplicada(tarjeta, pais, compra);
   if (r.tipo === 'ninguna' || resultado.valorRecompensa === 0) return null;
-  const monto = formatearMoneda(pais.montoReferencia, pais.monedaPrincipal, idioma);
+  const moneda = compra?.moneda ?? pais.monedaPrincipal;
   if (r.tipo === 'cashback') {
-    return t('inicio.recompensaCashback', { valor: formatearMoneda(resultado.valorRecompensa, pais.monedaPrincipal, idioma), monto });
+    const valor = formatearMoneda(resultado.valorRecompensa, moneda, idioma);
+    return compra ? t('compra.ganasCashback', { valor }) : t('inicio.recompensaCashback', { valor, monto: formatearMoneda(pais.montoReferencia, moneda, idioma) });
   }
-  const puntos = Math.round((resultado.valorRecompensa / r.valorPunto) * 100) / 100;
-  return t('inicio.recompensaPuntos', { puntos: puntos.toLocaleString(idioma), monto });
+  const puntos = (Math.round((resultado.valorRecompensa / r.valorPunto) * 100) / 100).toLocaleString(idioma);
+  return compra ? t('compra.ganasPuntos', { puntos }) : t('inicio.recompensaPuntos', { puntos, monto: formatearMoneda(pais.montoReferencia, moneda, idioma) });
 }
 
 export function etiquetasDe(tarjeta: Tarjeta, resultado: ResultadoTarjeta, { t }: Contexto): EtiquetaVista[] {
