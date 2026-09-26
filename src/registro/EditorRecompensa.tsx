@@ -5,6 +5,7 @@ import type { BorradorRecompensa } from './borrador';
 
 interface Props {
   etiqueta: string;
+  info?: string;
   valor: BorradorRecompensa;
   onCambio: (valor: BorradorRecompensa) => void;
   error?: string;
@@ -14,7 +15,7 @@ interface Props {
 const decimal = (texto: string) => texto.replace(/[^\d.,]/g, '');
 
 // Sección 4.2: ninguna, puntos (por monto, porcentaje o compra, con valor del punto) o cashback.
-export function EditorRecompensa({ etiqueta, valor, onCambio, error }: Props) {
+export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   const cambiar = (cambios: Partial<BorradorRecompensa>) => onCambio({ ...valor, ...cambios });
@@ -22,6 +23,7 @@ export function EditorRecompensa({ etiqueta, valor, onCambio, error }: Props) {
     <View style={{ gap: tema.espacio.m }}>
       <Opciones
         etiqueta={etiqueta}
+        info={info}
         valor={valor.tipo}
         onCambio={tipo => cambiar({ tipo })}
         opciones={[
@@ -33,6 +35,8 @@ export function EditorRecompensa({ etiqueta, valor, onCambio, error }: Props) {
       {valor.tipo === 'puntos' ? (
         <>
           <Opciones
+            etiqueta={t('registro.tipoRegla')}
+            info={t('registro.info.reglaPuntos')}
             valor={valor.regla}
             onCambio={regla => cambiar({ regla })}
             opciones={[
@@ -72,7 +76,7 @@ export function EditorRecompensa({ etiqueta, valor, onCambio, error }: Props) {
           )}
           <Campo
             etiqueta={t('registro.valorPunto')}
-            ayuda={t('registro.valorPuntoAyuda')}
+            info={t('registro.info.valorPunto')}
             value={valor.valorPunto}
             onChangeText={x => cambiar({ valorPunto: decimal(x), valorPuntoConfirmado: true })}
             keyboardType="decimal-pad"
@@ -82,6 +86,7 @@ export function EditorRecompensa({ etiqueta, valor, onCambio, error }: Props) {
       {valor.tipo === 'cashback' ? (
         <Campo
           etiqueta={t('registro.cashbackPorcentaje')}
+          info={t('registro.info.cashback')}
           value={valor.porcentajeCashback}
           onChangeText={x => cambiar({ porcentajeCashback: decimal(x) })}
           keyboardType="decimal-pad"

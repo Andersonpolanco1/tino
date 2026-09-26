@@ -5,19 +5,21 @@ import type { BorradorFechaLimite } from './borrador';
 
 interface Props {
   etiqueta: string;
+  info?: string;
   valor: BorradorFechaLimite;
   onCambio: (valor: BorradorFechaLimite) => void;
   error?: string;
 }
 
 // Fecha límite como "día del mes" o "días después del corte" (sección 4.1).
-export function EditorFecha({ etiqueta, valor, onCambio, error }: Props) {
+export function EditorFecha({ etiqueta, info, valor, onCambio, error }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   return (
     <View style={{ gap: tema.espacio.s }}>
       <Opciones
         etiqueta={etiqueta}
+        info={info}
         valor={valor.tipo}
         onCambio={tipo => onCambio({ ...valor, tipo })}
         opciones={[

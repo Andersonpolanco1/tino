@@ -15,7 +15,8 @@ export default function EditarTarjeta() {
       {tarjeta ? (
         <FormularioTarjeta
           tarjeta={tarjeta}
-          onListo={(_tarjeta, preguntarPagoUsd) => (preguntarPagoUsd ? router.replace('/tarjeta/pago-usd') : router.back())}
+          // Al editar se guarda por secciones y la pantalla sigue abierta; solo sale para la pregunta de dólares.
+          onListo={(_tarjeta, preguntarPagoUsd) => preguntarPagoUsd && router.push('/tarjeta/pago-usd')}
           onBorrada={() => router.back()}
         />
       ) : null}

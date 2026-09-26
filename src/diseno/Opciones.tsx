@@ -1,5 +1,6 @@
 import { Pressable, View } from 'react-native';
 import { Texto } from './Texto';
+import { EtiquetaConInfo } from './EtiquetaConInfo';
 import { useTema } from './useTema';
 
 interface Opcion<T extends string> {
@@ -9,6 +10,7 @@ interface Opcion<T extends string> {
 
 interface Props<T extends string> {
   etiqueta?: string;
+  info?: string;
   opciones: Opcion<T>[];
   valor: T | null;
   onCambio: (valor: T) => void;
@@ -16,15 +18,11 @@ interface Props<T extends string> {
 }
 
 // Elección única en chips de un toque (como la BarraOrden de la sección 8.3 técnica).
-export function Opciones<T extends string>({ etiqueta, opciones, valor, onCambio, error }: Props<T>) {
+export function Opciones<T extends string>({ etiqueta, info, opciones, valor, onCambio, error }: Props<T>) {
   const tema = useTema();
   return (
     <View style={{ gap: tema.espacio.xs }} accessibilityRole="radiogroup" accessibilityLabel={etiqueta}>
-      {etiqueta ? (
-        <Texto variante="apoyo" color="textoSecundario">
-          {etiqueta}
-        </Texto>
-      ) : null}
+      {etiqueta ? <EtiquetaConInfo etiqueta={etiqueta} info={info} /> : null}
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tema.espacio.s }}>
         {opciones.map(o => {
           const activa = o.valor === valor;

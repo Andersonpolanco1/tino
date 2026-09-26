@@ -1,20 +1,22 @@
 import { Switch, View } from 'react-native';
 import { Texto } from './Texto';
+import { EtiquetaConInfo } from './EtiquetaConInfo';
 import { useTema } from './useTema';
 
 interface Props {
   etiqueta: string;
   ayuda?: string;
+  info?: string;
   valor: boolean;
   onCambio: (valor: boolean) => void;
 }
 
-export function Interruptor({ etiqueta, ayuda, valor, onCambio }: Props) {
+export function Interruptor({ etiqueta, ayuda, info, valor, onCambio }: Props) {
   const tema = useTema();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m, minHeight: tema.toqueMinimo }}>
       <View style={{ flex: 1, gap: tema.espacio.xs }}>
-        <Texto variante="cuerpo">{etiqueta}</Texto>
+        <EtiquetaConInfo etiqueta={etiqueta} info={info} variante="cuerpo" />
         {ayuda ? (
           <Texto variante="apoyo" color="textoSecundario">
             {ayuda}

@@ -7,4 +7,5 @@ export { Campo } from './Campo';
 export { Opciones } from './Opciones';
 export { Interruptor } from './Interruptor';
 export { Fila } from './Fila';
+export { EtiquetaConInfo } from './EtiquetaConInfo';
 export type { Tema, ModoTema, RolColor, VarianteTexto } from './tema';

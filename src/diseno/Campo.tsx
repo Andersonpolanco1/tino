@@ -1,21 +1,21 @@
 import { TextInput, View, type TextInputProps } from 'react-native';
 import { Texto } from './Texto';
+import { EtiquetaConInfo } from './EtiquetaConInfo';
 import { useTema } from './useTema';
 
 interface Props extends Omit<TextInputProps, 'style'> {
   etiqueta: string;
   ayuda?: string;
+  info?: string;
   error?: string;
 }
 
 // Campo de texto con etiqueta, ayuda y error, todo desde los tokens.
-export function Campo({ etiqueta, ayuda, error, ...entrada }: Props) {
+export function Campo({ etiqueta, ayuda, info, error, ...entrada }: Props) {
   const tema = useTema();
   return (
     <View style={{ gap: tema.espacio.xs }}>
-      <Texto variante="apoyo" color="textoSecundario">
-        {etiqueta}
-      </Texto>
+      <EtiquetaConInfo etiqueta={etiqueta} info={info} />
       <TextInput
         {...entrada}
         accessibilityLabel={etiqueta}

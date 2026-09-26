@@ -255,10 +255,9 @@ export type ResultadoRegistro = { ok: true; tarjeta: Tarjeta } | { ok: false; er
 export function aTarjeta(borrador: BorradorTarjeta, pais: ConfigPais, id: string, creadaEn: FechaISO): ResultadoRegistro {
   const b: BorradorTarjeta =
     !borrador.monedaFacturacion && !pais.funciones.dobleBalance ? { ...borrador, monedaFacturacion: 'solo_principal' } : borrador;
-  if (!b.monedaFacturacion) {
-    return { ok: false, errores: ['monedaVacia'] };
-  }
-  const dobleBalance = b.monedaFacturacion === 'doble_balance';
+  // Sin moneda se valida lo demás igual, para poder mostrar los errores de cada paso.
+  const moneda: MonedaFacturacion = b.monedaFacturacion ?? 'solo_principal';
+  const dobleBalance = moneda === 'doble_balance';
   const tarjeta: Tarjeta = {
     id,
     alias: b.alias.trim(),
@@ -272,17 +271,37 @@ export function aTarjeta(borrador: BorradorTarjeta, pais: ConfigPais, id: string
     ...(dobleBalance && b.separarFechaUsd ? { fechaLimiteUsd: aFecha(b.fechaLimiteUsd) } : {}),
     ajusteDiaNoHabil: b.ajusteDiaNoHabil,
     compraEnDiaDeCorte: b.compraEnDiaDeCorte,
-    monedaFacturacion: b.monedaFacturacion,
+    monedaFacturacion: moneda,
     recompensa: aRecompensa(b.recompensa),
     // Las recompensas distintas en dólares solo aplican si la tarjeta factura en dólares.
-    ...(b.monedaFacturacion !== 'solo_principal' && b.monedaFacturacion !== 'solo_local' && b.recompensaUsdDistinta
+    ...(tieneDolares({ monedaFacturacion: moneda }) && b.recompensaUsdDistinta
       ? { recompensaUsd: aRecompensa(b.recompensaUsd) }
       : {}),
     enPausa: b.enPausa,
     creadaEn,
   };
-  const errores = validarTarjeta(tarjeta, pais);
+  const errores: ErrorRegistro[] = [...(b.monedaFacturacion ? [] : ['monedaVacia' as const]), ...validarTarjeta(tarjeta, pais)];
   return errores.length ? { ok: false, errores } : { ok: true, tarjeta };
+}
+
+// Pasos del registro y los errores que le tocan a cada uno.
+export type PasoRegistro = 'tarjeta' | 'moneda' | 'fechas' | 'recompensa';
+
+const ERRORES_POR_PASO: Record<PasoRegistro, ErrorRegistro[]> = {
+  tarjeta: ['aliasVacio', 'bancoVacio', 'ultimos4Invalido', 'numeroDeTarjeta'],
+  moneda: ['monedaVacia', 'dobleBalanceNoDisponible'],
+  fechas: ['diaCorteInvalido', 'fechaLimiteInvalida', 'fechaLimiteUsdLejana', 'fechaLimiteUsdSinDobleBalance'],
+  recompensa: ['recompensaInvalida'],
+};
+
+export function erroresDelPaso(paso: PasoRegistro, errores: ErrorRegistro[]): ErrorRegistro[] {
+  return errores.filter(e => ERRORES_POR_PASO[paso].includes(e));
+}
+
+// El paso de moneda se salta si el país no tiene doble balance o si el catálogo ya la trae.
+export function pasosDelRegistro(b: BorradorTarjeta, pais: ConfigPais): PasoRegistro[] {
+  const preguntarMoneda = pais.funciones.dobleBalance && !b.monedaPrecargada;
+  return preguntarMoneda ? ['tarjeta', 'moneda', 'fechas', 'recompensa'] : ['tarjeta', 'fechas', 'recompensa'];
 }
 
 // Sección 4.3: la pregunta de pago en dólares se hace una vez, con la primera tarjeta con dólares.
