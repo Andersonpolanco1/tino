@@ -110,10 +110,10 @@ Criterios de la especificación:
 Listo cuando: las notificaciones llegan en las fechas correctas en pruebas con fechas simuladas.
 
 - [x] Completar `motor.py` con las 5 frecuencias, regenerar los casos y ajustar `ingresos.ts` (decisión D6): 21 casos, 4 de cobros (D37)
-- [ ] Registro de ingresos con las 5 frecuencias, incluida la personalizada con fechas estimadas
+- [x] Registro de ingresos con las 5 frecuencias, incluida la personalizada con fechas estimadas (Ajustes > Tus cobros)
 - [ ] Etiqueta y alerta "Vence antes de tu cobro"
 - [ ] Notificaciones: cambio de tarjeta recomendada, fecha límite y resumen mensual de lo ganado
-- [ ] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18)
+- [ ] Pasos de cobros y de permiso de notificaciones en el onboarding (decisión D18): el de cobros ya está, con "Omitir por ahora"; falta el permiso
 - [ ] Sugerencias de datos contextuales (2.2 de la especificación)
 
 Criterios de la especificación:
@@ -215,4 +215,5 @@ Criterios de la especificación:
 | D37 | 2026-09-26 | Las 5 frecuencias de cobro en `motor.py` y `ingresos.ts`. Cada 2 semanas cobra el día de la semana cada 14 días desde la referencia; "último día hábil" ya es hábil y no se ajusta; la personalizada ajusta cada fecha y guarda si es estimada. Los cobros se buscan también 7 días a cada lado de la ventana, para contar el que el ajuste mete en ella (un sábado adelantado al viernes) y no contar el que saca | La referencia revisaba solo los días de la ventana antes de ajustar, y dejaba fuera un cobro adelantado al mismo día del pago; los 17 casos anteriores no cambian |
 | D38 | 2026-09-26 | El resumen mensual del MVP cuenta lo que Tino sabe sin compras registradas: cuántas tarjetas distintas recomendó y hasta cuántos días para pagar dio la tarjeta de cada día. Lo ganado en puntos y cashback llega con "La usé" (v2) | La especificación (sección 11) pide días aprovechados y lo ganado, pero sin compras registradas no se puede calcular |
 | D39 | 2026-09-26 | Sin la "ventaja" a las tarjetas que se pagan pocos días después de un cobro (sección 5.3 de la especificación); el MVP solo tiene la penalización de "vence antes del cobro" | La documentación técnica (5.3) y los casos de referencia no la definen; agregarla cambia las reglas del motor. Se reconsidera con los montos (nivel 3) |
+| D40 | 2026-09-26 | Registro de cobros en 3 pasos (frecuencia, días y nombre) con vista previa de los próximos 3 cobros. Quincenal viene con 15 y 30; en cada 2 semanas se elige cuál de los dos últimos días de esa semana fue de cobro, en vez de pedir una fecha; las fechas variables se agregan con mes y día tocables y la marca "estimada". Si el cobro cae en día no hábil, viene "se adelanta". El onboarding pasa a bienvenida, tarjetas, enfoque y cobros. El modo Liquidez se llama "Días" en toda la app | Mismo patrón que el registro de tarjetas y sin teclados de fecha; en inicio el control decía "Días" y Ajustes "Liquidez" |
 | D11 | 2026-09-25 | (Sin uso en pantalla desde D30.) La barra de orden desempata manteniendo el orden recomendado | La sección 5.4 no define el desempate de la barra; así el resultado es estable y predecible |

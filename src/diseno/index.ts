@@ -13,6 +13,7 @@ export { Interruptor, Palanca } from './Interruptor';
 export { ListaAgrupada, FilaLista } from './ListaAgrupada';
 export { Superficie } from './Superficie';
 export { BotonPastilla } from './BotonPastilla';
+export { MarcoAsistente } from './MarcoAsistente';
 export { EtiquetaConInfo } from './EtiquetaConInfo';
 export { Icono, type NombreIcono } from './Icono';
 export { Etiqueta, type TipoEtiqueta } from './Etiqueta';

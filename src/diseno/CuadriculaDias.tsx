@@ -6,13 +6,14 @@ import { useTema } from './useTema';
 const DIAS = Array.from({ length: 31 }, (_, i) => i + 1);
 
 // Días del mes para tocar, en 7 columnas (rediseño), en lugar de escribirlos.
-export function CuadriculaDias({ etiqueta, valor, onCambio }: { etiqueta: string; valor: number | null; onCambio: (dia: number) => void }) {
+// Con "valores" marca varios días a la vez (la quincena: 15 y 30).
+export function CuadriculaDias({ etiqueta, valor, valores, onCambio }: { etiqueta: string; valor?: number | null; valores?: number[]; onCambio: (dia: number) => void }) {
   const tema = useTema();
   return (
     <Superficie style={{ padding: tema.espacio.s }}>
       <View accessibilityRole="radiogroup" accessibilityLabel={etiqueta} style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {DIAS.map(dia => {
-          const activo = dia === valor;
+          const activo = valores ? valores.includes(dia) : dia === valor;
           return (
             <View key={dia} style={{ width: `${100 / 7}%`, padding: 2 }}>
               <Pressable

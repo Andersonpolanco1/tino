@@ -3,7 +3,7 @@ import { Alert, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { randomUUID } from 'expo-crypto';
 import type { Tarjeta } from '../tipos/tipos';
-import { BarraSuperior, Boton, EtiquetaConInfo, FilaLista, ListaAgrupada, Palanca, Pantalla, Texto, useTema } from '../diseno';
+import { BarraSuperior, Boton, FilaLista, ListaAgrupada, MarcoAsistente, Palanca, Pantalla, Texto } from '../diseno';
 import { useCatalogo } from '../catalogo';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
@@ -55,7 +55,6 @@ const ORDEN_PASOS: PasoRegistro[] = ['tarjeta', 'moneda', 'fechas', 'recompensa'
 // Agregar: un paso por pantalla con barra de progreso (rediseño). Editar: la tarjeta en
 // secciones; cada una se abre y se guarda sola.
 export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada, onCerrar }: Props) {
-  const tema = useTema();
   const { t } = useTranslation();
   const traducir = t as unknown as Traducir;
   const catalogo = useCatalogo();
@@ -140,35 +139,18 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
 
   // Marco común de cada paso: barra, progreso, título en pregunta y botón fijo abajo.
   const marco = (v: Vista, titulo: string, contenido: ReactNode, opciones: { pie?: ReactNode; info?: string; subtitulo?: string } = {}) => (
-    <Pantalla
-      arriba={
-        <View style={{ gap: 18 }}>
-          <BarraSuperior
-            izquierda={v === 'banco' && !editando ? { tipo: 'cerrar', onPress: onCerrar } : { tipo: 'atras', onPress: () => atras(v) }}
-            titulo={editando ? t('registro.tituloEditar') : t('registro.pasoDe', { actual: numeroDe(v), total })}
-            cerrar={!editando && v !== 'banco' ? onCerrar : undefined}
-          />
-          {!editando ? (
-            <View style={{ flexDirection: 'row', gap: 6 }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-              {Array.from({ length: total }, (_, i) => (
-                <View key={i} style={{ flex: 1, height: 5, borderRadius: 3, backgroundColor: i < numeroDe(v) ? tema.color.primario : tema.color.pistaApagada }} />
-              ))}
-            </View>
-          ) : null}
-        </View>
-      }
+    <MarcoAsistente
+      izquierda={v === 'banco' && !editando ? { tipo: 'cerrar', onPress: onCerrar } : { tipo: 'atras', onPress: () => atras(v) }}
+      tituloBarra={editando ? t('registro.tituloEditar') : t('registro.pasoDe', { actual: numeroDe(v), total })}
+      onCerrar={!editando && v !== 'banco' ? onCerrar : undefined}
+      progreso={editando ? undefined : { actual: numeroDe(v), total }}
+      titulo={titulo}
+      info={opciones.info}
+      subtitulo={opciones.subtitulo}
       pie={opciones.pie}
     >
-      <View style={{ gap: tema.espacio.xs }}>
-        <EtiquetaConInfo etiqueta={titulo} info={opciones.info} variante="titulo" encabezado />
-        {opciones.subtitulo ? (
-          <Texto variante="apoyo" color="textoSecundario">
-            {opciones.subtitulo}
-          </Texto>
-        ) : null}
-      </View>
       {contenido}
-    </Pantalla>
+    </MarcoAsistente>
   );
 
   // ---------- Banco y tipo ----------

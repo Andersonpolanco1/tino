@@ -14,7 +14,7 @@ export default function EnfoqueOnboarding() {
 
   async function elegir(modo: ModoEnfoque) {
     if (preferencias) await guardarPreferencias({ ...preferencias, enfoque: { modo } });
-    router.replace('/inicio');
+    router.push('/onboarding/cobros');
   }
 
   return (

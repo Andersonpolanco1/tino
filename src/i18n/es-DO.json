@@ -44,7 +44,7 @@
     "termina": "Termina en {{ultimos4}}"
   },
   "enfoque": {
-    "liquidez": "Liquidez",
+    "liquidez": "Días",
     "puntos": "Puntos",
     "cashback": "Cashback",
     "equilibrado": "Equilibrado",
@@ -255,7 +255,10 @@
     "precisionPistaPunto_one": "Confirma el valor del punto de esta tarjeta para subirla.",
     "precisionPistaPunto_other": "Confirma el valor del punto de estas {{count}} tarjetas para subirla.",
     "precisionPistaCobros": "Subirá cuando registres cuándo cobras.",
-    "confirmarPunto": "Confirmar el valor del punto"
+    "confirmarPunto": "Confirmar el valor del punto",
+    "cobrosN_one": "{{count}} cobro",
+    "cobrosN_other": "{{count}} cobros",
+    "cobrosNinguno": "Agregar"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -278,7 +281,10 @@
     "enfoqueTitulo": "¿Qué te importa más?",
     "enfoqueTexto": "Puedes cambiarlo cuando quieras desde la pantalla de inicio.",
     "dondeVives": "¿Dónde vives?",
-    "dondeVivesAyuda": "Así te mostramos los bancos y las tarjetas de tu país. Puedes cambiarlo en Ajustes."
+    "dondeVivesAyuda": "Así te mostramos los bancos y las tarjetas de tu país. Puedes cambiarlo en Ajustes.",
+    "cobrosTitulo": "¿Cuándo cobras?",
+    "cobrosTexto": "Es opcional. Con tus fechas de cobro te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
+    "omitir": "Omitir por ahora"
   },
   "enfoqueDescripcion": {
     "liquidez": "Más días para pagar sin intereses.",
@@ -355,5 +361,98 @@
     "liquidez": "Días",
     "puntos": "Puntos",
     "cashback": "Cashback"
+  },
+  "cobros": {
+    "titulo": "Tus cobros",
+    "tituloEditar": "Editar cobro",
+    "tituloFrecuencia": "¿Cada cuánto cobras?",
+    "tituloFechas": "¿Qué días cobras?",
+    "tituloNombre": "¿Cómo lo llamas?",
+    "soloFechas": "Solo las fechas, nunca montos.",
+    "frecuencias": {
+      "quincenal_dias_fijos": "Quincenal",
+      "mensual": "Mensual",
+      "semanal": "Semanal",
+      "cada_dos_semanas": "Cada 2 semanas",
+      "personalizada": "Fechas variables"
+    },
+    "frecuenciasEjemplo": {
+      "quincenal_dias_fijos": "Dos días fijos, como el 15 y el 30",
+      "mensual": "Un día fijo o el último día hábil",
+      "semanal": "Un día de la semana, como cada viernes",
+      "cada_dos_semanas": "Viernes por medio",
+      "personalizada": "Si trabajas por tu cuenta o cobras a clientes"
+    },
+    "dias": {
+      "domingo": "domingo",
+      "lunes": "lunes",
+      "martes": "martes",
+      "miercoles": "miércoles",
+      "jueves": "jueves",
+      "viernes": "viernes",
+      "sabado": "sábado",
+      "domingoCorto": "Dom",
+      "lunesCorto": "Lun",
+      "martesCorto": "Mar",
+      "miercolesCorto": "Mié",
+      "juevesCorto": "Jue",
+      "viernesCorto": "Vie",
+      "sabadoCorto": "Sáb"
+    },
+    "queDia": "Día de cobro",
+    "ultimoCobro": "¿Cuándo fue tu último cobro?",
+    "diasQuincena": "Toca tus dos días de cobro",
+    "diaDelMes": "Día de cobro",
+    "unDiaFijo": "Un día fijo",
+    "ultimoHabil": "Último día hábil",
+    "tusFechas": "Tus fechas",
+    "agregarFecha": "Agregar una fecha",
+    "agregarEstaFecha": "Agregar esta fecha",
+    "esEstimada": "Es una fecha estimada",
+    "estimada": "Estimada",
+    "estimadaCorta": "(estimada)",
+    "confirmada": "Confirmada",
+    "quitarFecha": "Quitar {{fecha}}",
+    "nombre": "Nombre",
+    "nombreNomina": "Nómina",
+    "nombreCliente": "Cliente",
+    "ajuste": "Si el cobro cae en fin de semana o feriado",
+    "ajusteAdelantar": "Cobro el día hábil anterior",
+    "ajusteAtrasar": "Cobro el día hábil siguiente",
+    "ajusteNinguno": "Cobro ese mismo día",
+    "proximos": "Tus próximos cobros: {{fechas}}",
+    "borrar": "Borrar este cobro",
+    "borrarConfirmar": "¿Borrar este cobro?",
+    "errorGuardar": "No se pudo guardar. Intenta de nuevo.",
+    "resumenSemanal": "Cada {{dia}}",
+    "resumenQuincenal": "Días {{a}} y {{b}}",
+    "resumenCadaDos": "Cada 2 semanas, los {{dia}}",
+    "resumenMensual": "Día {{dia}} de cada mes",
+    "resumenUltimoHabil": "Último día hábil del mes",
+    "resumenPersonalizada_one": "{{count}} fecha",
+    "resumenPersonalizada_other": "{{count}} fechas",
+    "errores": {
+      "sinTipo": "Elige cada cuánto cobras.",
+      "diasQuincena": "Toca dos días.",
+      "sinReferencia": "Elige cuándo fue tu último cobro.",
+      "sinFechas": "Agrega al menos una fecha.",
+      "nombreVacio": "Escribe un nombre, como Nómina.",
+      "numeroDeTarjeta": "Parece un número de tarjeta. Nunca lo escribas en Tino."
+    },
+    "info": {
+      "porQue": "Con tus fechas de cobro, Tino te avisa si una tarjeta vence antes de que cobres y la baja en la recomendación. Solo guardamos fechas, nunca montos.",
+      "ultimoCobro": "Cobras cada 14 días, así que con saber un día que ya cobraste calculamos todos los demás.",
+      "diasQuincena": "Si en un mes corto tu día no existe (por ejemplo, el 30 en febrero), se toma el último día del mes.",
+      "ultimoHabil": "El último día hábil es el último día del mes que no cae en fin de semana ni feriado.",
+      "personalizada": "Agrega las fechas en que esperas cobrar. Si un cobro se repite cada mes el mismo día, usa Mensual.",
+      "estimada": "Márcala si no es seguro que cobres ese día. Así te avisamos con más prudencia.",
+      "nombre": "Un nombre para reconocerlo, como Nómina o el nombre de tu cliente. Solo lo ves tú.",
+      "ajuste": "Muchas empresas pagan el día hábil anterior cuando el cobro cae en fin de semana o feriado."
+    },
+    "agregar": "Agregar un cobro",
+    "agregarOtro": "Agregar otro cobro",
+    "explicacion": "Con tus fechas de cobro te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
+    "vacio": "Todavía no tienes cobros registrados.",
+    "proximo": "próximo: {{fecha}}"
   }
 }
