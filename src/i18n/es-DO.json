@@ -118,7 +118,7 @@
     "porcentaje": "Porcentaje (%)",
     "puntosPorCompra": "Puntos por compra",
     "valorPunto": "Valor de 1 punto al canjearlo",
-    "cashbackPorcentaje": "Porcentaje de devolución (%)",
+    "cashbackPorcentaje": "Cashback en todas tus compras (%)",
     "masOpciones": "Más opciones",
     "menosOpciones": "Menos opciones",
     "ultimos4": "Últimos 4 dígitos (opcional)",
@@ -191,9 +191,9 @@
       "ajuste": "Si la fecha límite cae en sábado, domingo o feriado, algunos bancos te dejan pagar el día hábil siguiente y otros esperan el pago el día hábil anterior. Si no lo sabes, deja \"el día hábil anterior\": así nunca pagas tarde.",
       "separarFechaUsd": "Algunos bancos ponen una fecha límite distinta para el balance en dólares. Actívalo si en tu estado de cuenta ves dos fechas límite.",
       "recompensa": "Lo que te devuelve la tarjeta por usarla: puntos que luego canjeas o un porcentaje en dinero (cashback). Si no te da nada, elige Ninguna; la tarjeta igual compite por los días para pagar.",
-      "reglaPuntos": "Por monto: puntos por cada cierta cantidad que gastas (1 punto por cada 100). Por porcentaje: un porcentaje de la compra en puntos (2%). Por compra: puntos fijos cada vez que la usas.",
+      "reglaPuntos": "Por monto: puntos por cada cierta cantidad que gastas (1 punto por cada 100). Por porcentaje: un porcentaje de la compra en puntos (2%). Por compra: puntos fijos cada vez que la usas. Pon la tasa base, la de cualquier compra; los puntos extra en ciertos comercios llegarán en una próxima versión.",
       "valorPunto": "Cuánto dinero vale 1 punto cuando lo canjeas. Con este dato Tino compara puntos contra cashback. Si no lo sabes, déjalo en 1.00; puedes cambiarlo después.",
-      "cashback": "El porcentaje de cada compra que el banco te devuelve en dinero. Por ejemplo, 1% de RD$1,000 son RD$10.",
+      "cashback": "Pon solo el cashback que te dan en cualquier compra. Por ejemplo, 1% de RD$1,000 son RD$10. Si tu tarjeta solo da cashback en ciertos lugares, como supermercados o combustible, elige Ninguna: esas recompensas llegarán en una próxima versión.",
       "recompensaUsd": "Algunas tarjetas dan otra recompensa en las compras en dólares, por ejemplo más millas. Actívalo solo si tu banco lo indica.",
       "enPausa": "Una tarjeta en pausa sigue guardada, pero Tino no la recomienda. Sirve si la bloqueaste o no la quieres usar por un tiempo."
     },
@@ -204,7 +204,8 @@
     "tituloBanco": "¿De qué banco es?",
     "tituloProducto": "¿Qué tarjeta es?",
     "confirmarValorPunto": "Este valor es correcto",
-    "valorPuntoConfirmado": "Valor confirmado"
+    "valorPuntoConfirmado": "Valor confirmado",
+    "cashbackAlto": "Un cashback tan alto casi siempre es solo en ciertos comercios. ¿Te lo dan en todas tus compras?"
   },
   "pro": {
     "nombre": "Tino Pro",

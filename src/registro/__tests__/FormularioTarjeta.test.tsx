@@ -233,6 +233,26 @@ describe('editar tarjeta por secciones', () => {
     expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ recompensa: expect.objectContaining({ valorPunto: 1, valorPuntoConfirmado: true }) }), false);
   });
 
+  test('un cashback alto pregunta si es en todas las compras, sin bloquear (decisión D53)', async () => {
+    const almacen = await preparar();
+    const onListo = jest.fn();
+    await render(envolver(almacen, rd, <FormularioTarjeta onListo={onListo} onCerrar={jest.fn()} />));
+    await presionar('Banreservas');
+    await presionar('Mi tarjeta no está en la lista');
+    await presionar('Siguiente');
+    await presionar('No, todo en pesos');
+    await presionar('Siguiente');
+    await elegirCorte(5);
+    await presionar('Siguiente');
+    await presionar('Cashback');
+    await fireEvent.changeText(screen.getByLabelText('Cashback en todas tus compras (%)'), '1');
+    expect(screen.queryByText(/Un cashback tan alto/)).toBeNull();
+    await fireEvent.changeText(screen.getByLabelText('Cashback en todas tus compras (%)'), '5');
+    expect(screen.getByText(/Un cashback tan alto casi siempre es solo en ciertos comercios/)).toBeOnTheScreen();
+    await presionar('Guardar');
+    expect(onListo).toHaveBeenCalledWith(expect.objectContaining({ recompensa: { tipo: 'cashback', porcentaje: 5 } }), false);
+  });
+
   test('pausar se guarda al instante', async () => {
     const almacen = await conTarjeta();
     const [tarjeta] = almacen.getState().tarjetas;

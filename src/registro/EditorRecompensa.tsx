@@ -11,6 +11,9 @@ interface Props {
   error?: string;
 }
 
+// Por encima de este porcentaje, un cashback "en todas las compras" es poco probable (decisión D53).
+const CASHBACK_GENERAL_ALTO = 3;
+
 // Solo dígitos y un separador decimal.
 const decimal = (texto: string) => texto.replace(/[^\d.,]/g, '');
 
@@ -80,13 +83,21 @@ export function EditorRecompensa({ etiqueta, info, valor, onCambio, error }: Pro
         </View>
       ) : null}
       {valor.tipo === 'cashback' ? (
-        <Campo
-          etiqueta={t('registro.cashbackPorcentaje')}
-          info={t('registro.info.cashback')}
-          value={valor.porcentajeCashback}
-          onChangeText={x => cambiar({ porcentajeCashback: decimal(x) })}
-          keyboardType="decimal-pad"
-        />
+        <View style={{ gap: tema.espacio.s }}>
+          <Campo
+            etiqueta={t('registro.cashbackPorcentaje')}
+            info={t('registro.info.cashback')}
+            value={valor.porcentajeCashback}
+            onChangeText={x => cambiar({ porcentajeCashback: decimal(x) })}
+            keyboardType="decimal-pad"
+          />
+          {/* Decisión D53: un cashback alto casi siempre es solo en ciertos comercios; se pregunta sin bloquear. */}
+          {Number(valor.porcentajeCashback.replace(',', '.')) > CASHBACK_GENERAL_ALTO ? (
+            <Texto variante="apoyo" color="recompensaTexto" accessibilityLiveRegion="polite">
+              {t('registro.cashbackAlto')}
+            </Texto>
+          ) : null}
+        </View>
       ) : null}
       {error ? (
         <Texto variante="apoyo" color="alertaTexto" accessibilityLiveRegion="polite">
