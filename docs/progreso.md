@@ -151,7 +151,7 @@ Criterios de la especificación:
 - [x] 15.5: al intentar registrar la 3.ª tarjeta en el plan gratis aparece la oferta de Pro y las 2 existentes siguen funcionando (`src/__tests__/plan.test.tsx`)
 - [x] 15.5: una tarjeta con doble balance cuenta como una sola para el límite
 - [x] 15.5: al vencer Pro no se borra ningún dato y el usuario elige qué 2 tarjetas quedan activas
-- [ ] 15.5: ningún dato comercial entra al ranking y todo contenido patrocinado lleva su etiqueta
+- [x] 15.5: ningún dato comercial entra al ranking (el motor solo importa sus archivos y los tipos, y cambiar el banco o el producto de cada tarjeta no mueve ningún puntaje, en `src/motor/__tests__/motor.test.ts`); el MVP no tiene contenido patrocinado, así que no hay nada que etiquetar
 - [x] 17.5: ningún evento contiene montos, números de tarjeta, alias ni fechas exactas de ingresos (`src/analitica/__tests__/analitica.test.ts`)
 - [x] 17.5: desactivar la analítica detiene el envío de inmediato (prueba del módulo y verificado en el emulador con PostHog)
 - [ ] 17.5: el panel interno muestra ingreso recurrente, conversión, cancelación y retención por cohorte con máximo 24 horas de atraso
