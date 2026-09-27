@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Solo para el selector de widgets y antes del primer resumen; después los colores llegan de
+     la app. Son copia de src/diseno/tokens.json (superficie, texto y destacado) y una prueba
+     verifica que coincidan. -->
+<resources>
+  <color name="tino_widget_fondo">#FFFFFF</color>
+  <color name="tino_widget_texto">#0D1B16</color>
+  <color name="tino_widget_destacado">#0E7C5B</color>
+</resources>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android los lee antes de abrir la app (selector de widgets). Son copia de "widget" en
+     src/i18n/es-DO.json y una prueba verifica que coincidan. -->
+<resources>
+  <string name="tino_widget_nombre">Tino</string>
+  <string name="tino_widget_descripcion">La tarjeta que te conviene usar hoy</string>
+  <string name="tino_widget_sin_datos">Abre Tino para ver qué tarjeta usar hoy.</string>
+</resources>

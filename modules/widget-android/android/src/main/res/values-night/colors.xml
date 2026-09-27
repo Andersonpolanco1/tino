@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Modo oscuro; copia de src/diseno/tokens.json, verificada por una prueba. -->
+<resources>
+  <color name="tino_widget_fondo">#15271F</color>
+  <color name="tino_widget_texto">#E9F1ED</color>
+  <color name="tino_widget_destacado">#2BD49A</color>
+</resources>
