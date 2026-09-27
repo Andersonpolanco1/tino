@@ -37,6 +37,9 @@ export default function Compra() {
     registrarConsultaCompra(compra.moneda);
   }, [compra]);
   const [mejor, ...otras] = compra && vistas ? vistas.tarjetas : [];
+  const preferencias = useAlmacen(s => s.preferencias);
+  // Decisión D67: en una compra en la moneda secundaria, avisar si la mejor la convierte.
+  const conConversion = !!mejor && !!preferencias && moneda !== config.monedaPrincipal && mejor.tarjeta.monedaFacturacion === 'solo_principal';
 
   const monedas = [config.monedaPrincipal, ...(config.monedaSecundaria ? [config.monedaSecundaria] : [])];
   const simbolo = new Intl.NumberFormat(idioma, { style: 'currency', currency: moneda }).formatToParts(0).find(p => p.type === 'currency')?.value ?? moneda;
@@ -144,6 +147,15 @@ export default function Compra() {
               ) : null}
             </View>
           </Pressable>
+          {conConversion ? (
+            <Texto variante="apoyo" color="alertaTexto">
+              {t('compra.conversion', {
+                moneda: t(`monedas.${config.monedaPrincipal}`).toLocaleLowerCase(idioma),
+                monedaCompra: t(`monedas.${moneda}`).toLocaleLowerCase(idioma),
+                porcentaje: preferencias?.diferencialCambiarioPct,
+              })}
+            </Texto>
+          ) : null}
         </View>
       ) : null}
 

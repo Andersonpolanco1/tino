@@ -1,6 +1,6 @@
 import type { AjustesAvisos, ConfigPais, FechaISO, FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
 import { calcularRanking } from '../motor';
-import { aFecha, corteAnterior, fechaLimite, leer, numero, numeroDe, proximoCorte, ultimoDia } from '../motor/fechas';
+import { aFecha, ajustar, corteAnterior, esHabil, fechaLimite, leer, numero, numeroDe, proximoCorte, ultimoDia } from '../motor/fechas';
 import { avisoCobro, diaConSemana, textoFecha, type Traducir } from '../inicio/vista';
 
 // Sección 11 de la especificación: los avisos del MVP, calculados sin tocar el sistema de
@@ -112,7 +112,12 @@ export function planificarAvisos(e: EntradaAvisos): Aviso[] {
               ? t('avisos.fechaLimiteDobleFechas', { alias: tarjeta.alias, fecha: fecha(pago), fechaUsd: fecha(pagoUsd) })
               : t('avisos.fechaLimiteDoble', { alias: tarjeta.alias, fecha: fecha(pago) })
             : t('avisos.fechaLimiteCuerpo', { alias: tarjeta.alias, fecha: fecha(pago) });
-        agregar({ id: `fechaLimite:${tarjeta.id}:${aFecha(pago)}`, tipo: 'fechaLimite', fecha: dia, titulo: t('avisos.fechaLimiteTitulo', { dia: diaConSemana(aFecha(pago), idioma, t) }), cuerpo });
+        // Decisión D67: un pago desde otro banco puede tardar en llegar, y si la fecha cae en
+        // fin de semana o feriado conviene pagar el día hábil anterior.
+        const consejo = esHabil(pago, feriados)
+          ? t('avisos.pagoOtroBanco')
+          : t('avisos.pagoDiaNoHabil', { dia: diaConSemana(aFecha(ajustar(pago, 'adelantar', feriados)), idioma, t) });
+        agregar({ id: `fechaLimite:${tarjeta.id}:${aFecha(pago)}`, tipo: 'fechaLimite', fecha: dia, titulo: t('avisos.fechaLimiteTitulo', { dia: diaConSemana(aFecha(pago), idioma, t) }), cuerpo: `${cuerpo} ${consejo}` });
       }
       // Vence antes de tu cobro, 5 días antes (sección 5.3).
       if (ajustes.venceAntesDelCobro) {

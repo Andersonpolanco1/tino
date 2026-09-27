@@ -60,7 +60,10 @@ export function valorRecompensaCompra(tarjeta: Tarjeta, resultado: ResultadoTarj
 
 export function etiquetasDe(tarjeta: Tarjeta, resultado: ResultadoTarjeta, { t }: Contexto): EtiquetaVista[] {
   const etiquetas: EtiquetaVista[] = [];
-  if (resultado.etiquetas.includes('corta_pronto')) etiquetas.push({ tipo: 'alerta', texto: t('etiqueta.cortaPronto', { dias: resultado.diasParaCorte }) });
+  if (resultado.etiquetas.includes('corta_pronto')) {
+    const dias = resultado.diasParaCorte;
+    etiquetas.push({ tipo: 'alerta', texto: dias === 0 ? t('etiqueta.cortaHoy') : dias === 1 ? t('etiqueta.cortaManana') : t('etiqueta.cortaPronto', { dias }) });
+  }
   if (resultado.etiquetas.includes('vence_antes_del_cobro')) etiquetas.push({ tipo: 'alerta', texto: t('etiqueta.venceAntesDelCobro') });
   if (tarjeta.monedaFacturacion === 'doble_balance') etiquetas.push({ tipo: 'neutra', texto: t('etiqueta.pesosYDolares') });
   if (tarjeta.monedaFacturacion === 'solo_usd') etiquetas.push({ tipo: 'neutra', texto: t('etiqueta.dolares') });

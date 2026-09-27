@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { AccionBarra, BarraSuperior, Etiqueta, FilaLista, ListaAgrupada, Palanca, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import { AccionBarra, BarraSuperior, Etiqueta, EtiquetaConInfo, FilaLista, ListaAgrupada, Palanca, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistaTarjeta } from '@/inicio/useVistas';
@@ -134,6 +134,16 @@ export default function DetalleTarjeta() {
           derecha={<Palanca valor={tarjeta.enPausa} onCambio={() => alternarPausa(tarjeta.id)} etiqueta={t('registro.enPausa')} />}
         />
       </ListaAgrupada>
+
+      {/* Decisión D67: lo básico de una tarjeta de crédito, a un toque, para quien empieza. */}
+      <Superficie radio={20} style={{ padding: tema.espacio.l, gap: tema.espacio.l }}>
+        <Texto variante="cuerpoFuerte" accessibilityRole="header">
+          {t('detalle.comoFunciona')}
+        </Texto>
+        <EtiquetaConInfo variante="cuerpo" etiqueta={t('detalle.queEsCorte')} info={t('detalle.queEsCorteInfo', { alias: tarjeta.alias, dia: tarjeta.diaCorte })} />
+        <EtiquetaConInfo variante="cuerpo" etiqueta={t('detalle.queEsFechaLimite')} info={t('detalle.queEsFechaLimiteInfo')} />
+        <EtiquetaConInfo variante="cuerpo" etiqueta={t('detalle.totalOMinimo')} info={t('detalle.totalOMinimoInfo')} />
+      </Superficie>
 
       <Superficie radio={20} style={{ padding: tema.espacio.l, gap: 10 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>

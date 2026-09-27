@@ -122,6 +122,13 @@ describe('lo que muestra cada tarjeta', () => {
   });
 });
 
+test('etiquetas: "Corta mañana" y "Corta hoy" en vez de 1 o 0 días (decisión D67)', () => {
+  const t1 = tarjeta();
+  expect(etiquetasDe(t1, resultadoDe(t1, '2026-10-04').resultado, contexto)[0]).toEqual({ tipo: 'alerta', texto: 'Corta mañana' });
+  const actual = tarjeta({ compraEnDiaDeCorte: 'entra_en_corte_actual' });
+  expect(etiquetasDe(actual, resultadoDe(actual, '2026-10-05').resultado, contexto)[0]).toEqual({ tipo: 'alerta', texto: 'Corta hoy' });
+});
+
 describe('semáforo (sección 3.4)', () => {
   test('verde justo después del corte', () => {
     const t1 = tarjeta();

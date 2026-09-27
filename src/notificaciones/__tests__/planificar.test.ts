@@ -54,8 +54,11 @@ test('fecha límite: 3 días antes, con el día de la semana', () => {
     tipo: 'fechaLimite',
     fecha: '2026-10-07',
     titulo: 'Tu pago vence el sábado 10',
-    cuerpo: 'Tarjeta B vence el 10 de octubre. Págala completa y a tiempo para no pagar intereses.',
+    // Decisión D67: cae sábado, así que pide pagar el día laborable anterior.
+    cuerpo: 'Tarjeta B vence el 10 de octubre. Págala completa y a tiempo para no pagar intereses. Como ese día no es laborable, paga a más tardar el viernes 9.',
   });
+  // En día laborable, recuerda que un pago desde otro banco puede tardar.
+  expect(buscar('fechaLimite:A:2026-11-25')?.cuerpo).toBe('Tarjeta A vence el 25 de noviembre. Págala completa y a tiempo para no pagar intereses. Si pagas desde otro banco, hazlo 1 o 2 días laborables antes.');
   // Los estados siguientes dentro de los 60 días también.
   expect(buscar('fechaLimite:A:2026-11-25')?.fecha).toBe('2026-11-22');
   expect(buscar('fechaLimite:C:2026-12-21')).toBeUndefined();
@@ -65,8 +68,8 @@ test('con doble balance, el recordatorio menciona los dos pagos (criterio 14.1)'
   const doble = tarjeta('D', 5, 25, { tipo: 'ninguna' }, { monedaFacturacion: 'doble_balance' });
   const conFechaUsd = tarjeta('E', 5, 25, { tipo: 'ninguna' }, { monedaFacturacion: 'doble_balance', fechaLimiteUsd: { tipo: 'dia_del_mes', dia: 28 } });
   const e = entrada({ tarjetas: [doble, conFechaUsd] });
-  expect(buscar('fechaLimite:D:2026-10-25', e)?.cuerpo).toBe('Tarjeta D vence el 25 de octubre. Recuerda pagar los dos balances: el de pesos y el de dólares.');
-  expect(buscar('fechaLimite:E:2026-10-25', e)?.cuerpo).toBe('Tarjeta E: el balance en pesos vence el 25 de octubre y el de dólares el 28 de octubre. Recuerda pagar los dos.');
+  expect(buscar('fechaLimite:D:2026-10-25', e)?.cuerpo).toBe('Tarjeta D vence el 25 de octubre. Recuerda pagar los dos balances: el de pesos y el de dólares. Como ese día no es laborable, paga a más tardar el viernes 23.');
+  expect(buscar('fechaLimite:E:2026-10-25', e)?.cuerpo).toBe('Tarjeta E: el balance en pesos vence el 25 de octubre y el de dólares el 28 de octubre. Recuerda pagar los dos. Como ese día no es laborable, paga a más tardar el viernes 23.');
 });
 
 test('vence antes del cobro: 5 días antes y con la fecha del cobro (criterio 14.1)', () => {
