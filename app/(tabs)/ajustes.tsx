@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Alert, Linking, Platform, View } from 'react-native';
+import { Alert, Linking, Platform, Share, View } from 'react-native';
 import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
@@ -11,7 +11,11 @@ import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
 import { nombrePais, usePais } from '@/paises';
 import { useAlmacen, useElegirPais } from '@/estado';
 import { borrarBase, useEstadoDatos, useReabrirDatos } from '@/datos';
-import { compartirExportacion, datosParaExportar } from '@/datos/exportar';
+import { resumenDeDatos } from '@/respaldo/resumen';
+import { contenidoDe } from '@/respaldo/contenido';
+import { leerIdentificador } from '@/analitica/identificador';
+import { useCatalogo } from '@/catalogo';
+import { hoyLocal } from '@/utilidades/fecha';
 import { pistaPrecision, precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
@@ -44,6 +48,8 @@ export default function Ajustes() {
   const tarjetas = useAlmacen(s => s.tarjetas);
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
+  const sugerencias = useAlmacen(s => s.sugerencias);
+  const catalogo = useCatalogo();
   const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
   const permiso = usePermisoAvisos();
   const compras = useComprasPro();
@@ -61,15 +67,28 @@ export default function Ajustes() {
     ? t('ajustes.monedasDos', { principal: nombreMoneda(config.monedaPrincipal), secundaria: nombreMoneda(config.monedaSecundaria).toLocaleLowerCase(idioma) })
     : nombreMoneda(config.monedaPrincipal);
 
-  function exportar() {
-    Alert.alert(t('ajustes.exportarTitulo'), t('ajustes.exportarAviso'), [
+  // "Ver mis datos" (D62): todo lo que Tino guarda, en palabras; no va cifrado, por eso se avisa.
+  function verMisDatos() {
+    Alert.alert(t('ajustes.misDatosTitulo'), t('ajustes.misDatosAviso'), [
       { text: t('ajustes.cancelar'), style: 'cancel' },
       {
-        text: t('ajustes.exportarConfirmar'),
-        onPress: () =>
-          compartirExportacion(datosParaExportar(preferencias, tarjetas, ingresos, new Date()), t('ajustes.exportarTitulo')).catch(() =>
-            Alert.alert(t('ajustes.errorExportar')),
-          ),
+        text: t('ajustes.misDatosConfirmar'),
+        onPress: async () => {
+          try {
+            const texto = resumenDeDatos(contenidoDe({ preferencias, tarjetas, ingresos, sugerencias }, new Date()), {
+              t: t as never,
+              idioma,
+              monedaPrincipal: config.monedaPrincipal,
+              monedaSecundaria: config.monedaSecundaria,
+              catalogo,
+              identificadorAnalitica: await leerIdentificador().catch(() => null),
+              hoy: hoyLocal(),
+            });
+            await Share.share({ message: texto, title: t('misDatos.titulo') });
+          } catch {
+            Alert.alert(t('ajustes.errorMisDatos'));
+          }
+        },
       },
     ]);
   }
@@ -256,7 +275,9 @@ export default function Ajustes() {
 
       <View style={{ gap: tema.espacio.s }}>
         <ListaAgrupada titulo={t('ajustes.datosTitulo')}>
-          <FilaLista icono="descargar" titulo={t('ajustes.exportar')} flecha onPress={exportar} />
+          <FilaLista icono="descargar" titulo={t('ajustes.crearRespaldo')} detalle={t('ajustes.crearRespaldoDetalle')} flecha onPress={() => router.push('/respaldo/crear')} />
+          <FilaLista icono="reiniciar" titulo={t('ajustes.restaurarRespaldo')} flecha onPress={() => router.push('/respaldo/restaurar')} />
+          <FilaLista icono="info" titulo={t('ajustes.misDatos')} flecha onPress={verMisDatos} />
           <FilaLista icono="basura" titulo={t('ajustes.borrar')} destructiva onPress={borrarTodo} />
         </ListaAgrupada>
         <Texto variante="apoyo" color="textoSecundario" style={{ paddingHorizontal: tema.espacio.xs, fontSize: 13 }}>

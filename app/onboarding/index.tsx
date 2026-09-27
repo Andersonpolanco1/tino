@@ -31,6 +31,8 @@ export default function Bienvenida() {
       <Texto variante="apoyo" color="textoSecundario">
         {t('onboarding.privacidad')}
       </Texto>
+      {/* Quien ya usaba Tino en otro teléfono recupera todo con su respaldo (D62). */}
+      <Boton titulo={t('onboarding.restaurar')} variante="texto" onPress={() => router.push('/respaldo/restaurar')} />
     </Pantalla>
   );
 }
