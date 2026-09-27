@@ -32,6 +32,16 @@ const config: ExpoConfig = {
     'expo-localization',
     'expo-secure-store',
     ['expo-sqlite', { useSQLCipher: true }],
+    // Reporte de fallos (sección 7.3 técnica). Organización, proyecto y SENTRY_AUTH_TOKEN
+    // vienen de los secretos de EAS y solo sirven para subir los mapas de código al compilar.
+    [
+      '@sentry/react-native/expo',
+      {
+        organization: process.env.SENTRY_ORG,
+        project: process.env.SENTRY_PROJECT,
+        url: 'https://de.sentry.io/',
+      },
+    ],
     // Avisos locales programados en el teléfono (sección 11); el color sale del tema.
     ['expo-notifications', { color: claro.primario }],
     [
