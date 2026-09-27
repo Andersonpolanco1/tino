@@ -613,19 +613,35 @@
     "rango": "entre el {{desde}} y el {{hasta}}",
     "dia": "el día {{dia}}",
     "resumen": "Pide que el corte de {{alias}} sea {{rango}}",
+    "listaY": "{{inicio}} y {{ultimo}}",
     "pagoAntesDelCobro": {
       "titulo": "Tu {{alias}} vence antes de tu cobro",
-      "explicacion": "En {{meses}} de los próximos 12 meses, el pago vence antes de que cobres. Si el corte fuera {{rango}}, pagarías después de tu cobro, sin tener que apartar el dinero con tiempo.",
-      "explicacionConCobro": "En {{meses}} de los próximos 12 meses, el pago vence antes de que cobres. Si el corte fuera {{rango}}, pagarías después de tu cobro: por ejemplo, cobras el {{cobro}} y pagas el {{pago}}."
+      "problema": "En {{antes}} de los próximos {{revisados}} meses, el pago vence antes de que cobres. Tienes que apartar el dinero con tiempo o te arriesgas a pagar tarde.",
+      "problemaDolares": "En {{antes}} de los próximos {{revisados}} meses, el pago en dólares vence antes de que cobres. Tienes que apartar el dinero con tiempo o te arriesgas a pagar tarde.",
+      "margenEstimado": "Como tus cobros son estimados, Tino cuenta 3 días de margen.",
+      "solucion": "Pide que el corte sea {{rango}}. Así pagarías después de cobrar: por ejemplo, cobras el {{cobro}} y pagas el {{pago}}.",
+      "solucionSinCobro": "Pide que el corte sea {{rango}}. Así pagarías después de cobrar.",
+      "siNoPuede": "Si tu banco no puede, aparta el dinero del pago en cuanto cobres el mes anterior."
     },
-    "cortesJuntos": {
-      "titulo": "{{alias}} y {{otra}} cortan casi el mismo día",
-      "explicacion": "Por eso hay días del mes en que ninguna de las dos te da más de {{antes}} días para pagar. Si {{alias}} cortara {{rango}}, siempre tendrías una tarjeta con al menos {{despues}} días."
+    "mismoCobro": {
+      "titulo": "Todas tus tarjetas se pagan con el mismo cobro",
+      "problema": "Casi todos los meses, tus {{cantidad}} tarjetas se pagan con el mismo cobro y otro queda libre. Por ejemplo, todas con el del {{cargado}} y ninguna con el del {{libre}}.",
+      "solucion": "Pide que el corte de {{alias}} sea {{rango}}: la pagarías con otro cobro, por ejemplo el del {{cobro}}, y el peso queda repartido.",
+      "solucionSinCobro": "Pide que el corte de {{alias}} sea {{rango}}: la pagarías con otro cobro y el peso queda repartido.",
+      "tambienDias": "Además, siempre tendrías una tarjeta con al menos {{diasDespues}} días para pagar.",
+      "siNoPuede": "Si tu banco no puede, aparta una parte de cada cobro para los pagos que vienen."
     },
-    "pagosJuntos": {
-      "titulo": "{{alias}} y {{otra}} vencen la misma semana",
-      "explicacion": "Tienes que pagar las dos casi al mismo tiempo. Si {{alias}} cortara {{rango}}, su pago quedaría para el {{pago}}, separado del de {{otra}}."
+    "diasSinTarjetaBuena": {
+      "titulo": "Tus tarjetas cortan muy cerca",
+      "problema": "Tus tarjetas cortan los días {{cortes}}. Por eso hay días del mes en que ninguna te da más de {{diasAntes}} días para pagar.",
+      "solucion": "Pide que el corte de {{alias}} sea {{rango}}: siempre tendrías una tarjeta con al menos {{diasDespues}} días para pagar.",
+      "solucionSinCobro": "Pide que el corte de {{alias}} sea {{rango}}: siempre tendrías una tarjeta con al menos {{diasDespues}} días para pagar.",
+      "siNoPuede": "Si tu banco no puede, no pasa nada: Tino te sigue diciendo cada día cuál usar."
     },
+    "quePedir": "Qué pedir",
+    "siNoPuedeTitulo": "Si tu banco no puede",
+    "otrasConProblema_one": "Otra tarjeta también vence antes de tu cobro. Cuando actualices estas fechas, Tino te dirá qué hacer con ella.",
+    "otrasConProblema_other": "Otras {{count}} tarjetas también vencen antes de tu cobro. Cuando actualices estas fechas, Tino te dirá qué hacer con ellas.",
     "pasosTitulo": "Cómo pedirlo",
     "paso1": "Llama al número que está detrás de tu {{alias}}, o escríbele al banco por su app.",
     "paso2": "Pide que tu fecha de corte sea {{rango}}. Si no tienen ese día, pide el más cercano.",

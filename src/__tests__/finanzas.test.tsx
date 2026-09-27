@@ -95,9 +95,9 @@ const juntas = () => [tarjeta('P'), tarjeta('Q', { diaCorte: 6, creadaEn: '2026-
 test('Tarjetas muestra el consejo de fechas y lleva a sus pasos', async () => {
   await render(envolver(await almacenCon(juntas()), <Tarjetas />));
   expect(screen.getByText('Consejos para tus fechas')).toBeOnTheScreen();
-  expect(screen.getByText('Tarjeta Q y Tarjeta P cortan casi el mismo día')).toBeOnTheScreen();
+  expect(screen.getByText('Tus tarjetas cortan muy cerca')).toBeOnTheScreen();
   expect(screen.getByText(/^Pide que el corte de Tarjeta Q sea (entre el \d+ y el \d+|el día \d+)$/)).toBeOnTheScreen();
-  await act(async () => fireEvent.press(screen.getByText('Tarjeta Q y Tarjeta P cortan casi el mismo día')));
+  await act(async () => fireEvent.press(screen.getByText('Tus tarjetas cortan muy cerca')));
   expect(mockRouter.push).toHaveBeenCalledWith('/consejos/fechas');
 });
 
@@ -106,9 +106,11 @@ test('sin problemas de fechas no hay sección de consejos', async () => {
   expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
 });
 
-test('la pantalla de consejos explica qué pedir, cómo y lleva a editar las fechas', async () => {
+test('la pantalla de consejos explica qué pasa, qué pedir, qué hacer si el banco no puede y lleva a editar las fechas', async () => {
   await render(envolver(await almacenCon(juntas()), <ConsejosFechas />));
-  expect(screen.getByText(/^Por eso hay días del mes en que ninguna de las dos te da más de \d+ días para pagar\./)).toBeOnTheScreen();
+  expect(screen.getByText(/^Tus tarjetas cortan los días 5 y 6\. Por eso hay días del mes en que ninguna te da más de \d+ días para pagar\.$/)).toBeOnTheScreen();
+  expect(screen.getByText(/^Pide que el corte de Tarjeta Q sea .*: siempre tendrías una tarjeta con al menos \d+ días para pagar\.$/)).toBeOnTheScreen();
+  expect(screen.getByText('Si tu banco no puede, no pasa nada: Tino te sigue diciendo cada día cuál usar.')).toBeOnTheScreen();
   expect(screen.getByText(/^Llama al número que está detrás de tu Tarjeta Q/)).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByText('Actualizar fechas de Tarjeta Q')));
   expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'Q', seccion: 'fechas' } });

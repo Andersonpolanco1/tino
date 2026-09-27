@@ -36,7 +36,15 @@ export default function ConsejosFechas() {
             <Texto variante="subtitulo" accessibilityRole="header">
               {textos.titulo}
             </Texto>
-            <Texto>{textos.explicacion}</Texto>
+            <Texto>{textos.problema}</Texto>
+            <View style={{ gap: tema.espacio.xs }}>
+              <Texto variante="cuerpoFuerte">{t('consejos.quePedir')}</Texto>
+              <Texto>{textos.solucion}</Texto>
+            </View>
+            <View style={{ gap: tema.espacio.xs }}>
+              <Texto variante="cuerpoFuerte">{t('consejos.siNoPuedeTitulo')}</Texto>
+              <Texto color="textoSecundario">{textos.siNoPuede}</Texto>
+            </View>
             <Texto variante="cuerpoFuerte" style={{ paddingTop: tema.espacio.s }}>
               {t('consejos.pasosTitulo')}
             </Texto>
@@ -58,6 +66,11 @@ export default function ConsejosFechas() {
           </Superficie>
         );
       })}
+      {consejos[0]?.otrasConProblemaDeCobro ? (
+        <Texto variante="apoyo" color="textoSecundario">
+          {t('consejos.otrasConProblema', { count: consejos[0].otrasConProblemaDeCobro })}
+        </Texto>
+      ) : null}
     </Pantalla>
   );
 }
