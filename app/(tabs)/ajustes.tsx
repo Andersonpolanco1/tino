@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Alert, Image, Linking, Platform, View } from 'react-native';
+import { Alert, Linking, Platform, View } from 'react-native';
 import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { FilaLista, Hoja, ListaAgrupada, Palanca, type NombreIcono, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import { FilaLista, Hoja, LogoTino, ListaAgrupada, Palanca, type NombreIcono, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import type { AjustesAvisos, TemaApp } from '@/tipos/tipos';
 import { AVISOS_PREDETERMINADOS } from '@/notificaciones/planificar';
 import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
@@ -265,14 +265,11 @@ export default function Ajustes() {
       </View>
 
       {/* Acerca de Tino: al final, discreto. */}
-      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, t('ajustes.acercaCreditos'), derechos].join('. ')}>
-        <Image source={require('../../assets/iconos/icono-app-192.png')} style={{ width: 56, height: 56, borderRadius: 14, marginBottom: tema.espacio.xs }} />
+      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos].join('. ')}>
+        <LogoTino tamano={64} />
         <Texto variante="cuerpoFuerte">{t('ajustes.acercaNombre')}</Texto>
         <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
           {version}
-        </Texto>
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-          {t('ajustes.acercaCreditos')}
         </Texto>
         <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
           {derechos}

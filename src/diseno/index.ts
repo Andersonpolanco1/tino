@@ -14,6 +14,7 @@ export { ListaAgrupada, FilaLista } from './ListaAgrupada';
 export { Superficie } from './Superficie';
 export { BotonPastilla } from './BotonPastilla';
 export { AccionBarra } from './AccionBarra';
+export { LogoTino } from './LogoTino';
 export { MarcoAsistente } from './MarcoAsistente';
 export { EtiquetaConInfo } from './EtiquetaConInfo';
 export { Icono, type NombreIcono } from './Icono';
