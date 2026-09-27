@@ -32,7 +32,7 @@ export default function ElegirTarjetas() {
   const completas = elegidas.length === Math.min(LIMITE_GRATIS, tarjetas.length);
   return (
     <Pantalla
-      arriba={<BarraSuperior izquierda={{ tipo: 'cerrar', onPress: () => router.back() }} />}
+      arriba={<BarraSuperior cerrar={() => router.back()} />}
       pie={
         <>
           <Boton titulo={t('plan.elegirGuardar')} onPress={guardar} deshabilitado={!completas} />

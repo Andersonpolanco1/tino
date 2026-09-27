@@ -424,7 +424,9 @@
     "puntosCorto": "{{puntos}} pts",
     "usaEsta": "Usa esta tarjeta",
     "paraPagarla": "para pagarla",
-    "diasN": "{{dias}} días"
+    "diasN": "{{dias}} días",
+    "vacioTitulo": "Te decimos qué tarjeta usar",
+    "vacioTexto": "Escribe el monto y Tino compara tus tarjetas: cuántos días tendrías para pagar y cuánto te devuelve cada una."
   },
   "monedas": {
     "DOP": "Pesos",

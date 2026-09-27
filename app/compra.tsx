@@ -3,7 +3,7 @@ import { Pressable, TextInput, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import type { CodigoMoneda } from '@/tipos/tipos';
-import { BarraSuperior, ControlSegmentado, Icono, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
+import { BarraSuperior, ControlSegmentado, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
@@ -43,9 +43,10 @@ export default function Compra() {
   const ganancia = mejor && compra ? valorRecompensaCompra(mejor.tarjeta, mejor.resultado, { t: t as unknown as Traducir, pais: config, idioma }, compra) : null;
 
   return (
-    <Pantalla arriba={<BarraSuperior izquierda={{ tipo: 'cerrar', onPress: () => router.back() }} titulo={t('compra.titulo')} />}>
+    <Pantalla arriba={<BarraSuperior titulo={t('compra.titulo')} cerrar={() => router.back()} />}>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={{ alignItems: 'center', gap: 14, paddingTop: tema.espacio.s }}>
+      {/* El monto en una tarjeta, con la moneda debajo: es lo único que hay que escribir. */}
+      <Superficie radio={tema.radio.destacada} style={{ alignItems: 'center', gap: 14, paddingVertical: 26, paddingHorizontal: 22 }}>
         <Texto color="textoSecundario">{t('compra.monto')}</Texto>
         <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
           <Texto variante="cifra" color="textoSecundario" style={{ fontSize: 28 }}>
@@ -60,11 +61,13 @@ export default function Compra() {
             placeholderTextColor={tema.color.textoSecundario}
             allowFontScaling
             autoFocus
-            style={[tema.texto.cifraGrande, { fontSize: 60, lineHeight: 68, minWidth: 120, color: tema.color.texto, padding: 0, letterSpacing: -1.5 }]}
+            cursorColor={tema.color.primario}
+            selectionColor={tema.color.primario}
+            style={[tema.texto.cifraGrande, { fontSize: 60, lineHeight: 68, minWidth: 60, color: tema.color.texto, padding: 0, letterSpacing: -1.5 }]}
           />
         </View>
         {monedas.length > 1 ? (
-          <View style={{ width: 220 }}>
+          <View style={{ alignSelf: 'stretch' }}>
             <ControlSegmentado
               etiqueta={t('compra.moneda')}
               opciones={monedas.map(m => ({ valor: m, etiqueta: t(`monedas.${m}`, { defaultValue: m }) }))}
@@ -73,7 +76,33 @@ export default function Compra() {
             />
           </View>
         ) : null}
-      </View>
+      </Superficie>
+
+      {/* Sin monto todavía: qué va a aparecer aquí, en vez de un espacio vacío. */}
+      {!compra ? (
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: 14,
+            padding: tema.espacio.l,
+            borderRadius: tema.radio.lista,
+            borderWidth: 1.5,
+            borderStyle: 'dashed',
+            borderColor: tema.color.borde,
+          }}
+        >
+          <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
+            <Icono nombre="tarjetas" color="primario" tamano={20} />
+          </View>
+          <View style={{ flex: 1, gap: 2 }}>
+            <Texto variante="cuerpoFuerte">{t('compra.vacioTitulo')}</Texto>
+            <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+              {t('compra.vacioTexto')}
+            </Texto>
+          </View>
+        </View>
+      ) : null}
 
       {mejor ? (
         <View style={{ gap: 10 }}>
