@@ -11,7 +11,7 @@ import { proximoPago } from '../inicio/vista';
 import { valorPuntoPorConfirmar } from '../inicio/ConfirmarValorPunto';
 import { numeroDe } from '../motor/fechas';
 import { descartarSugerencia, elegirSugerencia, type TipoSugerencia } from './elegir';
-import { useConsejosFechas } from '../consejos';
+import { useConsejosNuevos } from '../consejos';
 import { registrarSugerenciaAceptada, registrarSugerenciaDescartada, registrarSugerenciaMostrada } from '../analitica';
 
 // Días antes de una fecha límite en que tiene sentido sugerir los cobros (sección 2.2:
@@ -35,10 +35,11 @@ export function SugerenciaDatos() {
   const activas = tarjetas.filter(x => !x.enPausa);
   const sinConfirmar = activas.find(valorPuntoPorConfirmar);
   const pagoCercano = activas.some(x => numeroDe(proximoPago(x, hoy, config)) - numeroDe(hoy) <= DIAS_PAGO_CERCANO);
-  const consejos = useConsejosFechas();
+  // Decisión D68: solo mientras haya consejos nuevos; los vistos quedan en Tarjetas.
+  const { nuevos: consejosNuevos } = useConsejosNuevos();
   const candidatas: TipoSugerencia[] = [];
   if (!ingresos.length && pagoCercano) candidatas.push('cobros');
-  if (consejos.length) candidatas.push('fechas');
+  if (consejosNuevos.length) candidatas.push('fechas');
   if (sinConfirmar) candidatas.push('valorPunto');
 
   const clave = candidatas.join(',');

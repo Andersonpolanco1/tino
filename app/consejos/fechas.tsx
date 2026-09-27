@@ -1,10 +1,11 @@
+import { useEffect, useRef } from 'react';
 import { View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { BarraSuperior, Boton, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useTarjetasEnPlan } from '@/suscripciones';
-import { textosConsejo, useConsejosFechas } from '@/consejos';
+import { textosConsejo, useConsejosNuevos } from '@/consejos';
 import type { Traducir } from '@/inicio/vista';
 import { useVolver } from '@/utilidades/useVolver';
 
@@ -16,7 +17,11 @@ export default function ConsejosFechas() {
   const volver = useVolver();
   const { idioma } = usePais();
   const tarjetas = useTarjetasEnPlan();
-  const consejos = useConsejosFechas();
+  const { consejos, marcar } = useConsejosNuevos();
+  // Decisión D68: al abrir la pantalla, los consejos quedan vistos (siguen aquí y en Tarjetas).
+  const marcarAlAbrir = useRef(marcar);
+  marcarAlAbrir.current = marcar;
+  useEffect(() => marcarAlAbrir.current(), []);
 
   return (
     <Pantalla arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: volver }} />}>

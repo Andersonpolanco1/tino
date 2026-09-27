@@ -113,6 +113,7 @@ const CAMPOS_PREFERENCIAS: Campos<Preferencias> = {
       avisos: AVISOS.map(a => `${c.t(`misDatos.aviso.${a}`)}: ${siNo(x.avisos?.[a] ?? true, c)}`).join(', '),
     }),
   tema: (x, c) => c.t('misDatos.tema', { tema: c.t(`ajustes.temas.${x.tema ?? 'automatico'}`) }),
+  consejosVistos: (x, c) => (x.consejosVistos?.length ? c.t('misDatos.consejosVistos', { count: x.consejosVistos.length }) : null),
 };
 
 const CAMPOS_SUGERENCIAS: Campos<EstadoSugerencias> = {

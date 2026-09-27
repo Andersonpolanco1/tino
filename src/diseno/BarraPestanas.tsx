@@ -11,6 +11,8 @@ export interface PestanaVista {
   clave: string;
   titulo: string;
   icono: NombreIcono;
+  // Un punto junto al ícono cuando hay algo nuevo (decisión D68), con su texto para el lector.
+  aviso?: string;
 }
 
 interface Props {
@@ -67,7 +69,7 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDe
             key={p.clave}
             accessibilityRole="tab"
             accessibilityState={{ selected: elegida }}
-            accessibilityLabel={p.titulo}
+            accessibilityLabel={p.aviso ? `${p.titulo}. ${p.aviso}` : p.titulo}
             onPress={() => onElegir(i)}
             style={{
               flex: 1,
@@ -79,7 +81,25 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDe
               backgroundColor: elegida ? tema.color.primario : 'transparent',
             }}
           >
-            <Icono nombre={p.icono} color={elegida ? 'sobrePrimario' : 'textoSecundario'} tamano={20} />
+            <View>
+              <Icono nombre={p.icono} color={elegida ? 'sobrePrimario' : 'textoSecundario'} tamano={20} />
+              {p.aviso ? (
+                <View
+                  testID={`aviso-${p.clave}`}
+                  style={{
+                    position: 'absolute',
+                    top: -2,
+                    right: -3,
+                    width: 9,
+                    height: 9,
+                    borderRadius: 5,
+                    backgroundColor: tema.color.alertaTexto,
+                    borderWidth: 1.5,
+                    borderColor: elegida ? tema.color.primario : tema.color.superficie,
+                  }}
+                />
+              ) : null}
+            </View>
             <Texto variante={elegida ? 'cuerpoFuerte' : 'apoyo'} color={elegida ? 'sobrePrimario' : 'textoSecundario'} numberOfLines={1} style={{ fontSize: 14 }}>
               {p.titulo}
             </Texto>

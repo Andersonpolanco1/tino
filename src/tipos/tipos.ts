@@ -105,6 +105,9 @@ export interface Preferencias {
   avisos?: AjustesAvisos;
   // Decisión D51: apariencia de la app; sin el campo, sigue al teléfono.
   tema?: TemaApp;
+  // Decisión D68: consejos de fechas ya vistos ("tipo:tarjeta:desde-hasta"). Siguen a la vista
+  // hasta que el problema se resuelva; solo dejan de contar como nuevos. Opcional para no migrar.
+  consejosVistos?: string[];
 }
 
 export type TemaApp = 'automatico' | 'claro' | 'oscuro';

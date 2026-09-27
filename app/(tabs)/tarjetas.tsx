@@ -1,11 +1,12 @@
-import { useRouter } from 'expo-router';
+import { useCallback, useRef, useState } from 'react';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { Boton, BotonPastilla, FilaLista, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
+import { Boton, BotonPastilla, Etiqueta, FilaLista, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
 import type { Tarjeta } from '@/tipos/tipos';
 import { useAlmacen } from '@/estado';
 import { logoEmisor, useCatalogo } from '@/catalogo';
-import { textosConsejo, useConsejosFechas } from '@/consejos';
+import { claveConsejo, textosConsejo, useConsejosNuevos } from '@/consejos';
 import { buscarEmisor } from '@/registro/borrador';
 import { inicialesBanco, textoFecha, type Traducir as TraducirVista } from '@/inicio/vista';
 import { useHoy } from '@/inicio/useHoy';
@@ -29,7 +30,19 @@ export default function Tarjetas() {
   // cuentan (15.2). Mezcladas con las activas parecía que las 3 funcionaban.
   const guardadas = tarjetas.filter(x => !enPlan.includes(x));
   const pagos = proximosPagos(enPlan, hoy, ingresos, config);
-  const consejos = useConsejosFechas();
+  // Decisión D68: al abrir la pestaña, los consejos nuevos quedan vistos; durante esta visita
+  // siguen con la etiqueta "Nuevo" para que se note cuáles son.
+  const { consejos, nuevos, marcar } = useConsejosNuevos();
+  const [nuevosDeLaVisita, setNuevosDeLaVisita] = useState<string[]>([]);
+  const alAbrir = useRef({ nuevos, marcar });
+  alAbrir.current = { nuevos, marcar };
+  useFocusEffect(
+    useCallback(() => {
+      setNuevosDeLaVisita(alAbrir.current.nuevos.map(claveConsejo));
+      alAbrir.current.marcar();
+    }, []),
+  );
+  const esNuevo = (c: (typeof consejos)[number]) => nuevosDeLaVisita.includes(claveConsejo(c)) || nuevos.includes(c);
 
   const fila = (tarjeta: Tarjeta) => {
     const emisor = buscarEmisor(catalogo, tarjeta.emisorId);
@@ -72,9 +85,7 @@ export default function Tarjetas() {
         {t('tarjetas.titulo')}
       </Texto>
       {tarjetas.length === 0 ? <Texto color="textoSecundario">{t('tarjetas.vacio')}</Texto> : null}
-      {enPlan.length ? <ListaAgrupada sangria={70}>{enPlan.map(fila)}</ListaAgrupada> : null}
-      <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
-      {/* Decisión D65: qué fecha de corte pedirle al banco para evitar moras o tener más días. */}
+      {/* Decisiones D65 y D68: qué fecha de corte pedirle al banco, arriba para verlo rápido. */}
       {consejos.length ? (
         <ListaAgrupada titulo={t('consejos.seccion')}>
           {consejos.map(consejo => {
@@ -86,6 +97,13 @@ export default function Tarjetas() {
                 tono={consejo.tipo === 'pagoAntesDelCobro' ? 'alerta' : 'primario'}
                 titulo={textos.titulo}
                 detalle={textos.resumen}
+                debajo={
+                  esNuevo(consejo) ? (
+                    <View style={{ flexDirection: 'row', marginTop: 2 }}>
+                      <Etiqueta tipo="recompensa" texto={t('consejos.nuevo')} />
+                    </View>
+                  ) : undefined
+                }
                 flecha
                 onPress={() => router.push('/consejos/fechas')}
               />
@@ -93,6 +111,8 @@ export default function Tarjetas() {
           })}
         </ListaAgrupada>
       ) : null}
+      {enPlan.length ? <ListaAgrupada sangria={70}>{enPlan.map(fila)}</ListaAgrupada> : null}
+      <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
       {guardadas.length ? (
         <View style={{ gap: tema.espacio.m, paddingTop: tema.espacio.s }}>
           <View style={{ gap: tema.espacio.xs }}>

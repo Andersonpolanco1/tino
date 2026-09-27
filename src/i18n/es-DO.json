@@ -278,7 +278,8 @@
     "inicio": "Inicio",
     "tarjetas": "Tarjetas",
     "ajustes": "Ajustes",
-    "etiqueta": "Navegación principal"
+    "etiqueta": "Navegación principal",
+    "consejosNuevos": "Tienes consejos nuevos para tus fechas"
   },
   "tarjetas": {
     "titulo": "Tus tarjetas",
@@ -610,6 +611,7 @@
     "titulo": "Mejora tus fechas",
     "intro": "Tino no puede cambiar tus fechas: lo decide tu banco. Pero muchos bancos te cambian el día de corte si lo pides, y con eso puedes evitar moras y tener más días para pagar.",
     "seccion": "Consejos para tus fechas",
+    "nuevo": "Nuevo",
     "rango": "entre el {{desde}} y el {{hasta}}",
     "dia": "el día {{dia}}",
     "resumen": "Pide que el corte de {{alias}} sea {{rango}}",
@@ -772,6 +774,8 @@
       "resumenMensual": "resumen del mes"
     },
     "tema": "Apariencia: {{tema}}",
+    "consejosVistos_one": "Ya viste 1 consejo de fechas",
+    "consejosVistos_other": "Ya viste {{count}} consejos de fechas",
     "sugerencia": {
       "cobros": "agregar tus días de cobro",
       "fechas": "mejorar las fechas de tus tarjetas",

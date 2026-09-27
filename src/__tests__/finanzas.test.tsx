@@ -12,6 +12,8 @@ import Compra from '../../app/compra';
 import DetalleTarjeta from '../../app/tarjeta/[id]';
 import Tarjetas from '../../app/(tabs)/tarjetas';
 import ConsejosFechas from '../../app/consejos/fechas';
+import Inicio from '../../app/(tabs)/inicio';
+import { BarraPestanas } from '@/diseno';
 
 // Decisión D67: textos que cuidan las finanzas en "Tengo una compra" y en el detalle.
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
@@ -114,4 +116,49 @@ test('la pantalla de consejos explica qué pasa, qué pedir, qué hacer si el ba
   expect(screen.getByText(/^Llama al número que está detrás de tu Tarjeta Q/)).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByText('Actualizar fechas de Tarjeta Q')));
   expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'Q', seccion: 'fechas' } });
+});
+
+// Decisión D68: vistos al abrir Tarjetas, pero a la vista hasta que el problema se resuelva.
+test('el consejo nuevo lleva "Nuevo", queda visto al abrir Tarjetas y sigue ahí en la siguiente visita', async () => {
+  const almacen = await almacenCon(juntas());
+  await render(envolver(almacen, <Tarjetas />));
+  expect(screen.getByText('Nuevo')).toBeOnTheScreen();
+  expect(almacen.getState().preferencias?.consejosVistos).toHaveLength(1);
+  await screen.unmount();
+  await render(envolver(almacen, <Tarjetas />));
+  expect(screen.getByText('Tus tarjetas cortan muy cerca')).toBeOnTheScreen();
+  expect(screen.queryByText('Nuevo')).toBeNull();
+});
+
+test('el consejo desaparece cuando el problema se resuelve: otra fecha de corte o la tarjeta en pausa', async () => {
+  const almacen = await almacenCon(juntas());
+  await render(envolver(almacen, <Tarjetas />));
+  await act(async () => almacen.getState().guardarTarjeta(tarjeta('Q', { diaCorte: 20, creadaEn: '2026-09-20' })));
+  expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
+  await act(async () => almacen.getState().guardarTarjeta(tarjeta('Q', { diaCorte: 6, creadaEn: '2026-09-20' })));
+  expect(screen.getByText('Consejos para tus fechas')).toBeOnTheScreen();
+  await act(async () => almacen.getState().alternarPausa('Q'));
+  expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
+});
+
+test('Inicio sugiere el consejo solo mientras es nuevo', async () => {
+  const almacen = await almacenCon(juntas());
+  await render(envolver(almacen, <Inicio />));
+  expect(screen.getByText(/^Tino encontró una forma de mejorar las fechas/)).toBeOnTheScreen();
+  await screen.unmount();
+  await render(envolver(almacen, <Tarjetas />));
+  await screen.unmount();
+  await render(envolver(almacen, <Inicio />));
+  expect(screen.queryByText(/^Tino encontró una forma de mejorar las fechas/)).toBeNull();
+});
+
+test('la pestaña con algo nuevo lleva un punto y lo dice al lector de pantalla', async () => {
+  const pestanas = [
+    { clave: 'inicio', titulo: 'Inicio', icono: 'inicio' as const },
+    { clave: 'tarjetas', titulo: 'Tarjetas', icono: 'tarjetas' as const, aviso: 'Tienes consejos nuevos para tus fechas' },
+  ];
+  await render(envolver(await almacenCon([]), <BarraPestanas pestanas={pestanas} activa={0} onElegir={() => {}} etiqueta="Navegación" />));
+  expect(screen.getByTestId('aviso-tarjetas')).toBeOnTheScreen();
+  expect(screen.queryByTestId('aviso-inicio')).toBeNull();
+  expect(screen.getByLabelText('Tarjetas. Tienes consejos nuevos para tus fechas')).toBeOnTheScreen();
 });
