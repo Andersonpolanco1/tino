@@ -15,6 +15,7 @@ import { LineaCiclo } from '@/inicio/LineaCiclo';
 import { avisoCobro, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
 import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 import { useTarjetasEnPlan } from '@/suscripciones';
+import { useVolver } from '@/utilidades/useVolver';
 
 // Detalle de tarjeta (sección 3.3) con el rediseño: semáforo, línea del ciclo, recompensa,
 // balance en dólares, En pausa y precisión.
@@ -22,6 +23,7 @@ export default function DetalleTarjeta() {
   const { t } = useTranslation();
   const tema = useTema();
   const router = useRouter();
+  const volver = useVolver();
   const hoy = useHoy();
   const { id } = useLocalSearchParams<{ id: string }>();
   const { config, idioma } = usePais();
@@ -64,7 +66,7 @@ export default function DetalleTarjeta() {
     <Pantalla
       arriba={
         <BarraSuperior
-          izquierda={{ tipo: 'atras', onPress: () => router.back() }}
+          izquierda={{ tipo: 'atras', onPress: volver }}
           derecha={
             <AccionBarra icono="editar" titulo={t('detalle.editar')} onPress={editar} />
           }

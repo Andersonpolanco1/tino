@@ -7,12 +7,14 @@ import { useCatalogo } from '@/catalogo';
 import { buscarEmisor } from '@/registro/borrador';
 import { inicialesBanco } from '@/inicio/vista';
 import { LIMITE_GRATIS, useTarjetasEnPlan } from '@/suscripciones';
+import { useVolver } from '@/utilidades/useVolver';
 
 // Sección 15.2: al vencer Pro, el usuario elige qué 2 tarjetas siguen activas. Nada se borra:
 // las demás quedan guardadas y vuelven si renueva.
 export default function ElegirTarjetas() {
   const { t } = useTranslation();
   const router = useRouter();
+  const volver = useVolver();
   const catalogo = useCatalogo();
   const tarjetas = useAlmacen(s => s.tarjetas);
   const preferencias = useAlmacen(s => s.preferencias);
@@ -26,13 +28,13 @@ export default function ElegirTarjetas() {
 
   async function guardar() {
     if (preferencias) await guardarPreferencias({ ...preferencias, tarjetasDelPlan: elegidas });
-    router.back();
+    volver();
   }
 
   const completas = elegidas.length === Math.min(LIMITE_GRATIS, tarjetas.length);
   return (
     <Pantalla
-      arriba={<BarraSuperior cerrar={() => router.back()} />}
+      arriba={<BarraSuperior cerrar={volver} />}
       pie={
         <>
           <Boton titulo={t('plan.elegirGuardar')} onPress={guardar} deshabilitado={!completas} />

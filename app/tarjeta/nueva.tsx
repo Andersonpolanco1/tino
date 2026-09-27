@@ -3,9 +3,11 @@ import { Stack, useRouter } from 'expo-router';
 import { FormularioTarjeta } from '@/registro/FormularioTarjeta';
 import { useAlmacen } from '@/estado';
 import { MuroPago, puedeAgregarTarjeta } from '@/suscripciones';
+import { useVolver } from '@/utilidades/useVolver';
 
 export default function NuevaTarjeta() {
   const router = useRouter();
+  const volver = useVolver();
   const tarjetas = useAlmacen(s => s.tarjetas);
   const plan = useAlmacen(s => s.preferencias?.plan ?? 'gratis');
   // Todas las entradas para agregar tarjeta pasan por aquí: con el límite del plan gratis se
@@ -19,11 +21,11 @@ export default function NuevaTarjeta() {
       <Stack.Screen options={{ headerShown: false }} />
       {permitido ? (
         <FormularioTarjeta
-          onCerrar={() => router.back()}
-          onListo={(_tarjeta, preguntarPagoUsd) => (preguntarPagoUsd ? router.replace('/tarjeta/pago-usd') : router.back())}
+          onCerrar={volver}
+          onListo={(_tarjeta, preguntarPagoUsd) => (preguntarPagoUsd ? router.replace('/tarjeta/pago-usd') : volver())}
         />
       ) : (
-        <MuroPago motivo="tercera_tarjeta" onCerrar={() => router.back()} onPro={() => setConPro(true)} />
+        <MuroPago motivo="tercera_tarjeta" onCerrar={volver} onPro={() => setConPro(true)} />
       )}
     </>
   );

@@ -11,7 +11,7 @@ import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
 import Inicio from '../../app/(tabs)/inicio';
 
-const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
 // Hoy fijo: el ejemplo 7.4 de la especificación.
 jest.mock('@/utilidades/fecha', () => ({ hoyLocal: () => '2026-10-06' }));

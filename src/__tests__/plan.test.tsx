@@ -15,7 +15,7 @@ import ElegirTarjetas from '../../app/plan/elegir';
 import Inicio from '../../app/(tabs)/inicio';
 import Tarjetas from '../../app/(tabs)/tarjetas';
 
-const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
 jest.mock('expo-router', () => ({
   useRouter: () => mockRouter,
   useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []),

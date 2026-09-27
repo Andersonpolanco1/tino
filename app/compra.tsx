@@ -11,6 +11,7 @@ import { valorRecompensaCompra, type Traducir } from '@/inicio/vista';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { registrarConsultaCompra } from '@/analitica';
+import { useVolver } from '@/utilidades/useVolver';
 
 // "Tengo una compra" (sección 7.5) con el rediseño: el monto en grande y el resultado al
 // instante. La categoría llega en v2 (decisión D27).
@@ -18,6 +19,7 @@ export default function Compra() {
   const { t } = useTranslation();
   const tema = useTema();
   const router = useRouter();
+  const volver = useVolver();
   const { config, idioma } = usePais();
   const tarjetas = useAlmacen(s => s.tarjetas);
   const [texto, setTexto] = useState('');
@@ -43,7 +45,7 @@ export default function Compra() {
   const ganancia = mejor && compra ? valorRecompensaCompra(mejor.tarjeta, mejor.resultado, { t: t as unknown as Traducir, pais: config, idioma }, compra) : null;
 
   return (
-    <Pantalla arriba={<BarraSuperior titulo={t('compra.titulo')} cerrar={() => router.back()} />}>
+    <Pantalla arriba={<BarraSuperior titulo={t('compra.titulo')} cerrar={volver} />}>
       <Stack.Screen options={{ headerShown: false }} />
       {/* El monto en una tarjeta, con la moneda debajo: es lo único que hay que escribir. */}
       <Superficie radio={tema.radio.destacada} style={{ alignItems: 'center', gap: 14, paddingVertical: 26, paddingHorizontal: 22 }}>

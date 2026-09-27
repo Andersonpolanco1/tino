@@ -2,9 +2,11 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useAlmacen } from '@/estado';
 import { FormularioTarjeta } from '@/registro/FormularioTarjeta';
 import type { PasoRegistro } from '@/registro/borrador';
+import { useVolver } from '@/utilidades/useVolver';
 
 export default function EditarTarjeta() {
   const router = useRouter();
+  const volver = useVolver();
   const { id, seccion } = useLocalSearchParams<{ id: string; seccion?: PasoRegistro }>();
   const tarjeta = useAlmacen(s => s.tarjetas.find(x => x.id === id));
   return (
@@ -14,7 +16,7 @@ export default function EditarTarjeta() {
         <FormularioTarjeta
           tarjeta={tarjeta}
           seccionInicial={seccion}
-          onCerrar={() => router.back()}
+          onCerrar={volver}
           // Al editar se guarda por secciones y la pantalla sigue abierta; solo sale para la pregunta de dólares.
           onListo={(_tarjeta, preguntarPagoUsd) => preguntarPagoUsd && router.push('/tarjeta/pago-usd')}
           onBorrada={() => router.dismissTo('/inicio')}

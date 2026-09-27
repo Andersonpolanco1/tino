@@ -13,7 +13,7 @@ import EnfoqueOnboarding from '../../app/onboarding/enfoque';
 import CobrosOnboarding from '../../app/onboarding/cobros';
 import AvisosOnboarding from '../../app/onboarding/avisos';
 
-const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
 
 const tarjeta: Tarjeta = {

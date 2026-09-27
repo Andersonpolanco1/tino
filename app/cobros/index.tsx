@@ -7,12 +7,14 @@ import { useAlmacen } from '@/estado';
 import { useHoy } from '@/inicio/useHoy';
 import { fechaCorta, type Traducir as TraducirVista } from '@/inicio/vista';
 import { proximosCobros, resumenFrecuencia, type Traducir } from '@/ingresos/borrador';
+import { useVolver } from '@/utilidades/useVolver';
 
 // Tus días de cobro (sección 5): lista de fuentes de ingreso con su próximo cobro.
 export default function Cobros() {
   const { t } = useTranslation();
   const tema = useTema();
   const router = useRouter();
+  const volver = useVolver();
   const hoy = useHoy();
   const { config, idioma } = usePais();
   const ingresos = useAlmacen(s => s.ingresos);
@@ -20,7 +22,7 @@ export default function Cobros() {
 
   return (
     <Pantalla
-      arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: () => router.back() }} titulo={t('cobros.titulo')} />}
+      arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: volver }} titulo={t('cobros.titulo')} />}
       pie={<Boton titulo={ingresos.length ? t('cobros.agregarOtro') : t('cobros.agregar')} icono="mas" onPress={() => router.push('/cobros/nuevo')} />}
     >
       <Stack.Screen options={{ headerShown: false }} />

@@ -15,7 +15,7 @@ import { hoyLocal } from '@/utilidades/fecha';
 import { proximoPago } from '@/inicio/vista';
 import paisDO from '@/paises/do.json';
 
-const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn() };
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
 // Ajustes importa la base para "Borrar todo"; en estas pruebas no se abre.
 jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '' }));
