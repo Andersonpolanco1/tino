@@ -68,11 +68,7 @@
   "unaTarjeta": {
     "titulo": "¿Tienes otra tarjeta?",
     "texto": "Agrégala y te diremos cuál conviene cada día.",
-    "siLaUsasHoy": "Si la usas hoy",
-    "siEsperas": "Si esperas al {{dia}}",
-    "cortaEl": "Corta el {{dia}}",
-    "proximoPago": "Próximo pago: {{fecha}}",
-    "diasN": "{{dias}} días"
+    "siEsperasDias": "Si esperas al {{dia}}: {{dias}} días para pagar"
   },
   "registro": {
     "banco": "Banco",

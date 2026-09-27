@@ -125,6 +125,20 @@ test('con una sola tarjeta muestra el semáforo y oculta la barra y el selector 
   expect(screen.getByText('¿Tienes otra tarjeta?')).toBeOnTheScreen();
 });
 
+test('con una sola tarjeta usa la misma tarjeta de hoy, con recompensa y línea del ciclo (decisión D64)', async () => {
+  await render(envolver(await almacenCon([A]), <Inicio />));
+  expect(screen.getByText('días para pagar')).toBeOnTheScreen();
+  expect(screen.getByText('Pagas')).toBeOnTheScreen();
+  expect(screen.getByText(/pts/)).toBeOnTheScreen();
+  expect(screen.queryByText(/^Si esperas/)).toBeNull();
+});
+
+test('con una sola tarjeta en rojo dice cuántos días daría esperar', async () => {
+  await render(envolver(await almacenCon([tarjeta('R', 8, 28, { tipo: 'ninguna' })]), <Inicio />));
+  expect(screen.getByLabelText('Espera')).toBeOnTheScreen();
+  expect(screen.getByText(/^Si esperas al viernes 9: \d+ días para pagar$/)).toBeOnTheScreen();
+});
+
 test('una tarjeta en pausa no aparece en el ranking (criterio 14.1)', async () => {
   await render(envolver(await almacenCon([A, { ...B, enPausa: true }, C]), <Inicio />));
   expect(screen.queryByText('Tarjeta B')).toBeNull();

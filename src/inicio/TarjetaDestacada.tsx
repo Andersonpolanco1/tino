@@ -13,7 +13,19 @@ import { subtituloTarjeta, type Traducir } from './vista';
 // Lo que no ayuda a decidir queda en el detalle y en lo que anuncia el lector de pantalla: el
 // corte anterior, el semáforo en verde y los últimos 4 dígitos, salvo que haya otra tarjeta
 // del mismo banco (mostrarUltimos4).
-export function TarjetaDestacada({ vista, mostrarUltimos4, onPress }: { vista: VistaTarjeta; mostrarUltimos4: boolean; onPress: () => void }) {
+// "unaSola" (modo una tarjeta, decisión D64): la misma tarjeta, con el semáforo siempre visible y,
+// en rojo, cuántos días daría esperar al día después del corte.
+export function TarjetaDestacada({
+  vista,
+  mostrarUltimos4,
+  unaSola = false,
+  onPress,
+}: {
+  vista: VistaTarjeta;
+  mostrarUltimos4: boolean;
+  unaSola?: boolean;
+  onPress: () => void;
+}) {
   const tema = useTema();
   const { t } = useTranslation();
   const hoy = useHoy();
@@ -51,6 +63,11 @@ export function TarjetaDestacada({ vista, mostrarUltimos4, onPress }: { vista: V
 
       <BloqueDias dias={resultado.diasGracia} sobreDestacado />
       <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} sobreDestacado sinCorteAnterior />
+      {unaSola && vista.esperar ? (
+        <Texto variante="apoyo" color="sobreDestacado" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+          {t('unaTarjeta.siEsperasDias', { dia: vista.esperar.dia, dias: vista.esperar.dias })}
+        </Texto>
+      ) : null}
 
       <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: tema.espacio.s }}>
         {vista.recompensaCorta ? (
@@ -63,8 +80,9 @@ export function TarjetaDestacada({ vista, mostrarUltimos4, onPress }: { vista: V
         ) : (
           <View />
         )}
-        {/* El semáforo solo aparece cuando advierte algo; en verde lo dice el lector de pantalla. */}
-        {resultado.semaforo !== 'verde' ? <PildoraSemaforo luz={resultado.semaforo} sobreDestacado /> : null}
+        {/* Con varias tarjetas el semáforo solo aparece cuando advierte algo; en verde lo dice el lector
+            de pantalla. Con una sola es la respuesta a "¿Es buen momento?" y se ve siempre. */}
+        {unaSola || resultado.semaforo !== 'verde' ? <PildoraSemaforo luz={resultado.semaforo} sobreDestacado /> : null}
       </View>
     </Pressable>
   );
