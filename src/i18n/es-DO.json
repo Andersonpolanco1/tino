@@ -827,5 +827,21 @@
       "formato": "Este archivo no es un respaldo de Tino.",
       "version": "Este respaldo es de una versión más nueva de Tino. Actualiza la app e inténtalo otra vez."
     }
+  },
+  "widget": {
+    "titulo": "Hoy te conviene usar",
+    "evitarHoy": "Evita {{alias}}: corta hoy",
+    "evitarManana": "Evita {{alias}}: corta mañana",
+    "evitarEnDias": "Evita {{alias}}: corta en {{dias}} días",
+    "pagoHoy": "{{alias}} vence hoy",
+    "pagoManana": "{{alias}} vence mañana",
+    "pagoEl": "{{alias}} vence el {{fecha}}",
+    "sinTarjetas": "Agrega tu primera tarjeta en Tino.",
+    "enPausa": "Tus tarjetas están en pausa. Actívalas en Tino.",
+    "abrir": "Abre Tino para actualizar.",
+    "accesible": "Hoy te conviene usar {{alias}}: {{dias}} días para pagar.",
+    "nombre": "Tino",
+    "descripcion": "La tarjeta que te conviene usar hoy",
+    "sinDatos": "Abre Tino para ver qué tarjeta usar hoy."
   }
 }

@@ -14,6 +14,7 @@ import { useAvisos } from '@/notificaciones/useAvisos';
 import { ProveedorCatalogo } from '@/catalogo';
 import { useAnalitica } from '@/analitica';
 import { useFallos } from '@/fallos';
+import { useWidget } from '@/widget';
 import { useSincronizarPlan } from '@/suscripciones';
 
 SplashScreen.preventAutoHideAsync();
@@ -112,6 +113,7 @@ function CuandoCargue({ children }: { children: ReactNode }) {
     <OcultarArranque>
       <AparienciaGuardada />
       <AvisosProgramados />
+      <WidgetActualizado />
       <AnaliticaSincronizada />
       <FallosSincronizados />
       <PlanSincronizado />
@@ -123,6 +125,12 @@ function CuandoCargue({ children }: { children: ReactNode }) {
 // Programa los avisos locales con los datos actuales (sección 11); no dibuja nada.
 function AvisosProgramados() {
   useAvisos();
+  return null;
+}
+
+// Mantiene al día el resumen del widget de Android (sección 11); no dibuja nada.
+function WidgetActualizado() {
+  useWidget();
   return null;
 }
 

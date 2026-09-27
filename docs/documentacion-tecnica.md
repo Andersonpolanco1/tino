@@ -92,7 +92,9 @@ tino/
     analitica/              Eventos permitidos (sección 10)
     notificaciones/         Programación de avisos locales
     suscripciones/          Tino Pro y límite del plan gratis
-  widget-android/           Widget nativo en Kotlin (plugin de configuración)
+    widget/                 Resumen de los próximos 60 días para el widget
+    fallos/                 Reporte de fallos con Sentry
+  modules/widget-android/   Widget nativo en Kotlin (módulo local de Expo, decisión D71)
   assets/iconos/            Iconos de tienda y capas adaptativas
   datos-publicos/           emisores-do.json y su esquema (fuente del servidor)
 ```
