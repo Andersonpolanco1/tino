@@ -33,6 +33,8 @@ const TEMAS: TemaApp[] = ['automatico', 'claro', 'oscuro'];
 const FILAS_AVISOS: [keyof AjustesAvisos, NombreIcono, string, string][] = [
   ['fechaLimite', 'calendario', 'ajustes.avisoFechaLimite', 'ajustes.avisoFechaLimiteDetalle'],
   ['venceAntesDelCobro', 'reloj', 'ajustes.avisoVenceAntes', 'ajustes.avisoVenceAntesDetalle'],
+  ['vencimiento', 'alto', 'ajustes.avisoVencimiento', 'ajustes.avisoVencimientoDetalle'],
+  ['antesDelCorte', 'compra', 'ajustes.avisoAntesDelCorte', 'ajustes.avisoAntesDelCorteDetalle'],
   ['cambioTarjeta', 'tarjetas', 'ajustes.avisoCambio', 'ajustes.avisoCambioDetalle'],
   ['resumenMensual', 'moneda', 'ajustes.avisoResumen', 'ajustes.avisoResumenDetalle'],
 ];

@@ -6,7 +6,7 @@ import { avisoCobro, diaConSemana, textoFecha, type Traducir } from '../inicio/v
 // Sección 11 de la especificación: los avisos del MVP, calculados sin tocar el sistema de
 // notificaciones, para poder probarlos con fechas simuladas. Nunca incluyen montos.
 
-export type TipoAviso = 'fechaLimite' | 'venceAntesDelCobro' | 'cambioTarjeta' | 'resumenMensual' | 'finPrueba';
+export type TipoAviso = 'fechaLimite' | 'venceAntesDelCobro' | 'cambioTarjeta' | 'resumenMensual' | 'finPrueba' | 'vencimiento' | 'vencido' | 'antesDelCorte';
 
 export interface Aviso {
   id: string;
@@ -25,7 +25,16 @@ export const DIAS_ANTES_FECHA_LIMITE = 3;
 export const DIAS_ANTES_COBRO = 5;
 export const DIAS_ANTES_FIN_PRUEBA = 2;
 
-export const AVISOS_PREDETERMINADOS: AjustesAvisos = { fechaLimite: true, venceAntesDelCobro: true, cambioTarjeta: true, resumenMensual: true };
+export const AVISOS_PREDETERMINADOS: Required<AjustesAvisos> = {
+  fechaLimite: true,
+  venceAntesDelCobro: true,
+  cambioTarjeta: true,
+  resumenMensual: true,
+  vencimiento: true,
+  antesDelCorte: true,
+};
+// Antes del corte, solo si esperar un día da al menos esta cantidad de días más para pagar.
+export const DIAS_MINIMOS_AL_ESPERAR = 10;
 
 export interface EntradaAvisos {
   hoy: FechaISO;
@@ -72,9 +81,28 @@ export function planificarAvisos(e: EntradaAvisos): Aviso[] {
   };
 
   for (const tarjeta of activas) {
-    for (const { pago, pagoUsd } of pagosEnHorizonte(tarjeta, hoy, hasta, feriados)) {
+    // Desde ayer, para el aviso de "venció ayer" (D66); los demás avisos de ese pago ya pasaron
+    // y agregar() los descarta.
+    for (const { pago, pagoUsd } of pagosEnHorizonte(tarjeta, hoy - 1, hasta, feriados)) {
       // "Ya pagué" (decisión D45): ese estado ya no avisa.
       if (tarjeta.pagoHecho === aFecha(pago)) continue;
+      // El día que vence y el siguiente, mientras no marque "Ya pagué" (decisión D66).
+      if (ajustes.vencimiento) {
+        agregar({
+          id: `vencimiento:${tarjeta.id}:${aFecha(pago)}`,
+          tipo: 'vencimiento',
+          fecha: aFecha(pago),
+          titulo: t('avisos.vencimientoTitulo', { alias: tarjeta.alias }),
+          cuerpo: t('avisos.vencimientoCuerpo'),
+        });
+        agregar({
+          id: `vencido:${tarjeta.id}:${aFecha(pago)}`,
+          tipo: 'vencido',
+          fecha: aFecha(pago + 1),
+          titulo: t('avisos.vencidoTitulo', { alias: tarjeta.alias }),
+          cuerpo: t('avisos.vencidoCuerpo'),
+        });
+      }
       // Fecha límite próxima, 3 días antes. Con doble balance menciona los dos pagos (criterio 14.1).
       if (ajustes.fechaLimite) {
         const dia = aFecha(pago - DIAS_ANTES_FECHA_LIMITE);
@@ -115,6 +143,29 @@ export function planificarAvisos(e: EntradaAvisos): Aviso[] {
         agregar({ id: `cambioTarjeta:${aFecha(d)}`, tipo: 'cambioTarjeta', fecha: aFecha(d), titulo: t('avisos.cambioTitulo'), cuerpo: t('avisos.cambioCuerpo', { alias, dias: mejor.diasGracia }) });
       }
       anterior = mejor;
+    }
+  }
+
+  // El último día antes del corte, si esperar un día da muchos más días para pagar y ninguna otra
+  // tarjeta es mejor ese día: con una sola tarjeta, o si todas cortan cerca (decisión D66).
+  if (ajustes.antesDelCorte) {
+    for (const tarjeta of activas) {
+      for (let d = hoy; d <= hasta; d++) {
+        const siguiente = proximoCorte(d + 1, tarjeta);
+        if (siguiente === proximoCorte(d, tarjeta)) continue;
+        // d es el último día cuyas compras entran en el estado que corta; d + 1, el primero del siguiente.
+        const antes = fechaLimite(proximoCorte(d, tarjeta), tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, feriados) - d;
+        const despues = fechaLimite(siguiente, tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, feriados) - (d + 1);
+        if (despues - antes < DIAS_MINIMOS_AL_ESPERAR) continue;
+        if (mejorDelDia(e, aFecha(d))?.tarjetaId !== tarjeta.id) continue;
+        agregar({
+          id: `antesDelCorte:${tarjeta.id}:${aFecha(d)}`,
+          tipo: 'antesDelCorte',
+          fecha: aFecha(d),
+          titulo: t('avisos.antesDelCorteTitulo', { alias: tarjeta.alias }),
+          cuerpo: t('avisos.antesDelCorteCuerpo', { dia: diaConSemana(aFecha(d + 1), idioma, t), despues, antes }),
+        });
+      }
     }
   }
 

@@ -332,6 +332,10 @@
     "avisoFechaLimiteDetalle": "3 días antes de cada pago",
     "avisoVenceAntes": "Vence antes de tu cobro",
     "avisoVenceAntesDetalle": "5 días antes, si registras tus días de cobro",
+    "avisoVencimiento": "Día del pago",
+    "avisoVencimientoDetalle": "El día que vence y el siguiente, si no marcaste \"Ya pagué\"",
+    "avisoAntesDelCorte": "Antes del corte",
+    "avisoAntesDelCorteDetalle": "Cuando conviene esperar un día para compras grandes",
     "avisoCambio": "Cambio de tarjeta",
     "avisoCambioDetalle": "Cuando otra tarjeta pasa a ser la mejor",
     "avisoResumen": "Resumen del mes",
@@ -580,6 +584,12 @@
     "resumenTitulo": "Tu resumen de {{mes}}",
     "resumenCuerpo_one": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjeta.",
     "resumenCuerpo_other": "En {{mes}}, la tarjeta de cada día te dio hasta {{dias}} días para pagar. Tino te recomendó {{count}} tarjetas distintas.",
+    "vencimientoTitulo": "Hoy vence tu {{alias}}",
+    "vencimientoCuerpo": "Si todavía no pagas, paga hoy el total para no pagar mora ni intereses. Si ya pagaste, márcalo en Tino.",
+    "vencidoTitulo": "Tu {{alias}} venció ayer",
+    "vencidoCuerpo": "Si todavía no pagaste, paga hoy: mientras antes pagues, menos mora e intereses te cobran. Si ya pagaste, márcalo en Tino.",
+    "antesDelCorteTitulo": "Mañana empieza un ciclo nuevo en tu {{alias}}",
+    "antesDelCorteCuerpo": "Si puedes, deja las compras grandes para mañana, {{dia}}: tendrás {{despues}} días para pagarlas en vez de {{antes}}.",
     "canal": "Avisos de pago",
     "finPruebaTitulo": "Tu prueba de Tino Pro termina pronto",
     "finPruebaCuerpo": "Termina el {{fecha}}. Si quieres seguir, no tienes que hacer nada; si no, cancélala en la tienda antes de esa fecha."
@@ -698,6 +708,8 @@
     "aviso": {
       "fechaLimite": "fecha límite próxima",
       "venceAntesDelCobro": "vence antes de tu cobro",
+      "vencimiento": "día del pago",
+      "antesDelCorte": "antes del corte",
       "cambioTarjeta": "cambio de tarjeta",
       "resumenMensual": "resumen del mes"
     },

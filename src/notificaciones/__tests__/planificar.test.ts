@@ -112,8 +112,45 @@ test('un pago marcado con "Ya pagué" ya no avisa (decisión D45)', () => {
   expect(buscar('fechaLimite:B:2026-11-10', e)).toBeDefined();
 });
 
+// Decisión D66: el día que vence y el siguiente, mientras no marque "Ya pagué".
+test('día del pago y día siguiente, si no marcó "Ya pagué"', () => {
+  expect(buscar('vencimiento:B:2026-10-10')).toEqual({
+    id: 'vencimiento:B:2026-10-10',
+    tipo: 'vencimiento',
+    fecha: '2026-10-10',
+    titulo: 'Hoy vence tu Tarjeta B',
+    cuerpo: 'Si todavía no pagas, paga hoy el total para no pagar mora ni intereses. Si ya pagaste, márcalo en Tino.',
+  });
+  expect(buscar('vencido:B:2026-10-10')).toMatchObject({ fecha: '2026-10-11', titulo: 'Tu Tarjeta B venció ayer' });
+  // Al abrir la app el día siguiente, el aviso de "venció ayer" se sigue programando.
+  expect(buscar('vencido:B:2026-10-10', entrada({ hoy: '2026-10-11' }))?.fecha).toBe('2026-10-11');
+  // Con "Ya pagué", ninguno de los dos.
+  const pagada = entrada({ tarjetas: [A, { ...B, pagoHecho: '2026-10-10' }, C] });
+  expect(buscar('vencimiento:B:2026-10-10', pagada)).toBeUndefined();
+  expect(buscar('vencido:B:2026-10-10', pagada)).toBeUndefined();
+});
+
+test('antes del corte: con una sola tarjeta, el último día del ciclo y los días que da esperar', () => {
+  expect(buscar('antesDelCorte:A:2026-11-04', entrada({ tarjetas: [A] }))).toEqual({
+    id: 'antesDelCorte:A:2026-11-04',
+    tipo: 'antesDelCorte',
+    fecha: '2026-11-04',
+    titulo: 'Mañana empieza un ciclo nuevo en tu Tarjeta A',
+    cuerpo: 'Si puedes, deja las compras grandes para mañana, jueves 5: tendrás 50 días para pagarlas en vez de 21.',
+  });
+});
+
+test('antes del corte: no avisa si otra tarjeta es mejor ese día', () => {
+  expect(buscar('antesDelCorte:A:2026-11-04')).toBeUndefined();
+  const avisos = planificarAvisos(entrada()).filter(a => a.tipo === 'antesDelCorte');
+  for (const aviso of avisos) {
+    const [mejor] = calcularRanking({ hoy: aviso.fecha, tarjetas: [A, B, C], ingresos: nomina, preferencias: preferenciasIniciales('DO', 'es-DO'), pais }).ranking;
+    expect(aviso.id).toBe(`antesDelCorte:${mejor.tarjetaId}:${aviso.fecha}`);
+  }
+});
+
 test('cada aviso se puede apagar y las tarjetas en pausa no avisan', () => {
-  const preferencias = { ...preferenciasIniciales('DO', 'es-DO'), avisos: { fechaLimite: false, venceAntesDelCobro: true, cambioTarjeta: false, resumenMensual: false } };
+  const preferencias = { ...preferenciasIniciales('DO', 'es-DO'), avisos: { fechaLimite: false, venceAntesDelCobro: true, cambioTarjeta: false, resumenMensual: false, vencimiento: false, antesDelCorte: false } };
   const avisos = planificarAvisos(entrada({ preferencias }));
   expect(new Set(avisos.map(a => a.tipo))).toEqual(new Set(['venceAntesDelCobro']));
   expect(planificarAvisos(entrada({ tarjetas: [{ ...B, enPausa: true }] }))).toEqual([]);
@@ -129,7 +166,7 @@ test('ordenados, dentro del límite y sin montos', () => {
 
 // Decisión D59: lo que promete el muro de pago, 2 días antes del cobro de la prueba.
 test('fin de la prueba de Tino Pro: 2 días antes, aunque los demás avisos estén apagados', () => {
-  const apagados = { fechaLimite: false, venceAntesDelCobro: false, cambioTarjeta: false, resumenMensual: false };
+  const apagados = { fechaLimite: false, venceAntesDelCobro: false, cambioTarjeta: false, resumenMensual: false, vencimiento: false, antesDelCorte: false };
   const pro = { ...preferenciasIniciales('DO', 'es-DO'), plan: 'pro' as const, finPruebaPro: '2026-11-05', avisos: apagados };
   expect(planificarAvisos(entrada({ preferencias: pro }))).toEqual([
     {

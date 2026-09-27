@@ -91,7 +91,7 @@ const CAMPOS_COBRO: Campos<FuenteIngreso> = {
   ajusteDiaNoHabil: (x, c) => c.t(`misDatos.ajusteCobro.${x.ajusteDiaNoHabil}`),
 };
 
-const AVISOS: (keyof AjustesAvisos)[] = ['fechaLimite', 'venceAntesDelCobro', 'cambioTarjeta', 'resumenMensual'];
+const AVISOS: (keyof AjustesAvisos)[] = ['fechaLimite', 'venceAntesDelCobro', 'vencimiento', 'antesDelCorte', 'cambioTarjeta', 'resumenMensual'];
 
 const CAMPOS_PREFERENCIAS: Campos<Preferencias> = {
   pais: (x, c) => c.t('misDatos.pais', { pais: nombrePais(c.t as never, x.pais) }),

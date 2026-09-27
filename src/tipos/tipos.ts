@@ -114,6 +114,9 @@ export interface AjustesAvisos {
   venceAntesDelCobro: boolean;       // 5 días antes, si vence antes del próximo cobro
   cambioTarjeta: boolean;            // el día después de un corte, si cambia la mejor tarjeta
   resumenMensual: boolean;           // el día 1 de cada mes
+  // Decisión D66; opcionales para no migrar: sin el campo, activos.
+  vencimiento?: boolean;             // el día que vence y el siguiente, si no marcó "Ya pagué"
+  antesDelCorte?: boolean;           // el último día antes del corte, si ninguna otra tarjeta sirve
 }
 
 export interface ConfigPais {
