@@ -606,11 +606,41 @@
     "finPruebaTitulo": "Tu prueba de Tino Pro termina pronto",
     "finPruebaCuerpo": "Termina el {{fecha}}. Si quieres seguir, no tienes que hacer nada; si no, cancélala en la tienda antes de esa fecha."
   },
+  "consejos": {
+    "titulo": "Mejora tus fechas",
+    "intro": "Tino no puede cambiar tus fechas: lo decide tu banco. Pero muchos bancos te cambian el día de corte si lo pides, y con eso puedes evitar moras y tener más días para pagar.",
+    "seccion": "Consejos para tus fechas",
+    "rango": "entre el {{desde}} y el {{hasta}}",
+    "dia": "el día {{dia}}",
+    "resumen": "Pide que el corte de {{alias}} sea {{rango}}",
+    "pagoAntesDelCobro": {
+      "titulo": "Tu {{alias}} vence antes de tu cobro",
+      "explicacion": "En {{meses}} de los próximos 12 meses, el pago vence antes de que cobres. Si el corte fuera {{rango}}, pagarías después de tu cobro, sin tener que apartar el dinero con tiempo.",
+      "explicacionConCobro": "En {{meses}} de los próximos 12 meses, el pago vence antes de que cobres. Si el corte fuera {{rango}}, pagarías después de tu cobro: por ejemplo, cobras el {{cobro}} y pagas el {{pago}}."
+    },
+    "cortesJuntos": {
+      "titulo": "{{alias}} y {{otra}} cortan casi el mismo día",
+      "explicacion": "Por eso hay días del mes en que ninguna de las dos te da más de {{antes}} días para pagar. Si {{alias}} cortara {{rango}}, siempre tendrías una tarjeta con al menos {{despues}} días."
+    },
+    "pagosJuntos": {
+      "titulo": "{{alias}} y {{otra}} vencen la misma semana",
+      "explicacion": "Tienes que pagar las dos casi al mismo tiempo. Si {{alias}} cortara {{rango}}, su pago quedaría para el {{pago}}, separado del de {{otra}}."
+    },
+    "pasosTitulo": "Cómo pedirlo",
+    "paso1": "Llama al número que está detrás de tu {{alias}}, o escríbele al banco por su app.",
+    "paso2": "Pide que tu fecha de corte sea {{rango}}. Si no tienen ese día, pide el más cercano.",
+    "paso3": "Pregunta si tiene algún costo. El primer estado de cuenta después del cambio puede venir con un ciclo más corto o más largo.",
+    "paso4": "Cuando te lo cambien, actualiza las fechas en Tino.",
+    "actualizar": "Actualizar fechas de {{alias}}",
+    "sinConsejos": "Tus fechas están bien: no hay nada que cambiar por ahora."
+  },
   "sugerencias": {
     "cobros": "Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.",
     "cobrosAccion": "Agregar mis días de cobro",
     "valorPunto": "Confirma cuánto vale el punto de {{alias}} y la comparación con el cashback será exacta.",
     "valorPuntoAccion": "Confirmar",
+    "fechas": "Tino encontró una forma de mejorar las fechas de tus tarjetas para evitar moras o tener más días para pagar.",
+    "fechasAccion": "Ver el consejo",
     "descartar": "Descartar sugerencia"
   },
   "pagos": {
@@ -728,6 +758,7 @@
     "tema": "Apariencia: {{tema}}",
     "sugerencia": {
       "cobros": "agregar tus días de cobro",
+      "fechas": "mejorar las fechas de tus tarjetas",
       "valorPunto": "confirmar el valor del punto"
     },
     "sugerenciaActiva": "Sugerencia de esta semana: {{tipo}}, desde el {{fecha}}",

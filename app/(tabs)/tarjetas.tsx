@@ -5,8 +5,9 @@ import { Boton, BotonPastilla, FilaLista, ListaAgrupada, Pantalla, Texto, useTem
 import type { Tarjeta } from '@/tipos/tipos';
 import { useAlmacen } from '@/estado';
 import { logoEmisor, useCatalogo } from '@/catalogo';
+import { textosConsejo, useConsejosFechas } from '@/consejos';
 import { buscarEmisor } from '@/registro/borrador';
-import { inicialesBanco, textoFecha } from '@/inicio/vista';
+import { inicialesBanco, textoFecha, type Traducir as TraducirVista } from '@/inicio/vista';
 import { useHoy } from '@/inicio/useHoy';
 import { usePais } from '@/paises';
 import { proximosPagos } from '@/pagos/pendientes';
@@ -28,6 +29,7 @@ export default function Tarjetas() {
   // cuentan (15.2). Mezcladas con las activas parecía que las 3 funcionaban.
   const guardadas = tarjetas.filter(x => !enPlan.includes(x));
   const pagos = proximosPagos(enPlan, hoy, ingresos, config);
+  const consejos = useConsejosFechas();
 
   const fila = (tarjeta: Tarjeta) => {
     const emisor = buscarEmisor(catalogo, tarjeta.emisorId);
@@ -72,6 +74,25 @@ export default function Tarjetas() {
       {tarjetas.length === 0 ? <Texto color="textoSecundario">{t('tarjetas.vacio')}</Texto> : null}
       {enPlan.length ? <ListaAgrupada sangria={70}>{enPlan.map(fila)}</ListaAgrupada> : null}
       <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
+      {/* Decisión D65: qué fecha de corte pedirle al banco para evitar moras o tener más días. */}
+      {consejos.length ? (
+        <ListaAgrupada titulo={t('consejos.seccion')}>
+          {consejos.map(consejo => {
+            const textos = textosConsejo(consejo, tarjetas, t as unknown as TraducirVista, idioma);
+            return (
+              <FilaLista
+                key={`${consejo.tipo}:${consejo.tarjetaId}`}
+                icono="calendario"
+                tono={consejo.tipo === 'pagoAntesDelCobro' ? 'alerta' : 'primario'}
+                titulo={textos.titulo}
+                detalle={textos.resumen}
+                flecha
+                onPress={() => router.push('/consejos/fechas')}
+              />
+            );
+          })}
+        </ListaAgrupada>
+      ) : null}
       {guardadas.length ? (
         <View style={{ gap: tema.espacio.m, paddingTop: tema.espacio.s }}>
           <View style={{ gap: tema.espacio.xs }}>

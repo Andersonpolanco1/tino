@@ -10,6 +10,8 @@ import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
 import Compra from '../../app/compra';
 import DetalleTarjeta from '../../app/tarjeta/[id]';
+import Tarjetas from '../../app/(tabs)/tarjetas';
+import ConsejosFechas from '../../app/consejos/fechas';
 
 // Decisión D67: textos que cuidan las finanzas en "Tengo una compra" y en el detalle.
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
@@ -85,4 +87,29 @@ test('el detalle explica el corte con el día de la tarjeta, la fecha límite y 
   expect(screen.getByText(/Tu Tarjeta P corta el día 5 de cada mes\.$/)).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByLabelText('Más información sobre ¿Pago el total o el mínimo?')));
   expect(screen.getByText(/^Si pagas el total del estado de cuenta/)).toBeOnTheScreen();
+});
+
+// Decisión D65: dos tarjetas que cortan casi el mismo día.
+const juntas = () => [tarjeta('P'), tarjeta('Q', { diaCorte: 6, creadaEn: '2026-09-20' })];
+
+test('Tarjetas muestra el consejo de fechas y lleva a sus pasos', async () => {
+  await render(envolver(await almacenCon(juntas()), <Tarjetas />));
+  expect(screen.getByText('Consejos para tus fechas')).toBeOnTheScreen();
+  expect(screen.getByText('Tarjeta Q y Tarjeta P cortan casi el mismo día')).toBeOnTheScreen();
+  expect(screen.getByText(/^Pide que el corte de Tarjeta Q sea (entre el \d+ y el \d+|el día \d+)$/)).toBeOnTheScreen();
+  await act(async () => fireEvent.press(screen.getByText('Tarjeta Q y Tarjeta P cortan casi el mismo día')));
+  expect(mockRouter.push).toHaveBeenCalledWith('/consejos/fechas');
+});
+
+test('sin problemas de fechas no hay sección de consejos', async () => {
+  await render(envolver(await almacenCon([tarjeta('P'), tarjeta('Q', { diaCorte: 20 })]), <Tarjetas />));
+  expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
+});
+
+test('la pantalla de consejos explica qué pedir, cómo y lleva a editar las fechas', async () => {
+  await render(envolver(await almacenCon(juntas()), <ConsejosFechas />));
+  expect(screen.getByText(/^Por eso hay días del mes en que ninguna de las dos te da más de \d+ días para pagar\./)).toBeOnTheScreen();
+  expect(screen.getByText(/^Llama al número que está detrás de tu Tarjeta Q/)).toBeOnTheScreen();
+  await act(async () => fireEvent.press(screen.getByText('Actualizar fechas de Tarjeta Q')));
+  expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'Q', seccion: 'fechas' } });
 });

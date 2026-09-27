@@ -138,9 +138,9 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
 - [ ] Pruebas de flujos completos con Maestro
 - [ ] Lista de verificación de la sección 11 técnica
-- [ ] Consejos para cuidar las finanzas (D65 a D67), fuera de la especificación:
+- [x] Consejos para cuidar las finanzas (D65 a D67), fuera de la especificación; falta verlos en el teléfono:
   - [x] Módulo de consejos de fechas: separar cortes, separar pagos y pagar después del cobro, cambiando el corte de una sola tarjeta (`src/consejos/`, D65)
-  - [ ] Pantalla de consejos con los pasos para pedir el cambio al banco, tarjeta en la pestaña Tarjetas y sugerencia en Inicio
+  - [x] Pantalla de consejos con los pasos para pedir el cambio al banco, tarjeta en la pestaña Tarjetas y sugerencia en Inicio (`app/consejos/fechas.tsx`)
   - [x] Avisos nuevos: el día que vence y el siguiente si no marcó "Ya pagué", y el día antes del corte cuando ninguna otra tarjeta sirve (D66) (`src/notificaciones/planificar.ts`, con interruptores en Ajustes)
   - [x] Textos más completos: pagar desde otro banco con anticipación, fecha límite en día no hábil, "Corta mañana", conversión en dólares y explicaciones del corte, la fecha límite y el pago total (D67)
 
@@ -195,6 +195,7 @@ Criterios de la especificación:
 - [ ] Verificar en un teléfono que los avisos llegan a las 9:00 en las fechas planificadas (etapa 5)
 - [ ] Si algún día se activa una prueba gratis (D60): verificar en iOS que solo aparece a quien tiene derecho (D59), con una cuenta Sandbox que ya la usó
 - [ ] Actualizar en claude.ai la especificación (15.2, 15.5, 17.2 y 17.3) sin prueba gratis en el MVP (D60)
+- [ ] Actualizar en claude.ai la especificación con los consejos para cuidar las finanzas (D65 a D67): consejos de fechas, avisos del día del pago y antes del corte, y los textos nuevos
 - [ ] Actualizar en claude.ai el ejemplo 7.4 de la especificación con los días reales (46, 35 y 50), como pide la nota de la sección 5.7 técnica
 - [x] Logos de los bancos en lugar de las iniciales (D63): 22 emisores del grupo 1 en `datos-publicos/logos/`, catálogo 2026.09.5 (López de Haro: el escudo recortado de su logo oficial)
 - [ ] Logos con mejor resolución: Scotiabank (48 px), Promerica (50 px), La Nacional (57 px), Lafise y Motor Crédito (64 px) vienen del favicon oficial y se ven algo suaves; pedir el logo al banco o tomarlo de su kit de prensa
