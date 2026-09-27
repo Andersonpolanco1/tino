@@ -133,7 +133,7 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 - [x] Registro anónimo de cada elección de "Otro" o de banco sin catálogo (4.1 de la especificación): `tarjeta_registrada` con emisor `otro` y producto `otro` o `no_se`
 - [x] Respaldo cifrado con contraseña, restauración gratis (en Ajustes y en la bienvenida) y "Ver mis datos" legible en vez del JSON interno (`src/respaldo/`, D62) **(asignada)**; falta probarlo en el teléfono de punta a punta
 - [ ] Respaldo automático para Tino Pro: copia cifrada periódica en la carpeta de la app, que iCloud y el respaldo de Google llevan al teléfono nuevo, y oferta de restaurarla al abrir (segunda parte de D62)
-- [x] Reporte de fallos sin datos de tarjetas: Sentry (UE) en `src/fallos/`, con el mismo interruptor que la analítica, sin migas, persona, capturas ni números de 13 a 19 dígitos (D70). Falta crear la cuenta y ver llegar un fallo desde el emulador
+- [x] Reporte de fallos sin datos de tarjetas: Sentry (UE) en `src/fallos/`, con el mismo interruptor que la analítica, sin migas, persona, capturas ni números de 13 a 19 dígitos (D70). Verificado en el emulador: un error de prueba llega a Sentry (organización `polanco-labs`, proyecto `react-native`, región UE) y con el interruptor apagado Sentry no se inicia
 - [ ] Widget de Android
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
 - [ ] Pruebas de flujos completos con Maestro
@@ -174,8 +174,9 @@ Criterios de la especificación:
 - [x] Cuentas de Apple Developer y Google Play Console
 - [ ] Proyecto en Expo (EAS) vinculado: `eas init` para que `app.config.ts` tenga su `projectId`
 - [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS (`EXPO_PUBLIC_POSTHOG_KEY` ya la lee la app)
-- [ ] Sentry: proyecto React Native en la región UE (`de.sentry.io`); `EXPO_PUBLIC_SENTRY_DSN` solo en `preview` y `production` de EAS, y `SENTRY_ORG`, `SENTRY_PROJECT` y `SENTRY_AUTH_TOKEN` como secretos de EAS para subir los mapas de código. En el proyecto de Sentry: "Prevent Storing of IP Addresses" y "Data Scrubber" activos
-- [ ] Recompilar la app de desarrollo con `@sentry/react-native` (sin cuenta de Sentry, compilar con `SENTRY_DISABLE_AUTO_UPLOAD=true`) y verificar que un error de prueba llega filtrado y que el interruptor lo detiene
+- [x] Sentry: organización `polanco-labs` y proyecto `react-native` en la región UE (`de.sentry.io`), plan gratis Developer al terminar la prueba de 14 días; el DSN está en `.env.local`
+- [ ] Sentry en EAS: `EXPO_PUBLIC_SENTRY_DSN` en `preview` y `production`, y `SENTRY_ORG=polanco-labs`, `SENTRY_PROJECT=react-native` y `SENTRY_AUTH_TOKEN` (token de organización) como secretos para subir los mapas de código. En Security & Privacy de la organización: "Prevent Storing of IP Addresses" y los limpiadores de datos, si el plan gratis los permite
+- [x] Recompilar la app de desarrollo con `@sentry/react-native` (en local con `SENTRY_DISABLE_AUTO_UPLOAD=true` en `.env.local`)
 - [x] Recompilar la app de desarrollo con `posthog-react-native`, `expo-application` y `expo-device`
 - [ ] Separar los datos de prueba en PostHog (el plan gratis tiene un solo proyecto): la clave de PostHog solo en `preview` y `production` de EAS, sin clave en `development` ni en `.env.local` salvo para probar la analítica, y los identificadores de los teléfonos de prueba en "Filter out internal and test users"
 - [ ] Productos de Tino Pro (D58 y D60), en un mismo grupo de suscripción: mensual USD 2.49, anual USD 19.99 y anual de lanzamiento USD 14.99, sin oferta de introducción (sin prueba gratis)
