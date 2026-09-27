@@ -4,7 +4,7 @@ import { View } from 'react-native';
 import { Boton, BotonPastilla, FilaLista, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
 import type { Tarjeta } from '@/tipos/tipos';
 import { useAlmacen } from '@/estado';
-import { useCatalogo } from '@/catalogo';
+import { logoEmisor, useCatalogo } from '@/catalogo';
 import { buscarEmisor } from '@/registro/borrador';
 import { inicialesBanco, textoFecha } from '@/inicio/vista';
 import { useHoy } from '@/inicio/useHoy';
@@ -30,7 +30,8 @@ export default function Tarjetas() {
   const pagos = proximosPagos(enPlan, hoy, ingresos, config);
 
   const fila = (tarjeta: Tarjeta) => {
-    const banco = buscarEmisor(catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
+    const emisor = buscarEmisor(catalogo, tarjeta.emisorId);
+    const banco = emisor?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
     // Decisión D54: la fila dice el estado del pago de hoy; el corte y la fecha límite
     // configurados siguen en el detalle. En pausa no hay pago que mostrar.
     const pago = pagos.find(p => p.tarjeta.id === tarjeta.id);
@@ -47,6 +48,7 @@ export default function Tarjetas() {
       <FilaLista
         key={tarjeta.id}
         iniciales={inicialesBanco(banco) || tarjeta.alias.slice(0, 2).toUpperCase()}
+        logo={logoEmisor(emisor)}
         titulo={tarjeta.alias}
         detalle={urgente ? undefined : estado}
         debajo={

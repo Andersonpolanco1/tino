@@ -1,8 +1,9 @@
 import { Children, Fragment, type ReactNode } from 'react';
-import { Pressable, View } from 'react-native';
+import { Pressable, View, type ImageSourcePropType } from 'react-native';
 import { Texto } from './Texto';
 import { Icono, type NombreIcono } from './Icono';
 import { Superficie } from './Superficie';
+import { MarcaBanco } from './MarcaBanco';
 import { useTema } from './useTema';
 import type { RolColor } from './tema';
 
@@ -46,6 +47,8 @@ interface PropsFila {
   tono?: TonoIcono;
   // Círculo con iniciales (el banco) en lugar de un ícono.
   iniciales?: string;
+  // Logo del banco en lugar de las iniciales, si lo hay y carga (decisión D63).
+  logo?: ImageSourcePropType;
   flecha?: boolean;
   destructiva?: boolean;
   derecha?: ReactNode;
@@ -62,6 +65,7 @@ export function FilaLista({
   icono,
   tono = 'primario',
   iniciales,
+  logo,
   flecha = false,
   destructiva = false,
   derecha,
@@ -75,11 +79,20 @@ export function FilaLista({
   const contenido = (
     <>
       {iniciales ? (
-        <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-          <Texto variante="etiqueta" color="primario" style={{ fontSize: 13 }}>
-            {iniciales}
-          </Texto>
-        </View>
+        <MarcaBanco
+          logo={logo}
+          ancho={42}
+          alto={42}
+          radio={21}
+          lado={28}
+          respaldo={
+            <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
+              <Texto variante="etiqueta" color="primario" style={{ fontSize: 13 }}>
+                {iniciales}
+              </Texto>
+            </View>
+          }
+        />
       ) : icono ? (
         <View style={{ width: 36, height: 36, borderRadius: 11, backgroundColor: tema.color[colores.fondo], alignItems: 'center', justifyContent: 'center' }}>
           <Icono nombre={icono} color={colores.trazo} tamano={18} />

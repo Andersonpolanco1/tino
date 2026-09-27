@@ -161,7 +161,7 @@ export default function Inicio() {
         <Pressable accessibilityRole="button" onPress={() => abrir(primera)}>
           <Superficie radio={tema.radio.destacada} style={{ padding: 22, gap: 18 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
-              {primera.iniciales ? <ChipBanco iniciales={primera.iniciales} /> : null}
+              {primera.iniciales ? <ChipBanco iniciales={primera.iniciales} logo={primera.logo} /> : null}
               <Texto variante="cuerpoFuerte" style={{ flex: 1, fontSize: 17 }}>
                 {tarjeta.alias}
               </Texto>

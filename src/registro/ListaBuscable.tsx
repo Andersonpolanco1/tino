@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { View, type ImageSourcePropType } from 'react-native';
 import { Campo, FilaLista, ListaAgrupada, useTema } from '../diseno';
 import { filtrar } from './borrador';
 
@@ -8,6 +8,7 @@ export interface ElementoLista {
   titulo: string;
   detalle?: string;
   iniciales?: string;
+  logo?: ImageSourcePropType;
   buscarEn: string[];
 }
 
@@ -31,7 +32,7 @@ export function ListaBuscable({ buscador, elementos, onElegir, salidas }: Props)
       {visibles.length ? (
         <ListaAgrupada sangria={conIniciales ? 70 : 16}>
           {visibles.map(e => (
-            <FilaLista key={e.id} titulo={e.titulo} detalle={e.detalle} iniciales={e.iniciales} flecha onPress={() => onElegir(e.id)} />
+            <FilaLista key={e.id} titulo={e.titulo} detalle={e.detalle} iniciales={e.iniciales} logo={e.logo} flecha onPress={() => onElegir(e.id)} />
           ))}
         </ListaAgrupada>
       ) : null}

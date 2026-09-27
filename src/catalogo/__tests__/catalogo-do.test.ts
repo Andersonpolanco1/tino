@@ -1,5 +1,8 @@
 import type { Catalogo } from '../../tipos/tipos';
 import datos from '../../../datos-publicos/emisores-do.json';
+import { readdirSync } from 'fs';
+import { join } from 'path';
+import { logoIncluido } from '../logos';
 
 // Validación mínima del catálogo de RD. La validación por esquema al descargarlo llega en la etapa 3.
 const catalogo = datos as Catalogo;
@@ -38,4 +41,10 @@ test('ningún producto trae recompensas precargadas todavía (decisión D14)', (
   for (const { producto } of productos) {
     expect(producto.plantilla?.recompensa).toBeUndefined();
   }
+});
+
+test('cada logo del catálogo viene incluido en la app y todo logo incluido se usa (decisión D63)', () => {
+  const nombrados = catalogo.emisores.flatMap(e => (e.logo ? [e.logo] : []));
+  for (const logo of nombrados) expect(logoIncluido(logo)).toBe(true);
+  expect(nombrados.sort()).toEqual(readdirSync(join(__dirname, '../../../datos-publicos/logos')).sort());
 });

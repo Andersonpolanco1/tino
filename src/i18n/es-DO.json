@@ -360,6 +360,7 @@
     "acercaNombre": "Tino",
     "acercaVersion": "Versión {{version}} ({{compilacion}})",
     "acercaDerechos": "© {{anio}} Polanco Labs. Todos los derechos reservados.",
+    "acercaMarcas": "Tino no está afiliado a ningún banco. Los nombres y logos de los bancos son de sus dueños y se usan solo para identificarlos.",
     "crearRespaldo": "Crear respaldo",
     "crearRespaldoDetalle": "Cifrado con tu contraseña, para otro teléfono",
     "restaurarRespaldo": "Restaurar un respaldo",

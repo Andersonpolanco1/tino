@@ -1,9 +1,10 @@
 import { useMemo } from 'react';
+import type { ImageSourcePropType } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import type { Catalogo, ConfigPais, EntradaMotor, FechaISO, ResultadoMotor, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
 import { calcularRanking, type OrdenVista } from '../motor';
 import { useAlmacen } from '../estado';
-import { useCatalogo } from '../catalogo';
+import { logoEmisor, useCatalogo } from '../catalogo';
 import { buscarEmisor } from '../registro/borrador';
 import { usePais } from '../paises';
 import { useRanking } from './useRanking';
@@ -27,6 +28,7 @@ export interface VistaTarjeta {
   resultado: ResultadoTarjeta;
   banco: string;
   iniciales: string;
+  logo?: ImageSourcePropType;
   fechaPago: string;
   fechaPagoCorta: string;
   recompensa: string | null;
@@ -53,7 +55,8 @@ interface ContextoVista {
 
 export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c: ContextoVista): VistaTarjeta {
   const contexto = { t: c.t, pais: c.pais, idioma: c.idioma };
-  const banco = buscarEmisor(c.catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
+  const emisor = buscarEmisor(c.catalogo, tarjeta.emisorId);
+  const banco = emisor?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
   const ciclo = cicloDe(tarjeta, resultado, c.entrada.hoy);
   const esperar = resultado.semaforo === 'rojo' ? esperarA(tarjeta, resultado, c.entrada) : null;
   return {
@@ -61,6 +64,7 @@ export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c:
     resultado,
     banco,
     iniciales: inicialesBanco(banco),
+    logo: logoEmisor(emisor),
     fechaPago: textoFecha(resultado.fechaPago, c.idioma),
     fechaPagoCorta: fechaCorta(resultado.fechaPago, c.idioma, c.t),
     recompensa: textoRecompensa(tarjeta, resultado, contexto, c.entrada.compra),

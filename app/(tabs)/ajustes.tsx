@@ -286,7 +286,7 @@ export default function Ajustes() {
       </View>
 
       {/* Acerca de Tino: al final, discreto. */}
-      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos].join('. ')}>
+      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos, t('ajustes.acercaMarcas')].join('. ')}>
         <LogoTino tamano={64} />
         <Texto variante="cuerpoFuerte">{t('ajustes.acercaNombre')}</Texto>
         <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
@@ -294,6 +294,9 @@ export default function Ajustes() {
         </Texto>
         <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
           {derechos}
+        </Texto>
+        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
+          {t('ajustes.acercaMarcas')}
         </Texto>
       </View>
 

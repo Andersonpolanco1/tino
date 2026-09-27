@@ -16,6 +16,7 @@ export function FilaTarjeta({ vista, onPress, recompensa }: { vista: VistaTarjet
   return (
     <FilaLista
       iniciales={vista.iniciales || tarjeta.alias.slice(0, 2).toUpperCase()}
+      logo={vista.logo}
       titulo={tarjeta.alias}
       detalle={vista.banco ? t('inicio.detalleLista', { banco: vista.banco, fecha: vista.fechaPagoCorta }) : t('inicio.sePagaEl', { fecha: vista.fechaPagoCorta })}
       etiquetaAccesible={t('inicio.accesibleTarjeta', { alias: tarjeta.alias, dias: resultado.diasGracia, fecha: vista.fechaPago, extra })}

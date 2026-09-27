@@ -36,7 +36,7 @@ export function TarjetaDestacada({ vista, mostrarUltimos4, onPress }: { vista: V
       })}
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
-        {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} sobreDestacado /> : null}
+        {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} logo={vista.logo} sobreDestacado /> : null}
         <View style={{ flex: 1 }}>
           <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17 }} numberOfLines={2}>
             {tarjeta.alias}

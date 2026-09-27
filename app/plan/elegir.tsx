@@ -3,7 +3,7 @@ import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { BarraSuperior, Boton, FilaLista, ListaAgrupada, Pantalla, Texto } from '@/diseno';
 import { useAlmacen } from '@/estado';
-import { useCatalogo } from '@/catalogo';
+import { logoEmisor, useCatalogo } from '@/catalogo';
 import { buscarEmisor } from '@/registro/borrador';
 import { inicialesBanco } from '@/inicio/vista';
 import { LIMITE_GRATIS, useTarjetasEnPlan } from '@/suscripciones';
@@ -52,11 +52,13 @@ export default function ElegirTarjetas() {
       </Texto>
       <ListaAgrupada sangria={70}>
         {tarjetas.map(tarjeta => {
-          const banco = buscarEmisor(catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
+          const emisor = buscarEmisor(catalogo, tarjeta.emisorId);
+          const banco = emisor?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
           return (
             <FilaLista
               key={tarjeta.id}
               iniciales={inicialesBanco(banco) || tarjeta.alias.slice(0, 2).toUpperCase()}
+              logo={logoEmisor(emisor)}
               titulo={tarjeta.alias}
               detalle={banco || undefined}
               seleccionada={elegidas.includes(tarjeta.id)}

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { randomUUID } from 'expo-crypto';
 import type { Tarjeta } from '../tipos/tipos';
 import { BarraSuperior, Boton, FilaLista, ListaAgrupada, MarcoAsistente, Palanca, Pantalla, Texto } from '../diseno';
-import { useCatalogo } from '../catalogo';
+import { logoEmisor, useCatalogo } from '../catalogo';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
 import { hoyLocal } from '../utilidades/fecha';
@@ -165,7 +165,7 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
       t('registro.tituloBanco'),
       <ListaBuscable
         buscador={t('registro.buscarBanco')}
-        elementos={emisoresParaRegistro(catalogo).map(e => ({ id: e.id, titulo: e.nombreCorto, iniciales: inicialesBanco(e.nombreCorto), buscarEn: [e.nombreCorto, e.nombreLegal] }))}
+        elementos={emisoresParaRegistro(catalogo).map(e => ({ id: e.id, titulo: e.nombreCorto, iniciales: inicialesBanco(e.nombreCorto), logo: logoEmisor(e), buscarEn: [e.nombreCorto, e.nombreLegal] }))}
         onElegir={id => {
           setB(elegirEmisor(b, id, traducir, catalogo));
           setBancoAMano(false);

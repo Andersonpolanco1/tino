@@ -117,7 +117,7 @@ export default function Compra() {
             style={{ padding: 18, gap: 14, borderRadius: 24, backgroundColor: tema.color.destacado, boxShadow: tema.sombra.destacada }}
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
-              {mejor.iniciales ? <ChipBanco iniciales={mejor.iniciales} sobreDestacado /> : null}
+              {mejor.iniciales ? <ChipBanco iniciales={mejor.iniciales} logo={mejor.logo} sobreDestacado /> : null}
               <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ flex: 1, fontSize: 17 }}>
                 {mejor.tarjeta.alias}
               </Texto>

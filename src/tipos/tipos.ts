@@ -133,6 +133,7 @@ export interface Emisor {
   id: string;                        // "banreservas"
   nombreCorto: string;
   nombreLegal: string;
+  logo?: string;                     // "banreservas.png" en /v1/logos/; sin logo = iniciales (decisión D63)
   tipoEntidad: string;
   grupo: 1 | 2;
   participacionActivosPct: number | null;

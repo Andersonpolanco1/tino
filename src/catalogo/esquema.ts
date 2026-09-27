@@ -17,6 +17,7 @@ const emisor = z.object({
   id: z.string().regex(/^[a-z0-9-]+$/),
   nombreCorto: z.string().min(1),
   nombreLegal: z.string().min(1),
+  logo: z.string().regex(/^[a-z0-9-]+\.png$/).optional(),
   tipoEntidad: z.string(),
   grupo: z.union([z.literal(1), z.literal(2)]),
   participacionActivosPct: z.number().nullable(),
