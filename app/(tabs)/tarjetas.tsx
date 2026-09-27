@@ -1,6 +1,8 @@
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Boton, FilaLista, ListaAgrupada, Pantalla, Texto } from '@/diseno';
+import { View } from 'react-native';
+import { Boton, BotonPastilla, FilaLista, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
+import type { Tarjeta } from '@/tipos/tipos';
 import { useAlmacen } from '@/estado';
 import { useCatalogo } from '@/catalogo';
 import { buscarEmisor } from '@/registro/borrador';
@@ -20,8 +22,45 @@ export default function Tarjetas() {
   const ingresos = useAlmacen(s => s.ingresos);
   const hoy = useHoy();
   const { config, idioma } = usePais();
+  const tema = useTema();
   const enPlan = useTarjetasEnPlan();
+  // Al vencer Pro, las que quedan fuera del plan gratis se ven aparte: siguen guardadas, pero no
+  // cuentan (15.2). Mezcladas con las activas parecía que las 3 funcionaban.
+  const guardadas = tarjetas.filter(x => !enPlan.includes(x));
   const pagos = proximosPagos(enPlan, hoy, ingresos, config);
+
+  const fila = (tarjeta: Tarjeta) => {
+    const banco = buscarEmisor(catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
+    // Decisión D54: la fila dice el estado del pago de hoy; el corte y la fecha límite
+    // configurados siguen en el detalle. En pausa no hay pago que mostrar.
+    const pago = pagos.find(p => p.tarjeta.id === tarjeta.id);
+    const fecha = pago ? textoFecha(pago.fecha, idioma) : '';
+    const urgente = !!pago && !pago.pagado && (pago.dias <= 3 || pago.aviso?.tipo === 'antes');
+    const estado = !enPlan.includes(tarjeta)
+      ? t('plan.etiquetaFuera')
+      : !pago
+        ? t('registro.enPausa')
+        : pago.pagado
+          ? t('pagos.pagadoLinea', { fecha })
+          : textoVence(pago.dias, fecha, t as never);
+    return (
+      <FilaLista
+        key={tarjeta.id}
+        iniciales={inicialesBanco(banco) || tarjeta.alias.slice(0, 2).toUpperCase()}
+        titulo={tarjeta.alias}
+        detalle={urgente ? undefined : estado}
+        debajo={
+          urgente ? (
+            <Texto variante="apoyo" color="alertaTexto" style={{ fontSize: 13 }}>
+              {estado}
+            </Texto>
+          ) : undefined
+        }
+        flecha
+        onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
+      />
+    );
+  };
 
   return (
     <Pantalla conPestanas>
@@ -29,43 +68,25 @@ export default function Tarjetas() {
         {t('tarjetas.titulo')}
       </Texto>
       {tarjetas.length === 0 ? <Texto color="textoSecundario">{t('tarjetas.vacio')}</Texto> : null}
-      {tarjetas.length ? (
-        <ListaAgrupada sangria={70}>
-          {tarjetas.map(tarjeta => {
-            const banco = buscarEmisor(catalogo, tarjeta.emisorId)?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '';
-            // Decisión D54: la fila dice el estado del pago de hoy; el corte y la fecha límite
-            // configurados siguen en el detalle. En pausa no hay pago que mostrar.
-            const pago = pagos.find(p => p.tarjeta.id === tarjeta.id);
-            const fecha = pago ? textoFecha(pago.fecha, idioma) : '';
-            const urgente = !!pago && !pago.pagado && (pago.dias <= 3 || pago.aviso?.tipo === 'antes');
-            const estado = !enPlan.includes(tarjeta)
-              ? t('plan.fueraDelPlan')
-              : !pago
-                ? t('registro.enPausa')
-                : pago.pagado
-                  ? t('pagos.pagadoLinea', { fecha })
-                  : textoVence(pago.dias, fecha, t as never);
-            return (
-              <FilaLista
-                key={tarjeta.id}
-                iniciales={inicialesBanco(banco) || tarjeta.alias.slice(0, 2).toUpperCase()}
-                titulo={tarjeta.alias}
-                detalle={urgente ? undefined : estado}
-                debajo={
-                  urgente ? (
-                    <Texto variante="apoyo" color="alertaTexto" style={{ fontSize: 13 }}>
-                      {estado}
-                    </Texto>
-                  ) : undefined
-                }
-                flecha
-                onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
-              />
-            );
-          })}
-        </ListaAgrupada>
-      ) : null}
+      {enPlan.length ? <ListaAgrupada sangria={70}>{enPlan.map(fila)}</ListaAgrupada> : null}
       <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
+      {guardadas.length ? (
+        <View style={{ gap: tema.espacio.m, paddingTop: tema.espacio.s }}>
+          <View style={{ gap: tema.espacio.xs }}>
+            <Texto variante="subtitulo" accessibilityRole="header">
+              {t('tarjetas.guardadasTitulo')}
+            </Texto>
+            <Texto variante="apoyo" color="textoSecundario">
+              {t('tarjetas.guardadasTexto', { count: guardadas.length })}
+            </Texto>
+          </View>
+          <ListaAgrupada sangria={70}>{guardadas.map(fila)}</ListaAgrupada>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: tema.espacio.s }}>
+            <BotonPastilla icono="tarjetas" titulo={t('tarjetas.cambiarElegidas')} onPress={() => router.push('/plan/elegir')} />
+            <BotonPastilla icono="estrella" titulo={t('plan.renovar')} onPress={() => router.push({ pathname: '/pro', params: { motivo: 'voluntario' } })} />
+          </View>
+        </View>
+      ) : null}
     </Pantalla>
   );
 }

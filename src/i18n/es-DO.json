@@ -288,7 +288,11 @@
     "agregar": "Agregar tarjeta",
     "corteYPago": "Corte día {{corte}} · {{pago}}",
     "pagoDia": "Pago día {{dia}}",
-    "pagoDias": "Pago {{dias}} días después"
+    "pagoDias": "Pago {{dias}} días después",
+    "guardadasTitulo": "Guardadas",
+    "guardadasTexto_one": "Esta tarjeta no entra en tus recomendaciones ni en tus avisos. Sus datos siguen aquí y vuelve si renuevas Tino Pro.",
+    "guardadasTexto_other": "Estas tarjetas no entran en tus recomendaciones ni en tus avisos. Sus datos siguen aquí y vuelven si renuevas Tino Pro.",
+    "cambiarElegidas": "Cambiar mis 2 tarjetas"
   },
   "ajustes": {
     "titulo": "Ajustes",
@@ -607,7 +611,6 @@
     "renovar": "Renovar Tino Pro",
     "avisoInicio": "Tu Tino Pro terminó. Elige las 2 tarjetas que Tino seguirá usando; las demás quedan guardadas.",
     "avisoInicioAccion": "Elegir mis 2 tarjetas",
-    "fueraDelPlan": "Guardada · fuera del plan gratis",
     "etiquetaFuera": "Fuera del plan gratis"
   }
 }

@@ -173,11 +173,21 @@ describe('al vencer Pro (15.5)', () => {
     expect(almacen.getState().tarjetas).toHaveLength(3);
   });
 
-  it('en Tarjetas, la sobrante aparece guardada fuera del plan', async () => {
+  it('en Tarjetas, la sobrante aparece aparte, en Guardadas, con cómo cambiarla o recuperarla', async () => {
     const almacen = await almacenCon([A, B, C]);
     await render(envolver(almacen, <Tarjetas />));
+    expect(screen.getByText('Guardadas')).toBeOnTheScreen();
+    expect(screen.getByText(/^Esta tarjeta no entra en tus recomendaciones/)).toBeOnTheScreen();
     expect(screen.getByText('Tarjeta C')).toBeOnTheScreen();
-    expect(screen.getByText('Guardada · fuera del plan gratis')).toBeOnTheScreen();
+    expect(screen.getByText('Fuera del plan gratis')).toBeOnTheScreen();
+    await act(async () => fireEvent.press(screen.getByText('Cambiar mis 2 tarjetas')));
+    expect(mockRouter.push).toHaveBeenCalledWith('/plan/elegir');
+  });
+
+  it('sin tarjetas guardadas no aparece la sección', async () => {
+    const almacen = await almacenCon([A, B]);
+    await render(envolver(almacen, <Tarjetas />));
+    expect(screen.queryByText('Guardadas')).toBeNull();
   });
 
   it('el usuario elige qué 2 tarjetas quedan activas', async () => {
