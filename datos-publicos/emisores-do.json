@@ -1,6 +1,6 @@
 {
   "pais": "DO",
-  "version": "2026.09.4",
+  "version": "2026.09.5",
   "generadoEn": "2026-09-26",
   "fuente": "Emisores: listado de entidades autorizadas de la Superintendencia de Bancos (corte de junio de 2026) y participación de mercado por activos publicada por la misma entidad. Productos: verificados el 2026-09-25 en los sitios oficiales y documentos de cada emisor; detalle y enlaces en verificacion-emisores-do.md. Logos: icono publicado en el sitio oficial de cada emisor (descargado el 2026-09-26), solo para identificarlo.",
   "nota": "Productos del grupo 1: nombre, marca y, solo cuando el emisor la declara, moneda de facturación; sin ella, el registro se la pregunta al usuario. Marca \"otra\" = el emisor no publica la marca. Sin recompensas precargadas (decisión D14).",
@@ -927,6 +927,7 @@
       "id": "lopez-de-haro",
       "nombreCorto": "López de Haro",
       "nombreLegal": "BANCO MÚLTIPLE LÓPEZ DE HARO, S. A.",
+      "logo": "lopez-de-haro.png",
       "tipoEntidad": "Bancos múltiples",
       "grupo": 1,
       "participacionActivosPct": 0.7,

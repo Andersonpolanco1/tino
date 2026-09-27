@@ -191,9 +191,8 @@ Criterios de la especificación:
 - [ ] Si algún día se activa una prueba gratis (D60): verificar en iOS que solo aparece a quien tiene derecho (D59), con una cuenta Sandbox que ya la usó
 - [ ] Actualizar en claude.ai la especificación (15.2, 15.5, 17.2 y 17.3) sin prueba gratis en el MVP (D60)
 - [ ] Actualizar en claude.ai el ejemplo 7.4 de la especificación con los días reales (46, 35 y 50), como pide la nota de la sección 5.7 técnica
-- [x] Logos de los bancos en lugar de las iniciales (D63): 21 emisores del grupo 1 en `datos-publicos/logos/`, catálogo 2026.09.4
+- [x] Logos de los bancos en lugar de las iniciales (D63): 22 emisores del grupo 1 en `datos-publicos/logos/`, catálogo 2026.09.5 (López de Haro: el escudo recortado de su logo oficial)
 - [ ] Logos con mejor resolución: Scotiabank (48 px), Promerica (50 px), La Nacional (57 px), Lafise y Motor Crédito (64 px) vienen del favicon oficial y se ven algo suaves; pedir el logo al banco o tomarlo de su kit de prensa
-- [ ] López de Haro sigue con iniciales: su ícono oficial es un escudo que no se distingue a 28 puntos
 - [ ] Publicar `datos-publicos/logos/` en `/v1/logos/` del servidor de datos públicos junto con el catálogo
 - [ ] Capturas y fichas de las tiendas sin logos de bancos reales (D63): usar bancos de ejemplo o iniciales
 - [ ] Si un banco pide quitar su logo: borrar el campo `logo` de su emisor en el catálogo y subir la versión; la app vuelve a las iniciales sin publicar versión nueva

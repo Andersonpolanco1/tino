@@ -21,6 +21,7 @@ const incluidos: Record<string, ImageSourcePropType> = {
   'bhd.png': require('../../datos-publicos/logos/bhd.png'),
   'citibank.png': require('../../datos-publicos/logos/citibank.png'),
   'lafise.png': require('../../datos-publicos/logos/lafise.png'),
+  'lopez-de-haro.png': require('../../datos-publicos/logos/lopez-de-haro.png'),
   'motor-credito.png': require('../../datos-publicos/logos/motor-credito.png'),
   'promerica.png': require('../../datos-publicos/logos/promerica.png'),
   'qik.png': require('../../datos-publicos/logos/qik.png'),
