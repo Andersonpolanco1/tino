@@ -14,7 +14,8 @@ interface Props {
   cerrar?: () => void;
 }
 
-// Barra de arriba del rediseño, en lugar del encabezado del sistema.
+// Barra de arriba del rediseño, en lugar del encabezado del sistema. Atrás y cerrar van sin fondo,
+// del mismo tamaño y color, para que se lean como un par.
 export function BarraSuperior({ izquierda, titulo, derecha, cerrar }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
@@ -26,6 +27,7 @@ export function BarraSuperior({ izquierda, titulo, derecha, cerrar }: Props) {
           icono={izquierda.tipo}
           etiqueta={izquierda.tipo === 'atras' ? t('comun.atras') : t('comun.cerrar')}
           onPress={izquierda.onPress}
+          plano
         />
       ) : (
         hueco
