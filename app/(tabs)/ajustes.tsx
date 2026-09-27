@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Alert, Linking, Platform, View } from 'react-native';
+import { Alert, Image, Linking, Platform, View } from 'react-native';
+import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -104,6 +105,10 @@ export default function Ajustes() {
       Alert.alert(t('pro.errorCompra'));
     }
   }
+
+  // Versión visible y número de compilación que pone la tienda (sección 12 técnica).
+  const version = t('ajustes.acercaVersion', { version: Application.nativeApplicationVersion ?? '', compilacion: Application.nativeBuildVersion ?? '' });
+  const derechos = t('ajustes.acercaDerechos', { anio: new Date().getFullYear() });
 
   function reiniciarIdentificador() {
     Alert.alert(t('ajustes.reiniciarIdTitulo'), t('ajustes.reiniciarIdAviso'), [
@@ -256,6 +261,21 @@ export default function Ajustes() {
         </ListaAgrupada>
         <Texto variante="apoyo" color="textoSecundario" style={{ paddingHorizontal: tema.espacio.xs, fontSize: 13 }}>
           {t('ajustes.datosInfo')}
+        </Texto>
+      </View>
+
+      {/* Acerca de Tino: al final, discreto. */}
+      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, t('ajustes.acercaCreditos'), derechos].join('. ')}>
+        <Image source={require('../../assets/iconos/icono-app-192.png')} style={{ width: 56, height: 56, borderRadius: 14, marginBottom: tema.espacio.xs }} />
+        <Texto variante="cuerpoFuerte">{t('ajustes.acercaNombre')}</Texto>
+        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+          {version}
+        </Texto>
+        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+          {t('ajustes.acercaCreditos')}
+        </Texto>
+        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
+          {derechos}
         </Texto>
       </View>
 
