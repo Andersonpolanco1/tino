@@ -7,8 +7,8 @@ import { Texto } from './Texto';
 import { useTema } from './useTema';
 
 interface Props {
-  // Barra: "atrás" o "cerrar" a la izquierda, "Paso X de N" o un título, y cerrar a la derecha.
-  izquierda: { tipo: 'atras' | 'cerrar'; onPress: () => void };
+  // Barra: "atrás" a la izquierda (nada en el primer paso), "Paso X de N" o un título, y cerrar a la derecha.
+  izquierda?: { tipo: 'atras' | 'cerrar'; onPress: () => void };
   tituloBarra: string;
   onCerrar?: () => void;
   // Segmentos de avance; sin él (al editar) no se muestran.

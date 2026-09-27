@@ -140,11 +140,13 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
   }
 
   // Marco común de cada paso: barra, progreso, título en pregunta y botón fijo abajo.
+  // Al agregar, la X va siempre a la derecha sin fondo; "atrás" a la izquierda desde el 2.º paso.
+  const primerPaso = (v: Vista) => !editando && (v === 'banco' || (!catalogo && v === pasos[0]));
   const marco = (v: Vista, titulo: string, contenido: ReactNode, opciones: { pie?: ReactNode; info?: string; subtitulo?: string } = {}) => (
     <MarcoAsistente
-      izquierda={v === 'banco' && !editando ? { tipo: 'cerrar', onPress: onCerrar } : { tipo: 'atras', onPress: () => atras(v) }}
+      izquierda={primerPaso(v) ? undefined : { tipo: 'atras', onPress: () => atras(v) }}
       tituloBarra={editando ? t('registro.tituloEditar') : t('registro.pasoDe', { actual: numeroDe(v), total })}
-      onCerrar={!editando && v !== 'banco' ? onCerrar : undefined}
+      onCerrar={editando ? undefined : onCerrar}
       progreso={editando ? undefined : { actual: numeroDe(v), total }}
       titulo={titulo}
       info={opciones.info}

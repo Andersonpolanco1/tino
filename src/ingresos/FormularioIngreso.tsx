@@ -236,9 +236,9 @@ export function FormularioIngreso({ ingreso, onListo, onCerrar, onBorrado }: Pro
   const ultimo = i === PASOS_INGRESO.length - 1;
   return (
     <MarcoAsistente
-      izquierda={i === 0 ? { tipo: 'cerrar', onPress: onCerrar } : { tipo: 'atras', onPress: () => ir(PASOS_INGRESO[i - 1]) }}
+      izquierda={i === 0 ? undefined : { tipo: 'atras', onPress: () => ir(PASOS_INGRESO[i - 1]) }}
       tituloBarra={editando ? t('cobros.tituloEditar') : t('registro.pasoDe', { actual: i + 1, total: PASOS_INGRESO.length })}
-      onCerrar={i > 0 ? onCerrar : undefined}
+      onCerrar={onCerrar}
       progreso={{ actual: i + 1, total: PASOS_INGRESO.length }}
       titulo={t(TITULOS[paso])}
       info={paso === 'frecuencia' ? t('cobros.info.porQue') : undefined}

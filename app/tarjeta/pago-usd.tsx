@@ -16,7 +16,7 @@ export default function PagoUsd() {
   }
 
   return (
-    <Pantalla arriba={<BarraSuperior izquierda={{ tipo: 'cerrar', onPress: () => router.back() }} />}>
+    <Pantalla arriba={<BarraSuperior cerrar={() => router.back()} />}>
       <Stack.Screen options={{ headerShown: false }} />
       <Texto variante="titulo" accessibilityRole="header">
         {t('registro.pagoBalanceUsd')}

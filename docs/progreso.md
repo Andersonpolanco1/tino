@@ -178,6 +178,7 @@ Criterios de la especificación:
 - [ ] Revisar con un contador el ITBIS sobre servicios digitales y la comisión de 15% del programa de pequeños desarrolladores (Apple y Google)
 - [ ] Qué ofrecer al usuario si la clave de cifrado no abre su base (por ejemplo, una base restaurada en otro teléfono). Hoy la app muestra un mensaje y no borra nada.
 - [ ] Configurar lint (`npx expo lint`)
+- [ ] Prueba inestable: "muestra la fecha, la tarjeta de hoy y las demás en orden de enfoque" (`src/__tests__/inicio.test.tsx`) falló una vez y pasó en las 4 corridas siguientes; averiguar la causa
 - [ ] Confirmar la regla de fecha límite en día no laborable (¿se paga el siguiente día hábil sin cargo?). No aparece en el reglamento de la Superintendencia ni en los contratos de Promerica y Banesco; si se confirma, el valor por defecto pasa a "atrasar" y la pregunta se puede quitar
 - [ ] Actualizar en claude.ai la especificación (12.2) y la documentación técnica (sección 6): sin bloqueo propio ni cobertura en segundo plano (decisión D25)
 - [ ] Publicar el servidor de datos públicos (sección 7.1 técnica) y poner su dirección en `EXPO_PUBLIC_URL_DATOS_PUBLICOS` (secreto de EAS); mientras tanto la app usa la copia incluida
