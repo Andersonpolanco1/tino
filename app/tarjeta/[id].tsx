@@ -1,7 +1,7 @@
 import { View } from 'react-native';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { BarraSuperior, BotonPastilla, Etiqueta, FilaLista, ListaAgrupada, Palanca, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import { AccionBarra, BarraSuperior, Etiqueta, FilaLista, ListaAgrupada, Palanca, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistaTarjeta } from '@/inicio/useVistas';
@@ -66,7 +66,7 @@ export default function DetalleTarjeta() {
         <BarraSuperior
           izquierda={{ tipo: 'atras', onPress: () => router.back() }}
           derecha={
-            <BotonPastilla icono="editar" titulo={t('detalle.editar')} onPress={editar} />
+            <AccionBarra icono="editar" titulo={t('detalle.editar')} onPress={editar} />
           }
         />
       }
