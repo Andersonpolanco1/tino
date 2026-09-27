@@ -8,7 +8,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { fechaCorta, type Traducir as TraducirVista } from '@/inicio/vista';
 import { proximosCobros, resumenFrecuencia, type Traducir } from '@/ingresos/borrador';
 
-// Tus cobros (sección 5): lista de fuentes de ingreso con su próximo cobro.
+// Tus días de cobro (sección 5): lista de fuentes de ingreso con su próximo cobro.
 export default function Cobros() {
   const { t } = useTranslation();
   const tema = useTema();

@@ -296,11 +296,11 @@
     "moneda": "Moneda",
     "paisAyuda": "Define los bancos, la moneda y los feriados que usa Tino.",
     "precision": "Precisión de recomendaciones: {{porcentaje}}%",
-    "precisionInfo": "Qué tan completa está la información de tus tarjetas. Sube si confirmas el valor del punto de cada tarjeta y, más adelante, si registras tus fechas de cobro.",
+    "precisionInfo": "Qué tan completa está la información de tus tarjetas. Sube si confirmas el valor del punto de cada tarjeta y, más adelante, si registras tus días de cobro.",
     "privacidadTitulo": "Privacidad",
     "analitica": "Datos de uso anónimos",
     "analiticaDetalle": "Nos ayudan a saber qué mejorar. Apagados, no se envía nada.",
-    "privacidadInfo": "Solo enviamos qué partes de Tino usas, en categorías: por ejemplo, tu banco o cuántas tarjetas tienes (1, 2, 3 a 4). Nunca montos, números, nombres de tus tarjetas ni fechas de tus cobros.",
+    "privacidadInfo": "Solo enviamos qué partes de Tino usas, en categorías: por ejemplo, tu banco o cuántas tarjetas tienes (1, 2, 3 a 4). Nunca montos, números, nombres de tus tarjetas ni tus días de cobro.",
     "reiniciarId": "Reiniciar identificador anónimo",
     "reiniciarIdTitulo": "¿Reiniciar el identificador?",
     "reiniciarIdAviso": "Tino usará un identificador anónimo nuevo. Lo que se envíe desde ahora no se podrá unir con lo anterior.",
@@ -336,7 +336,7 @@
     "avisoFechaLimite": "Fecha límite próxima",
     "avisoFechaLimiteDetalle": "3 días antes de cada pago",
     "avisoVenceAntes": "Vence antes de tu cobro",
-    "avisoVenceAntesDetalle": "5 días antes, si registras tus cobros",
+    "avisoVenceAntesDetalle": "5 días antes, si registras tus días de cobro",
     "avisoCambio": "Cambio de tarjeta",
     "avisoCambioDetalle": "Cuando otra tarjeta pasa a ser la mejor",
     "avisoResumen": "Resumen del mes",
@@ -467,7 +467,7 @@
     }
   },
   "cobros": {
-    "titulo": "Tus cobros",
+    "titulo": "Tus días de cobro",
     "tituloEditar": "Editar cobro",
     "tituloFrecuencia": "¿Cada cuánto cobras?",
     "tituloFechas": "¿Qué días cobras?",
@@ -556,7 +556,7 @@
     "agregar": "Agregar un cobro",
     "agregarOtro": "Agregar otro cobro",
     "explicacion": "Con tus fechas de cobro te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
-    "vacio": "Todavía no tienes cobros registrados.",
+    "vacio": "Todavía no tienes días de cobro registrados.",
     "proximo": "próximo: {{fecha}}"
   },
   "avisos": {
@@ -577,8 +577,8 @@
     "finPruebaCuerpo": "Termina el {{fecha}}. Si quieres seguir, no tienes que hacer nada; si no, cancélala en la tienda antes de esa fecha."
   },
   "sugerencias": {
-    "cobros": "Agrega tus fechas de cobro y te avisamos si un pago vence antes de que cobres.",
-    "cobrosAccion": "Agregar mis cobros",
+    "cobros": "Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.",
+    "cobrosAccion": "Agregar mis días de cobro",
     "valorPunto": "Confirma cuánto vale el punto de {{alias}} y la comparación con el cashback será exacta.",
     "valorPuntoAccion": "Confirmar",
     "descartar": "Descartar sugerencia"

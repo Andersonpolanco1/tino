@@ -155,7 +155,7 @@ test('sugerencia de datos: agregar los cobros cuando un pago está cerca, y se p
   const almacen = await almacenCon([A, B, C]);
   await render(envolver(almacen, <Inicio />));
   // B vence el 10 de octubre, en 4 días, y no hay cobros registrados.
-  expect(screen.getByText('Agrega tus fechas de cobro y te avisamos si un pago vence antes de que cobres.')).toBeOnTheScreen();
+  expect(screen.getByText('Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.')).toBeOnTheScreen();
   await fireEvent.press(screen.getByLabelText('Descartar sugerencia'));
   await act(async () => {});
   expect(screen.queryByText(/Agrega tus fechas de cobro/)).toBeNull();
