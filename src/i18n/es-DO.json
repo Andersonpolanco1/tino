@@ -227,8 +227,7 @@
     "equivale": "equivale a {{precio}} al mes",
     "lanzamientoDetalle": "Precio para los primeros usuarios",
     "empezarPrueba": "Empezar prueba gratis",
-    "suscribirme": "Suscribirme",
-    "condiciones": "El cobro se hace en tu cuenta de {{tienda}} al terminar la prueba gratis, si la tiene, y se renueva solo al mismo precio hasta que lo canceles en {{tienda}}. Si cancelas durante la prueba, no se te cobra.",
+    "condiciones": "Se cobra en tu cuenta de {{tienda}} al confirmar y se renueva solo al mismo precio. Cancela cuando quieras en {{tienda}}.",
     "tienda": {
       "ios": "App Store",
       "android": "Google Play"
@@ -271,7 +270,11 @@
     "listoPrueba_one": "Tu prueba gratis empezó. Te avisamos {{count}} día antes de que termine.",
     "listoPrueba_other": "Tu prueba gratis empezó. Te avisamos {{count}} días antes de que termine.",
     "listoCompra": "Gracias por apoyar a Tino. Ya puedes registrar todas tus tarjetas.",
-    "continuar": "Continuar"
+    "continuar": "Continuar",
+    "condicionesPrueba": "El cobro se hace en tu cuenta de {{tienda}} al terminar la prueba gratis, si la tiene, y se renueva solo al mismo precio hasta que lo canceles en {{tienda}}. Si cancelas durante la prueba, no se te cobra.",
+    "suscribirmePor": "Suscribirme por {{precio}}",
+    "agregarMiTarjeta": "Agregar mi tarjeta",
+    "tuPlan": "Plan {{plan}}"
   },
   "pestanas": {
     "inicio": "Inicio",

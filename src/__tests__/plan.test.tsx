@@ -104,7 +104,8 @@ describe('3.ª tarjeta en el plan gratis (15.5)', () => {
     // Lo que se cobra se ve más que la prueba (norma 3.1.2 de Apple), y el ahorro del anual se calcula.
     expect(screen.getByText('US$14.99')).toBeOnTheScreen();
     expect(screen.getByText('1 mes gratis, luego US$14.99 al año')).toBeOnTheScreen();
-    expect(screen.getByText('Ahorra 50% · Precio para los primeros usuarios')).toBeOnTheScreen();
+    expect(screen.getByText('Ahorra 50%')).toBeOnTheScreen();
+    expect(screen.getByText('Precio para los primeros usuarios')).toBeOnTheScreen();
     expect(screen.getByText('Ahorra 33%')).toBeOnTheScreen();
     // Cómo funciona la prueba, con el aviso antes del cobro.
     expect(screen.getByText('2 días antes de que termine')).toBeOnTheScreen();
@@ -117,19 +118,22 @@ describe('3.ª tarjeta en el plan gratis (15.5)', () => {
     // Confirmación antes de seguir con el registro.
     expect(screen.getByText('Ya tienes Tino Pro')).toBeOnTheScreen();
     expect(screen.getByText('Tu prueba gratis empezó. Te avisamos 2 días antes de que termine.')).toBeOnTheScreen();
-    await act(async () => fireEvent.press(screen.getByText('Continuar')));
+    expect(screen.getByText('Plan Anual de lanzamiento')).toBeOnTheScreen();
+    await act(async () => fireEvent.press(screen.getByText('Agregar mi tarjeta')));
     expect(screen.queryByText('Ya tienes Tino Pro')).toBeNull();
     expect(screen.queryByText('Registra todas tus tarjetas')).toBeNull();
   });
 
-  it('sin prueba, el botón dice Suscribirme y no hay línea de tiempo', async () => {
+  it('sin prueba, el botón dice el precio, no hay línea de tiempo y las condiciones no hablan de prueba', async () => {
     usarServicioDePrueba(servicioFalso());
     const almacen = await almacenCon([A, B]);
     await render(envolver(almacen, <NuevaTarjeta />));
     await act(async () => fireEvent.press(await screen.findByText('Anual')));
-    expect(screen.getByText('Suscribirme')).toBeOnTheScreen();
+    expect(screen.getByRole('radio', { name: /^Anual\. US\$19\.99 al año/ }).props.accessibilityState).toMatchObject({ selected: true });
+    expect(screen.getByText('Suscribirme por US$19.99 al año')).toBeOnTheScreen();
     expect(screen.queryByText('Cómo funciona la prueba')).toBeNull();
     expect(screen.getByText('equivale a US$1.67 al mes')).toBeOnTheScreen();
+    expect(screen.getByText(/^Se cobra en tu cuenta de .* al confirmar/)).toBeOnTheScreen();
   });
 
   it('un pago pendiente lo explica y no activa Pro', async () => {
