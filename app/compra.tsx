@@ -7,7 +7,9 @@ import { BarraSuperior, ControlSegmentado, Icono, ListaAgrupada, Pantalla, Super
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
-import { valorRecompensaCompra, type Traducir } from '@/inicio/vista';
+import { diaConSemana, valorRecompensaCompra, type Traducir } from '@/inicio/vista';
+import { calcularRanking } from '@/motor';
+import { DIAS_MINIMOS_AL_ESPERAR } from '@/notificaciones/planificar';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { ChipBanco } from '@/inicio/ChipBanco';
 import { registrarConsultaCompra } from '@/analitica';
@@ -39,6 +41,14 @@ export default function Compra() {
   const [mejor, ...otras] = compra && vistas ? vistas.tarjetas : [];
   const preferencias = useAlmacen(s => s.preferencias);
   // Decisión D67: en una compra en la moneda secundaria, avisar si la mejor la convierte.
+  // Decisión D69: si la mejor está por cortar (semáforo en rojo), cuántos días daría esperar al
+  // día después del corte, con la mejor tarjeta de ese día (puede ser otra).
+  const esperar = useMemo(() => {
+    if (!mejor?.esperar || !vistas) return null;
+    const [luego] = calcularRanking({ ...vistas.entrada, hoy: mejor.esperar.fecha }).ranking;
+    if (!luego || luego.diasGracia - mejor.resultado.diasGracia < DIAS_MINIMOS_AL_ESPERAR) return null;
+    return { fecha: mejor.esperar.fecha, dias: luego.diasGracia, tarjetaId: luego.tarjetaId };
+  }, [mejor, vistas]);
   const conConversion = !!mejor && !!preferencias && moneda !== config.monedaPrincipal && mejor.tarjeta.monedaFacturacion === 'solo_principal';
 
   const monedas = [config.monedaPrincipal, ...(config.monedaSecundaria ? [config.monedaSecundaria] : [])];
@@ -147,6 +157,16 @@ export default function Compra() {
               ) : null}
             </View>
           </Pressable>
+          {esperar ? (
+            <Texto variante="apoyo">
+              {t(esperar.tarjetaId === mejor.tarjeta.id ? 'compra.esperar' : 'compra.esperarOtra', {
+                dia: diaConSemana(esperar.fecha, idioma, t as unknown as Traducir),
+                despues: esperar.dias,
+                antes: mejor.resultado.diasGracia,
+                alias: aliasDe(esperar.tarjetaId),
+              })}
+            </Texto>
+          ) : null}
           {conConversion ? (
             <Texto variante="apoyo" color="alertaTexto">
               {t('compra.conversion', {

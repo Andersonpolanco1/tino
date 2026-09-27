@@ -431,6 +431,8 @@
     "mejor": "Usa esta tarjeta",
     "otras": "Otras opciones",
     "excluidaLocal": "{{alias}} no aparece: es solo de uso local.",
+    "esperar": "Si puedes esperar al {{dia}}, tendrás {{despues}} días para pagar esta compra en vez de {{antes}}.",
+    "esperarOtra": "Si puedes esperar al {{dia}}, con {{alias}} tendrás {{despues}} días para pagar esta compra en vez de {{antes}}.",
     "conversion": "Esta tarjeta te cobra en {{moneda}} con la tasa del banco: puede salirte alrededor de {{porcentaje}}% más cara. Una tarjeta con balance en {{monedaCompra}} te ahorra esa diferencia.",
     "excluidaPausa": "{{alias}} está en pausa.",
     "montoInvalido": "Escribe un monto mayor que cero.",

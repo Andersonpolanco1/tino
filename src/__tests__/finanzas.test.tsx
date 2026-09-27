@@ -162,3 +162,16 @@ test('la pestaña con algo nuevo lleva un punto y lo dice al lector de pantalla'
   expect(screen.queryByTestId('aviso-inicio')).toBeNull();
   expect(screen.getByLabelText('Tarjetas. Tienes consejos nuevos para tus fechas')).toBeOnTheScreen();
 });
+
+// Decisión D69: en "Tengo una compra", si la mejor está por cortar, cuánto da esperar.
+test('una compra con la mejor tarjeta por cortar dice cuántos días da esperar', async () => {
+  await render(envolver(await almacenCon([tarjeta('P', { diaCorte: 8 })]), <Compra />));
+  await act(async () => fireEvent.changeText(screen.getByLabelText('¿Cuánto vas a gastar?'), '5000'));
+  expect(screen.getByText('Si puedes esperar al viernes 9, tendrás 50 días para pagar esta compra en vez de 22.')).toBeOnTheScreen();
+});
+
+test('recién cortada no sugiere esperar', async () => {
+  await render(envolver(await almacenCon([tarjeta('P')]), <Compra />));
+  await act(async () => fireEvent.changeText(screen.getByLabelText('¿Cuánto vas a gastar?'), '5000'));
+  expect(screen.queryByText(/^Si puedes esperar/)).toBeNull();
+});
