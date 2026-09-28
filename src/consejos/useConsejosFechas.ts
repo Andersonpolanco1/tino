@@ -6,17 +6,16 @@ import { useTarjetasEnPlan } from '../suscripciones/useSuscripcion';
 import { consejosDeFechas, type ConsejoFechas } from './fechas';
 import { esVisto, marcarVistos } from './vistos';
 
-// Los consejos de fechas de hoy, con las tarjetas que cuentan (activas y dentro del plan) y el
-// enfoque guardado. Siguen a la vista mientras el problema exista (decisiones D68 y D74).
+// Los consejos de fechas de hoy, con las tarjetas que cuentan (activas y dentro del plan); el
+// enfoque no cuenta (D79). Siguen a la vista mientras el problema exista (decisiones D68 y D74).
 export function useConsejosFechas(): ConsejoFechas[] {
   const hoy = useHoy();
   const { config } = usePais();
   const tarjetas = useTarjetasEnPlan();
   const ingresos = useAlmacen(s => s.ingresos);
-  const enfoque = useAlmacen(s => s.preferencias?.enfoque.modo ?? 'equilibrado');
   return useMemo(
-    () => consejosDeFechas({ hoy, tarjetas: tarjetas.filter(x => !x.enPausa), ingresos, pais: config, enfoque }),
-    [hoy, tarjetas, ingresos, config, enfoque],
+    () => consejosDeFechas({ hoy, tarjetas: tarjetas.filter(x => !x.enPausa), ingresos, pais: config }),
+    [hoy, tarjetas, ingresos, config],
   );
 }
 

@@ -1,4 +1,4 @@
-import type { ConfigPais, FechaISO, FuenteIngreso, ModoEnfoque, ReglaFechaLimite, Tarjeta } from '../tipos/tipos';
+import type { ConfigPais, FechaISO, FuenteIngreso, ReglaFechaLimite, Tarjeta } from '../tipos/tipos';
 import { aFecha, fechaLimite, numeroDe, proximoCorte } from '../motor/fechas';
 import { cobrosEntre, type Cobro } from '../motor/ingresos';
 
@@ -12,8 +12,10 @@ import { cobrosEntre, type Cobro } from '../motor/ingresos';
 // - pagoLejosDelCobro: en la mitad o más de los próximos 12 estados, el pago cae más de 3
 //   semanas después del último cobro. El dinero tiene que durar casi un mes y ahí se cae en
 //   mora. Solo con cobros de fecha regular: los de fechas variables no sirven para alinear.
-// - cortesJuntos (2 a 4 tarjetas, enfoque Días o Equilibrado): todas cortan a menos de una
-//   semana, así que hay días del mes en que ninguna da muchos días para pagar.
+// - cortesJuntos (2 a 4 tarjetas): todas cortan a menos de una semana, así que hay días del
+//   mes en que ninguna da muchos días para pagar.
+// El enfoque no cuenta: elige qué tarjeta usar hoy, pero un problema de fechas lo es para
+// cualquiera (D79).
 // Nada con 5 tarjetas o más: mover una casi siempre desordena otra.
 
 export type TipoConsejoFechas = 'pagoLejosDelCobro' | 'cortesJuntos';
@@ -53,7 +55,6 @@ export interface EntradaConsejos {
   tarjetas: Tarjeta[];
   ingresos: FuenteIngreso[];
   pais: ConfigPais;
-  enfoque: ModoEnfoque;
 }
 
 const DIAS_SIMULADOS = 365;
@@ -224,7 +225,7 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
   let tarjetas = e.tarjetas;
   const sims: Record<string, Simulacion> = {};
   for (const t of tarjetas) sims[t.id] = simular(t, ctx);
-  const cortesJuntosHoy = amontonadas(tarjetas) && (e.enfoque === 'liquidez' || e.enfoque === 'equilibrado');
+  const cortesJuntosHoy = amontonadas(tarjetas);
   const peorHoy = peorDia(tarjetas, sims);
   const consejos: ConsejoFechas[] = [];
   let separadas = !cortesJuntosHoy;

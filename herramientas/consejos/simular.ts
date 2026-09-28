@@ -135,7 +135,7 @@ function propuesta(e: Escenario): { consejos: string[]; notas: string[] } {
     .map(t => ({ t, m: medirTarjeta(t, ingresos) }))
     .filter(x => x.m.riesgo)
     .sort((a, b) => promedio(b.m.desdeCobro) - promedio(a.m.desdeCobro));
-  const juntas = amontonadas(e.tarjetas) && (e.enfoque === 'liquidez' || e.enfoque === 'equilibrado');
+  const juntas = amontonadas(e.tarjetas);
   let juntasResuelto = !juntas;
   for (const x of conRiesgo) {
     const arreglo = arregloRiesgo(x.t, tarjetas, ingresos);
@@ -186,7 +186,7 @@ test('simular consejos de fechas', () => {
     '',
     `Hoy: ${HOY}, feriados de RD. ${escenarios.length} escenarios.`,
     '',
-    `Regla (D73): el pago queda lejos del cobro si en la mitad o más de 12 meses cae más de ${DIAS_RIESGO} días después del último cobro que llegó al menos ${MARGEN_COBRO} días antes (${MARGEN_ESTIMADO} si es estimado); los cobros que varían más de ${VARIACION_MAXIMA} días no cuentan. Cortes juntos si todas cortan a menos de ${CORTES_JUNTOS} días (2 a 4 tarjetas, enfoque Días o Equilibrado). Máximo ${MAXIMO_CONSEJOS} consejos, calculados en orden; un arreglo del cobro no puede amontonar los cortes ni bajar el peor día del año de ${PISO_PEOR_DIA}.`,
+    `Regla (D73): el pago queda lejos del cobro si en la mitad o más de 12 meses cae más de ${DIAS_RIESGO} días después del último cobro que llegó al menos ${MARGEN_COBRO} días antes (${MARGEN_ESTIMADO} si es estimado); los cobros que varían más de ${VARIACION_MAXIMA} días no cuentan. Cortes juntos si todas cortan a menos de ${CORTES_JUNTOS} días (2 a 4 tarjetas). Máximo ${MAXIMO_CONSEJOS} consejos, calculados en orden; un arreglo del cobro no puede amontonar los cortes ni bajar el peor día del año de ${PISO_PEOR_DIA}.`,
     '',
     '| # | Tarjetas | Cobros | Peor día | Días desde el cobro hasta el pago (promedio por tarjeta) | Consejos de la app | Detalle del prototipo |',
     '| --- | --- | --- | --- | --- | --- | --- |',
@@ -198,7 +198,7 @@ test('simular consejos de fechas', () => {
     const n = i + 1;
     const ingresos = COBROS[e.cobros];
     const porId = new Map(e.tarjetas.map(t => [t.id, t]));
-    const codigo = consejosDeFechas({ hoy: HOY, tarjetas: e.tarjetas, ingresos, pais, enfoque: e.enfoque }).map(c => cortoCodigo(c, porId));
+    const codigo = consejosDeFechas({ hoy: HOY, tarjetas: e.tarjetas, ingresos, pais }).map(c => cortoCodigo(c, porId));
     const prototipo = propuesta(e);
     const esperado = prototipo.consejos.map(cortoPrototipo);
     if (codigo.length) conConsejo++;
@@ -207,7 +207,7 @@ test('simular consejos de fechas', () => {
       const p = promedio(medirTarjeta(t, ingresos).desdeCobro);
       return `${t.alias} ${Number.isNaN(p) ? '?' : Math.round(p)}`;
     });
-    const tarjetas = `${e.grupo}: ${e.nombre}${e.enfoque !== 'equilibrado' ? ` (enfoque ${e.enfoque})` : ''}`;
+    const tarjetas = `${e.grupo}: ${e.nombre}`;
     const detalle = [...prototipo.consejos, ...prototipo.notas].join('; ');
     lineas.push(`| ${n} | ${tarjetas} | ${e.cobros} | ${peorDia(e.tarjetas)} | ${promedios.join(', ')} | ${codigo.join(', ') || '—'} | ${detalle} |`);
     if (codigo.length) consola.push(`${n} | ${tarjetas} | ${e.cobros} | ${codigo.join(', ')}`);

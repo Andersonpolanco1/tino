@@ -1,4 +1,4 @@
-import type { ConfigPais, FuenteIngreso, ModoEnfoque, Tarjeta } from '../../tipos/tipos';
+import type { ConfigPais, FuenteIngreso, Tarjeta } from '../../tipos/tipos';
 import pais from '../../paises/do.json';
 import { cobrosRegulares, consejosDeFechas, distanciaCircular } from '../fechas';
 
@@ -37,8 +37,7 @@ const estimados = (dias: number[]) =>
     fechas: dias.map((dia, i) => ({ fecha: new Date(Date.UTC(2026, 9 + i, dia)).toISOString().slice(0, 10), estimada: true })),
   });
 
-const consejos = (tarjetas: Tarjeta[], ingresos: FuenteIngreso[] = [], enfoque: ModoEnfoque = 'equilibrado') =>
-  consejosDeFechas({ hoy, tarjetas, ingresos, pais: config, enfoque });
+const consejos = (tarjetas: Tarjeta[], ingresos: FuenteIngreso[] = []) => consejosDeFechas({ hoy, tarjetas, ingresos, pais: config });
 
 test('la distancia entre días del mes da la vuelta', () => {
   expect(distanciaCircular(5, 6)).toBe(1);
@@ -118,10 +117,16 @@ describe('cortes juntos', () => {
     expect(c.peorDia).toBeLessThan(25);
   });
 
-  test('con enfoque Puntos o Cashback no importa: casi siempre gana la misma tarjeta', () => {
-    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal], 'puntos')).toEqual([]);
-    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal], 'cashback')).toEqual([]);
-    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal], 'liquidez')).toHaveLength(1);
+  test('el caso del usuario: dos tarjetas que cortan el 19; el enfoque no cuenta (D79)', () => {
+    const conPuntos = (id: string, dia: number) =>
+      tarjeta(id, 19, 0, {
+        fechaLimite: { tipo: 'dia_del_mes', dia },
+        recompensa: { tipo: 'puntos', regla: { tipo: 'por_monto', puntos: 1, porCadaMonto: 100 }, valorPunto: 1, valorPuntoConfirmado: false },
+      });
+    const [c, ...resto] = consejos([conPuntos('SC', 27), conPuntos('BR', 30)], [mensual(22)]);
+    expect(resto).toEqual([]);
+    expect(c).toMatchObject({ tipo: 'cortesJuntos', cortes: [19, 19] });
+    expect(c.peorDia).toBeLessThan(12);
   });
 
   test('cortes que cruzan el fin de mes también están juntos (28 y 1)', () => {
@@ -135,7 +140,7 @@ describe('cortes juntos', () => {
 
   test('la tarjeta que se pide mover no cambia con el calendario: la más nueva o, en empate, siempre la misma', () => {
     const tarjetas = [tarjeta('A', 5, 20), tarjeta('B', 8, 20)];
-    const elegida = (hoy: string) => consejosDeFechas({ hoy, tarjetas, ingresos: [quincenal], pais: config, enfoque: 'equilibrado' })[0].tarjetaId;
+    const elegida = (hoy: string) => consejosDeFechas({ hoy, tarjetas, ingresos: [quincenal], pais: config })[0].tarjetaId;
     const meses = ['2026-10-06', '2026-11-15', '2027-01-15', '2027-03-01', '2027-06-15', '2027-09-01'];
     expect(new Set(meses.map(elegida))).toEqual(new Set(['A']));
     const nueva = [tarjeta('A', 5, 20), tarjeta('B', 8, 20, { creadaEn: '2026-09-20' })];
@@ -145,7 +150,7 @@ describe('cortes juntos', () => {
   test('con cobros de fechas anotadas, solo juzga los meses que cubren', () => {
     // Sueldo el 30 y una remesa anotada hasta diciembre: después Tino no sabe si sigue llegando.
     const remesa = estimados([15, 15, 15]);
-    const c = consejosDeFechas({ hoy: '2027-06-01', tarjetas: [tarjeta('A', 5, 20)], ingresos: [mensual(30), remesa], pais: config, enfoque: 'equilibrado' });
+    const c = consejosDeFechas({ hoy: '2027-06-01', tarjetas: [tarjeta('A', 5, 20)], ingresos: [mensual(30), remesa], pais: config });
     expect(c).toEqual([]);
   });
 
@@ -177,7 +182,7 @@ describe('juntos', () => {
   test('la huella es estable con el calendario y cambia si cambian las fechas o los cobros', () => {
     const tarjetas = [tarjeta('SC', 23, 27)];
     const hoyC = consejos(tarjetas, [mensual(22)])[0].huella;
-    const manana = consejosDeFechas({ hoy: '2026-10-20', tarjetas, ingresos: [mensual(22)], pais: config, enfoque: 'equilibrado' })[0].huella;
+    const manana = consejosDeFechas({ hoy: '2026-10-20', tarjetas, ingresos: [mensual(22)], pais: config })[0].huella;
     expect(manana).toBe(hoyC);
     expect(consejos([tarjeta('SC', 23, 26)], [mensual(22)])[0].huella).not.toBe(hoyC);
     expect(consejos(tarjetas, [{ ...mensual(22), ajusteDiaNoHabil: 'adelantar' }])[0].huella).not.toBe(hoyC);

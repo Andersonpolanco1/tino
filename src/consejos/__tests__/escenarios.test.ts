@@ -72,8 +72,6 @@ const ESPERADO: Record<number, string[]> = {
   166: ['cobro:Visa doble'],
   168: ['cobro:Scotiabank'],
   169: ['cobro:Scotiabank'],
-  171: ['cobro:B', 'cobro:A'],
-  172: ['cortes:A'],
 };
 
 test('hay más de 150 escenarios', () => {
@@ -82,7 +80,7 @@ test('hay más de 150 escenarios', () => {
 
 test.each(escenarios.map((e, i) => [i + 1, e] as const))('escenario %i', (n, e) => {
   const porId = new Map(e.tarjetas.map(t => [t.id, t]));
-  const consejos = consejosDeFechas({ hoy: HOY, tarjetas: e.tarjetas, ingresos: COBROS[e.cobros], pais, enfoque: e.enfoque }).map(
+  const consejos = consejosDeFechas({ hoy: HOY, tarjetas: e.tarjetas, ingresos: COBROS[e.cobros], pais }).map(
     c => `${c.tipo === 'pagoLejosDelCobro' ? 'cobro' : 'cortes'}:${porId.get(c.tarjetaId)!.alias}${c.separaCortes ? '+separa' : ''}`,
   );
   const escenario = `${e.grupo}: ${e.nombre} · ${e.cobros}`;

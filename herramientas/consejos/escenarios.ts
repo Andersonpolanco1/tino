@@ -1,7 +1,7 @@
 // Escenarios de tarjetas y cobros de la vida real dominicana para revisar los consejos de fechas
 // (decisión D73). Los usan la prueba src/consejos/__tests__/escenarios.test.ts y el simulador de
 // herramientas/consejos/simular.ts.
-import type { ConfigPais, FechaISO, FuenteIngreso, FrecuenciaIngreso, ModoEnfoque, ReglaFechaLimite, Tarjeta } from '../../src/tipos/tipos';
+import type { ConfigPais, FechaISO, FuenteIngreso, FrecuenciaIngreso, ReglaFechaLimite, Tarjeta } from '../../src/tipos/tipos';
 import paisDO from '../../src/paises/do.json';
 
 export const HOY: FechaISO = '2026-09-27';
@@ -97,12 +97,11 @@ export interface Escenario {
   nombre: string;
   tarjetas: Tarjeta[];
   cobros: string;
-  enfoque: ModoEnfoque;
 }
 
 export const escenarios: Escenario[] = [];
-const agregar = (grupo: string, nombre: string, tarjetas: Tarjeta[], cobros: string[], enfoque: ModoEnfoque = 'equilibrado') => {
-  for (const c of cobros) escenarios.push({ grupo, nombre, tarjetas, cobros: c, enfoque });
+const agregar = (grupo: string, nombre: string, tarjetas: Tarjeta[], cobros: string[]) => {
+  for (const c of cobros) escenarios.push({ grupo, nombre, tarjetas, cobros: c });
 };
 
 // 1 tarjeta: 3 × 20 cobros.
@@ -166,6 +165,4 @@ agregar('4 tarjetas', 'por pares: 5, 6, 20 y 21', [tarjeta('A', 5, 20), tarjeta(
 agregar('Especiales', 'doble balance: corta 10, pesos a los 20 y dólares a los 15', [tarjeta('Visa doble', 10, 20, { usd: 15 })], ['Empleado mensual 30', 'Empleado quincenal 15/30', 'Uber (martes)']);
 agregar('Especiales', 'doble balance + una en pesos: cortan 10 y 25', [tarjeta('Visa doble', 10, 20, { usd: 15 }), tarjeta('Mastercard', 25, 20)], ['Empleado mensual 30', 'Mensual 30 + Uber']);
 agregar('Especiales', 'paga el día 28, corta el 3', [tarjeta('Scotiabank', 3, 0, { plazo: { tipo: 'dia_del_mes', dia: 28 } })], ['Empleado mensual 30', 'Mensual último día hábil']);
-agregar('Especiales', 'amontonadas 5 y 8 con enfoque Puntos', [tarjeta('A', 5, 20), tarjeta('B', 8, 20)], ['Empleado quincenal 15/30', 'Empleado mensual 30'], 'puntos');
-agregar('Especiales', 'amontonadas 5 y 8 con enfoque Días', [tarjeta('A', 5, 20), tarjeta('B', 8, 20)], ['Empleado quincenal 15/30'], 'liquidez');
 
