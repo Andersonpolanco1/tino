@@ -1,0 +1,134 @@
+<!--
+Borrador para publicar en la dirección de EXPO_PUBLIC_URL_PRIVACIDAD.
+Antes de publicar: completar los campos [POR COMPLETAR], pedir revisión a un abogado
+(Ley 172-13) y confirmar los pendientes de docs/progreso.md (sección "Pendientes fuera del código").
+Todo lo que dice este texto debe seguir siendo cierto en el código: si cambia la analítica,
+los reportes de fallos, el respaldo o las suscripciones, se actualiza aquí en el mismo commit.
+-->
+
+# Política de privacidad de Tino
+
+Última actualización: [POR COMPLETAR: fecha de publicación]
+
+Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso necesita algunos datos de tus tarjetas, y queremos que sepas exactamente cuáles, dónde se guardan y qué sale de tu teléfono. Lo resumimos así:
+
+- **Tus datos financieros se quedan en tu teléfono,** cifrados. No tenemos servidores donde se guarden tus tarjetas ni tus fechas.
+- **No necesitas crear una cuenta.** No te pedimos nombre, correo ni teléfono.
+- **Nunca te pedimos** el número completo de tu tarjeta, la fecha de vencimiento, el código de seguridad (CVV) ni tu usuario o clave del banco.
+- **Enviamos datos de uso anónimos** para mejorar Tino, sin montos, nombres de tarjetas ni fechas de cobro. Puedes apagarlos en cualquier momento.
+- **No vendemos datos** ni mostramos publicidad.
+
+## 1. Quién es responsable de tus datos
+
+El responsable de Tino es Polanco Labs, con domicilio en [POR COMPLETAR: dirección], República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a polancolabsrd@gmail.com.
+
+Esta política se rige por la Ley 172-13 sobre protección de datos de carácter personal de la República Dominicana.
+
+## 2. Qué datos guarda Tino en tu teléfono
+
+Estos datos los escribes tú y se guardan **solo en tu teléfono**, en una base de datos cifrada. La clave de cifrado se crea al instalar Tino y se guarda en el almacén seguro del sistema (Keychain en iPhone, Keystore en Android).
+
+| Dato | Para qué se usa |
+| --- | --- |
+| Tus tarjetas: el nombre que les pones, el banco y el tipo de tarjeta, los últimos 4 dígitos (opcional), el día de corte, la fecha límite de pago, la moneda en que factura y sus recompensas (puntos o cashback) | Calcular cuántos días tienes para pagar y qué tarjeta te conviene hoy |
+| Si una tarjeta está en pausa y si marcaste un pago como hecho | Sacarla del ranking y dejar de recordarte ese pago |
+| Tus días de cobro: el nombre que les pones (por ejemplo, "Nómina") y cada cuánto cobras. **Nunca montos** | Avisarte si una tarjeta vence antes de que cobres |
+| Tus preferencias: el enfoque (días, puntos, cashback o equilibrado), cómo pagas tu balance en dólares, los avisos que quieres recibir, tu plan y si los datos de uso están encendidos | Que Tino funcione como lo configuraste |
+| Las sugerencias y consejos que ya viste o descartaste | No repetirte lo mismo |
+| Una copia del catálogo público de bancos y tarjetas | Que puedas elegir tu banco sin conexión |
+
+Tino no usa tu ubicación, tus contactos, tus fotos, tus mensajes ni tu cámara. El único permiso que te pide es el de notificaciones, y solo si decides activar los avisos.
+
+## 3. Qué sale de tu teléfono
+
+### 3.1 Datos de uso anónimos
+
+Si la opción **"Datos de uso anónimos"** está encendida, Tino envía eventos como "se registró una tarjeta" o "se cambió el enfoque", para saber qué partes de la app se usan y cuáles mejorar. La opción viene encendida y la puedes apagar en **Ajustes > Privacidad**. Al apagarla, Tino deja de enviar eventos al instante y no los guarda para enviarlos después.
+
+Cada evento puede llevar:
+
+- el país configurado en Tino;
+- categorías, nunca valores exactos: por ejemplo, el banco y el tipo de tarjeta del catálogo (o "otro"), la moneda en que factura, el tipo de recompensa, el enfoque elegido o cuántas tarjetas tienes en rangos (1, 2, 3 a 4, 5 o más);
+- la versión de Tino y la del sistema operativo de tu teléfono;
+- un identificador aleatorio creado por Tino en tu teléfono, que no está ligado a tu nombre, a tu cuenta de la tienda ni al teléfono. Si usas "Borrar todo", se crea uno nuevo.
+
+**Nunca se envían** montos, balances, límites, números de tarjeta (ni los últimos 4 dígitos), los nombres que les pones a tus tarjetas o cobros, ni tus fechas de cobro. Tino tampoco guarda tu ubicación a partir de la dirección IP.
+
+Estos eventos los recibe PostHog, en servidores de la Unión Europea.
+
+### 3.2 Reportes de fallos
+
+Con la misma opción "Datos de uso anónimos" encendida, si Tino se cierra o tiene un error, envía un reporte técnico para que podamos corregirlo: qué parte del código falló, la versión de la app, el modelo y sistema del teléfono, y si la sesión terminó sin fallos. Antes de enviarlo, Tino le quita los datos de pantalla y el historial de acciones, y reemplaza cualquier secuencia larga de números por "[filtrado]". Los reportes no incluyen capturas de pantalla.
+
+Estos reportes los recibe Sentry, en servidores de la Unión Europea. Con la opción apagada no se envía ningún reporte.
+
+### 3.3 Compras de Tino Pro
+
+Si compras Tino Pro, el pago lo procesa Apple (App Store) o Google (Google Play); Tino nunca ve los datos de tu tarjeta de pago. Para saber si tienes Pro, Tino usa RevenueCat, que recibe el recibo de la compra de la tienda y un identificador anónimo propio. No le enviamos tu nombre, tu correo ni datos de tus tarjetas registradas en Tino. RevenueCat procesa estos datos en los Estados Unidos.
+
+### 3.4 Catálogo público
+
+Tino puede descargar de nuestro servidor la lista pública de bancos, tarjetas y logos, para mantenerla al día. Esa descarga no lleva ningún dato tuyo; como cualquier conexión a internet, el servidor ve la dirección IP desde donde se pide, y no la usamos para identificarte.
+
+## 4. Respaldos
+
+- **Respaldo con contraseña.** En Ajustes > Tus datos puedes crear un archivo de respaldo cifrado con una contraseña que eliges tú. Tú decides dónde guardarlo (correo, nube, computadora). Sin esa contraseña nadie puede leerlo, ni nosotros: si la olvidas, no la podemos recuperar.
+- **Respaldo automático (Tino Pro).** Si lo enciendes, Tino guarda una copia de tus datos en su carpeta dentro del teléfono, y esa copia viaja con el respaldo de tu teléfono (Google en Android, iCloud en iPhone) según la configuración de tu cuenta. Esa copia no lleva una contraseña de Tino: la protege el respaldo de Google o de Apple, bajo sus propias políticas de privacidad. Viene apagado y lo puedes apagar cuando quieras.
+- **Ver mis datos.** En Ajustes > Tus datos, "Ver mis datos" arma un texto legible con todo lo que Tino tiene guardado, incluido el identificador anónimo de los datos de uso, y te deja compartirlo donde quieras. Ese texto no va cifrado.
+
+## 5. Avisos y widget
+
+Los avisos se programan dentro de tu teléfono; no pasan por ningún servidor. Pueden mostrar el nombre que le pusiste a una tarjeta en la pantalla bloqueada, pero nunca montos. Lo mismo el widget de la pantalla de inicio de Android: muestra la tarjeta que te conviene hoy. Puedes apagar cada aviso en Ajustes > Avisos y quitar el widget cuando quieras.
+
+## 6. Con quién compartimos datos
+
+No vendemos, alquilamos ni compartimos tus datos con bancos, comercios ni anunciantes. Ningún banco puede pagar para que su tarjeta aparezca mejor en Tino.
+
+Solo usamos estos proveedores, que tratan los datos por encargo nuestro y para lo descrito arriba:
+
+| Proveedor | Para qué | Dónde |
+| --- | --- | --- |
+| PostHog | Datos de uso anónimos | Unión Europea |
+| Sentry | Reportes de fallos | Unión Europea |
+| RevenueCat | Estado de la suscripción a Tino Pro | Estados Unidos |
+| Apple y Google | Cobro de Tino Pro y respaldo del teléfono | Según su política |
+
+Algunos de estos servidores están fuera de la República Dominicana. Solo les llegan los datos anónimos o técnicos descritos en esta política, nunca tus datos financieros.
+
+Podríamos tener que entregar información si una autoridad competente lo exige conforme a la ley. Como tus datos financieros no salen de tu teléfono, no los tenemos para entregarlos.
+
+## 7. Cuánto tiempo guardamos los datos
+
+- **En tu teléfono:** hasta que los borres o desinstales Tino.
+- **Datos de uso anónimos:** hasta [POR COMPLETAR: por ejemplo, 24 meses], y luego se borran.
+- **Reportes de fallos:** hasta 90 días.
+- **Compras:** mientras tengas o hayas tenido Tino Pro, y lo que exijan las tiendas y las leyes fiscales.
+
+## 8. Tus derechos
+
+La Ley 172-13 te da derecho a acceder a tus datos, corregirlos, pedir que se borren y oponerte a su uso. En Tino puedes hacerlo tú mismo:
+
+- **Acceder:** Ajustes > Tus datos > Ver mis datos te da un texto con todo lo que Tino guarda.
+- **Corregir:** edita tus tarjetas, cobros y preferencias cuando quieras.
+- **Borrar:** Ajustes > Tus datos > Borrar todo elimina todos tus datos del teléfono, incluida la clave de cifrado, y crea un identificador anónimo nuevo. Desinstalar Tino también borra los datos del teléfono (el respaldo automático, si lo encendiste, queda en el respaldo de tu teléfono hasta que lo borres ahí).
+- **Oponerte:** apaga "Datos de uso anónimos" en Ajustes > Privacidad.
+
+Si quieres que borremos los datos de uso anónimos que ya se enviaron, escríbenos a polancolabsrd@gmail.com con el identificador que aparece en "Ver mis datos". Te respondemos en un máximo de 30 días.
+
+## 9. Seguridad
+
+Tus datos se guardan en una base cifrada completa en tu teléfono. Todo lo que Tino envía a sus proveedores viaja cifrado. Tino rechaza cualquier campo que parezca un número de tarjeta completo, para que no se guarde por error. Aun así, ningún sistema es perfecto: protege tu teléfono con bloqueo de pantalla.
+
+## 10. Menores de edad
+
+Tino está dirigido a personas mayores de 18 años que tienen tarjetas de crédito. No recogemos a sabiendas datos de menores.
+
+## 11. Cambios a esta política
+
+Si cambiamos algo importante, lo avisaremos dentro de la app antes de que entre en vigor. La fecha de arriba indica la última versión.
+
+## 12. Contacto
+
+Polanco Labs
+polancolabsrd@gmail.com
+[POR COMPLETAR: dirección]

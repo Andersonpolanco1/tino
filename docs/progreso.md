@@ -136,6 +136,9 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 - [x] Reporte de fallos sin datos de tarjetas: Sentry (UE) en `src/fallos/`, con el mismo interruptor que la analítica, sin migas, persona, capturas ni números de 13 a 19 dígitos (D70). Verificado en el emulador: un error de prueba llega a Sentry (organización `polanco-labs`, proyecto `react-native`, región UE) y con el interruptor apagado Sentry no se inicia
 - [x] Widget de Android (D71 y D72): solo la tarjeta de hoy, igual que en Inicio (logo, días, línea del ciclo y recompensa), calculada 60 días por adelantado (`src/widget/`) y dibujados en Kotlin (`modules/widget-android/`); se reescribe con cada cambio de datos, enfoque, plan o día. Verificado en el emulador: se agrega desde el selector, muestra lo mismo que Inicio y al tocarlo abre Inicio. Falta verlo en modo oscuro, al cambiar de día y en un teléfono real
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
+  - [x] Borradores en `docs/tienda/`: política de privacidad, términos de uso y fichas de App Store y Google Play (textos, compras, etiqueta de privacidad de Apple, seguridad de los datos de Google, clasificación y plan de capturas). Responsable: Polanco Labs, polancolabsrd@gmail.com
+  - [ ] Capturas con bancos de ejemplo (plan en `docs/tienda/fichas.md`, sección 4)
+  - [ ] Publicar los documentos y llenar las fichas en las consolas (pendientes abajo)
 - [ ] Pruebas de flujos completos con Maestro: se dejan para cuando las pantallas estén estables; mientras tanto los flujos se prueban a mano. Lo aprendido en un primer intento (Maestro 2.10 en Windows, con el Java de Android Studio):
   - Las etiquetas accesibles de campos y botones sirven de selector; no hacen falta `testID`.
   - En la versión de desarrollo: `stopApp`, `clearState` y después `openLink` a `exp+tino://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081` (con `adb reverse`); abrir la app primero y mandar el enlace después la deja en el lanzador.
@@ -190,6 +193,11 @@ Criterios de la especificación:
 - [ ] Claves públicas de RevenueCat como secretos de EAS: `EXPO_PUBLIC_REVENUECAT_IOS` y `EXPO_PUBLIC_REVENUECAT_ANDROID`
 - [ ] Integración de RevenueCat con PostHog para `prueba_iniciada`, `suscripcion_iniciada` y `suscripcion_cancelada`; decidir cómo unir los dos identificadores anónimos solo si la analítica está activa
 - [ ] Publicar términos de uso y política de privacidad, y poner sus direcciones en `EXPO_PUBLIC_URL_TERMINOS` y `EXPO_PUBLIC_URL_PRIVACIDAD` (el muro de pago los enlaza; Apple los exige)
+- [ ] Completar en `docs/tienda/` lo marcado `[POR COMPLETAR]`: dirección de Polanco Labs, fecha de publicación, ciudad de los tribunales, direcciones de los documentos y de soporte
+- [ ] Revisión de la política de privacidad y los términos de uso por un abogado (Ley 172-13 y Ley 358-05)
+- [ ] Decidir si "Datos de uso anónimos" sigue encendido por defecto (hoy `analiticaActiva: true`, con una línea en la bienvenida) o pasa a pedirse al usuario: la Ley 172-13 pide consentimiento, y es la pregunta principal para el abogado
+- [ ] PostHog: fijar la retención de eventos y ponerla en la sección 7 de la política (hoy dice `[POR COMPLETAR]`)
+- [ ] RevenueCat: la Test Store muestra Tino Pro anual a USD 79.99; ajustar el producto de prueba a los precios de D58 (2.49, 19.99 y 14.99) para que el muro de pago se vea como en las tiendas
 - [x] Recompilar la app de desarrollo con `react-native-purchases`
 - [x] Proyecto en RevenueCat con la Test Store: derecho `pro`, productos `tino_pro_mensual` y `tino_pro_anual`, oferta por defecto
 - [ ] La clave de la Test Store (`test_…`) va solo en `.env.local`: una versión de producción que la encuentra se cierra a propósito. En `preview` y `production` de EAS van las claves de App Store y Google Play
