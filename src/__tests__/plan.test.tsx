@@ -100,6 +100,9 @@ describe('3.ª tarjeta en el plan gratis (15.5)', () => {
     await render(envolver(almacen, <NuevaTarjeta />));
     expect(await screen.findByText('Registra todas tus tarjetas')).toBeOnTheScreen();
     expect(screen.getByText(/Tus 2 tarjetas siguen funcionando igual/)).toBeOnTheScreen();
+    // Los beneficios incluyen el respaldo automático (D81).
+    expect(screen.getByText('Respaldo automático')).toBeOnTheScreen();
+    expect(screen.getByText('Si cambias de teléfono, tus datos vuelven solos')).toBeOnTheScreen();
     expect(await screen.findByText('Anual de lanzamiento')).toBeOnTheScreen();
     // Lo que se cobra se ve más que la prueba (norma 3.1.2 de Apple), y el ahorro del anual se calcula.
     expect(screen.getByText('US$14.99')).toBeOnTheScreen();

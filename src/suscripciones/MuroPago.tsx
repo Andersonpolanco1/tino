@@ -79,6 +79,7 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
 
   const beneficios: [NombreIcono, string, string][] = [
     ['tarjetas', t('pro.beneficioTarjetas'), t('pro.beneficioTarjetasDetalle')],
+    ['nube', t('pro.beneficioRespaldo'), t('pro.beneficioRespaldoDetalle')],
     ['check', t('pro.beneficioDatos'), t('pro.beneficioDatosDetalle')],
   ];
 
