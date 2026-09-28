@@ -46,9 +46,10 @@ function medirTarjeta(t: Tarjeta, todos: FuenteIngreso[]): MedidaTarjeta {
   const ingresos = cobrosRegulares(todos);
   const hoy = numeroDe(HOY);
   const cobros = ingresos.length ? cobrosEntre(ingresos, hoy - 62, hoy + 430, feriados) : [];
-  const soloPersonalizadas = ingresos.length > 0 && ingresos.every(i => i.frecuencia.tipo === 'personalizada');
-  const limite = soloPersonalizadas ? Math.max(...cobros.map(c => c.dia)) : Infinity;
-  const primero = soloPersonalizadas ? Math.min(...cobros.map(c => c.dia)) : -Infinity;
+  // Con fechas anotadas, solo el tramo que cubren todas.
+  const tramos = ingresos.flatMap(i => (i.frecuencia.tipo === 'personalizada' ? [i.frecuencia.fechas.map(f => numeroDe(f.fecha))] : []));
+  const limite = tramos.length ? Math.min(...tramos.map(d => Math.max(...d))) : Infinity;
+  const primero = tramos.length ? Math.max(...tramos.map(d => Math.min(...d))) : -Infinity;
   const desdeCobro: number[] = [];
   const dias: number[] = [];
   let corte = proximoCorte(hoy, t);
@@ -101,7 +102,8 @@ function arregloRiesgo(t: Tarjeta, tarjetas: Tarjeta[], ingresos: FuenteIngreso[
 function arregloAmontonadas(tarjetas: Tarjeta[], ingresos: FuenteIngreso[]): { alias: string; cambio: number } | null {
   const base = peorDia(tarjetas);
   let mejor: { alias: string; cambio: number } | null = null;
-  for (const t of tarjetas) {
+  const ordenadas = [...tarjetas].sort((a, b) => (a.creadaEn < b.creadaEn ? 1 : a.creadaEn > b.creadaEn ? -1 : 0) || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+  for (const t of ordenadas) {
     for (let c = 1; c <= 28; c++) {
       if (c === t.diaCorte) continue;
       const movida = conCorte(t, c, numeroDe(HOY));
@@ -109,6 +111,9 @@ function arregloAmontonadas(tarjetas: Tarjeta[], ingresos: FuenteIngreso[]): { a
       const cambio = peorDia(tarjetas.map(x => (x.id === t.id ? movida : x))) - base;
       if (cambio >= MEJORA_MINIMA && (!mejor || cambio > mejor.cambio)) mejor = { alias: t.alias, cambio };
     }
+    // La primera tarjeta, por orden fijo (más nueva y luego id), que se puede mover: así el
+    // consejo no salta de tarjeta con el calendario.
+    if (mejor) return mejor;
   }
   return mejor;
 }

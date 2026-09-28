@@ -626,6 +626,7 @@
       "problemaDolares": "El balance en dólares vence alrededor del {{pago}} y cobras el {{cobro}}: tienes que guardar el dinero {{dias}} días para pagarlo.",
       "problemaSinDia": "Vence lejos de tu último cobro: tienes que guardar el dinero {{dias}} días para pagarla.",
       "problemaJusto": "Vence alrededor del {{pago}} y cobras el {{cobro}}: si el cobro se atrasa o pagas desde otro banco, el pago puede llegar tarde.",
+      "problemaJustoDolares": "El balance en dólares vence alrededor del {{pago}} y cobras el {{cobro}}: si el cobro se atrasa o pagas desde otro banco, el pago puede llegar tarde.",
       "solucion": "Llama a tu banco y pide que la fecha de pago quede unos días después del {{cobro}}.",
       "solucionSinDia": "Llama a tu banco y pide que la fecha de pago quede unos días después de uno de tus cobros.",
       "separa": "Así también tendrás más días para pagar con tus otras tarjetas.",

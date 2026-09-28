@@ -127,6 +127,22 @@ describe('cortes juntos', () => {
     expect(consejos([tarjeta('A', 1, 20), tarjeta('B', 8, 20), tarjeta('C', 15, 20), tarjeta('D', 22, 20)], [quincenal])).toEqual([]);
   });
 
+  test('la tarjeta que se pide mover no cambia con el calendario: la más nueva o, en empate, siempre la misma', () => {
+    const tarjetas = [tarjeta('A', 5, 20), tarjeta('B', 8, 20)];
+    const elegida = (hoy: string) => consejosDeFechas({ hoy, tarjetas, ingresos: [quincenal], pais: config, enfoque: 'equilibrado' })[0].tarjetaId;
+    const meses = ['2026-10-06', '2026-11-15', '2027-01-15', '2027-03-01', '2027-06-15', '2027-09-01'];
+    expect(new Set(meses.map(elegida))).toEqual(new Set(['A']));
+    const nueva = [tarjeta('A', 5, 20), tarjeta('B', 8, 20, { creadaEn: '2026-09-20' })];
+    expect(consejos(nueva, [quincenal])[0].tarjetaId).toBe('B');
+  });
+
+  test('con cobros de fechas anotadas, solo juzga los meses que cubren', () => {
+    // Sueldo el 30 y una remesa anotada hasta diciembre: después Tino no sabe si sigue llegando.
+    const remesa = estimados([15, 15, 15]);
+    const c = consejosDeFechas({ hoy: '2027-06-01', tarjetas: [tarjeta('A', 5, 20)], ingresos: [mensual(30), remesa], pais: config, enfoque: 'equilibrado' });
+    expect(c).toEqual([]);
+  });
+
   test('una tarjeta sola nunca tiene cortes juntos', () => {
     expect(consejos([tarjeta('A', 5, 20)])).toEqual([]);
   });

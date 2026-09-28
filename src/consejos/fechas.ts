@@ -112,7 +112,8 @@ interface Contexto {
   hoy: number;
   feriados: ReadonlySet<FechaISO>;
   cobros: Cobro[];
-  // Qué días se conocen: con solo fechas personalizadas, entre la primera y la última.
+  // Qué días se conocen: si hay cobros con fechas anotadas (personalizados), solo el tramo que
+  // cubren todos; fuera de él Tino no sabe si siguen llegando y no juzga esos meses.
   primerCobro: number;
   ultimoCobro: number;
 }
@@ -207,13 +208,13 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
   const feriados = new Set(e.pais.feriados);
   const regulares = cobrosRegulares(e.ingresos);
   const cobros = regulares.length ? cobrosEntre(regulares, hoy - 62, hoy + DIAS_SIMULADOS + 62, feriados) : [];
-  const soloPersonalizadas = regulares.length > 0 && regulares.every(i => i.frecuencia.tipo === 'personalizada');
+  const tramos = regulares.flatMap(i => (i.frecuencia.tipo === 'personalizada' ? [i.frecuencia.fechas.map(f => numeroDe(f.fecha))] : []));
   const ctx: Contexto = {
     hoy,
     feriados,
     cobros,
-    primerCobro: soloPersonalizadas ? Math.min(...cobros.map(c => c.dia)) : -Infinity,
-    ultimoCobro: soloPersonalizadas ? Math.max(...cobros.map(c => c.dia)) : Infinity,
+    primerCobro: tramos.length ? Math.max(...tramos.map(d => Math.min(...d))) : -Infinity,
+    ultimoCobro: tramos.length ? Math.min(...tramos.map(d => Math.max(...d))) : Infinity,
   };
   const cobroEstimado = cobros.some(c => c.estimada);
   const huellaCobros = regulares.map(i => [i.frecuencia, i.ajusteDiaNoHabil]);
@@ -293,14 +294,15 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
     aceptar(mejor);
   }
 
-  // 2. Cortes juntos: la tarjeta que más sube el peor día sin quedar lejos del cobro; en
-  // empate, la más nueva, que suele ser la más fácil de cambiar.
+  // 2. Cortes juntos: entre las tarjetas que se pueden mover sin quedar lejos del cobro, la más
+  // nueva (suele ser la más fácil de cambiar) y, en empate, siempre la misma. No se elige por
+  // cuántos días gana: esos empates cambian con el calendario y el consejo saltaría de tarjeta.
   if (!separadas && consejos.length < MAXIMO_CONSEJOS) {
     const actual = peorDia(tarjetas, sims);
     const opciones = tarjetas
       .flatMap(tarjeta => movidas(tarjeta).map(m => ({ original: tarjeta, m })))
       .filter(({ m }) => !m.simulacion.lejos && m.peor >= actual + MEJORA_MINIMA_DIAS)
-      .sort((a, b) => b.m.peor - a.m.peor || (a.original.creadaEn < b.original.creadaEn ? 1 : a.original.creadaEn > b.original.creadaEn ? -1 : 0));
+      .sort((a, b) => (a.original.creadaEn < b.original.creadaEn ? 1 : a.original.creadaEn > b.original.creadaEn ? -1 : 0) || (a.original.id < b.original.id ? -1 : a.original.id > b.original.id ? 1 : 0));
     const [opcion] = opciones;
     if (opcion) {
       consejos.push({

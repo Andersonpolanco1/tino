@@ -40,7 +40,15 @@ export function textosConsejo(consejo: ConsejoFechas, tarjetas: Tarjeta[], t: Tr
   const datos = { alias, pago: consejo.diaPago, cobro: consejo.diaCobro, dias: consejo.diasDesdeCobro };
   // Cobro el mismo día del pago o casi (D76): el riesgo es que el cobro o el pago se atrasen.
   const justo = conDia && consejo.cobroJusto;
-  const problema = justo ? 'problemaJusto' : conDia ? (consejo.enDolares ? 'problemaDolares' : 'problema') : 'problemaSinDia';
+  const problema = justo
+    ? consejo.enDolares
+      ? 'problemaJustoDolares'
+      : 'problemaJusto'
+    : conDia
+      ? consejo.enDolares
+        ? 'problemaDolares'
+        : 'problema'
+      : 'problemaSinDia';
   const solucion = t(`consejos.pagoLejosDelCobro.${conDia ? 'solucion' : 'solucionSinDia'}`, datos);
   return {
     titulo: t(`consejos.pagoLejosDelCobro.${justo ? 'tituloJusto' : 'titulo'}`, datos),

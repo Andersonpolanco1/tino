@@ -60,6 +60,10 @@ test('cobro el mismo día del pago: el riesgo es que se atrase, no estirar el di
   });
 });
 
+test('cobro el mismo día y balance en dólares: dice que es el de dólares', () => {
+  expect(textos({ diaPago: 22, diaCobro: 22, cobroJusto: true, enDolares: true }).problema).toMatch(/^El balance en dólares vence alrededor del 22 y cobras el 22: si el cobro se atrasa/);
+});
+
 test('sin el día del cobro siguiente, sin fechas', () => {
   expect(textos({ diaCobro: 0 })).toMatchObject({
     problema: 'Vence lejos de tu último cobro: tienes que guardar el dinero 28 días para pagarla.',
