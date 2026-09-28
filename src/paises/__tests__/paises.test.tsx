@@ -2,12 +2,17 @@ import { act, render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import configDO from '../do.json';
-import { configPara, detectarPais, opcionesDePais, PAIS_PREDETERMINADO, type RegionDispositivo } from '../paises';
+import { configPara, detectarPais, opcionesDePais, paisPermitido, PAIS_PREDETERMINADO, usarEleccionDePais, type RegionDispositivo } from '../paises';
 import { ProveedorPais, usePais } from '../ContextoPais';
 
 const telefonoRD: RegionDispositivo = { regionCode: 'DO', currencyCode: 'DOP', languageTag: 'es-DO' };
 const telefonoMX: RegionDispositivo = { regionCode: 'MX', currencyCode: 'MXN', languageTag: 'es-MX' };
 const telefonoFR: RegionDispositivo = { regionCode: 'FR', currencyCode: 'EUR', languageTag: 'fr-FR' };
+
+// La base multipaís se prueba con la elección de país prendida; el lanzamiento solo en el
+// país predeterminado (D84) tiene su propio bloque al final.
+beforeEach(() => usarEleccionDePais(true));
+afterEach(() => usarEleccionDePais(null));
 
 describe('detectarPais', () => {
   test('usa la región del teléfono', () => {
@@ -99,4 +104,34 @@ test('un teléfono en un idioma sin textos usa el idioma predeterminado', async 
   );
   expect(screen.getByTestId('idioma')).toHaveTextContent('es-DO');
   expect(screen.getByTestId('texto')).toHaveTextContent('Inicio');
+});
+
+describe('un solo país mientras "elegirPais" está apagado (decisión D84)', () => {
+  beforeEach(() => usarEleccionDePais(false));
+
+  test('cualquier región del teléfono usa el país predeterminado y no hay nada que elegir', () => {
+    for (const region of [telefonoMX, telefonoFR, { regionCode: 'US', currencyCode: 'USD', languageTag: 'en-US' }]) {
+      expect(detectarPais([region])).toBe(PAIS_PREDETERMINADO);
+      expect(opcionesDePais([region])).toEqual([PAIS_PREDETERMINADO]);
+    }
+    expect(paisPermitido(PAIS_PREDETERMINADO)).toBe(true);
+    expect(paisPermitido('MX')).toBe(false);
+  });
+
+  test('un teléfono en inglés de EE. UU. ve Tino con la configuración y el idioma del país predeterminado', async () => {
+    await render(
+      <ProveedorPais regiones={[{ regionCode: 'US', currencyCode: 'USD', languageTag: 'en-US' }]}>
+        <MostrarPais />
+      </ProveedorPais>,
+    );
+    expect(screen.getByTestId('pais')).toHaveTextContent(PAIS_PREDETERMINADO);
+    expect(screen.getByTestId('moneda')).toHaveTextContent(configDO.monedaPrincipal);
+    expect(screen.getByTestId('idioma')).toHaveTextContent(configDO.idiomas[0]);
+  });
+
+  test('el registro trae la elección apagada para el lanzamiento', () => {
+    usarEleccionDePais(null);
+    expect(require('../registro.json').elegirPais).toBe(false);
+    expect(opcionesDePais([telefonoMX])).toEqual([PAIS_PREDETERMINADO]);
+  });
 });

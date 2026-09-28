@@ -174,7 +174,10 @@ export default function Ajustes() {
           <FilaLista icono="luna" titulo={t('ajustes.apariencia')} valor={t(`ajustes.temas.${preferencias.tema ?? 'automatico'}`)} flecha onPress={() => setHojaApariencia(true)} />
         ) : null}
         {/* Las monedas salen del país y no se eligen: van como detalle, sin fila propia. */}
-        <FilaLista icono="globo" titulo={t('ajustes.pais')} detalle={t('ajustes.paisDetalle', { pais: nombrePais(t, config.codigo), monedas })} flecha onPress={() => setHojaPais(true)} />
+        {/* D84: con un solo país disponible no hay nada que elegir. */}
+        {opciones.length > 1 ? (
+          <FilaLista icono="globo" titulo={t('ajustes.pais')} detalle={t('ajustes.paisDetalle', { pais: nombrePais(t, config.codigo), monedas })} flecha onPress={() => setHojaPais(true)} />
+        ) : null}
       </ListaAgrupada>
 
       {preferencias ? (

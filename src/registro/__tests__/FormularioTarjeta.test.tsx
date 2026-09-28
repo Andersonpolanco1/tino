@@ -7,7 +7,7 @@ import { preferenciasIniciales } from '../../datos/preferencias';
 import { basePrueba } from '../../pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '../../estado';
 import { catalogoIncluido, ProveedorCatalogoDePrueba } from '../../catalogo';
-import { ProveedorPais, type RegionDispositivo } from '../../paises';
+import { ProveedorPais, usarEleccionDePais, type RegionDispositivo } from '../../paises';
 import { FormularioTarjeta } from '../FormularioTarjeta';
 
 jest.mock('expo-crypto', () => ({ randomUUID: () => 'id-nueva' }));
@@ -51,6 +51,8 @@ async function elegirCorte(dia: number) {
 async function elegirPago(dia: number) {
   await fireEvent.press(within(screen.getByLabelText('Se paga el día')).getByLabelText(String(dia)));
 }
+
+afterEach(() => usarEleccionDePais(null));
 
 describe('agregar tarjeta paso a paso', () => {
   test('producto con moneda conocida: sin paso de dólares y con la fecha límite precargada', async () => {
@@ -141,6 +143,8 @@ describe('agregar tarjeta paso a paso', () => {
   });
 
   test('fuera de RD: banco a mano, sin paso de dólares y facturación normal (criterio 18.6)', async () => {
+    // La base multipaís se prueba con la elección de país prendida (D84).
+    usarEleccionDePais(true);
     const almacen = await preparar(mx);
     const onListo = jest.fn();
     await render(envolver(almacen, mx, <FormularioTarjeta onListo={onListo} onCerrar={jest.fn()} />));

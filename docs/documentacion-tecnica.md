@@ -343,7 +343,7 @@ La base multipaís (sección 18 de la especificación) se implementa con tres pi
 
 **Reglas:**
 
-- El país se detecta por la región del teléfono en el onboarding y se puede cambiar en Ajustes.
+- El país se detecta por la región del teléfono en el onboarding y se puede cambiar en Ajustes. Para el lanzamiento, `elegirPais: false` en `src/paises/registro.json` fija el país predeterminado (RD) sin preguntar ni mostrar la fila País (decisión D84).
 - Un país sin archivo de catálogo usa el modo sin catálogo: banco y producto opcionales, en texto libre.
 - `funciones.dobleBalance: false` oculta la moneda de facturación "Pesos y dólares" y la pregunta sobre cómo paga su balance en dólares.
 - Fechas, montos y monedas se formatean con las APIs de internacionalización del sistema, según el idioma y país (por ejemplo, "RD$1,000" y "25 de septiembre").

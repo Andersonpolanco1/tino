@@ -1,5 +1,6 @@
 {
   "predeterminado": "DO",
+  "elegirPais": false,
   "monedaRespaldo": "USD",
   "montoReferenciaRespaldo": 1000
 }

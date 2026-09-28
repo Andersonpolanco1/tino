@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { ReactNode } from 'react';
-import { ProveedorPais, type RegionDispositivo } from '@/paises';
+import { ProveedorPais, usarEleccionDePais, type RegionDispositivo } from '@/paises';
 import { migrar } from '@/datos/migraciones';
 import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, repositorioTarjetas } from '@/datos/repositorios';
 import { preferenciasIniciales } from '@/datos/preferencias';
@@ -10,6 +10,7 @@ import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
 import Inicio from '../../app/(tabs)/inicio';
 import Ajustes from '../../app/(tabs)/ajustes';
 import Tarjetas from '../../app/(tabs)/tarjetas';
+import Bienvenida from '../../app/onboarding/index';
 import Avisos from '../../app/ajustes/avisos';
 import Privacidad from '../../app/ajustes/privacidad';
 import type { Tarjeta } from '@/tipos/tipos';
@@ -51,23 +52,27 @@ const rd: RegionDispositivo = { regionCode: 'DO', currencyCode: 'DOP', languageT
 const mx: RegionDispositivo = { regionCode: 'MX', currencyCode: 'MXN', languageTag: 'es-MX' };
 const us: RegionDispositivo = { regionCode: 'US', currencyCode: 'USD', languageTag: 'en-US' };
 
+afterEach(() => usarEleccionDePais(null));
+
 test('inicio muestra su título como encabezado', async () => {
   await render(conPais([rd], await almacenCon('DO'), <Inicio />));
   expect(screen.getByRole('header')).toHaveTextContent('Hoy te conviene usar');
 });
 
-test('ajustes muestra el país y las monedas de RD', async () => {
+test('con un teléfono de RD solo hay un país que ofrecer, así que Ajustes no muestra la fila País', async () => {
+  usarEleccionDePais(true);
   await render(conPais([rd], await almacenCon('DO'), <Ajustes />));
-  // Las monedas van como detalle del país, sin fila propia.
-  expect(screen.getByText('República Dominicana · Pesos y dólares')).toBeOnTheScreen();
+  expect(screen.queryByText('País')).toBeNull();
 });
 
 test('ajustes muestra un país sin catálogo con la moneda del teléfono', async () => {
+  usarEleccionDePais(true);
   await render(conPais([mx], await almacenCon('MX'), <Ajustes />));
   expect(screen.getByText('Otro país (MX) · MXN')).toBeOnTheScreen();
 });
 
 test('un teléfono con región de EE. UU. puede elegir República Dominicana y queda guardado (criterio 18.6)', async () => {
+  usarEleccionDePais(true);
   const almacen = await almacenCon('US');
   await render(conPais([us], almacen, <Ajustes />));
   expect(screen.getByText(/· Dólares$/)).toBeOnTheScreen();
@@ -215,5 +220,19 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
     await fireEvent.press(screen.getByLabelText('Datos de uso anónimos'));
     await act(async () => {});
     expect(almacen.getState().preferencias?.analiticaActiva).toBe(!antes);
+  });
+});
+
+describe('un solo país mientras "elegirPais" está apagado (decisión D84)', () => {
+  test('Ajustes no muestra la fila País aunque el teléfono sea de otra región', async () => {
+    await render(conPais([us], await almacenCon('DO'), <Ajustes />));
+    expect(screen.queryByText('País')).toBeNull();
+  });
+
+  test('la bienvenida no pregunta dónde vives', async () => {
+    await render(conPais([us], await almacenCon('DO'), <Bienvenida />));
+    await act(async () => {});
+    expect(screen.getByText('Te decimos qué tarjeta usar hoy')).toBeOnTheScreen();
+    expect(screen.queryByText('¿Dónde vives?')).toBeNull();
   });
 });

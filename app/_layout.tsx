@@ -7,9 +7,9 @@ import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { useTranslation } from 'react-i18next';
 import { archivosFuente, Pantalla, Texto, useTema, type Tema } from '@/diseno';
-import { ProveedorPais, usePais } from '@/paises';
+import { PAIS_PREDETERMINADO, paisPermitido, ProveedorPais, usePais } from '@/paises';
 import { ProveedorDatos, useEstadoDatos } from '@/datos';
-import { ProveedorAlmacen, useAlmacen } from '@/estado';
+import { ProveedorAlmacen, useAlmacen, useElegirPais } from '@/estado';
 import { useAvisos } from '@/notificaciones/useAvisos';
 import { ProveedorCatalogo } from '@/catalogo';
 import { useAnalitica } from '@/analitica';
@@ -99,15 +99,19 @@ function CuandoCargue({ children }: { children: ReactNode }) {
   const paisGuardado = useAlmacen(s => s.preferencias?.pais);
   const asegurarPreferencias = useAlmacen(s => s.asegurarPreferencias);
   const { config, idioma, cambiarPais } = usePais();
+  const elegirPais = useElegirPais();
   // Solo la primera vez se espera a que coincidan; después no se desmonta la navegación.
   const [sincronizado, setSincronizado] = useState(false);
 
   useEffect(() => {
     if (!cargado) return;
     if (!paisGuardado) asegurarPreferencias(config.codigo, idioma);
+    // D84: un país guardado que ya no se ofrece (por ejemplo, de antes de enfocar la app en
+    // un solo país) pasa al predeterminado; las tarjetas se conservan.
+    else if (!paisPermitido(paisGuardado)) elegirPais(PAIS_PREDETERMINADO);
     else if (paisGuardado !== config.codigo) cambiarPais(paisGuardado);
     else setSincronizado(true);
-  }, [cargado, paisGuardado, asegurarPreferencias, cambiarPais, config.codigo, idioma]);
+  }, [cargado, paisGuardado, asegurarPreferencias, cambiarPais, elegirPais, config.codigo, idioma]);
 
   if (!sincronizado) return null;
   return (
