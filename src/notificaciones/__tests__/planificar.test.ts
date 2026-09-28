@@ -55,10 +55,10 @@ test('fecha límite: 3 días antes, con el día de la semana', () => {
     fecha: '2026-10-07',
     titulo: 'Tu pago vence el sábado 10',
     // Decisión D67: cae sábado, así que pide pagar el día laborable anterior.
-    cuerpo: 'Tarjeta B vence el 10 de octubre. Págala completa y a tiempo para no pagar intereses. Como ese día no es laborable, paga a más tardar el viernes 9.',
+    cuerpo: 'Tarjeta B vence el 10 de octubre. Paga el total a tiempo y no pagas intereses. Ese día no es laborable: paga a más tardar el viernes 9.',
   });
   // En día laborable, recuerda que un pago desde otro banco puede tardar.
-  expect(buscar('fechaLimite:A:2026-11-25')?.cuerpo).toBe('Tarjeta A vence el 25 de noviembre. Págala completa y a tiempo para no pagar intereses. Si pagas desde otro banco, hazlo 1 o 2 días laborables antes.');
+  expect(buscar('fechaLimite:A:2026-11-25')?.cuerpo).toBe('Tarjeta A vence el 25 de noviembre. Paga el total a tiempo y no pagas intereses. Si pagas desde otro banco, hazlo 1 o 2 días laborables antes.');
   // Los estados siguientes dentro de los 60 días también.
   expect(buscar('fechaLimite:A:2026-11-25')?.fecha).toBe('2026-11-22');
   expect(buscar('fechaLimite:C:2026-12-21')).toBeUndefined();
@@ -68,8 +68,8 @@ test('con doble balance, el recordatorio menciona los dos pagos (criterio 14.1)'
   const doble = tarjeta('D', 5, 25, { tipo: 'ninguna' }, { monedaFacturacion: 'doble_balance' });
   const conFechaUsd = tarjeta('E', 5, 25, { tipo: 'ninguna' }, { monedaFacturacion: 'doble_balance', fechaLimiteUsd: { tipo: 'dia_del_mes', dia: 28 } });
   const e = entrada({ tarjetas: [doble, conFechaUsd] });
-  expect(buscar('fechaLimite:D:2026-10-25', e)?.cuerpo).toBe('Tarjeta D vence el 25 de octubre. Recuerda pagar los dos balances: el de pesos y el de dólares. Como ese día no es laborable, paga a más tardar el viernes 23.');
-  expect(buscar('fechaLimite:E:2026-10-25', e)?.cuerpo).toBe('Tarjeta E: el balance en pesos vence el 25 de octubre y el de dólares el 28 de octubre. Recuerda pagar los dos. Como ese día no es laborable, paga a más tardar el viernes 23.');
+  expect(buscar('fechaLimite:D:2026-10-25', e)?.cuerpo).toBe('Tarjeta D vence el 25 de octubre. Paga los dos balances: pesos y dólares. Ese día no es laborable: paga a más tardar el viernes 23.');
+  expect(buscar('fechaLimite:E:2026-10-25', e)?.cuerpo).toBe('Tarjeta E: los pesos vencen el 25 de octubre y los dólares el 28 de octubre. Paga los dos. Ese día no es laborable: paga a más tardar el viernes 23.');
 });
 
 test('vence antes del cobro: 5 días antes y con la fecha del cobro (criterio 14.1)', () => {
@@ -105,7 +105,7 @@ test('resumen mensual el día 1, sin montos (decisión D38)', () => {
   const resumen = buscar('resumenMensual:2026-10');
   expect(resumen?.fecha).toBe('2026-11-01');
   expect(resumen?.titulo).toBe('Tu resumen de octubre');
-  expect(resumen?.cuerpo).toMatch(/^En octubre, la tarjeta de cada día te dio hasta \d+ días para pagar\. Tino te recomendó \d tarjetas? ?(distintas)?\.$/);
+  expect(resumen?.cuerpo).toMatch(/^En octubre, Tino te recomendó \d tarjetas?( distintas)? y te dio hasta \d+ días para pagar\.$/);
 });
 
 test('un pago marcado con "Ya pagué" ya no avisa (decisión D45)', () => {
@@ -122,7 +122,7 @@ test('día del pago y día siguiente, si no marcó "Ya pagué"', () => {
     tipo: 'vencimiento',
     fecha: '2026-10-10',
     titulo: 'Hoy vence tu Tarjeta B',
-    cuerpo: 'Si todavía no pagas, paga hoy el total para no pagar mora ni intereses. Si ya pagaste, márcalo en Tino.',
+    cuerpo: 'Paga hoy el total y evitas mora e intereses. ¿Ya pagaste? Márcalo en Tino.',
   });
   expect(buscar('vencido:B:2026-10-10')).toMatchObject({ fecha: '2026-10-11', titulo: 'Tu Tarjeta B venció ayer' });
   // Al abrir la app el día siguiente, el aviso de "venció ayer" se sigue programando.
@@ -139,7 +139,7 @@ test('antes del corte: con una sola tarjeta, el último día del ciclo y los dí
     tipo: 'antesDelCorte',
     fecha: '2026-11-04',
     titulo: 'Mañana empieza un ciclo nuevo en tu Tarjeta A',
-    cuerpo: 'Si puedes, deja las compras grandes para mañana, jueves 5: tendrás 50 días para pagarlas en vez de 21.',
+    cuerpo: 'Deja las compras grandes para mañana, jueves 5: tendrás 50 días para pagar en vez de 21.',
   });
 });
 
@@ -177,7 +177,7 @@ test('fin de la prueba de Tino Pro: 2 días antes, aunque los demás avisos est�
       tipo: 'finPrueba',
       fecha: '2026-11-03',
       titulo: 'Tu prueba de Tino Pro termina pronto',
-      cuerpo: 'Termina el 5 de noviembre. Si quieres seguir, no tienes que hacer nada; si no, cancélala en la tienda antes de esa fecha.',
+      cuerpo: 'Termina el 5 de noviembre. Para seguir, no hagas nada; si no, cancélala en la tienda antes de esa fecha.',
     },
   ]);
   // Sin Pro, o si ya pasó la fecha del aviso, no hay aviso.

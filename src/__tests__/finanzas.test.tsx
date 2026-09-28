@@ -65,7 +65,7 @@ function envolver(almacen: Almacen, hijos: ReactNode) {
   );
 }
 
-const conversion = /^Esta tarjeta te cobra en pesos con la tasa del banco: puede salirte alrededor de 6% más cara\./;
+const conversion = /^Te cobra en pesos con la tasa del banco: sale cerca de 6% más caro\./;
 
 test('una compra en dólares con una tarjeta que factura en pesos avisa de la conversión', async () => {
   await render(envolver(await almacenCon([tarjeta('P')]), <Compra />));
@@ -86,9 +86,9 @@ test('el detalle explica el corte con el día de la tarjeta, la fecha límite y 
   await render(envolver(await almacenCon([tarjeta('P')]), <DetalleTarjeta />));
   expect(screen.getByText('Cómo funciona tu tarjeta')).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByLabelText('Más información sobre ¿Qué es el corte?')));
-  expect(screen.getByText(/Tu Tarjeta P corta el día 5 de cada mes\.$/)).toBeOnTheScreen();
+  expect(screen.getByText(/Tu Tarjeta P corta el 5 de cada mes\.$/)).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByLabelText('Más información sobre ¿Pago el total o el mínimo?')));
-  expect(screen.getByText(/^Si pagas el total del estado de cuenta/)).toBeOnTheScreen();
+  expect(screen.getByText(/^Si pagas el total antes de la fecha límite/)).toBeOnTheScreen();
 });
 
 // Decisión D73: dos tarjetas que cortan casi el mismo día.
@@ -146,12 +146,12 @@ test('el consejo se va cuando el problema se resuelve: otra fecha de corte o la 
 test('Inicio sugiere el consejo solo mientras es nuevo', async () => {
   const almacen = await almacenCon(juntas());
   await render(envolver(almacen, <Inicio />));
-  expect(screen.getByText(/^Tino encontró una forma de mejorar las fechas/)).toBeOnTheScreen();
+  expect(screen.getByText(/^Tino encontró cómo mejorar tus fechas/)).toBeOnTheScreen();
   await screen.unmount();
   await render(envolver(almacen, <ConsejosFechas />));
   await screen.unmount();
   await render(envolver(almacen, <Inicio />));
-  expect(screen.queryByText(/^Tino encontró una forma de mejorar las fechas/)).toBeNull();
+  expect(screen.queryByText(/^Tino encontró cómo mejorar tus fechas/)).toBeNull();
 });
 
 test('la pestaña con algo nuevo lleva un punto y lo dice al lector de pantalla', async () => {
@@ -169,11 +169,11 @@ test('la pestaña con algo nuevo lleva un punto y lo dice al lector de pantalla'
 test('una compra con la mejor tarjeta por cortar dice cuántos días da esperar', async () => {
   await render(envolver(await almacenCon([tarjeta('P', { diaCorte: 8 })]), <Compra />));
   await act(async () => fireEvent.changeText(screen.getByLabelText('¿Cuánto vas a gastar?'), '5000'));
-  expect(screen.getByText('Si puedes esperar al viernes 9, tendrás 50 días para pagar esta compra en vez de 22.')).toBeOnTheScreen();
+  expect(screen.getByText('Si esperas al viernes 9, tendrás 50 días para pagar esta compra en vez de 22.')).toBeOnTheScreen();
 });
 
 test('recién cortada no sugiere esperar', async () => {
   await render(envolver(await almacenCon([tarjeta('P')]), <Compra />));
   await act(async () => fireEvent.changeText(screen.getByLabelText('¿Cuánto vas a gastar?'), '5000'));
-  expect(screen.queryByText(/^Si puedes esperar/)).toBeNull();
+  expect(screen.queryByText(/^Si esperas al/)).toBeNull();
 });
