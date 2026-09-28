@@ -20,12 +20,12 @@ import {
 } from '../automatico';
 import { ESPERA_RESPALDO_MS, useRespaldoAutomatico } from '../useRespaldoAutomatico';
 import Bienvenida from '../../../app/onboarding/index';
-import Ajustes from '../../../app/(tabs)/ajustes';
+import Datos from '../../../app/ajustes/datos';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
 
 // Decisión D81: respaldo automático sin contraseña, que viaja con el respaldo del teléfono.
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
-jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
+jest.mock('expo-router', () => ({ Stack: { Screen: () => null }, useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
 jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '' }));
 jest.mock('expo-sharing', () => ({ shareAsync: jest.fn() }));
 // La bienvenida restaura sobre la base de la prueba.
@@ -214,10 +214,10 @@ describe('restaurar en un teléfono nuevo', () => {
   });
 });
 
-describe('Ajustes', () => {
+describe('Ajustes > Tus datos', () => {
   test('sin Pro, la fila lleva al muro de pago', async () => {
     const { almacen } = await almacenCon();
-    await render(envolver(almacen, <Ajustes />));
+    await render(envolver(almacen, <Datos />));
     await act(async () => fireEvent.press(screen.getByText('Con Tino Pro, tus datos vuelven solos si cambias de teléfono.')));
     expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/pro', params: { motivo: 'funcion_avanzada' } });
   });
@@ -225,7 +225,7 @@ describe('Ajustes', () => {
   test('con Pro: encenderlo avisa del respaldo del teléfono; apagarlo pide confirmar y borra la copia', async () => {
     const alerta = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { almacen } = await almacenCon({ plan: 'pro' });
-    await render(envolver(almacen, <Ajustes />));
+    await render(envolver(almacen, <Datos />));
     await act(async () => fireEvent.press(screen.getByLabelText('Respaldo automático')));
     expect(almacen.getState().preferencias?.respaldoAutomatico).toBe(true);
     expect(alerta).toHaveBeenCalledWith('Respaldo automático activado', expect.stringMatching(/Copia de seguridad|Respaldo en iCloud/), expect.anything());
@@ -242,7 +242,7 @@ describe('Ajustes', () => {
   test('muestra la última copia o, si falló, que se revise el espacio', async () => {
     const { almacen } = await almacenCon({ plan: 'pro', respaldoAutomatico: true });
     await guardarRespaldoAutomatico(contenido);
-    await render(envolver(almacen, <Ajustes />));
+    await render(envolver(almacen, <Datos />));
     expect(screen.getByText(/^Última copia: 20 de septiembre/)).toBeOnTheScreen();
     memoria.fallar = true;
     await act(async () => guardarRespaldoAutomatico(contenido).catch(() => {}));

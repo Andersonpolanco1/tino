@@ -1,45 +1,28 @@
 import { useState } from 'react';
-import { Alert, Linking, Platform, Share, View } from 'react-native';
+import { Linking, View } from 'react-native';
 import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { FilaLista, Hoja, LogoTino, ListaAgrupada, Palanca, type NombreIcono, Pantalla, Superficie, Texto, useTema } from '@/diseno';
-import type { AjustesAvisos, TemaApp } from '@/tipos/tipos';
+import { FilaLista, Hoja, LogoTino, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import type { TemaApp } from '@/tipos/tipos';
 import { AVISOS_PREDETERMINADOS } from '@/notificaciones/planificar';
 import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
 import { nombrePais, usePais } from '@/paises';
 import { useAlmacen, useElegirPais } from '@/estado';
-import { borrarBase, useEstadoDatos, useReabrirDatos } from '@/datos';
-import { resumenDeDatos } from '@/respaldo/resumen';
-import { contenidoDe } from '@/respaldo/contenido';
-import { leerIdentificador } from '@/analitica/identificador';
-import { useCatalogo } from '@/catalogo';
-import { hoyLocal } from '@/utilidades/fecha';
 import { pistaPrecision, precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
-import { reiniciarIdentificadorAnalitica } from '@/analitica';
 import { useComprasPro } from '@/suscripciones';
-import { borrarRespaldoAutomatico, useEstadoRespaldoAutomatico } from '@/respaldo/automatico';
-import { formatearFechaHora } from '@/i18n';
+import { useEstadoRespaldoAutomatico } from '@/respaldo/automatico';
+import { detalleRespaldoAutomatico } from '@/respaldo/detalle';
 
 // Anillo de 84: con 100% el número necesita aire dentro del trazo.
 const LADO_ANILLO = 84;
 const GROSOR_ANILLO = 7;
 const RADIO_ANILLO = (LADO_ANILLO - GROSOR_ANILLO) / 2;
 
-// Los avisos del MVP (sección 11), cada uno con su interruptor.
 const TEMAS: TemaApp[] = ['automatico', 'claro', 'oscuro'];
-
-const FILAS_AVISOS: [keyof AjustesAvisos, NombreIcono, string, string][] = [
-  ['fechaLimite', 'calendario', 'ajustes.avisoFechaLimite', 'ajustes.avisoFechaLimiteDetalle'],
-  ['venceAntesDelCobro', 'reloj', 'ajustes.avisoVenceAntes', 'ajustes.avisoVenceAntesDetalle'],
-  ['vencimiento', 'alto', 'ajustes.avisoVencimiento', 'ajustes.avisoVencimientoDetalle'],
-  ['antesDelCorte', 'compra', 'ajustes.avisoAntesDelCorte', 'ajustes.avisoAntesDelCorteDetalle'],
-  ['cambioTarjeta', 'tarjetas', 'ajustes.avisoCambio', 'ajustes.avisoCambioDetalle'],
-  ['resumenMensual', 'moneda', 'ajustes.avisoResumen', 'ajustes.avisoResumenDetalle'],
-];
 const CIRCUNFERENCIA = 2 * Math.PI * RADIO_ANILLO;
 
 // Ajustes con el rediseño: precisión en un anillo y listas agrupadas.
@@ -53,20 +36,9 @@ export default function Ajustes() {
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
   const respaldo = useEstadoRespaldoAutomatico();
-  const detalleRespaldo = !preferencias?.respaldoAutomatico
-    ? t('ajustes.respaldoAutomaticoDetalle')
-    : respaldo.fallo
-      ? t('ajustes.respaldoFallo')
-      : respaldo.fecha
-        ? t('ajustes.respaldoUltima', { fecha: formatearFechaHora(respaldo.fecha, idioma) })
-        : t('ajustes.respaldoPendiente');
-  const sugerencias = useAlmacen(s => s.sugerencias);
-  const catalogo = useCatalogo();
   const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
   const permiso = usePermisoAvisos();
   const compras = useComprasPro();
-  const datos = useEstadoDatos();
-  const reabrir = useReabrirDatos();
   const [hojaPais, setHojaPais] = useState(false);
   const [hojaEnfoque, setHojaEnfoque] = useState(false);
   const [hojaApariencia, setHojaApariencia] = useState(false);
@@ -74,6 +46,11 @@ export default function Ajustes() {
   const contextoPrecision = { hayIngresos: ingresos.length > 0, catalogoDisponible: config.catalogoDisponible };
   const precision = precisionGeneral(tarjetas, contextoPrecision);
   const pista = pistaPrecision(tarjetas, contextoPrecision);
+  const avisos = { ...AVISOS_PREDETERMINADOS, ...preferencias?.avisos };
+  const totalAvisos = Object.keys(AVISOS_PREDETERMINADOS).length;
+  const avisosActivos = Object.values(avisos).filter(Boolean).length;
+  // Mientras se consulta el permiso (null) no se alarma: casi siempre ya está concedido.
+  const avisosSinPermiso = permiso.estado === 'negado' || permiso.estado === 'sin_preguntar';
   const textoPista = pista === 'punto' ? t('ajustes.precisionPistaPunto', { count: porConfirmar.length }) : t(`ajustes.precisionPista.${pista}`);
   // Decisión D82: lo que falta para subir la precisión va en filas dentro del mismo bloque, cada
   // una lleva al lugar donde se completa.
@@ -111,73 +88,6 @@ export default function Ajustes() {
     ? t('ajustes.monedasDos', { principal: nombreMoneda(config.monedaPrincipal), secundaria: nombreMoneda(config.monedaSecundaria).toLocaleLowerCase(idioma) })
     : nombreMoneda(config.monedaPrincipal);
 
-  // "Ver mis datos" (D62): todo lo que Tino guarda, en palabras; no va cifrado, por eso se avisa.
-  function verMisDatos() {
-    Alert.alert(t('ajustes.misDatosTitulo'), t('ajustes.misDatosAviso'), [
-      { text: t('ajustes.cancelar'), style: 'cancel' },
-      {
-        text: t('ajustes.misDatosConfirmar'),
-        onPress: async () => {
-          try {
-            const texto = resumenDeDatos(contenidoDe({ preferencias, tarjetas, ingresos, sugerencias }, new Date()), {
-              t: t as never,
-              idioma,
-              monedaPrincipal: config.monedaPrincipal,
-              monedaSecundaria: config.monedaSecundaria,
-              catalogo,
-              identificadorAnalitica: await leerIdentificador().catch(() => null),
-              hoy: hoyLocal(),
-            });
-            await Share.share({ message: texto, title: t('misDatos.titulo') });
-          } catch {
-            Alert.alert(t('ajustes.errorMisDatos'));
-          }
-        },
-      },
-    ]);
-  }
-
-  function borrarTodo() {
-    if (datos.estado !== 'lista') return;
-    Alert.alert(t('ajustes.borrarTitulo'), t('ajustes.borrarAviso'), [
-      { text: t('ajustes.cancelar'), style: 'cancel' },
-      {
-        text: t('ajustes.borrarConfirmar'),
-        style: 'destructive',
-        onPress: async () => {
-          await borrarBase(datos.base);
-          await borrarRespaldoAutomatico();
-          await reiniciarIdentificadorAnalitica().catch(() => {});
-          reabrir();
-        },
-      },
-    ]);
-  }
-
-  // Decisión D81: respaldo automático, solo con Pro. Al encenderlo, avisa que depende del
-  // respaldo del teléfono (Tino no puede saber si está encendido o tiene espacio); al apagarlo,
-  // borra la copia de este teléfono.
-  function cambiarRespaldoAutomatico(valor: boolean) {
-    if (!preferencias) return;
-    if (valor) {
-      guardarPreferencias({ ...preferencias, respaldoAutomatico: true }).catch(() => {});
-      Alert.alert(t('ajustes.respaldoActivadoTitulo'), t(Platform.OS === 'ios' ? 'ajustes.respaldoActivadoIos' : 'ajustes.respaldoActivadoAndroid'), [{ text: t('ajustes.entendido') }]);
-      return;
-    }
-    Alert.alert(t('ajustes.respaldoApagarTitulo'), t('ajustes.respaldoApagarTexto'), [
-      { text: t('ajustes.cancelar'), style: 'cancel' },
-      {
-        text: t('ajustes.respaldoApagar'),
-        style: 'destructive',
-        onPress: async () => {
-          const { respaldoAutomatico: _activo, ...resto } = preferencias;
-          await guardarPreferencias(resto);
-          await borrarRespaldoAutomatico();
-        },
-      },
-    ]);
-  }
-
   // Pro se gestiona en la tienda (cancelar, cambiar de plan); Tino solo abre su página.
   async function abrirPlan() {
     if (preferencias?.plan !== 'pro') return router.push({ pathname: '/pro', params: { motivo: 'voluntario' } });
@@ -185,25 +95,9 @@ export default function Ajustes() {
     if (url) Linking.openURL(url);
   }
 
-  async function restaurarCompras() {
-    const tienda = t(`pro.tienda.${Platform.OS === 'ios' ? 'ios' : 'android'}`);
-    try {
-      Alert.alert((await compras.restaurar()) ? t('pro.restaurado') : t('pro.nadaQueRestaurar', { tienda }));
-    } catch {
-      Alert.alert(t('pro.errorCompra'));
-    }
-  }
-
   // Versión visible y número de compilación que pone la tienda (sección 12 técnica).
   const version = t('ajustes.acercaVersion', { version: Application.nativeApplicationVersion ?? '', compilacion: Application.nativeBuildVersion ?? '' });
   const derechos = t('ajustes.acercaDerechos', { anio: new Date().getFullYear() });
-
-  function reiniciarIdentificador() {
-    Alert.alert(t('ajustes.reiniciarIdTitulo'), t('ajustes.reiniciarIdAviso'), [
-      { text: t('ajustes.cancelar'), style: 'cancel' },
-      { text: t('ajustes.reiniciarIdConfirmar'), onPress: () => reiniciarIdentificadorAnalitica().catch(() => {}) },
-    ]);
-  }
 
   return (
     <Pantalla conPestanas>
@@ -262,7 +156,6 @@ export default function Ajustes() {
             flecha
             onPress={abrirPlan}
           />
-          <FilaLista icono="reiniciar" titulo={t('pro.restaurar')} onPress={restaurarCompras} />
         </ListaAgrupada>
       ) : null}
 
@@ -285,83 +178,31 @@ export default function Ajustes() {
       </ListaAgrupada>
 
       {preferencias ? (
-        <ListaAgrupada titulo={t('ajustes.avisosTitulo')}>
-          {permiso.estado === 'sin_preguntar' ? (
-            <FilaLista icono="alto" tono="alerta" titulo={t('ajustes.activarAvisos')} detalle={t('ajustes.activarAvisosDetalle')} flecha onPress={permiso.pedir} />
-          ) : permiso.estado === 'negado' ? (
-            <FilaLista icono="alto" tono="alerta" titulo={t('ajustes.avisosApagados')} detalle={t('ajustes.avisosApagadosDetalle')} flecha onPress={() => Linking.openSettings()} />
-          ) : null}
-          {FILAS_AVISOS.map(([clave, icono, titulo, detalle]) => {
-            const avisos = { ...AVISOS_PREDETERMINADOS, ...preferencias.avisos };
-            return (
-              <FilaLista
-                key={clave}
-                icono={icono}
-                titulo={t(titulo)}
-                detalle={t(detalle)}
-                derecha={
-                  <Palanca
-                    valor={avisos[clave]}
-                    etiqueta={t(titulo)}
-                    onCambio={valor => guardarPreferencias({ ...preferencias, avisos: { ...avisos, [clave]: valor } })}
-                  />
-                }
-              />
-            );
-          })}
+        <ListaAgrupada>
+          <FilaLista
+            icono="reloj"
+            tono={avisosSinPermiso ? 'alerta' : 'primario'}
+            titulo={t('ajustes.avisosTitulo')}
+            detalle={avisosSinPermiso ? t('ajustes.avisosResumenApagados') : t('ajustes.avisosResumen', { activos: avisosActivos, total: totalAvisos })}
+            flecha
+            onPress={() => router.push('/ajustes/avisos')}
+          />
+          <FilaLista
+            icono="grafica"
+            titulo={t('ajustes.privacidadTitulo')}
+            detalle={t(preferencias.analiticaActiva ? 'ajustes.privacidadResumenSi' : 'ajustes.privacidadResumenNo')}
+            flecha
+            onPress={() => router.push('/ajustes/privacidad')}
+          />
+          <FilaLista
+            icono="nube"
+            titulo={t('ajustes.datosTitulo')}
+            detalle={preferencias.plan === 'pro' && preferencias.respaldoAutomatico ? detalleRespaldoAutomatico(t, idioma, preferencias, respaldo) : t('ajustes.datosResumen')}
+            flecha
+            onPress={() => router.push('/ajustes/datos')}
+          />
         </ListaAgrupada>
       ) : null}
-
-      {preferencias ? (
-        <View style={{ gap: tema.espacio.s }}>
-          <ListaAgrupada titulo={t('ajustes.privacidadTitulo')}>
-            <FilaLista
-              icono="grafica"
-              titulo={t('ajustes.analitica')}
-              detalle={t('ajustes.analiticaDetalle')}
-              derecha={
-                <Palanca
-                  valor={preferencias.analiticaActiva}
-                  etiqueta={t('ajustes.analitica')}
-                  onCambio={valor => guardarPreferencias({ ...preferencias, analiticaActiva: valor })}
-                />
-              }
-            />
-            <FilaLista icono="reiniciar" titulo={t('ajustes.reiniciarId')} onPress={reiniciarIdentificador} />
-          </ListaAgrupada>
-          <Texto variante="apoyo" color="textoSecundario" style={{ paddingHorizontal: tema.espacio.xs, fontSize: 13 }}>
-            {t('ajustes.privacidadInfo')}
-          </Texto>
-        </View>
-      ) : null}
-
-      <View style={{ gap: tema.espacio.s }}>
-        <ListaAgrupada titulo={t('ajustes.datosTitulo')}>
-          {preferencias?.plan === 'pro' ? (
-            <FilaLista
-              icono="nube"
-              titulo={t('ajustes.respaldoAutomatico')}
-              detalle={detalleRespaldo}
-              derecha={<Palanca valor={preferencias.respaldoAutomatico === true} etiqueta={t('ajustes.respaldoAutomatico')} onCambio={cambiarRespaldoAutomatico} />}
-            />
-          ) : (
-            <FilaLista
-              icono="nube"
-              titulo={t('ajustes.respaldoAutomatico')}
-              detalle={t('ajustes.respaldoSoloPro')}
-              flecha
-              onPress={() => router.push({ pathname: '/pro', params: { motivo: 'funcion_avanzada' } })}
-            />
-          )}
-          <FilaLista icono="descargar" titulo={t('ajustes.crearRespaldo')} detalle={t('ajustes.crearRespaldoDetalle')} flecha onPress={() => router.push('/respaldo/crear')} />
-          <FilaLista icono="reiniciar" titulo={t('ajustes.restaurarRespaldo')} flecha onPress={() => router.push('/respaldo/restaurar')} />
-          <FilaLista icono="info" titulo={t('ajustes.misDatos')} flecha onPress={verMisDatos} />
-          <FilaLista icono="basura" titulo={t('ajustes.borrar')} destructiva onPress={borrarTodo} />
-        </ListaAgrupada>
-        <Texto variante="apoyo" color="textoSecundario" style={{ paddingHorizontal: tema.espacio.xs, fontSize: 13 }}>
-          {t('ajustes.datosInfo')}
-        </Texto>
-      </View>
 
       {/* Acerca de Tino: al final, discreto. */}
       <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos, t('ajustes.acercaMarcas')].join('. ')}>

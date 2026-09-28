@@ -10,13 +10,15 @@ import { crearAlmacen, ProveedorAlmacenDePrueba, type Almacen } from '@/estado';
 import Inicio from '../../app/(tabs)/inicio';
 import Ajustes from '../../app/(tabs)/ajustes';
 import Tarjetas from '../../app/(tabs)/tarjetas';
+import Avisos from '../../app/ajustes/avisos';
+import Privacidad from '../../app/ajustes/privacidad';
 import type { Tarjeta } from '@/tipos/tipos';
 import { hoyLocal } from '@/utilidades/fecha';
 import { proximoPago } from '@/inicio/vista';
 import paisDO from '@/paises/do.json';
 
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
-jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
+jest.mock('expo-router', () => ({ Stack: { Screen: () => null }, useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
 // Ajustes importa la base para "Borrar todo"; en estas pruebas no se abre.
 jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '' }));
 jest.mock('expo-sharing', () => ({ shareAsync: jest.fn() }));
@@ -172,5 +174,46 @@ describe('Ajustes: lo que falta para subir la precisión va dentro de su bloque 
     expect(screen.queryByText('Confirmar el valor del punto')).toBeNull();
     expect(screen.queryByText('Agregar tus días de cobro')).toBeNull();
     expect(screen.queryByText('Elegir el tipo de tarjeta')).toBeNull();
+  });
+});
+
+describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión D83)', () => {
+  beforeEach(() => mockRouter.push.mockClear());
+
+  test('cada sección es una fila con su resumen que abre su pantalla', async () => {
+    const almacen = await almacenCon('DO');
+    await render(conPais([rd], almacen, <Ajustes />));
+    await act(async () => {});
+    expect(screen.queryByText('Fecha límite próxima')).toBeNull();
+    expect(screen.queryByText('Borrar todo')).toBeNull();
+    expect(screen.queryByText('Restaurar compras')).toBeNull();
+    expect(screen.getByText(/^(\d de \d encendidos|Apagados: Tino necesita tu permiso)$/)).toBeOnTheScreen();
+    expect(screen.getByText(/^Datos de uso anónimos: (encendidos|apagados)$/)).toBeOnTheScreen();
+    expect(screen.getByText('Respaldo, ver y borrar tus datos')).toBeOnTheScreen();
+
+    await fireEvent.press(screen.getByText('Avisos'));
+    await fireEvent.press(screen.getByText('Privacidad'));
+    await fireEvent.press(screen.getByText('Tus datos'));
+    expect(mockRouter.push.mock.calls).toEqual([['/ajustes/avisos'], ['/ajustes/privacidad'], ['/ajustes/datos']]);
+  });
+
+  test('Avisos: apagar uno lo guarda y el resumen de Ajustes lo cuenta', async () => {
+    const almacen = await almacenCon('DO');
+    await render(conPais([rd], almacen, <Avisos />));
+    await fireEvent.press(screen.getByLabelText('Resumen del mes'));
+    await act(async () => {});
+    expect(almacen.getState().preferencias?.avisos?.resumenMensual).toBe(false);
+    await render(conPais([rd], almacen, <Ajustes />));
+    await act(async () => {});
+    expect(screen.getByText(/^(5 de 6 encendidos|Apagados: Tino necesita tu permiso)$/)).toBeOnTheScreen();
+  });
+
+  test('Privacidad: el interruptor de datos de uso anónimos lo guarda', async () => {
+    const almacen = await almacenCon('DO');
+    const antes = almacen.getState().preferencias!.analiticaActiva;
+    await render(conPais([rd], almacen, <Privacidad />));
+    await fireEvent.press(screen.getByLabelText('Datos de uso anónimos'));
+    await act(async () => {});
+    expect(almacen.getState().preferencias?.analiticaActiva).toBe(!antes);
   });
 });
