@@ -96,6 +96,10 @@ export function fechaMesCorto(fecha: FechaISO, idioma: string, t: Traducir): str
   return t('comun.fechaMesCorto', { dia: parte('day'), mes: parte('month').replace(/\.$/, '') });
 }
 
+// Opacidad de la pista de la línea del ciclo sobre la tarjeta verde, por modo; la comparten
+// la tarjeta de hoy y el widget.
+export const OPACIDAD_PISTA = { claro: 0.22, oscuro: 0.15 } as const;
+
 // "martes 6".
 export function diaConSemana(fecha: FechaISO, idioma: string, t: Traducir): string {
   const { diaSemana, dia } = partesFechaLarga(fecha, idioma);

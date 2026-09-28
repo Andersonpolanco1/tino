@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import type { FechaISO } from '../tipos/tipos';
 import { Texto, useTema } from '../diseno';
 import { usePais } from '../paises';
-import { fechaMesCorto, type Traducir } from './vista';
+import { fechaMesCorto, OPACIDAD_PISTA, type Traducir } from './vista';
 
 interface Props {
   anterior: FechaISO;
@@ -33,7 +33,7 @@ export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false,
 
   const trazo = sobreDestacado ? tema.color.sobreDestacado : tema.color.primario;
   const fondoPunto = sobreDestacado ? tema.color.destacado : tema.color.superficie;
-  const pista = sobreDestacado ? { backgroundColor: tema.color.sobreDestacado, opacity: tema.modo === 'oscuro' ? 0.15 : 0.22 } : { backgroundColor: tema.color.neutroFondo };
+  const pista = sobreDestacado ? { backgroundColor: tema.color.sobreDestacado, opacity: OPACIDAD_PISTA[tema.modo] } : { backgroundColor: tema.color.neutroFondo };
   const secundario = sobreDestacado ? 'sobreDestacado' : 'textoSecundario';
   const principal = sobreDestacado ? 'sobreDestacado' : 'texto';
 

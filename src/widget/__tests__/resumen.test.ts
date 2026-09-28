@@ -7,7 +7,7 @@ import { calcularRanking } from '../../motor';
 import type { Traducir } from '../../inicio/vista';
 import tokens from '../../diseno/tokens.json';
 import textos from '../../i18n/es-DO.json';
-import { HORIZONTE_WIDGET, planificarWidget, type EntradaWidget } from '../resumen';
+import { HORIZONTE_WIDGET, mezclar, planificarWidget, VERSION_RESUMEN, type EntradaWidget } from '../resumen';
 import { abiertoDesdeWidget } from '../useWidget';
 
 // Hoy es el martes 6 de octubre de 2026, el ejemplo 7.4, como en las pruebas de los avisos.
@@ -136,14 +136,44 @@ test('colores de los tokens, tema de Ajustes y enlace', () => {
       destacado: c.destacado,
       sobreDestacado: c.sobreDestacado,
       alerta: c.alertaTexto,
+      pista: mezclar(c.destacado, c.sobreDestacado, modo === 'claro' ? 0.22 : 0.15),
+      recompensaPunto: c.recompensaPunto,
     });
   }
-  expect(resumen.textos).toEqual({ titulo: 'Hoy te conviene usar', diasParaPagar: 'días para pagar', mensaje: 'Agrega tu primera tarjeta en Tino.', abrir: 'Abre Tino para actualizar.' });
+  expect(resumen.textos).toEqual({
+    titulo: 'Hoy te conviene usar',
+    diasParaPagar: 'días para pagar',
+    mensaje: 'Agrega tu primera tarjeta en Tino.',
+    abrir: 'Abre Tino para actualizar.',
+    hitoHoy: 'Hoy',
+    hitoCorta: 'Corta',
+    hitoPagas: 'Pagas',
+  });
 });
 
-test('el resumen no lleva montos ni números de tarjeta', () => {
-  const json = JSON.stringify(planificarWidget(entrada()));
-  expect(json).not.toMatch(/RD\$|US\$|\d{13,}/);
+test('la línea del ciclo y la recompensa, como en la tarjeta de hoy', () => {
+  const d = dia('2026-10-06');
+  const [mejor] = calcularRanking({ hoy: '2026-10-06', tarjetas: [A, B, C], ingresos: nomina, preferencias: preferenciasIniciales('DO', 'es-DO'), pais }).ranking;
+  expect(d).toMatchObject({ hoy: '6 oct.', recompensa: expect.stringContaining('por RD$1,000') });
+  expect(mejor.tarjetaId).toBe('C');
+  expect(d).toMatchObject({ corta: '1 nov.', pagas: '21 nov.' });
+  // Sin recompensa no hay línea.
+  const sinRecompensa = [A, B, C].map(x => ({ ...x, recompensa: { tipo: 'ninguna' as const } }));
+  expect(dia('2026-10-06', entrada({ tarjetas: sinRecompensa })).recompensa).toBeNull();
+});
+
+test('mezcla colores como una opacidad', () => {
+  expect(mezclar('#000000', '#FFFFFF', 0.5)).toBe('#808080');
+  expect(mezclar('#0E7C5B', '#FFFFFF', 0)).toBe('#0E7C5B');
+});
+
+test('el resumen no lleva montos del usuario ni números de tarjeta', () => {
+  const resumen = planificarWidget(entrada());
+  // Los únicos montos son los de la recompensa por cada RD$1,000 (el monto de referencia del país).
+  const sinRecompensa = JSON.stringify({ ...resumen, dias: resumen.dias.map(d => ({ ...d, recompensa: null })) });
+  expect(sinRecompensa).not.toMatch(/RD\$|US\$|\d{13,}/);
+  for (const d of resumen.dias) expect(d.recompensa).toMatch(/ por RD\$1,000$/);
+  const json = JSON.stringify(resumen);
   expect(json).not.toContain('4821');
 });
 
@@ -165,6 +195,11 @@ describe('recursos nativos del widget', () => {
       const c = tokens.color[modo];
       expect(valores(`${carpeta}/colors.xml`, 'color')).toEqual({ tino_widget_fondo: c.superficie, tino_widget_texto: c.texto, tino_widget_destacado: c.destacado });
     }
+  });
+
+  test('el widget espera la misma versión del resumen', () => {
+    const kotlin = readFileSync(join(res, '..', 'java', 'expo', 'modules', 'tinowidget', 'TinoWidgetProvider.kt'), 'utf8');
+    expect(kotlin).toContain(`VERSION_RESUMEN = ${VERSION_RESUMEN}`);
   });
 
   test('los textos coinciden con i18n', () => {

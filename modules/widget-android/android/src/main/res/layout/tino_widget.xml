@@ -46,7 +46,9 @@
         android:scaleType="fitXY"
         android:src="@drawable/tino_widget_bloque" />
 
+      <!-- Compacta: nombre y días en una fila, para widgets bajos. -->
       <LinearLayout
+        android:id="@+id/widget_compacto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_vertical"
@@ -98,6 +100,257 @@
             android:layout_height="wrap_content"
             android:maxLines="1"
             android:textSize="11sp" />
+        </LinearLayout>
+      </LinearLayout>
+
+      <!-- Completa: como la tarjeta de hoy en Inicio (D43): nombre, días en grande, línea del
+           ciclo (Hoy, Corta y Pagas en columnas fijas, D35) y recompensa. -->
+      <LinearLayout
+        android:id="@+id/widget_completo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp"
+        android:visibility="gone">
+
+        <TextView
+          android:id="@+id/widget_alias_completo"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="1"
+          android:textSize="15sp"
+          android:textStyle="bold" />
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:gravity="center_vertical"
+          android:orientation="horizontal">
+
+          <TextView
+            android:id="@+id/widget_dias_completo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+          <TextView
+            android:id="@+id/widget_dias_texto_completo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:maxLines="1"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+        </LinearLayout>
+
+        <FrameLayout
+          android:layout_width="match_parent"
+          android:layout_height="20dp"
+          android:layout_marginTop="8dp"
+          android:importantForAccessibility="noHideDescendants">
+
+          <ImageView
+            android:id="@+id/widget_pista"
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="center_vertical"
+            android:layout_marginHorizontal="6dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/tino_widget_barra" />
+
+          <!-- El relleno llega hasta Hoy, el centro de la segunda columna (3/8 del ancho). -->
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="8">
+
+            <ImageView
+              android:id="@+id/widget_relleno"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_marginStart="6dp"
+              android:layout_weight="3"
+              android:scaleType="fitXY"
+              android:src="@drawable/tino_widget_barra" />
+          </LinearLayout>
+
+          <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <FrameLayout
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1">
+
+              <ImageView
+                android:id="@+id/widget_punto_corto"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="start|center_vertical"
+                android:src="@drawable/tino_widget_punto" />
+            </FrameLayout>
+
+            <FrameLayout
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1">
+
+              <ImageView
+                android:id="@+id/widget_punto_hoy"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
+                android:src="@drawable/tino_widget_punto" />
+
+              <ImageView
+                android:id="@+id/widget_punto_hoy_centro"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_gravity="center"
+                android:src="@drawable/tino_widget_punto" />
+            </FrameLayout>
+
+            <FrameLayout
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1">
+
+              <ImageView
+                android:id="@+id/widget_punto_corta"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="center"
+                android:src="@drawable/tino_widget_punto" />
+
+              <ImageView
+                android:id="@+id/widget_punto_corta_centro"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_gravity="center"
+                android:src="@drawable/tino_widget_punto" />
+            </FrameLayout>
+
+            <FrameLayout
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="1">
+
+              <ImageView
+                android:id="@+id/widget_punto_pagas"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="end|center_vertical"
+                android:src="@drawable/tino_widget_punto" />
+            </FrameLayout>
+          </LinearLayout>
+        </FrameLayout>
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="4dp"
+          android:orientation="horizontal">
+
+          <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+          <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+              android:id="@+id/widget_hito_hoy"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="12sp" />
+
+            <TextView
+              android:id="@+id/widget_fecha_hoy"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="12sp"
+              android:textStyle="bold" />
+          </LinearLayout>
+
+          <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+              android:id="@+id/widget_hito_corta"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="12sp" />
+
+            <TextView
+              android:id="@+id/widget_fecha_corta"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="12sp"
+              android:textStyle="bold" />
+          </LinearLayout>
+
+          <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="end"
+            android:orientation="vertical">
+
+            <TextView
+              android:id="@+id/widget_hito_pagas"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="12sp" />
+
+            <TextView
+              android:id="@+id/widget_fecha_pagas"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textSize="12sp"
+              android:textStyle="bold" />
+          </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+          android:id="@+id/widget_fila_recompensa"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:gravity="center_vertical"
+          android:orientation="horizontal">
+
+          <ImageView
+            android:id="@+id/widget_punto_recompensa"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:src="@drawable/tino_widget_punto" />
+
+          <TextView
+            android:id="@+id/widget_recompensa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:maxLines="1"
+            android:textSize="13sp"
+            android:textStyle="bold" />
         </LinearLayout>
       </LinearLayout>
     </FrameLayout>

@@ -43,8 +43,14 @@ class TinoWidgetProvider : AppWidgetProvider() {
     private const val ARCHIVO = "tino_widget"
     private const val CLAVE = "resumen"
     private const val ACCION_MEDIANOCHE = "expo.modules.tinowidget.MEDIANOCHE"
-    // Por debajo de esta altura (dp) solo cabe la tarjeta de hoy.
-    private const val ALTURA_COMPLETA = 120
+    // Igual a VERSION_RESUMEN en src/widget/resumen.ts; cambia cuando cambian los campos.
+    private const val VERSION_RESUMEN = 2
+    // Altos (dp) desde los que caben las líneas de abajo (tarjeta a evitar y pago) y la tarjeta
+    // de hoy completa, con la línea del ciclo como en Inicio. Con la tarjeta completa y la de
+    // evitar, la recompensa necesita más alto.
+    private const val ALTURA_LINEAS = 120
+    private const val ALTURA_TARJETA_COMPLETA = 200
+    private const val ALTURA_RECOMPENSA_Y_EVITAR = 250
 
     fun guardar(contexto: Context, json: String) {
       contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE).edit().putString(CLAVE, json).apply()
@@ -65,20 +71,26 @@ class TinoWidgetProvider : AppWidgetProvider() {
       val opciones = manager.getAppWidgetOptions(id)
       val vertical = contexto.resources.configuration.orientation != Configuration.ORIENTATION_LANDSCAPE
       val clave = if (vertical) AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT else AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT
-      val completo = opciones.getInt(clave, ALTURA_COMPLETA) >= ALTURA_COMPLETA
-      manager.updateAppWidget(id, construir(contexto, completo))
+      val alto = opciones.getInt(clave, ALTURA_TARJETA_COMPLETA)
+      // Un resumen que no se puede leer (por ejemplo, el de una versión anterior de la app antes
+      // de abrirla) nunca debe tumbar la app: el widget pide abrirla, y al abrirla se reescribe.
+      val vistas = runCatching { construir(contexto, alto) }.getOrElse { sinResumen(contexto) }
+      manager.updateAppWidget(id, vistas)
     }
 
-    private fun construir(contexto: Context, completo: Boolean): RemoteViews {
-      val vistas = RemoteViews(contexto.packageName, R.layout.tino_widget)
-      val json = contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE).getString(CLAVE, null)
-      val resumen = json?.let { runCatching { JSONObject(it) }.getOrNull() }
-      if (resumen == null) {
-        // La app todavía no escribió el resumen: el diseño trae el mensaje para abrirla.
-        vistas.setOnClickPendingIntent(R.id.widget_raiz, abrirApp(contexto, null))
-        return vistas
+    private fun sinResumen(contexto: Context): RemoteViews =
+      RemoteViews(contexto.packageName, R.layout.tino_widget).apply {
+        setOnClickPendingIntent(R.id.widget_raiz, abrirApp(contexto, null))
       }
 
+    private fun construir(contexto: Context, alto: Int): RemoteViews {
+      val lineas = alto >= ALTURA_LINEAS
+      val json = contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE).getString(CLAVE, null)
+      val resumen = json?.let { runCatching { JSONObject(it) }.getOrNull() }
+      // Sin resumen, o de otra versión: el diseño trae el mensaje para abrir la app.
+      if (resumen == null || resumen.optInt("version") != VERSION_RESUMEN) return sinResumen(contexto)
+
+      val vistas = RemoteViews(contexto.packageName, R.layout.tino_widget)
       val colores = Colores(contexto, resumen)
       val textos = resumen.getJSONObject("textos")
       colores.aplicar(vistas, R.id.widget_fondo, "setColorFilter", "fondo")
@@ -98,16 +110,14 @@ class TinoWidgetProvider : AppWidgetProvider() {
       vistas.setViewVisibility(R.id.widget_contenido, View.VISIBLE)
       vistas.setContentDescription(R.id.widget_raiz, dia.getString("accesible"))
 
-      vistas.setTextViewText(R.id.widget_titulo, textos.getString("titulo"))
-      vistas.setTextViewText(R.id.widget_alias, dia.getString("alias"))
-      vistas.setTextViewText(R.id.widget_dias, dia.getInt("dias").toString())
-      vistas.setTextViewText(R.id.widget_dias_texto, textos.getString("diasParaPagar"))
-      for (texto in listOf(R.id.widget_titulo, R.id.widget_alias, R.id.widget_dias, R.id.widget_dias_texto)) {
-        colores.aplicar(vistas, texto, "setTextColor", "sobreDestacado")
+      val evitar = if (dia.isNull("evitar")) null else dia.getString("evitar")
+      if (alto >= ALTURA_TARJETA_COMPLETA) {
+        tarjetaCompleta(vistas, colores, textos, dia, conRecompensa = evitar == null || alto >= ALTURA_RECOMPENSA_Y_EVITAR)
+      } else {
+        tarjetaCompacta(vistas, colores, textos, dia)
       }
 
-      val evitar = if (dia.isNull("evitar")) null else dia.getString("evitar")
-      if (completo && evitar != null) {
+      if (lineas && evitar != null) {
         vistas.setViewVisibility(R.id.widget_evitar, View.VISIBLE)
         vistas.setTextViewText(R.id.widget_evitar, evitar)
         colores.aplicar(vistas, R.id.widget_evitar, "setTextColor", "alerta")
@@ -116,7 +126,7 @@ class TinoWidgetProvider : AppWidgetProvider() {
       }
 
       val pago = dia.optJSONObject("pago")
-      if (completo && pago != null) {
+      if (lineas && pago != null) {
         vistas.setViewVisibility(R.id.widget_pago, View.VISIBLE)
         vistas.setTextViewText(R.id.widget_pago, pago.getString("texto"))
         colores.aplicar(vistas, R.id.widget_pago, "setTextColor", if (pago.getBoolean("urgente")) "alerta" else "textoSecundario")
@@ -124,6 +134,59 @@ class TinoWidgetProvider : AppWidgetProvider() {
         vistas.setViewVisibility(R.id.widget_pago, View.GONE)
       }
       return vistas
+    }
+
+    private fun tarjetaCompacta(vistas: RemoteViews, colores: Colores, textos: JSONObject, dia: JSONObject) {
+      vistas.setViewVisibility(R.id.widget_compacto, View.VISIBLE)
+      vistas.setViewVisibility(R.id.widget_completo, View.GONE)
+      vistas.setTextViewText(R.id.widget_titulo, textos.getString("titulo"))
+      vistas.setTextViewText(R.id.widget_alias, dia.getString("alias"))
+      vistas.setTextViewText(R.id.widget_dias, dia.getInt("dias").toString())
+      vistas.setTextViewText(R.id.widget_dias_texto, textos.getString("diasParaPagar"))
+      for (texto in listOf(R.id.widget_titulo, R.id.widget_alias, R.id.widget_dias, R.id.widget_dias_texto)) {
+        colores.aplicar(vistas, texto, "setTextColor", "sobreDestacado")
+      }
+    }
+
+    // La tarjeta de hoy de Inicio: nombre, días, línea del ciclo y recompensa.
+    private fun tarjetaCompleta(vistas: RemoteViews, colores: Colores, textos: JSONObject, dia: JSONObject, conRecompensa: Boolean) {
+      vistas.setViewVisibility(R.id.widget_compacto, View.GONE)
+      vistas.setViewVisibility(R.id.widget_completo, View.VISIBLE)
+      val textosDelDia = mapOf(
+        R.id.widget_alias_completo to dia.getString("alias"),
+        R.id.widget_dias_completo to dia.getInt("dias").toString(),
+        R.id.widget_dias_texto_completo to textos.getString("diasParaPagar"),
+        R.id.widget_hito_hoy to textos.getString("hitoHoy"),
+        R.id.widget_hito_corta to textos.getString("hitoCorta"),
+        R.id.widget_hito_pagas to textos.getString("hitoPagas"),
+        R.id.widget_fecha_hoy to dia.getString("hoy"),
+        R.id.widget_fecha_corta to dia.getString("corta"),
+        R.id.widget_fecha_pagas to dia.getString("pagas"),
+      )
+      for ((id, texto) in textosDelDia) {
+        vistas.setTextViewText(id, texto)
+        colores.aplicar(vistas, id, "setTextColor", "sobreDestacado")
+      }
+      // Línea: pista tenue, relleno y puntos en el color del texto, centro de los anillos en el
+      // verde de la tarjeta y el pago en dorado, como LineaCiclo.
+      colores.aplicar(vistas, R.id.widget_pista, "setColorFilter", "pista")
+      for (id in listOf(R.id.widget_relleno, R.id.widget_punto_corto, R.id.widget_punto_hoy, R.id.widget_punto_corta)) {
+        colores.aplicar(vistas, id, "setColorFilter", "sobreDestacado")
+      }
+      for (id in listOf(R.id.widget_punto_hoy_centro, R.id.widget_punto_corta_centro)) {
+        colores.aplicar(vistas, id, "setColorFilter", "destacado")
+      }
+      colores.aplicar(vistas, R.id.widget_punto_pagas, "setColorFilter", "recompensaPunto")
+
+      val recompensa = if (dia.isNull("recompensa")) null else dia.getString("recompensa")
+      if (conRecompensa && recompensa != null) {
+        vistas.setViewVisibility(R.id.widget_fila_recompensa, View.VISIBLE)
+        vistas.setTextViewText(R.id.widget_recompensa, recompensa)
+        colores.aplicar(vistas, R.id.widget_recompensa, "setTextColor", "sobreDestacado")
+        colores.aplicar(vistas, R.id.widget_punto_recompensa, "setColorFilter", "recompensaPunto")
+      } else {
+        vistas.setViewVisibility(R.id.widget_fila_recompensa, View.GONE)
+      }
     }
 
     private fun diaDeHoy(resumen: JSONObject): JSONObject? {
