@@ -38,12 +38,14 @@ export function textosConsejo(consejo: ConsejoFechas, tarjetas: Tarjeta[], t: Tr
   // Sin el día del cobro siguiente (pasa con pocas fechas personalizadas), sin fechas.
   const conDia = consejo.diaCobro > 0;
   const datos = { alias, pago: consejo.diaPago, cobro: consejo.diaCobro, dias: consejo.diasDesdeCobro };
-  const problema = conDia ? (consejo.enDolares ? 'problemaDolares' : 'problema') : 'problemaSinDia';
+  // Cobro el mismo día del pago o casi (D76): el riesgo es que el cobro o el pago se atrasen.
+  const justo = conDia && consejo.cobroJusto;
+  const problema = justo ? 'problemaJusto' : conDia ? (consejo.enDolares ? 'problemaDolares' : 'problema') : 'problemaSinDia';
   const solucion = t(`consejos.pagoLejosDelCobro.${conDia ? 'solucion' : 'solucionSinDia'}`, datos);
   return {
-    titulo: t('consejos.pagoLejosDelCobro.titulo', datos),
+    titulo: t(`consejos.pagoLejosDelCobro.${justo ? 'tituloJusto' : 'titulo'}`, datos),
     problema: t(`consejos.pagoLejosDelCobro.${problema}`, datos),
     solucion: consejo.separaCortes ? `${solucion} ${t('consejos.pagoLejosDelCobro.separa')}` : solucion,
-    mientras: t('consejos.pagoLejosDelCobro.mientras'),
+    mientras: t(`consejos.pagoLejosDelCobro.${justo ? 'mientrasJusto' : 'mientras'}`),
   };
 }

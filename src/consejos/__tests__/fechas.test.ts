@@ -50,7 +50,7 @@ describe('pago lejos del cobro', () => {
   test('el caso del usuario: cobra el 22 y paga el ~19; cuenta el cobro anterior al corte', () => {
     const [c, ...resto] = consejos([tarjeta('SC', 23, 27)], [mensual(22)]);
     expect(resto).toEqual([]);
-    expect(c).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'SC', diaCobro: 22, diasDesdeCobro: 28, enDolares: false });
+    expect(c).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'SC', diaCobro: 22, diasDesdeCobro: 28, enDolares: false, cobroJusto: false });
     expect([17, 18, 19, 20, 21, 22]).toContain(c.diaPago);
   });
 
@@ -60,7 +60,9 @@ describe('pago lejos del cobro', () => {
 
   test('un cobro el mismo día o el día antes del pago no alcanza (2 días de margen)', () => {
     // Corta el 8 y paga el 30, el mismo día del cobro: se paga con el del mes anterior.
-    expect(consejos([tarjeta('BR', 8, 22)], [mensual(30)])[0]).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'BR' });
+    expect(consejos([tarjeta('BR', 8, 22)], [mensual(30)])[0]).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'BR', cobroJusto: true, diaCobro: 30 });
+    // El caso del usuario con la fecha movida: paga el 22, el mismo día que cobra.
+    expect(consejos([tarjeta('SC', 26, 27)], [mensual(22)])[0]).toMatchObject({ tarjetaId: 'SC', cobroJusto: true, diaCobro: 22 });
   });
 
   test('con cobros semanales, cada 2 semanas o quincenales nunca queda lejos', () => {

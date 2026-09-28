@@ -18,6 +18,7 @@ const base: ConsejoFechas = {
   diaPago: 19,
   diaCobro: 22,
   diasDesdeCobro: 28,
+  cobroJusto: false,
   enDolares: false,
   cobroEstimado: false,
   separaCortes: false,
@@ -48,6 +49,15 @@ test('ningún consejo da un día de corte para pedir ni pasa de unas pocas frase
 test('en dólares y cuando también separa los cortes', () => {
   expect(textos({ enDolares: true }).problema).toBe('El balance en dólares vence alrededor del 19 y cobras el 22: tienes que guardar el dinero 28 días para pagarlo.');
   expect(textos({ separaCortes: true }).solucion).toMatch(/Así también tendrás más días para pagar con tus otras tarjetas\.$/);
+});
+
+test('cobro el mismo día del pago: el riesgo es que se atrase, no estirar el dinero (D76)', () => {
+  expect(textos({ diaPago: 22, diaCobro: 22, diasDesdeCobro: 30, cobroJusto: true })).toEqual({
+    titulo: 'Tu Visa Santa Cruz vence el mismo día que cobras',
+    problema: 'Vence alrededor del 22 y cobras el 22: si el cobro se atrasa o pagas desde otro banco, el pago puede llegar tarde.',
+    solucion: 'Llama a tu banco y pide que la fecha de pago quede unos días después del 22.',
+    mientras: 'Paga apenas te llegue el cobro, sin dejarlo para el último momento.',
+  });
 });
 
 test('sin el día del cobro siguiente, sin fechas', () => {

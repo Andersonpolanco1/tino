@@ -30,6 +30,9 @@ export interface ConsejoFechas {
   diaPago: number;
   diaCobro: number;
   diasDesdeCobro: number;
+  // Si el cobro cae el mismo día del pago o muy poco antes (dentro del margen): el riesgo no es
+  // estirar el dinero sino que el cobro se atrase o el pago tarde en llegar (D76).
+  cobroJusto: boolean;
   // Con doble balance, si el pago que queda lejos del cobro es el de dólares.
   enDolares: boolean;
   cobroEstimado: boolean;
@@ -119,7 +122,8 @@ interface Estado {
   enDolares: boolean;
   // Días desde el último cobro (con margen) hasta el pago; null si no se sabe.
   desdeCobro: number | null;
-  // El cobro que llega justo después del pago.
+  // Un cobro que llega el mismo día del pago o dentro del margen, y el que llega después.
+  justo: number | null;
   siguiente: number | null;
 }
 
@@ -143,16 +147,18 @@ function simular(tarjeta: Tarjeta, ctx: Contexto): Simulacion {
       tarjeta.monedaFacturacion === 'doble_balance' && tarjeta.fechaLimiteUsd ? fechaLimite(corte, tarjeta.fechaLimiteUsd, tarjeta.ajusteDiaNoHabil, feriados) : null;
     const pago = usd !== null && usd < principal ? usd : principal;
     let ultimo: Cobro | undefined;
+    let justo: Cobro | undefined;
     let siguiente: Cobro | undefined;
     for (const c of cobros) {
       if (c.dia <= pago - (c.estimada ? MARGEN_COBRO_ESTIMADO : MARGEN_COBRO)) ultimo = c;
-      else if (c.dia >= pago) {
+      else if (c.dia <= pago) justo = c;
+      else {
         siguiente = c;
         break;
       }
     }
     const conocido = !!ultimo && ultimo.dia >= ctx.primerCobro && pago <= ctx.ultimoCobro;
-    estados.push({ pago, enDolares: pago !== principal, desdeCobro: conocido ? pago - ultimo!.dia : null, siguiente: siguiente?.dia ?? null });
+    estados.push({ pago, enDolares: pago !== principal, desdeCobro: conocido ? pago - ultimo!.dia : null, justo: justo?.dia ?? null, siguiente: siguiente?.dia ?? null });
     corte = proximoCorte(corte + 1, { diaCorte: tarjeta.diaCorte, compraEnDiaDeCorte: 'entra_en_corte_actual' });
   }
   const conocidos = estados.filter(x => x.desdeCobro !== null);
@@ -238,6 +244,7 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
     diaPago: 0,
     diaCobro: 0,
     diasDesdeCobro: 0,
+    cobroJusto: false,
     enDolares: false,
     cobroEstimado,
     separaCortes: false,
@@ -267,6 +274,7 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
     const sim = sims[tarjeta.id];
     const revisados = sim.estados.filter(x => x.desdeCobro !== null);
     const lejanos = revisados.filter(x => x.desdeCobro! > DIAS_LEJOS_DEL_COBRO);
+    const justos = lejanos.filter(x => x.justo !== null);
     const separa = !separadas && mejor.peor >= peorHoy + MEJORA_MINIMA_DIAS;
     if (separa) separadas = true;
     consejos.push({
@@ -275,7 +283,8 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
       tarjetaId: tarjeta.id,
       huella: huellaDe([fechasDe(original), huellaCobros]),
       diaPago: moda(lejanos.map(x => diaDelMes(x.pago))),
-      diaCobro: moda(lejanos.filter(x => x.siguiente !== null).map(x => diaDelMes(x.siguiente!))),
+      diaCobro: justos.length * 2 > lejanos.length ? moda(justos.map(x => diaDelMes(x.justo!))) : moda(lejanos.filter(x => x.siguiente !== null).map(x => diaDelMes(x.siguiente!))),
+      cobroJusto: justos.length * 2 > lejanos.length,
       diasDesdeCobro: Math.round(promedio(sim)),
       enDolares: lejanos.filter(x => x.enDolares).length * 2 > lejanos.length,
       separaCortes: separa,
