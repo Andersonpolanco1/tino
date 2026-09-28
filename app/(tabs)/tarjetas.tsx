@@ -1,14 +1,13 @@
-import { useCallback, useRef, useState } from 'react';
-import { useFocusEffect, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
-import { Boton, BotonPastilla, Etiqueta, FilaLista, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
+import { Boton, BotonCircular, BotonPastilla, FilaLista, ListaAgrupada, Pantalla, Texto, useTema } from '@/diseno';
 import type { Tarjeta } from '@/tipos/tipos';
 import { useAlmacen } from '@/estado';
 import { logoEmisor, useCatalogo } from '@/catalogo';
-import { claveConsejo, textosConsejo, useConsejosNuevos } from '@/consejos';
+import { useConsejosNuevos } from '@/consejos';
 import { buscarEmisor } from '@/registro/borrador';
-import { inicialesBanco, textoFecha, type Traducir as TraducirVista } from '@/inicio/vista';
+import { inicialesBanco, textoFecha } from '@/inicio/vista';
 import { useHoy } from '@/inicio/useHoy';
 import { usePais } from '@/paises';
 import { proximosPagos } from '@/pagos/pendientes';
@@ -30,19 +29,9 @@ export default function Tarjetas() {
   // cuentan (15.2). Mezcladas con las activas parecía que las 3 funcionaban.
   const guardadas = tarjetas.filter(x => !enPlan.includes(x));
   const pagos = proximosPagos(enPlan, hoy, ingresos, config);
-  // Decisión D68: al abrir la pestaña, los consejos nuevos quedan vistos; durante esta visita
-  // siguen con la etiqueta "Nuevo" para que se note cuáles son.
-  const { consejos, nuevos, marcar } = useConsejosNuevos();
-  const [nuevosDeLaVisita, setNuevosDeLaVisita] = useState<string[]>([]);
-  const alAbrir = useRef({ nuevos, marcar });
-  alAbrir.current = { nuevos, marcar };
-  useFocusEffect(
-    useCallback(() => {
-      setNuevosDeLaVisita(alAbrir.current.nuevos.map(claveConsejo));
-      alAbrir.current.marcar();
-    }, []),
-  );
-  const esNuevo = (c: (typeof consejos)[number]) => nuevosDeLaVisita.includes(claveConsejo(c)) || nuevos.includes(c);
+  // Decisión D74: los consejos de fechas viven detrás del bombillo del encabezado, con un punto
+  // mientras haya alguno sin ver; se marcan vistos al abrir su pantalla.
+  const { consejos, nuevos } = useConsejosNuevos();
 
   const fila = (tarjeta: Tarjeta) => {
     const emisor = buscarEmisor(catalogo, tarjeta.emisorId);
@@ -81,36 +70,21 @@ export default function Tarjetas() {
 
   return (
     <Pantalla conPestanas>
-      <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>
-        {t('tarjetas.titulo')}
-      </Texto>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: tema.espacio.m }}>
+        <Texto variante="titulo" accessibilityRole="header" style={{ flexShrink: 1, fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>
+          {t('tarjetas.titulo')}
+        </Texto>
+        {consejos.length ? (
+          <BotonCircular
+            icono="bombillo"
+            testID="consejos"
+            aviso={nuevos.length > 0}
+            etiqueta={nuevos.length ? t('consejos.botonNuevos', { count: nuevos.length }) : t('consejos.boton')}
+            onPress={() => router.push('/consejos/fechas')}
+          />
+        ) : null}
+      </View>
       {tarjetas.length === 0 ? <Texto color="textoSecundario">{t('tarjetas.vacio')}</Texto> : null}
-      {/* Decisiones D68 y D73: qué cambio pedirle al banco, arriba para verlo rápido. */}
-      {consejos.length ? (
-        <ListaAgrupada titulo={t('consejos.seccion')}>
-          {consejos.map(consejo => {
-            const textos = textosConsejo(consejo, tarjetas, t as unknown as TraducirVista);
-            return (
-              <FilaLista
-                key={`${consejo.tipo}:${consejo.tarjetaId}`}
-                icono="calendario"
-                tono={consejo.tipo === 'pagoLejosDelCobro' ? 'alerta' : 'primario'}
-                titulo={textos.titulo}
-                detalle={textos.resumen}
-                debajo={
-                  esNuevo(consejo) ? (
-                    <View style={{ flexDirection: 'row', marginTop: 2 }}>
-                      <Etiqueta tipo="recompensa" texto={t('consejos.nuevo')} />
-                    </View>
-                  ) : undefined
-                }
-                flecha
-                onPress={() => router.push('/consejos/fechas')}
-              />
-            );
-          })}
-        </ListaAgrupada>
-      ) : null}
       {enPlan.length ? <ListaAgrupada sangria={70}>{enPlan.map(fila)}</ListaAgrupada> : null}
       <Boton titulo={t('tarjetas.agregar')} icono="mas" onPress={() => router.push('/tarjeta/nueva')} />
       {guardadas.length ? (

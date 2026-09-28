@@ -371,10 +371,7 @@
     "misDatosTitulo": "Ver mis datos",
     "misDatosAviso": "Vas a compartir un texto con todo lo que Tino guarda sobre ti. No va cifrado: compártelo solo donde confíes. Para cambiar de teléfono usa \"Crear respaldo\".",
     "misDatosConfirmar": "Compartir",
-    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo.",
-    "consejosOcultos": "Mostrar consejos ocultos",
-    "consejosOcultosDetalle_one": "Ocultaste 1 consejo de fechas",
-    "consejosOcultosDetalle_other": "Ocultaste {{count}} consejos de fechas"
+    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo."
   },
   "paises": {
     "DO": "República Dominicana",
@@ -615,7 +612,6 @@
   "consejos": {
     "titulo": "Mejora tus fechas",
     "intro": "Tino no puede cambiar tus fechas: las decide tu banco. Pero muchos bancos las cambian si lo pides, y con eso puedes evitar pagar tarde o tener más días para pagar.",
-    "seccion": "Consejos para tus fechas",
     "nuevo": "Nuevo",
     "listaY": "{{inicio}} y {{ultimo}}",
     "pagoLejosDelCobro": {
@@ -652,9 +648,10 @@
     "paso3": "Pregunta si tiene algún costo. Casi siempre es gratis, pero el primer estado de cuenta después del cambio puede venir con un ciclo más corto o más largo.",
     "paso4": "Cuando te lo cambien, actualiza las fechas en Tino.",
     "actualizar": "Actualizar fechas de {{alias}}",
-    "ocultar": "Ya lo sé, no mostrar más",
-    "ocultarDetalle": "No volverá a aparecer mientras tus fechas y cobros sigan iguales.",
-    "sinConsejos": "Tus fechas están bien: no hay nada que cambiar por ahora."
+    "sinConsejos": "Tus fechas están bien: no hay nada que cambiar por ahora.",
+    "boton": "Consejos para tus fechas",
+    "botonNuevos_one": "Consejos para tus fechas, 1 nuevo",
+    "botonNuevos_other": "Consejos para tus fechas, {{count}} nuevos"
   },
   "sugerencias": {
     "cobros": "Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.",
@@ -790,9 +787,7 @@
     "sugerenciaDescartes_one": "Descartaste la sugerencia de {{tipo}} {{count}} vez, la última el {{fecha}}",
     "sugerenciaDescartes_other": "Descartaste la sugerencia de {{tipo}} {{count}} veces, la última el {{fecha}}",
     "identificador": "Tu identificador anónimo: {{id}}. Con él puedes pedir que se borren tus datos de uso.",
-    "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino.",
-    "consejosDescartados_one": "Ocultaste 1 consejo de fechas",
-    "consejosDescartados_other": "Ocultaste {{count}} consejos de fechas"
+    "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino."
   },
   "respaldo": {
     "crearTitulo": "Crear respaldo",

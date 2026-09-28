@@ -13,6 +13,14 @@ const TRAZOS = {
     </>
   ),
   check: <Path d="M5 12l5 5 9-10" />,
+  // Consejos para tus fechas (pestaña Tarjetas).
+  bombillo: (
+    <>
+      <Path d="M9 18h6" />
+      <Path d="M10 21h4" />
+      <Path d="M12 3a6 6 0 0 0-3.6 10.8c.7.5 1.1 1.3 1.1 2.1V16h5v-.1c0-.8.4-1.6 1.1-2.1A6 6 0 0 0 12 3z" />
+    </>
+  ),
   // Tino Pro.
   estrella: <Path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.8-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z" />,
   // Datos de uso anónimos (Ajustes > Privacidad).

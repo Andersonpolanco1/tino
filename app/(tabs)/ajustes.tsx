@@ -21,7 +21,6 @@ import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 import { reiniciarIdentificadorAnalitica } from '@/analitica';
 import { useComprasPro } from '@/suscripciones';
-import { useConsejosOcultos } from '@/consejos';
 
 // Anillo de 84: con 100% el número necesita aire dentro del trazo.
 const LADO_ANILLO = 84;
@@ -50,7 +49,6 @@ export default function Ajustes() {
   const elegirPais = useElegirPais();
   const tarjetas = useAlmacen(s => s.tarjetas);
   const ingresos = useAlmacen(s => s.ingresos);
-  const consejosOcultos = useConsejosOcultos();
   const preferencias = useAlmacen(s => s.preferencias);
   const sugerencias = useAlmacen(s => s.sugerencias);
   const catalogo = useCatalogo();
@@ -224,15 +222,6 @@ export default function Ajustes() {
         ) : null}
         {/* Las monedas salen del país y no se eligen: van como detalle, sin fila propia. */}
         <FilaLista icono="globo" titulo={t('ajustes.pais')} detalle={t('ajustes.paisDetalle', { pais: nombrePais(t, config.codigo), monedas })} flecha onPress={() => setHojaPais(true)} />
-        {/* Decisión D73: los consejos ocultos con "Ya lo sé" se pueden volver a mostrar. */}
-        {consejosOcultos.ocultos ? (
-          <FilaLista
-            icono="calendario"
-            titulo={t('ajustes.consejosOcultos')}
-            detalle={t('ajustes.consejosOcultosDetalle', { count: consejosOcultos.ocultos })}
-            onPress={consejosOcultos.mostrar}
-          />
-        ) : null}
       </ListaAgrupada>
 
       {preferencias ? (

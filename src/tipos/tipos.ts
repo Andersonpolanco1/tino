@@ -108,9 +108,6 @@ export interface Preferencias {
   // Decisión D68: consejos de fechas ya vistos ("tipo:tarjeta:huella", D73). Siguen a la vista
   // hasta que el problema se resuelva; solo dejan de contar como nuevos. Opcional para no migrar.
   consejosVistos?: string[];
-  // Decisión D73: consejos que el usuario ocultó con "Ya lo sé" (misma clave). No vuelven
-  // mientras sus fechas y cobros sigan iguales. Opcional para no migrar.
-  consejosDescartados?: string[];
 }
 
 export type TemaApp = 'automatico' | 'claro' | 'oscuro';

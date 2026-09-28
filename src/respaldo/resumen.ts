@@ -114,7 +114,6 @@ const CAMPOS_PREFERENCIAS: Campos<Preferencias> = {
     }),
   tema: (x, c) => c.t('misDatos.tema', { tema: c.t(`ajustes.temas.${x.tema ?? 'automatico'}`) }),
   consejosVistos: (x, c) => (x.consejosVistos?.length ? c.t('misDatos.consejosVistos', { count: x.consejosVistos.length }) : null),
-  consejosDescartados: (x, c) => (x.consejosDescartados?.length ? c.t('misDatos.consejosDescartados', { count: x.consejosDescartados.length }) : null),
 };
 
 const CAMPOS_SUGERENCIAS: Campos<EstadoSugerencias> = {

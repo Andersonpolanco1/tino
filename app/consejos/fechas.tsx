@@ -8,16 +8,16 @@ import { textosConsejo, useConsejosNuevos } from '@/consejos';
 import type { Traducir } from '@/inicio/vista';
 import { useVolver } from '@/utilidades/useVolver';
 
-// Consejos de fechas (decisión D73): qué pasa, qué pedirle al banco y cómo, sin fechas exactas.
-// "Ya lo sé" oculta el consejo mientras sus fechas y cobros sigan iguales.
+// Consejos de fechas (decisiones D73 y D74): qué pasa, qué pedirle al banco y cómo, sin fechas
+// exactas. Se abren desde el bombillo de Tarjetas y siguen aquí mientras el problema exista.
 export default function ConsejosFechas() {
   const { t } = useTranslation();
   const tema = useTema();
   const router = useRouter();
   const volver = useVolver();
   const tarjetas = useTarjetasEnPlan();
-  const { consejos, marcar, ocultar } = useConsejosNuevos();
-  // Decisión D68: al abrir la pantalla, los consejos quedan vistos (siguen aquí y en Tarjetas).
+  const { consejos, marcar } = useConsejosNuevos();
+  // Decisión D68: al abrir la pantalla, los consejos quedan vistos y se apaga el punto del bombillo.
   const marcarAlAbrir = useRef(marcar);
   marcarAlAbrir.current = marcar;
   useEffect(() => marcarAlAbrir.current(), []);
@@ -67,12 +67,6 @@ export default function ConsejosFechas() {
               icono="editar"
               onPress={() => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: consejo.tarjetaId, seccion: 'fechas' } })}
             />
-            <View style={{ gap: tema.espacio.xs }}>
-              <Boton titulo={t('consejos.ocultar')} variante="texto" onPress={() => ocultar(consejo)} />
-              <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
-                {t('consejos.ocultarDetalle')}
-              </Texto>
-            </View>
           </Superficie>
         );
       })}
