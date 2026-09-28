@@ -99,6 +99,8 @@ export function fechaMesCorto(fecha: FechaISO, idioma: string, t: Traducir): str
 // Opacidad de la pista de la línea del ciclo sobre la tarjeta verde, por modo; la comparten
 // la tarjeta de hoy y el widget.
 export const OPACIDAD_PISTA = { claro: 0.22, oscuro: 0.15 } as const;
+// Y la del recuadro con las iniciales del banco (ChipBanco).
+export const OPACIDAD_INICIALES = { claro: 0.18, oscuro: 0.12 } as const;
 
 // "martes 6".
 export function diaConSemana(fecha: FechaISO, idioma: string, t: Traducir): string {

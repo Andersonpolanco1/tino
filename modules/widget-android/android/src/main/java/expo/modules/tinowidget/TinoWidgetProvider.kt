@@ -8,6 +8,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -15,6 +17,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.RemoteViews
 import org.json.JSONObject
+import java.io.File
 import java.util.Calendar
 import java.util.Locale
 
@@ -44,16 +47,38 @@ class TinoWidgetProvider : AppWidgetProvider() {
     private const val CLAVE = "resumen"
     private const val ACCION_MEDIANOCHE = "expo.modules.tinowidget.MEDIANOCHE"
     // Igual a VERSION_RESUMEN en src/widget/resumen.ts; cambia cuando cambian los campos.
-    private const val VERSION_RESUMEN = 2
-    // Altos (dp) desde los que caben las líneas de abajo (tarjeta a evitar y pago) y la tarjeta
-    // de hoy completa, con la línea del ciclo como en Inicio. Con la tarjeta completa y la de
-    // evitar, la recompensa necesita más alto.
+    private const val VERSION_RESUMEN = 3
+    // Altos (dp) desde los que caben las líneas de abajo (tarjeta a evitar y pago), la tarjeta
+    // de hoy completa con la línea del ciclo, y además la recompensa (con la tarjeta a evitar,
+    // más). El 4 × 2 de un Pixel mide unos 230 dp: tarjeta completa sin recompensa.
     private const val ALTURA_LINEAS = 120
     private const val ALTURA_TARJETA_COMPLETA = 200
-    private const val ALTURA_RECOMPENSA_Y_EVITAR = 250
+    private const val ALTURA_RECOMPENSA = 260
+    private const val ALTURA_RECOMPENSA_Y_EVITAR = 290
 
     fun guardar(contexto: Context, json: String) {
       contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE).edit().putString(CLAVE, json).apply()
+    }
+
+    // Logos de los bancos de las tarjetas del usuario (D63), copiados por la app desde sus
+    // archivos incluidos. Solo nombres del catálogo ("banreservas.png"), nunca rutas.
+    private const val CARPETA_LOGOS = "tino_widget_logos"
+    private val NOMBRE_LOGO = Regex("""^[a-z0-9-]+\.png$""")
+
+    fun guardarLogos(contexto: Context, rutas: Map<String, String>) {
+      val carpeta = File(contexto.filesDir, CARPETA_LOGOS).apply { mkdirs() }
+      for ((nombre, uri) in rutas) {
+        if (!NOMBRE_LOGO.matches(nombre)) continue
+        val origen = Uri.parse(uri).path?.let(::File) ?: continue
+        runCatching { origen.copyTo(File(carpeta, nombre), overwrite = true) }
+      }
+      carpeta.listFiles()?.filter { it.name !in rutas.keys }?.forEach { it.delete() }
+    }
+
+    private fun logo(contexto: Context, nombre: String): Bitmap? {
+      if (!NOMBRE_LOGO.matches(nombre)) return null
+      val archivo = File(File(contexto.filesDir, CARPETA_LOGOS), nombre)
+      return if (archivo.exists()) BitmapFactory.decodeFile(archivo.path) else null
     }
 
     fun ids(contexto: Context): IntArray =
@@ -112,7 +137,7 @@ class TinoWidgetProvider : AppWidgetProvider() {
 
       val evitar = if (dia.isNull("evitar")) null else dia.getString("evitar")
       if (alto >= ALTURA_TARJETA_COMPLETA) {
-        tarjetaCompleta(vistas, colores, textos, dia, conRecompensa = evitar == null || alto >= ALTURA_RECOMPENSA_Y_EVITAR)
+        tarjetaCompleta(contexto, vistas, colores, textos, dia, conRecompensa = alto >= (if (evitar == null) ALTURA_RECOMPENSA else ALTURA_RECOMPENSA_Y_EVITAR))
       } else {
         tarjetaCompacta(vistas, colores, textos, dia)
       }
@@ -148,11 +173,21 @@ class TinoWidgetProvider : AppWidgetProvider() {
       }
     }
 
-    // La tarjeta de hoy de Inicio: nombre, días, línea del ciclo y recompensa.
-    private fun tarjetaCompleta(vistas: RemoteViews, colores: Colores, textos: JSONObject, dia: JSONObject, conRecompensa: Boolean) {
+    // La tarjeta de hoy de Inicio, con el título de la pantalla encima: banco, nombre, días,
+    // línea del ciclo y recompensa.
+    private fun tarjetaCompleta(
+      contexto: Context,
+      vistas: RemoteViews,
+      colores: Colores,
+      textos: JSONObject,
+      dia: JSONObject,
+      conRecompensa: Boolean,
+    ) {
       vistas.setViewVisibility(R.id.widget_compacto, View.GONE)
       vistas.setViewVisibility(R.id.widget_completo, View.VISIBLE)
+      banco(contexto, vistas, colores, dia.optJSONObject("banco"))
       val textosDelDia = mapOf(
+        R.id.widget_titulo_completo to textos.getString("titulo"),
         R.id.widget_alias_completo to dia.getString("alias"),
         R.id.widget_dias_completo to dia.getInt("dias").toString(),
         R.id.widget_dias_texto_completo to textos.getString("diasParaPagar"),
@@ -186,6 +221,28 @@ class TinoWidgetProvider : AppWidgetProvider() {
         colores.aplicar(vistas, R.id.widget_punto_recompensa, "setColorFilter", "recompensaPunto")
       } else {
         vistas.setViewVisibility(R.id.widget_fila_recompensa, View.GONE)
+      }
+    }
+
+    // Logo sobre blanco si el widget lo tiene; si no, las iniciales sobre el verde translúcido.
+    private fun banco(contexto: Context, vistas: RemoteViews, colores: Colores, banco: JSONObject?) {
+      if (banco == null) {
+        vistas.setViewVisibility(R.id.widget_chip, View.GONE)
+        return
+      }
+      vistas.setViewVisibility(R.id.widget_chip, View.VISIBLE)
+      val imagen = banco.optString("logo").ifEmpty { null }?.let { logo(contexto, it) }
+      if (imagen != null) {
+        vistas.setImageViewBitmap(R.id.widget_chip_logo, imagen)
+        vistas.setViewVisibility(R.id.widget_chip_logo, View.VISIBLE)
+        vistas.setViewVisibility(R.id.widget_chip_iniciales, View.GONE)
+        colores.aplicar(vistas, R.id.widget_chip_fondo, "setColorFilter", "fondoLogo")
+      } else {
+        vistas.setTextViewText(R.id.widget_chip_iniciales, banco.getString("iniciales"))
+        vistas.setViewVisibility(R.id.widget_chip_iniciales, View.VISIBLE)
+        vistas.setViewVisibility(R.id.widget_chip_logo, View.GONE)
+        colores.aplicar(vistas, R.id.widget_chip_iniciales, "setTextColor", "sobreDestacado")
+        colores.aplicar(vistas, R.id.widget_chip_fondo, "setColorFilter", "fondoIniciales")
       }
     }
 

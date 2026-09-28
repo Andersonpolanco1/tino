@@ -1,5 +1,6 @@
 import { StyleSheet, View, type ImageSourcePropType } from 'react-native';
 import { MarcaBanco, Texto, useTema } from '../diseno';
+import { OPACIDAD_INICIALES } from './vista';
 
 // Pequeña tarjeta con el logo del banco o, sin logo, sus iniciales (rediseño y decisión D63).
 // Iniciales con "sobreDestacado": translúcida dentro de la tarjeta de hoy; si no, en jade.
@@ -29,7 +30,7 @@ export function ChipBanco({
       }}
     >
       {sobreDestacado ? (
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: tema.color.sobreDestacado, opacity: tema.modo === 'oscuro' ? 0.12 : 0.18 }]} />
+        <View style={[StyleSheet.absoluteFill, { backgroundColor: tema.color.sobreDestacado, opacity: OPACIDAD_INICIALES[tema.modo] }]} />
       ) : null}
       <Texto variante="etiqueta" color={sobreDestacado ? 'sobreDestacado' : 'sobrePrimario'} style={{ fontSize: grande ? 12 : 11, letterSpacing: 0.5 }}>
         {iniciales}

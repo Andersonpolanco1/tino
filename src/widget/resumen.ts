@@ -1,7 +1,8 @@
-import type { ConfigPais, FechaISO, FuenteIngreso, Preferencias, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
+import type { Catalogo, ConfigPais, FechaISO, FuenteIngreso, Preferencias, ResultadoTarjeta, Tarjeta } from '../tipos/tipos';
 import { calcularRanking } from '../motor';
 import { aFecha, fechaLimite, numeroDe, proximoCorte } from '../motor/fechas';
-import { fechaCorta, fechaMesCorto, OPACIDAD_PISTA, proximoPago, textoRecompensa, type Traducir } from '../inicio/vista';
+import { fechaCorta, fechaMesCorto, inicialesBanco, OPACIDAD_INICIALES, OPACIDAD_PISTA, proximoPago, textoRecompensa, type Traducir } from '../inicio/vista';
+import { buscarEmisor } from '../registro/borrador';
 import { estaPagado } from '../pagos/pendientes';
 import { DIAS_ANTES_FECHA_LIMITE } from '../notificaciones/planificar';
 import tokens from '../diseno/tokens.json';
@@ -14,7 +15,7 @@ import tokens from '../diseno/tokens.json';
 
 // Sube cuando cambian los campos; el widget ignora un resumen de otra versión y pide abrir la
 // app (VERSION_RESUMEN en TinoWidgetProvider.kt, que una prueba compara).
-export const VERSION_RESUMEN = 2;
+export const VERSION_RESUMEN = 3;
 // Días calculados hacia adelante, como los avisos. Pasado el horizonte sin abrir la app, el
 // widget pide abrirla. Cada día es un ranking completo: con 10 tarjetas y cobros, 60 días
 // tardan unos 100 ms en una PC.
@@ -30,11 +31,22 @@ export interface ColoresWidget {
   // Línea del ciclo: la pista es el texto sobre el verde con la opacidad de la tarjeta de hoy.
   pista: string;
   recompensaPunto: string;
+  // Recuadro del banco: blanco con logo (D63) o translúcido con las iniciales, como ChipBanco.
+  fondoLogo: string;
+  fondoIniciales: string;
+}
+
+// Banco de la tarjeta de hoy: el logo es el archivo del catálogo (el widget lo recibe aparte,
+// ver useWidget); sin logo, las iniciales. Null si la tarjeta no tiene banco.
+export interface BancoWidget {
+  iniciales: string;
+  logo: string | null;
 }
 
 export interface DiaWidget {
   fecha: FechaISO;
   alias: string;
+  banco: BancoWidget | null;
   dias: number;
   // Línea del ciclo, como en la tarjeta de hoy (D35 y D43): "27 sept.", "23 oct." y "19 nov.".
   hoy: string;
@@ -67,6 +79,7 @@ export interface EntradaWidget {
   ingresos: FuenteIngreso[];
   preferencias: Preferencias;
   pais: ConfigPais;
+  catalogo: Catalogo | null;
   t: Traducir;
   idioma: string;
   enlace?: string | null;
@@ -91,7 +104,20 @@ function colores(modo: 'claro' | 'oscuro'): ColoresWidget {
     alerta: c.alertaTexto,
     pista: mezclar(c.destacado, c.sobreDestacado, OPACIDAD_PISTA[modo]),
     recompensaPunto: c.recompensaPunto,
+    fondoLogo: c.fondoLogo,
+    fondoIniciales: mezclar(c.destacado, c.sobreDestacado, OPACIDAD_INICIALES[modo]),
   };
+}
+
+function bancoDe(tarjeta: Tarjeta, catalogo: Catalogo | null): BancoWidget | null {
+  const emisor = buscarEmisor(catalogo, tarjeta.emisorId);
+  const iniciales = inicialesBanco(emisor?.nombreCorto ?? tarjeta.emisorTextoLibre ?? '');
+  return iniciales ? { iniciales, logo: emisor?.logo ?? null } : null;
+}
+
+// Logos que usa el resumen, para que el widget tenga solo los de las tarjetas del usuario.
+export function logosDelResumen(resumen: ResumenWidget): string[] {
+  return [...new Set(resumen.dias.flatMap(d => (d.banco?.logo ? [d.banco.logo] : [])))];
 }
 
 // La tarjeta a evitar: otra que corta en 3 días o menos (semáforo rojo), la que corta primero.
@@ -160,6 +186,7 @@ export function planificarWidget(e: EntradaWidget): ResumenWidget {
       dias.push({
         fecha,
         alias,
+        banco: bancoDe(tarjeta, e.catalogo),
         dias: mejor.diasGracia,
         hoy: corto(fecha),
         corta: corto(mejor.proximoCorte),

@@ -7,7 +7,7 @@ import { calcularRanking } from '../../motor';
 import type { Traducir } from '../../inicio/vista';
 import tokens from '../../diseno/tokens.json';
 import textos from '../../i18n/es-DO.json';
-import { HORIZONTE_WIDGET, mezclar, planificarWidget, VERSION_RESUMEN, type EntradaWidget } from '../resumen';
+import { HORIZONTE_WIDGET, logosDelResumen, mezclar, planificarWidget, VERSION_RESUMEN, type EntradaWidget } from '../resumen';
 import { abiertoDesdeWidget } from '../useWidget';
 
 // Hoy es el martes 6 de octubre de 2026, el ejemplo 7.4, como en las pruebas de los avisos.
@@ -49,7 +49,7 @@ const C = tarjeta('C', 1, 21, { tipo: 'cashback', porcentaje: 1 });
 const nomina: FuenteIngreso[] = [{ id: 'n', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos', dias: [15, 30] }, ajusteDiaNoHabil: 'adelantar' }];
 
 function entrada(cambios: Partial<EntradaWidget> = {}): EntradaWidget {
-  return { hoy: '2026-10-06', tarjetas: [A, B, C], ingresos: nomina, preferencias: preferenciasIniciales('DO', 'es-DO'), pais, t, idioma: 'es-DO', ...cambios };
+  return { hoy: '2026-10-06', tarjetas: [A, B, C], ingresos: nomina, preferencias: preferenciasIniciales('DO', 'es-DO'), pais, catalogo: null, t, idioma: 'es-DO', ...cambios };
 }
 const dia = (fecha: string, e = entrada()) => planificarWidget(e).dias.find(d => d.fecha === fecha)!;
 
@@ -138,6 +138,8 @@ test('colores de los tokens, tema de Ajustes y enlace', () => {
       alerta: c.alertaTexto,
       pista: mezclar(c.destacado, c.sobreDestacado, modo === 'claro' ? 0.22 : 0.15),
       recompensaPunto: c.recompensaPunto,
+      fondoLogo: c.fondoLogo,
+      fondoIniciales: mezclar(c.destacado, c.sobreDestacado, modo === 'claro' ? 0.18 : 0.12),
     });
   }
   expect(resumen.textos).toEqual({
@@ -160,6 +162,25 @@ test('la línea del ciclo y la recompensa, como en la tarjeta de hoy', () => {
   // Sin recompensa no hay línea.
   const sinRecompensa = [A, B, C].map(x => ({ ...x, recompensa: { tipo: 'ninguna' as const } }));
   expect(dia('2026-10-06', entrada({ tarjetas: sinRecompensa })).recompensa).toBeNull();
+});
+
+test('el banco de la tarjeta de hoy: logo del catálogo o iniciales, y solo esos logos', () => {
+  const catalogo = require('../../../datos-publicos/emisores-do.json');
+  const conBanco = [
+    { ...A, emisorId: 'banreservas' },
+    { ...B, emisorId: null, emisorTextoLibre: 'Cooperativa Central' },
+    { ...C, emisorId: null },
+  ];
+  // Con Puntos gana A o B según el día; con Días, C. Se revisan los tres en distintos enfoques.
+  const banco = (modo: 'puntos' | 'liquidez', alias: string) =>
+    planificarWidget(entrada({ tarjetas: conBanco, catalogo, preferencias: { ...preferenciasIniciales('DO', 'es-DO'), enfoque: { modo } } })).dias.find(d => d.alias === alias)?.banco;
+  expect(banco('puntos', 'Tarjeta B')).toEqual({ iniciales: 'CC', logo: null });
+  expect(banco('liquidez', 'Tarjeta C')).toBeNull();
+  const conBanreservas = planificarWidget(entrada({ tarjetas: [conBanco[0]], catalogo }));
+  expect(conBanreservas.dias[0].banco).toEqual({ iniciales: expect.any(String), logo: 'banreservas.png' });
+  // El widget recibe solo los logos de los bancos que aparecen, no todo el catálogo.
+  expect(logosDelResumen(conBanreservas)).toEqual(['banreservas.png']);
+  expect(logosDelResumen(planificarWidget(entrada({ catalogo })))).toEqual([]);
 });
 
 test('mezcla colores como una opacidad', () => {

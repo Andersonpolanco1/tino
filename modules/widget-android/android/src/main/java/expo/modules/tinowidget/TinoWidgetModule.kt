@@ -18,6 +18,10 @@ class TinoWidgetModule : Module() {
       TinoWidgetProvider.actualizarTodos(contexto)
     }
 
+    Function("guardarLogos") { rutas: Map<String, String> ->
+      TinoWidgetProvider.guardarLogos(contexto, rutas)
+    }
+
     Function("widgetsInstalados") {
       TinoWidgetProvider.ids(contexto).size
     }
