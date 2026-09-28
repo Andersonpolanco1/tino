@@ -8,8 +8,9 @@ import { textosConsejo, useConsejosNuevos } from '@/consejos';
 import type { Traducir } from '@/inicio/vista';
 import { useVolver } from '@/utilidades/useVolver';
 
-// Consejos de fechas (decisiones D73 y D74): qué pasa, qué pedirle al banco y cómo, sin fechas
-// exactas. Se abren desde el bombillo de Tarjetas y siguen aquí mientras el problema exista.
+// Consejos de fechas (decisiones D73 a D75): qué pasa y qué hacer, breve y sin fechas exactas.
+// Se abren desde el bombillo de Tarjetas y siguen aquí mientras el problema exista; con varios
+// (máximo 2), uno debajo del otro.
 export default function ConsejosFechas() {
   const { t } = useTranslation();
   const tema = useTema();
@@ -25,12 +26,9 @@ export default function ConsejosFechas() {
   return (
     <Pantalla arriba={<BarraSuperior izquierda={{ tipo: 'atras', onPress: volver }} />}>
       <Stack.Screen options={{ headerShown: false }} />
-      <View style={{ gap: tema.espacio.s }}>
-        <Texto variante="titulo" accessibilityRole="header">
-          {t('consejos.titulo')}
-        </Texto>
-        <Texto color="textoSecundario">{t('consejos.intro')}</Texto>
-      </View>
+      <Texto variante="titulo" accessibilityRole="header">
+        {t('consejos.titulo')}
+      </Texto>
       {consejos.length === 0 ? <Texto>{t('consejos.sinConsejos')}</Texto> : null}
       {consejos.map(consejo => {
         const textos = textosConsejo(consejo, tarjetas, t as unknown as Traducir);
@@ -42,26 +40,18 @@ export default function ConsejosFechas() {
             </Texto>
             <Texto>{textos.problema}</Texto>
             <View style={{ gap: tema.espacio.xs }}>
-              <Texto variante="cuerpoFuerte">{t('consejos.quePedir')}</Texto>
+              <Texto variante="cuerpoFuerte">{t('consejos.queHacer')}</Texto>
               <Texto>{textos.solucion}</Texto>
             </View>
-            <View style={{ gap: tema.espacio.xs }}>
-              <Texto variante="cuerpoFuerte">{textos.siNoPuedeTitulo}</Texto>
-              <Texto color="textoSecundario">{textos.siNoPuede}</Texto>
-            </View>
-            <Texto variante="cuerpoFuerte" style={{ paddingTop: tema.espacio.s }}>
-              {t('consejos.pasosTitulo')}
-            </Texto>
-            {textos.pasos.map((paso, i) => (
-              <View key={paso} style={{ flexDirection: 'row', gap: tema.espacio.m }}>
-                <View style={{ width: 28, height: 28, borderRadius: 14, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-                  <Texto variante="etiqueta" color="primario">
-                    {i + 1}
-                  </Texto>
-                </View>
-                <Texto style={{ flex: 1 }}>{paso}</Texto>
+            {textos.mientras ? (
+              <View style={{ gap: tema.espacio.xs }}>
+                <Texto variante="cuerpoFuerte">{t('consejos.mientrasTanto')}</Texto>
+                <Texto>{textos.mientras}</Texto>
               </View>
-            ))}
+            ) : null}
+            <Texto variante="apoyo" color="textoSecundario">
+              {t('consejos.nota')}
+            </Texto>
             <Boton
               titulo={t('consejos.actualizar', { alias })}
               icono="editar"

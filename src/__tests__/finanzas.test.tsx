@@ -100,7 +100,7 @@ test('Tarjetas muestra el bombillo con punto y lleva a los consejos, sin listarl
   await render(envolver(await almacenCon(juntas()), <Tarjetas />));
   expect(screen.getByLabelText('Consejos para tus fechas, 1 nuevo')).toBeOnTheScreen();
   expect(screen.getByTestId('consejos-aviso')).toBeOnTheScreen();
-  expect(screen.queryByText('Tus tarjetas cortan casi al mismo tiempo')).toBeNull();
+  expect(screen.queryByText('Tus tarjetas cortan casi el mismo día')).toBeNull();
   await act(async () => fireEvent.press(screen.getByTestId('consejos')));
   expect(mockRouter.push).toHaveBeenCalledWith('/consejos/fechas');
 });
@@ -110,13 +110,13 @@ test('sin problemas de fechas no hay bombillo', async () => {
   expect(screen.queryByTestId('consejos')).toBeNull();
 });
 
-test('la pantalla de consejos explica qué pasa, qué pedir sin fechas exactas, qué hacer si el banco no puede y lleva a editar las fechas', async () => {
+test('la pantalla de consejos dice qué pasa y qué hacer, breve, y lleva a editar las fechas', async () => {
   await render(envolver(await almacenCon(juntas()), <ConsejosFechas />));
-  expect(screen.getByText(/^Tus tarjetas cortan los días 5 y 6\. Por eso hay días del mes en que ninguna te da más de \d+ días para pagar\.$/)).toBeOnTheScreen();
-  expect(screen.getByText(/^Pide que la fecha de corte de tu Tarjeta Q quede unas dos semanas lejos de las de tus otras tarjetas\./)).toBeOnTheScreen();
-  expect(screen.getByText('Si tu banco no puede')).toBeOnTheScreen();
-  expect(screen.getByText('No pasa nada: Tino te sigue diciendo cada día cuál usar.')).toBeOnTheScreen();
-  expect(screen.getByText(/^Llama al número que está detrás de tu Tarjeta Q/)).toBeOnTheScreen();
+  expect(screen.getByText('Tus tarjetas cortan casi el mismo día')).toBeOnTheScreen();
+  expect(screen.getByText(/^Cortan los días 5 y 6, así que hay días del mes en que ninguna te da más de \d+ días para pagar\.$/)).toBeOnTheScreen();
+  expect(screen.getByText('Qué hacer')).toBeOnTheScreen();
+  expect(screen.getByText('Llama al banco de tu Tarjeta Q y pide mover su fecha de corte unas dos semanas.')).toBeOnTheScreen();
+  expect(screen.queryByText('Mientras tanto')).toBeNull();
   await act(async () => fireEvent.press(screen.getByText('Actualizar fechas de Tarjeta Q')));
   expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'Q', seccion: 'fechas' } });
 });

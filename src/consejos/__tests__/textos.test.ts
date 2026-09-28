@@ -4,8 +4,8 @@ import type { Traducir } from '../../inicio/vista';
 import type { ConsejoFechas } from '../fechas';
 import { textosConsejo } from '../textos';
 
-// Decisión D73: el problema con las fechas del usuario y la dirección del cambio, nunca un día
-// de corte exacto.
+// Decisiones D73 y D75: el problema con las fechas del usuario y qué hacer, breve y sin días de
+// corte exactos.
 const t = iniciarI18n('es-DO').t as unknown as Traducir;
 const tarjetas = [
   { id: 'SC', alias: 'Visa Santa Cruz' },
@@ -28,47 +28,43 @@ const base: ConsejoFechas = {
 };
 const textos = (c: Partial<ConsejoFechas>) => textosConsejo({ ...base, ...c }, tarjetas, t);
 
-test('pago lejos del cobro: el problema con sus fechas, qué pedir sin día exacto y qué hacer mientras tanto', () => {
-  const x = textos({});
-  expect(x.titulo).toBe('Tu Visa Santa Cruz se paga justo antes de tu cobro');
-  expect(x.problema).toBe(
-    'Pagas tu Visa Santa Cruz alrededor del día 19 y cobras el 22. Así, el dinero de tu cobro anterior tiene que durarte unos 28 días, y si se va en otros gastos, terminas pagando tarde.',
-  );
-  expect(x.solucion).toBe('Pide que tu fecha de pago caiga pocos días después de tu cobro del 22. Muchos bancos lo hacen cambiando la fecha de corte.');
-  expect(x.siNoPuedeTitulo).toBe('Mientras tanto');
-  expect(x.siNoPuede).toMatch(/^Paga apenas salga tu estado de cuenta/);
-  expect(x.resumen).toBe('Pide que se pague después de tu cobro del 22');
-  expect(x.pasos).toHaveLength(4);
-  expect(x.pasos[1]).toMatch(/después de tu cobro del 22/);
-  expect(x.pasos[2]).toMatch(/Casi siempre es gratis/);
+test('pago lejos del cobro: qué pasa, qué hacer y qué hacer mientras tanto, en pocas palabras', () => {
+  expect(textos({})).toEqual({
+    titulo: 'Pagas tu Visa Santa Cruz antes de cobrar',
+    problema: 'Vence alrededor del 19 y cobras el 22: tienes que guardar el dinero 28 días para pagarla.',
+    solucion: 'Llama a tu banco y pide que la fecha de pago quede unos días después del 22.',
+    mientras: 'Aparta el dinero apenas cobres.',
+  });
 });
 
-test('ningún consejo da un día de corte para pedir', () => {
-  for (const c of [textos({}), textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8], peorDia: 22 })]) {
-    const todo = [c.titulo, c.problema, c.solucion, c.siNoPuede, c.resumen, ...c.pasos].join(' ');
+test('ningún consejo da un día de corte para pedir ni pasa de unas pocas frases', () => {
+  for (const c of [textos({}), textos({ separaCortes: true }), textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8], peorDia: 22 })]) {
+    const todo = [c.titulo, c.problema, c.solucion, c.mientras ?? ''].join(' ');
     expect(todo).not.toMatch(/corte (sea|entre|el día)|entre el \d+ y el \d+/);
+    expect(todo.length).toBeLessThan(330);
   }
 });
 
-test('en dólares, con cobros estimados y cuando también separa los cortes', () => {
-  expect(textos({ enDolares: true }).problema).toMatch(/^El balance en dólares de tu Visa Santa Cruz se paga alrededor del día 19/);
-  expect(textos({ cobroEstimado: true }).problema).toMatch(/Tino cuenta 3 días de margen\.$/);
-  expect(textos({ separaCortes: true }).solucion).toMatch(/dejarían de cortar casi juntas/);
+test('en dólares y cuando también separa los cortes', () => {
+  expect(textos({ enDolares: true }).problema).toBe('El balance en dólares vence alrededor del 19 y cobras el 22: tienes que guardar el dinero 28 días para pagarlo.');
+  expect(textos({ separaCortes: true }).solucion).toMatch(/Así también tendrás más días para pagar con tus otras tarjetas\.$/);
 });
 
 test('sin el día del cobro siguiente, sin fechas', () => {
-  const x = textos({ diaCobro: 0 });
-  expect(x.problema).toBe('El pago de tu Visa Santa Cruz cae lejos de tu último cobro: el dinero tiene que durarte unos 28 días, y si se va en otros gastos, terminas pagando tarde.');
-  expect(x.resumen).toBe('Pide que se pague pocos días después de un cobro');
+  expect(textos({ diaCobro: 0 })).toMatchObject({
+    problema: 'Vence lejos de tu último cobro: tienes que guardar el dinero 28 días para pagarla.',
+    solucion: 'Llama a tu banco y pide que la fecha de pago quede unos días después de uno de tus cobros.',
+  });
 });
 
 test('cortes juntos: con los cortes de hoy y el peor día; recuerda el cobro solo si hay cobros', () => {
   const x = textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8], peorDia: 22 });
-  expect(x.titulo).toBe('Tus tarjetas cortan casi al mismo tiempo');
-  expect(x.problema).toBe('Tus tarjetas cortan los días 5 y 8. Por eso hay días del mes en que ninguna te da más de 22 días para pagar.');
-  expect(x.solucion).toMatch(/^Pide que la fecha de corte de tu Mastercard BHD quede unas dos semanas lejos/);
-  expect(x.solucion).toMatch(/Cuida que su nueva fecha de pago caiga pocos días después de un cobro\.$/);
-  expect(x.resumen).toBe('Pide separar el corte de tu Mastercard BHD de las demás');
-  expect(textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8, 8], conCobros: false }).solucion).not.toMatch(/Cuida/);
-  expect(textos({ tipo: 'cortesJuntos', cortes: [3, 5, 7] }).problema).toMatch(/los días 3, 5 y 7\./);
+  expect(x).toEqual({
+    titulo: 'Tus tarjetas cortan casi el mismo día',
+    problema: 'Cortan los días 5 y 8, así que hay días del mes en que ninguna te da más de 22 días para pagar.',
+    solucion: 'Llama al banco de tu Mastercard BHD y pide mover su fecha de corte unas dos semanas. Que el pago quede unos días después de un cobro.',
+    mientras: null,
+  });
+  expect(textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8, 8], conCobros: false }).solucion).not.toMatch(/cobro/);
+  expect(textos({ tipo: 'cortesJuntos', cortes: [3, 5, 7] }).problema).toMatch(/^Cortan los días 3, 5 y 7,/);
 });
