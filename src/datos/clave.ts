@@ -12,16 +12,21 @@ const opciones: SecureStore.SecureStoreOptions = {
 export const FORMATO_CLAVE = /^[0-9a-f]{64}$/;
 
 // Clave de 256 bits generada al instalar y guardada en Keychain o Keystore (sección 6).
-export async function obtenerClaveBase(): Promise<string> {
+// "nueva" dice si se acaba de generar: una base que ya existía no se puede abrir con ella.
+export async function claveBase(): Promise<{ clave: string; nueva: boolean }> {
   const existente = await SecureStore.getItemAsync(NOMBRE_CLAVE, opciones);
   if (existente) {
     if (!FORMATO_CLAVE.test(existente)) throw new Error('La clave guardada de la base local no es válida');
-    return existente;
+    return { clave: existente, nueva: false };
   }
   const bytes = await Crypto.getRandomBytesAsync(32);
   const clave = Array.from(bytes, b => b.toString(16).padStart(2, '0')).join('');
   await SecureStore.setItemAsync(NOMBRE_CLAVE, clave, opciones);
-  return clave;
+  return { clave, nueva: true };
+}
+
+export async function obtenerClaveBase(): Promise<string> {
+  return (await claveBase()).clave;
 }
 
 // Parte de "Borrar todo" (sección 6 técnica): sin la clave, la base anterior no se puede leer.

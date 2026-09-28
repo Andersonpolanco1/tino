@@ -108,6 +108,10 @@ export interface Preferencias {
   // Decisión D68: consejos de fechas ya vistos ("tipo:tarjeta:huella", D73). Siguen a la vista
   // hasta que el problema se resuelva; solo dejan de contar como nuevos. Opcional para no migrar.
   consejosVistos?: string[];
+  // Decisión D81: respaldo automático (Tino Pro) encendido. Opcional para no migrar.
+  respaldoAutomatico?: boolean;
+  // Decisión D81: último respaldo manual creado, para recordarlo pasados 3 meses.
+  ultimoRespaldoManual?: FechaISO;
 }
 
 export type TemaApp = 'automatico' | 'claro' | 'oscuro';

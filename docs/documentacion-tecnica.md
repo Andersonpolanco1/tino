@@ -231,7 +231,7 @@ export function calcularRanking(e: EntradaMotor): ResultadoMotor {
 | Validación | El campo "últimos 4 dígitos" acepta exactamente 4 números; cualquier campo de texto rechaza secuencias de 13 a 19 dígitos, para evitar guardar un número completo por error |
 | Datos que salen del teléfono | Solo eventos anónimos de analítica (sección 10), reportes de fallos sin datos personales y las compras que gestiona la tienda |
 | Respaldo en la nube | Fuera del MVP (v2); se cifrará en el teléfono antes de subir |
-| Respaldo, ver y borrar | Ajustes permite crear un respaldo cifrado con contraseña y restaurarlo en otro teléfono, ver todos los datos en un texto legible y borrarlo todo, incluida la clave de cifrado (decisión D62 de `docs/progreso.md`) |
+| Respaldo, ver y borrar | Ajustes permite crear un respaldo cifrado con contraseña y restaurarlo en otro teléfono, ver todos los datos en un texto legible y borrarlo todo, incluida la clave de cifrado (decisión D62 de `docs/progreso.md`). Con Tino Pro, además, una copia automática en la carpeta de la app que el respaldo de Google o iCloud lleva al teléfono nuevo (decisión D81) |
 | Permisos | Notificaciones al terminar el onboarding; ningún otro permiso en el MVP |
 
 **Ley 172-13:** la política de privacidad explica en lenguaje simple qué se guarda en el teléfono, qué eventos anónimos se envían y cómo desactivarlos. La app no crea perfiles personales ni vende datos.

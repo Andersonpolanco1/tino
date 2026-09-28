@@ -20,6 +20,7 @@ export default function CrearRespaldo() {
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
   const sugerencias = useAlmacen(s => s.sugerencias);
+  const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
   const [contrasena, setContrasena] = useState('');
   const [repetida, setRepetida] = useState('');
   const [error, setError] = useState<{ campo: 'contrasena' | 'repetida'; texto: string } | null>(null);
@@ -34,6 +35,8 @@ export default function CrearRespaldo() {
       const contenido = contenidoDe({ preferencias, tarjetas, ingresos, sugerencias }, new Date());
       const texto = await cifrarRespaldo(contenido, contrasena, n => Crypto.getRandomBytes(n));
       await compartirRespaldo(texto, hoyLocal(), t('respaldo.crearTitulo'));
+      // Decisión D81: para recordarlo pasados 3 meses sin respaldo manual.
+      if (preferencias) await guardarPreferencias({ ...preferencias, ultimoRespaldoManual: hoyLocal() }).catch(() => {});
       volver();
     } catch {
       Alert.alert(t('respaldo.errorCrear'));

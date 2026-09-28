@@ -1,6 +1,6 @@
 import { defaultDatabaseDirectory, deleteDatabaseAsync, openDatabaseAsync, type SQLiteDatabase } from 'expo-sqlite';
 import { File } from 'expo-file-system';
-import { borrarClaveBase, FORMATO_CLAVE, obtenerClaveBase } from './clave';
+import { borrarClaveBase, claveBase, FORMATO_CLAVE } from './clave';
 import type { ConexionSql } from './conexion';
 import { migrar } from './migraciones';
 
@@ -21,9 +21,39 @@ const sentenciaClave = (clave: string) => `PRAGMA key = "x'${clave}'"`;
 // Abre la base local cifrada con SQLCipher y la deja en la última versión del esquema.
 // Nunca abre ni crea una base sin cifrar.
 export async function abrirBase(): Promise<BaseLocal> {
-  const clave = await obtenerClaveBase();
+  const { clave, nueva } = await claveBase();
   if (!FORMATO_CLAVE.test(clave)) throw new ErrorBaseCifrada('Clave con formato inválido');
+  // Decisión D81: el respaldo del teléfono (iCloud) puede traer la base a un teléfono nuevo, pero
+  // no su clave, que vive solo en el teléfono donde se creó. Con una clave recién creada esa base
+  // no se puede leer nunca: se descarta y se empieza con una limpia (sus datos vuelven con el
+  // respaldo automático o el manual). Si la clave ya existía, un fallo no borra nada.
+  const heredada = nueva && existeBase();
+  try {
+    return await abrirCon(clave);
+  } catch (error) {
+    if (!heredada || error instanceof ErrorBaseCifrada) throw error;
+    await eliminarArchivosBase();
+    return abrirCon(clave);
+  }
+}
 
+function existeBase(): boolean {
+  try {
+    return new File(defaultDatabaseDirectory, NOMBRE_BASE).exists;
+  } catch {
+    return false;
+  }
+}
+
+async function eliminarArchivosBase(): Promise<void> {
+  await deleteDatabaseAsync(NOMBRE_BASE);
+  for (const sufijo of ['-wal', '-shm']) {
+    const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);
+    if (archivo.exists) archivo.delete();
+  }
+}
+
+async function abrirCon(clave: string): Promise<BaseLocal> {
   // Conexión nueva siempre: la que expo-sqlite guarda para las recargas en desarrollo puede
   // quedar cerrada del lado nativo y fallar con NullPointerException.
   const db = await openDatabaseAsync(NOMBRE_BASE, { useNewConnection: true });
@@ -60,10 +90,6 @@ export async function abrirBase(): Promise<BaseLocal> {
 export async function borrarBase(base: BaseLocal): Promise<void> {
   await base.db.execAsync('PRAGMA wal_checkpoint(TRUNCATE)').catch(() => {});
   await base.db.closeAsync();
-  await deleteDatabaseAsync(NOMBRE_BASE);
-  for (const sufijo of ['-wal', '-shm']) {
-    const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);
-    if (archivo.exists) archivo.delete();
-  }
+  await eliminarArchivosBase();
   await borrarClaveBase();
 }

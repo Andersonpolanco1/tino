@@ -371,7 +371,20 @@
     "misDatosTitulo": "Ver mis datos",
     "misDatosAviso": "Vas a compartir un texto con todo lo que Tino guarda sobre ti. No va cifrado: compártelo solo donde confíes. Para cambiar de teléfono usa \"Crear respaldo\".",
     "misDatosConfirmar": "Compartir",
-    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo."
+    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo.",
+    "respaldoAutomatico": "Respaldo automático",
+    "respaldoAutomaticoDetalle": "Tus datos vuelven solos si cambias de teléfono.",
+    "respaldoSoloPro": "Con Tino Pro, tus datos vuelven solos si cambias de teléfono.",
+    "respaldoUltima": "Última copia: {{fecha}}",
+    "respaldoPendiente": "Guardando la primera copia…",
+    "respaldoFallo": "No se pudo guardar la última copia. Revisa si tu teléfono tiene espacio.",
+    "respaldoActivadoTitulo": "Respaldo automático activado",
+    "respaldoActivadoAndroid": "Tu copia viaja con la copia de seguridad de Google de tu teléfono. Revisa que esté encendida y que tengas espacio en Google: en los ajustes del teléfono, busca «Copia de seguridad».",
+    "respaldoActivadoIos": "Tu copia viaja con el respaldo de iCloud de tu teléfono. Revisa que esté encendido y que tengas espacio: Configuración > tu nombre > iCloud > Respaldo en iCloud.",
+    "respaldoApagarTitulo": "¿Apagar el respaldo automático?",
+    "respaldoApagarTexto": "Se borra la copia de este teléfono. Si cambias de teléfono, tus datos no volverán solos.",
+    "respaldoApagar": "Apagar",
+    "entendido": "Entendido"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -402,7 +415,13 @@
     "avisosTexto": "Te avisamos antes de cada fecha límite y cuando te conviene cambiar de tarjeta. Nunca te mostramos montos en los avisos.",
     "activarAvisos": "Activar avisos",
     "ahoraNo": "Ahora no",
-    "restaurar": "¿Ya usabas Tino? Restaura tu respaldo"
+    "restaurar": "¿Ya usabas Tino? Restaura tu respaldo",
+    "copiaTitulo": "Encontramos tus datos de tu otro teléfono",
+    "copiaTexto_one": "Tu respaldo automático tiene 1 tarjeta y se guardó el {{fecha}}.",
+    "copiaTexto_other": "Tu respaldo automático tiene {{count}} tarjetas y se guardó el {{fecha}}.",
+    "copiaRestaurar": "Restaurar mis datos",
+    "copiaEmpezar": "Empezar de cero",
+    "copiaError": "No pudimos restaurar tus datos. Inténtalo otra vez."
   },
   "enfoqueDescripcion": {
     "liquidez": "Más días para pagar sin intereses.",
@@ -653,7 +672,9 @@
     "valorPuntoAccion": "Confirmar",
     "fechas": "Tino encontró cómo mejorar tus fechas: menos riesgo de mora o más días para pagar.",
     "fechasAccion": "Ver el consejo",
-    "descartar": "Descartar sugerencia"
+    "descartar": "Descartar sugerencia",
+    "respaldo": "Hace más de 3 meses que no guardas un respaldo de Tino. Crea uno y guárdalo donde quieras.",
+    "respaldoAccion": "Crear respaldo"
   },
   "pagos": {
     "yaPague": "Ya pagué",
@@ -780,7 +801,9 @@
     "sugerenciaDescartes_one": "Descartaste la sugerencia de {{tipo}} {{count}} vez, la última el {{fecha}}",
     "sugerenciaDescartes_other": "Descartaste la sugerencia de {{tipo}} {{count}} veces, la última el {{fecha}}",
     "identificador": "Tu identificador anónimo: {{id}}. Con él puedes pedir que se borren tus datos de uso.",
-    "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino."
+    "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino.",
+    "respaldoAutomatico": "Respaldo automático: {{valor}}",
+    "ultimoRespaldoManual": "Último respaldo manual: {{fecha}}"
   },
   "respaldo": {
     "crearTitulo": "Crear respaldo",

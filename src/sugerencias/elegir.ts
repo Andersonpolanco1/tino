@@ -5,7 +5,8 @@ import { numeroDe } from '../motor/fechas';
 // en que el dato aporta. Máximo una por semana; descartada dos veces, no vuelve en 60 días.
 
 // 'fechas': un consejo de fechas para pedirle al banco (decisión D65).
-export type TipoSugerencia = 'cobros' | 'fechas' | 'valorPunto';
+// 'respaldo': 3 meses sin respaldo manual (decisión D81).
+export type TipoSugerencia = 'cobros' | 'fechas' | 'valorPunto' | 'respaldo';
 
 export const DIAS_ENTRE_SUGERENCIAS = 7;
 export const DIAS_TRAS_DOS_DESCARTES = 60;

@@ -31,6 +31,9 @@ const config: ExpoConfig = {
     'expo-font',
     'expo-localization',
     'expo-secure-store',
+    // Respaldo de Google: solo la copia automática y las preferencias (decisión D81). Va después
+    // de expo-secure-store para reemplazar sus reglas.
+    './plugins/respaldo-android',
     ['expo-sqlite', { useSQLCipher: true }],
     // Reporte de fallos (sección 7.3 técnica). Organización, proyecto y SENTRY_AUTH_TOKEN
     // vienen de los secretos de EAS y solo sirven para subir los mapas de código al compilar.

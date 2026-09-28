@@ -15,6 +15,7 @@ import { ProveedorCatalogo } from '@/catalogo';
 import { useAnalitica } from '@/analitica';
 import { useFallos } from '@/fallos';
 import { useWidget } from '@/widget';
+import { useRespaldoAutomatico } from '@/respaldo/useRespaldoAutomatico';
 import { useSincronizarPlan } from '@/suscripciones';
 
 SplashScreen.preventAutoHideAsync();
@@ -114,6 +115,7 @@ function CuandoCargue({ children }: { children: ReactNode }) {
       <AparienciaGuardada />
       <AvisosProgramados />
       <WidgetActualizado />
+      <RespaldoAutomatico />
       <AnaliticaSincronizada />
       <FallosSincronizados />
       <PlanSincronizado />
@@ -125,6 +127,12 @@ function CuandoCargue({ children }: { children: ReactNode }) {
 // Programa los avisos locales con los datos actuales (sección 11); no dibuja nada.
 function AvisosProgramados() {
   useAvisos();
+  return null;
+}
+
+// Mantiene al día la copia del respaldo automático de Tino Pro (decisión D81); no dibuja nada.
+function RespaldoAutomatico() {
+  useRespaldoAutomatico();
   return null;
 }
 

@@ -21,6 +21,8 @@ import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 import { reiniciarIdentificadorAnalitica } from '@/analitica';
 import { useComprasPro } from '@/suscripciones';
+import { borrarRespaldoAutomatico, useEstadoRespaldoAutomatico } from '@/respaldo/automatico';
+import { formatearFechaHora } from '@/i18n';
 
 // Anillo de 84: con 100% el número necesita aire dentro del trazo.
 const LADO_ANILLO = 84;
@@ -50,6 +52,14 @@ export default function Ajustes() {
   const tarjetas = useAlmacen(s => s.tarjetas);
   const ingresos = useAlmacen(s => s.ingresos);
   const preferencias = useAlmacen(s => s.preferencias);
+  const respaldo = useEstadoRespaldoAutomatico();
+  const detalleRespaldo = !preferencias?.respaldoAutomatico
+    ? t('ajustes.respaldoAutomaticoDetalle')
+    : respaldo.fallo
+      ? t('ajustes.respaldoFallo')
+      : respaldo.fecha
+        ? t('ajustes.respaldoUltima', { fecha: formatearFechaHora(respaldo.fecha, idioma) })
+        : t('ajustes.respaldoPendiente');
   const sugerencias = useAlmacen(s => s.sugerencias);
   const catalogo = useCatalogo();
   const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
@@ -104,8 +114,33 @@ export default function Ajustes() {
         style: 'destructive',
         onPress: async () => {
           await borrarBase(datos.base);
+          await borrarRespaldoAutomatico();
           await reiniciarIdentificadorAnalitica().catch(() => {});
           reabrir();
+        },
+      },
+    ]);
+  }
+
+  // Decisión D81: respaldo automático, solo con Pro. Al encenderlo, avisa que depende del
+  // respaldo del teléfono (Tino no puede saber si está encendido o tiene espacio); al apagarlo,
+  // borra la copia de este teléfono.
+  function cambiarRespaldoAutomatico(valor: boolean) {
+    if (!preferencias) return;
+    if (valor) {
+      guardarPreferencias({ ...preferencias, respaldoAutomatico: true }).catch(() => {});
+      Alert.alert(t('ajustes.respaldoActivadoTitulo'), t(Platform.OS === 'ios' ? 'ajustes.respaldoActivadoIos' : 'ajustes.respaldoActivadoAndroid'), [{ text: t('ajustes.entendido') }]);
+      return;
+    }
+    Alert.alert(t('ajustes.respaldoApagarTitulo'), t('ajustes.respaldoApagarTexto'), [
+      { text: t('ajustes.cancelar'), style: 'cancel' },
+      {
+        text: t('ajustes.respaldoApagar'),
+        style: 'destructive',
+        onPress: async () => {
+          const { respaldoAutomatico: _activo, ...resto } = preferencias;
+          await guardarPreferencias(resto);
+          await borrarRespaldoAutomatico();
         },
       },
     ]);
@@ -277,6 +312,22 @@ export default function Ajustes() {
 
       <View style={{ gap: tema.espacio.s }}>
         <ListaAgrupada titulo={t('ajustes.datosTitulo')}>
+          {preferencias?.plan === 'pro' ? (
+            <FilaLista
+              icono="nube"
+              titulo={t('ajustes.respaldoAutomatico')}
+              detalle={detalleRespaldo}
+              derecha={<Palanca valor={preferencias.respaldoAutomatico === true} etiqueta={t('ajustes.respaldoAutomatico')} onCambio={cambiarRespaldoAutomatico} />}
+            />
+          ) : (
+            <FilaLista
+              icono="nube"
+              titulo={t('ajustes.respaldoAutomatico')}
+              detalle={t('ajustes.respaldoSoloPro')}
+              flecha
+              onPress={() => router.push({ pathname: '/pro', params: { motivo: 'funcion_avanzada' } })}
+            />
+          )}
           <FilaLista icono="descargar" titulo={t('ajustes.crearRespaldo')} detalle={t('ajustes.crearRespaldoDetalle')} flecha onPress={() => router.push('/respaldo/crear')} />
           <FilaLista icono="reiniciar" titulo={t('ajustes.restaurarRespaldo')} flecha onPress={() => router.push('/respaldo/restaurar')} />
           <FilaLista icono="info" titulo={t('ajustes.misDatos')} flecha onPress={verMisDatos} />

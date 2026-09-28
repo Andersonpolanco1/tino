@@ -114,6 +114,8 @@ const CAMPOS_PREFERENCIAS: Campos<Preferencias> = {
     }),
   tema: (x, c) => c.t('misDatos.tema', { tema: c.t(`ajustes.temas.${x.tema ?? 'automatico'}`) }),
   consejosVistos: (x, c) => (x.consejosVistos?.length ? c.t('misDatos.consejosVistos', { count: x.consejosVistos.length }) : null),
+  respaldoAutomatico: (x, c) => c.t('misDatos.respaldoAutomatico', { valor: siNo(x.respaldoAutomatico ?? false, c) }),
+  ultimoRespaldoManual: (x, c) => (x.ultimoRespaldoManual ? c.t('misDatos.ultimoRespaldoManual', { fecha: fecha(x.ultimoRespaldoManual, c) }) : null),
 };
 
 const CAMPOS_SUGERENCIAS: Campos<EstadoSugerencias> = {

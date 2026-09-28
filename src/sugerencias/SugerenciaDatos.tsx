@@ -17,7 +17,9 @@ import { registrarSugerenciaAceptada, registrarSugerenciaDescartada, registrarSu
 // Días antes de una fecha límite en que tiene sentido sugerir los cobros (sección 2.2:
 // "al acercarse una fecha límite").
 const DIAS_PAGO_CERCANO = 7;
-const ICONO_ACCION = { cobros: 'mas', fechas: 'derecha', valorPunto: 'check' } as const;
+const ICONO_ACCION = { cobros: 'mas', fechas: 'derecha', valorPunto: 'check', respaldo: 'descargar' } as const;
+// Decisión D81: pasados 3 meses usando Tino sin un respaldo manual, se recuerda crearlo.
+export const DIAS_SIN_RESPALDO = 90;
 
 // La tarjeta discreta de sugerencia de la pantalla de inicio (sección 3.1): un dato, con su
 // beneficio, que se completa en menos de 30 segundos o se descarta.
@@ -31,6 +33,7 @@ export function SugerenciaDatos() {
   const ingresos = useAlmacen(s => s.ingresos);
   const estado = useAlmacen(s => s.sugerencias);
   const guardar = useAlmacen(s => s.guardarSugerencias);
+  const ultimoRespaldo = useAlmacen(s => s.preferencias?.ultimoRespaldoManual);
 
   const activas = tarjetas.filter(x => !x.enPausa);
   const sinConfirmar = activas.find(valorPuntoPorConfirmar);
@@ -41,6 +44,9 @@ export function SugerenciaDatos() {
   if (!ingresos.length && pagoCercano) candidatas.push('cobros');
   if (consejosNuevos.length) candidatas.push('fechas');
   if (sinConfirmar) candidatas.push('valorPunto');
+  const desde = (fecha: string) => numeroDe(hoy) - numeroDe(fecha.slice(0, 10));
+  const primeraTarjeta = tarjetas.map(x => x.creadaEn).sort()[0];
+  if (primeraTarjeta && desde(primeraTarjeta) >= DIAS_SIN_RESPALDO && (!ultimoRespaldo || desde(ultimoRespaldo) >= DIAS_SIN_RESPALDO)) candidatas.push('respaldo');
 
   const clave = candidatas.join(',');
   const eleccion = useMemo(() => elegirSugerencia(estado, candidatas, hoy), [estado, clave, hoy]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -58,13 +64,14 @@ export function SugerenciaDatos() {
     registrarSugerenciaAceptada(tipo);
     if (tipo === 'cobros') router.push('/cobros/nuevo');
     else if (tipo === 'fechas') router.push('/consejos/fechas');
+    else if (tipo === 'respaldo') router.push('/respaldo/crear');
     else if (sinConfirmar) router.push({ pathname: '/tarjeta/[id]', params: { id: sinConfirmar.id } });
   };
   return (
     <Superficie radio={tema.radio.lista} style={{ padding: tema.espacio.l, gap: tema.espacio.m }}>
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: tema.espacio.m }}>
         <View style={{ width: 36, height: 36, borderRadius: 11, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-          <Icono nombre={tipo === 'valorPunto' ? 'moneda' : 'calendario'} color="primario" tamano={20} />
+          <Icono nombre={tipo === 'valorPunto' ? 'moneda' : tipo === 'respaldo' ? 'nube' : 'calendario'} color="primario" tamano={20} />
         </View>
         <Texto variante="apoyo" style={{ flex: 1 }}>
           {texto}

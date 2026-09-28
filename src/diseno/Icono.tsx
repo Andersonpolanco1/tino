@@ -13,6 +13,8 @@ const TRAZOS = {
     </>
   ),
   check: <Path d="M5 12l5 5 9-10" />,
+  // Respaldo automático (Ajustes).
+  nube: <Path d="M7 18.5h10.5a4 4 0 0 0 .4-8A6 6 0 0 0 6.3 9.2 4.7 4.7 0 0 0 7 18.5z" />,
   // Consejos para tus fechas (pestaña Tarjetas).
   bombillo: (
     <>

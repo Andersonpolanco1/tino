@@ -10,7 +10,17 @@ jest.mock('expo-secure-store', () => ({
   setItemAsync: jest.fn(),
 }));
 jest.mock('expo-crypto', () => ({ getRandomBytesAsync: jest.fn() }));
-jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn() }));
+jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '/bases' }));
+// Si el archivo de la base existe (una base que llegó con el respaldo del teléfono).
+let mockExisteBase = false;
+jest.mock('expo-file-system', () => ({
+  File: jest.fn().mockImplementation(() => ({
+    get exists() {
+      return mockExisteBase;
+    },
+    delete: jest.fn(),
+  })),
+}));
 
 const secure = SecureStore as jest.Mocked<typeof SecureStore>;
 const crypto = Crypto as jest.Mocked<typeof Crypto>;
@@ -46,13 +56,17 @@ describe('obtenerClaveBase', () => {
 });
 
 // Como expo-sqlite, cada transacción exclusiva corre en una conexión nueva con sus propias sentencias.
-function baseSimulada(cipherVersion: string | null) {
+function baseSimulada(cipherVersion: string | null, legible = true) {
   const sentencias: string[] = [];
   const transacciones: string[][] = [];
   const db = {
     sentencias,
     transacciones,
-    execAsync: jest.fn(async (sql: string) => void sentencias.push(sql)),
+    execAsync: jest.fn(async (sql: string) => {
+      sentencias.push(sql);
+      // La primera lectura real falla si la clave no corresponde a la base.
+      if (!legible && sql.startsWith('PRAGMA journal_mode')) throw new Error('file is not a database');
+    }),
     getFirstAsync: jest.fn(async (sql: string) => {
       sentencias.push(sql);
       if (sql === 'PRAGMA cipher_version') return cipherVersion ? { cipher_version: cipherVersion } : null;
@@ -66,12 +80,16 @@ function baseSimulada(cipherVersion: string | null) {
     }),
     closeAsync: jest.fn(async () => {}),
   };
-  sqlite.openDatabaseAsync.mockResolvedValue(db as unknown as SQLite.SQLiteDatabase);
+  sqlite.openDatabaseAsync.mockResolvedValueOnce(db as unknown as SQLite.SQLiteDatabase);
   return db;
 }
 
 describe('abrirBase', () => {
-  beforeEach(() => secure.getItemAsync.mockResolvedValue(CLAVE));
+  beforeEach(() => {
+    secure.getItemAsync.mockResolvedValue(CLAVE);
+    mockExisteBase = false;
+    sqlite.openDatabaseAsync.mockReset();
+  });
 
   test('aplica la clave antes de cualquier otra sentencia y migra', async () => {
     const db = baseSimulada('4.6.1 community');
@@ -96,5 +114,44 @@ describe('abrirBase', () => {
     await expect(abrirBase()).rejects.toThrow(ErrorBaseCifrada);
     expect(db.sentencias.some(s => s.includes('CREATE TABLE'))).toBe(false);
     expect(db.closeAsync).toHaveBeenCalled();
+  });
+
+  // Decisión D81: iCloud puede traer la base a un teléfono nuevo, pero no su clave.
+  describe('base que llegó del respaldo del teléfono sin su clave', () => {
+    beforeEach(() => {
+      secure.getItemAsync.mockResolvedValue(null);
+      crypto.getRandomBytesAsync.mockResolvedValue(new Uint8Array(32).fill(0xab));
+    });
+
+    test('con una clave recién creada, se descarta y se abre una base limpia', async () => {
+      mockExisteBase = true;
+      const vieja = baseSimulada('4.6.1 community', false);
+      const nueva = baseSimulada('4.6.1 community');
+      await abrirBase();
+      expect(vieja.closeAsync).toHaveBeenCalled();
+      expect(sqlite.deleteDatabaseAsync).toHaveBeenCalledWith('tino.db');
+      expect(nueva.transacciones.flat()).toContain('PRAGMA user_version = 1');
+    });
+
+    test('sin base anterior no se borra nada', async () => {
+      baseSimulada('4.6.1 community');
+      await abrirBase();
+      expect(sqlite.deleteDatabaseAsync).not.toHaveBeenCalled();
+    });
+
+    test('si la clave ya existía, un fallo no borra la base', async () => {
+      secure.getItemAsync.mockResolvedValue(CLAVE);
+      mockExisteBase = true;
+      baseSimulada('4.6.1 community', false);
+      await expect(abrirBase()).rejects.toThrow('file is not a database');
+      expect(sqlite.deleteDatabaseAsync).not.toHaveBeenCalled();
+    });
+
+    test('sin SQLCipher no se borra nada aunque la clave sea nueva', async () => {
+      mockExisteBase = true;
+      baseSimulada(null);
+      await expect(abrirBase()).rejects.toThrow(ErrorBaseCifrada);
+      expect(sqlite.deleteDatabaseAsync).not.toHaveBeenCalled();
+    });
   });
 });

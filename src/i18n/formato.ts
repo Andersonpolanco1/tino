@@ -27,3 +27,9 @@ export function partesFechaLarga(fecha: FechaISO, idioma: string): { diaSemana: 
   const diaSemana = parte('weekday');
   return { diaSemana: diaSemana.charAt(0).toLocaleUpperCase(idioma) + diaSemana.slice(1), dia: parte('day'), mes: parte('month') };
 }
+
+// Día y hora locales de un instante (ISO), por ejemplo "28 de septiembre, 3:40 p. m.": la última
+// copia del respaldo automático (decisión D81).
+export function formatearFechaHora(instante: string, idioma: string): string {
+  return new Intl.DateTimeFormat(idioma, { day: 'numeric', month: 'long', hour: 'numeric', minute: '2-digit' }).format(new Date(instante));
+}
