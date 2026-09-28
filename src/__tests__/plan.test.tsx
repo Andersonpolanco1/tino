@@ -120,6 +120,8 @@ describe('3.ª tarjeta en el plan gratis (15.5)', () => {
     expect(almacen.getState().preferencias?.finPruebaPro).toBe('2026-11-06');
     // Confirmación antes de seguir con el registro.
     expect(screen.getByText('Ya tienes Tino Pro')).toBeOnTheScreen();
+    // El respaldo automático viene apagado (D81): la confirmación dice dónde activarlo.
+    expect(screen.getByText('Respaldo automático: actívalo en Ajustes, Tus datos')).toBeOnTheScreen();
     expect(screen.getByText('Tu prueba gratis empezó. Te avisamos 2 días antes de que termine.')).toBeOnTheScreen();
     expect(screen.getByText('Plan Anual de lanzamiento')).toBeOnTheScreen();
     await act(async () => fireEvent.press(screen.getByText('Agregar mi tarjeta')));

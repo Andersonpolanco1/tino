@@ -270,6 +270,7 @@
     "listoPrueba_one": "Tu prueba gratis empezó. Te avisamos {{count}} día antes de que termine.",
     "listoPrueba_other": "Tu prueba gratis empezó. Te avisamos {{count}} días antes de que termine.",
     "listoCompra": "Gracias por apoyar a Tino. Ya puedes registrar todas tus tarjetas.",
+    "listoRespaldo": "Respaldo automático: actívalo en Ajustes, Tus datos",
     "continuar": "Continuar",
     "condicionesPrueba": "El cobro se hace en tu cuenta de {{tienda}} al terminar la prueba gratis, si la tiene, y se renueva solo al mismo precio hasta que lo canceles en {{tienda}}. Si cancelas durante la prueba, no se te cobra.",
     "suscribirmePor": "Suscribirme por {{precio}}",

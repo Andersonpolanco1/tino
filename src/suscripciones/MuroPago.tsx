@@ -302,7 +302,7 @@ function Confirmacion({ listo, motivo, onPro }: { listo: { tipo: 'compra' | 'pru
             <Texto color="textoSecundario">{precioConPeriodo(listo.oferta)}</Texto>
           </View>
         ) : null}
-        {[t('pro.beneficioTarjetas'), t('pro.beneficioDatos')].map(beneficio => (
+        {[t('pro.beneficioTarjetas'), t('pro.listoRespaldo'), t('pro.beneficioDatos')].map(beneficio => (
           <View key={beneficio} style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
             <Icono nombre="check" color="primario" tamano={20} grosor={2.5} />
             <Texto>{beneficio}</Texto>
