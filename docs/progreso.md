@@ -136,7 +136,12 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 - [x] Reporte de fallos sin datos de tarjetas: Sentry (UE) en `src/fallos/`, con el mismo interruptor que la analítica, sin migas, persona, capturas ni números de 13 a 19 dígitos (D70). Verificado en el emulador: un error de prueba llega a Sentry (organización `polanco-labs`, proyecto `react-native`, región UE) y con el interruptor apagado Sentry no se inicia
 - [x] Widget de Android (D71 y D72): solo la tarjeta de hoy, igual que en Inicio (logo, días, línea del ciclo y recompensa), calculada 60 días por adelantado (`src/widget/`) y dibujados en Kotlin (`modules/widget-android/`); se reescribe con cada cambio de datos, enfoque, plan o día. Verificado en el emulador: se agrega desde el selector, muestra lo mismo que Inicio y al tocarlo abre Inicio. Falta verlo en modo oscuro, al cambiar de día y en un teléfono real
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
-- [ ] Pruebas de flujos completos con Maestro
+- [ ] Pruebas de flujos completos con Maestro: se dejan para cuando las pantallas estén estables; mientras tanto los flujos se prueban a mano. Lo aprendido en un primer intento (Maestro 2.10 en Windows, con el Java de Android Studio):
+  - Las etiquetas accesibles de campos y botones sirven de selector; no hacen falta `testID`.
+  - En la versión de desarrollo: `stopApp`, `clearState` y después `openLink` a `exp+tino://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081` (con `adb reverse`); abrir la app primero y mandar el enlace después la deja en el lanzador.
+  - En Windows hace falta `JAVA_TOOL_OPTIONS=-Dfile.encoding=UTF-8` para los acentos, y las expresiones con `\.` van entre comillas simples en YAML.
+  - `eraseText` borra desde donde quedó el cursor al tocar, no desde el final: conviene dejar el nombre que propone la app en vez de reescribirlo.
+  - La cuadrícula del día de pago se elige con `below: "Días después"` y `scrollUntilVisible`.
 - [ ] Lista de verificación de la sección 11 técnica
 - [x] Consejos para cuidar las finanzas (D65 a D67 y D73), fuera de la especificación; falta verlos en el teléfono:
   - [x] Consejos de fechas rehechos (D73, reemplaza a D65): "se paga justo antes de tu cobro" y "cortan casi al mismo tiempo", sin fechas exactas del banco, con 1 a 4 tarjetas (`src/consejos/`). Revisados en 172 escenarios de la vida real dominicana (`herramientas/consejos/`) que quedan como prueba automática (`src/consejos/__tests__/escenarios.test.ts`)
