@@ -89,38 +89,13 @@ test('sin tarjetas o con todas en pausa, el widget muestra un mensaje en vez de 
   expect(planificarWidget(entrada({ tarjetas: pausadas }))).toMatchObject({ estado: 'enPausa', dias: [], textos: { mensaje: 'Tus tarjetas están en pausa. Actívalas en Tino.' } });
 });
 
-test('la tarjeta a evitar es otra que corta en 3 días o menos', () => {
-  // B corta el 20 de octubre.
-  expect(dia('2026-10-16').evitar).toBeNull();
-  expect(dia('2026-10-17').evitar).toBe('Evita Tarjeta B: corta en 3 días');
-  expect(dia('2026-10-19').evitar).toBe('Evita Tarjeta B: corta mañana');
-  // El día del corte, lo que se compra entra en el estado siguiente: ya no hay que evitarla.
-  expect(dia('2026-10-20').evitar).toBeNull();
-  // Si el banco la mete en el estado que corta ese día, todavía conviene evitarla.
-  const entraHoy = { ...B, compraEnDiaDeCorte: 'entra_en_corte_actual' as const };
-  expect(dia('2026-10-20', entrada({ tarjetas: [A, entraHoy, C] })).evitar).toBe('Evita Tarjeta B: corta hoy');
-  // Nunca se pide evitar la tarjeta recomendada.
-  for (const d of planificarWidget(entrada()).dias) {
-    if (d.evitar) expect(d.evitar).not.toContain(d.alias + ':');
-  }
-});
-
-test('el próximo pago sin marcar, urgente en los últimos 3 días', () => {
-  expect(dia('2026-10-06').pago).toEqual({ texto: 'Tarjeta B vence el 10 de octubre', urgente: false });
-  expect(dia('2026-10-07').pago).toEqual({ texto: 'Tarjeta B vence el 10 de octubre', urgente: true });
-  expect(dia('2026-10-09').pago).toEqual({ texto: 'Tarjeta B vence mañana', urgente: true });
-  expect(dia('2026-10-10').pago).toEqual({ texto: 'Tarjeta B vence hoy', urgente: true });
-  // "Ya pagué" (D45): pasa al siguiente pago.
-  const pagada = { ...B, pagoHecho: '2026-10-10' };
-  expect(dia('2026-10-06', entrada({ tarjetas: [A, pagada, C] })).pago).toEqual({ texto: 'Tarjeta C vence el 21 de octubre', urgente: false });
-  // Con todo pagado, la fecha límite siguiente de cada tarjeta: B vuelve a vencer el 10 de noviembre.
-  const todoPagado = [{ ...A, pagoHecho: '2026-10-25' }, pagada, { ...C, pagoHecho: '2026-10-21' }];
-  expect(dia('2026-10-06', entrada({ tarjetas: todoPagado })).pago).toEqual({ texto: 'Tarjeta B vence el 10 de noviembre', urgente: false });
-});
-
-test('lo que anuncia el lector de pantalla junta todo en palabras', () => {
+test('solo la tarjeta recomendada: nada de otras tarjetas ni de sus pagos (D72)', () => {
+  // El 19 de octubre B corta mañana y vence el pago de C: nada de eso sale en el widget.
   const d = dia('2026-10-19');
-  expect(d.accesible).toBe(`Hoy te conviene usar ${d.alias}: ${d.dias} días para pagar. Evita Tarjeta B: corta mañana ${d.pago!.texto}`);
+  expect(Object.keys(d).sort()).toEqual(['accesible', 'alias', 'banco', 'corta', 'dias', 'fecha', 'hoy', 'pagas', 'recompensa']);
+  expect(d.accesible).toBe(`Hoy te conviene usar ${d.alias}: ${d.dias} días para pagar.`);
+  const otras = planificarWidget(entrada()).dias.filter(x => x.alias !== 'Tarjeta B').map(x => JSON.stringify(x));
+  for (const x of otras) expect(x).not.toContain('Tarjeta B');
 });
 
 test('colores de los tokens, tema de Ajustes y enlace', () => {
@@ -130,12 +105,8 @@ test('colores de los tokens, tema de Ajustes y enlace', () => {
   for (const modo of ['claro', 'oscuro'] as const) {
     const c = tokens.color[modo];
     expect(resumen.colores[modo]).toEqual({
-      fondo: c.superficie,
-      texto: c.texto,
-      textoSecundario: c.textoSecundario,
       destacado: c.destacado,
       sobreDestacado: c.sobreDestacado,
-      alerta: c.alertaTexto,
       pista: mezclar(c.destacado, c.sobreDestacado, modo === 'claro' ? 0.22 : 0.15),
       recompensaPunto: c.recompensaPunto,
       fondoLogo: c.fondoLogo,
@@ -214,7 +185,7 @@ describe('recursos nativos del widget', () => {
   test('los colores coinciden con los tokens', () => {
     for (const [carpeta, modo] of [['values', 'claro'], ['values-night', 'oscuro']] as const) {
       const c = tokens.color[modo];
-      expect(valores(`${carpeta}/colors.xml`, 'color')).toEqual({ tino_widget_fondo: c.superficie, tino_widget_texto: c.texto, tino_widget_destacado: c.destacado });
+      expect(valores(`${carpeta}/colors.xml`, 'color')).toEqual({ tino_widget_fondo: c.destacado, tino_widget_texto: c.sobreDestacado });
     }
   });
 

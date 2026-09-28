@@ -21,8 +21,8 @@ import java.io.File
 import java.util.Calendar
 import java.util.Locale
 
-// Widget de Tino (sección 11 de la especificación): la tarjeta de hoy, la tarjeta a evitar y el
-// próximo pago. No calcula nada: busca el día de hoy en el resumen que la app calculó por
+// Widget de Tino (sección 11 de la especificación): solo la tarjeta de hoy, como en Inicio
+// (decisión D72). No calcula nada: busca el día de hoy en el resumen que la app calculó por
 // adelantado y lo dibuja con los textos y colores que trae. Se redibuja cuando la app guarda un
 // resumen, cada 30 minutos, a la medianoche y si cambian la hora o la zona horaria.
 class TinoWidgetProvider : AppWidgetProvider() {
@@ -47,14 +47,11 @@ class TinoWidgetProvider : AppWidgetProvider() {
     private const val CLAVE = "resumen"
     private const val ACCION_MEDIANOCHE = "expo.modules.tinowidget.MEDIANOCHE"
     // Igual a VERSION_RESUMEN en src/widget/resumen.ts; cambia cuando cambian los campos.
-    private const val VERSION_RESUMEN = 3
-    // Altos (dp) desde los que caben las líneas de abajo (tarjeta a evitar y pago), la tarjeta
-    // de hoy completa con la línea del ciclo, y además la recompensa (con la tarjeta a evitar,
-    // más). El 4 × 2 de un Pixel mide unos 230 dp: tarjeta completa sin recompensa.
-    private const val ALTURA_LINEAS = 120
-    private const val ALTURA_TARJETA_COMPLETA = 200
-    private const val ALTURA_RECOMPENSA = 260
-    private const val ALTURA_RECOMPENSA_Y_EVITAR = 290
+    private const val VERSION_RESUMEN = 4
+    // Altos (dp) desde los que cabe la tarjeta de hoy completa, con la línea del ciclo, y además
+    // la recompensa. El 4 × 2 de un Pixel mide unos 230 dp y cabe todo.
+    private const val ALTURA_TARJETA_COMPLETA = 170
+    private const val ALTURA_RECOMPENSA = 210
 
     fun guardar(contexto: Context, json: String) {
       contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE).edit().putString(CLAVE, json).apply()
@@ -109,7 +106,6 @@ class TinoWidgetProvider : AppWidgetProvider() {
       }
 
     private fun construir(contexto: Context, alto: Int): RemoteViews {
-      val lineas = alto >= ALTURA_LINEAS
       val json = contexto.getSharedPreferences(ARCHIVO, Context.MODE_PRIVATE).getString(CLAVE, null)
       val resumen = json?.let { runCatching { JSONObject(it) }.getOrNull() }
       // Sin resumen, o de otra versión: el diseño trae el mensaje para abrir la app.
@@ -118,9 +114,8 @@ class TinoWidgetProvider : AppWidgetProvider() {
       val vistas = RemoteViews(contexto.packageName, R.layout.tino_widget)
       val colores = Colores(contexto, resumen)
       val textos = resumen.getJSONObject("textos")
-      colores.aplicar(vistas, R.id.widget_fondo, "setColorFilter", "fondo")
-      colores.aplicar(vistas, R.id.widget_bloque_fondo, "setColorFilter", "destacado")
-      colores.aplicar(vistas, R.id.widget_mensaje, "setTextColor", "texto")
+      colores.aplicar(vistas, R.id.widget_fondo, "setColorFilter", "destacado")
+      colores.aplicar(vistas, R.id.widget_mensaje, "setTextColor", "sobreDestacado")
       vistas.setOnClickPendingIntent(R.id.widget_raiz, abrirApp(contexto, resumen.optString("enlace").ifEmpty { null }))
 
       val dia = if (resumen.getString("estado") == "tarjetas") diaDeHoy(resumen) else null
@@ -135,28 +130,10 @@ class TinoWidgetProvider : AppWidgetProvider() {
       vistas.setViewVisibility(R.id.widget_contenido, View.VISIBLE)
       vistas.setContentDescription(R.id.widget_raiz, dia.getString("accesible"))
 
-      val evitar = if (dia.isNull("evitar")) null else dia.getString("evitar")
       if (alto >= ALTURA_TARJETA_COMPLETA) {
-        tarjetaCompleta(contexto, vistas, colores, textos, dia, conRecompensa = alto >= (if (evitar == null) ALTURA_RECOMPENSA else ALTURA_RECOMPENSA_Y_EVITAR))
+        tarjetaCompleta(contexto, vistas, colores, textos, dia, conRecompensa = alto >= ALTURA_RECOMPENSA)
       } else {
         tarjetaCompacta(vistas, colores, textos, dia)
-      }
-
-      if (lineas && evitar != null) {
-        vistas.setViewVisibility(R.id.widget_evitar, View.VISIBLE)
-        vistas.setTextViewText(R.id.widget_evitar, evitar)
-        colores.aplicar(vistas, R.id.widget_evitar, "setTextColor", "alerta")
-      } else {
-        vistas.setViewVisibility(R.id.widget_evitar, View.GONE)
-      }
-
-      val pago = dia.optJSONObject("pago")
-      if (lineas && pago != null) {
-        vistas.setViewVisibility(R.id.widget_pago, View.VISIBLE)
-        vistas.setTextViewText(R.id.widget_pago, pago.getString("texto"))
-        colores.aplicar(vistas, R.id.widget_pago, "setTextColor", if (pago.getBoolean("urgente")) "alerta" else "textoSecundario")
-      } else {
-        vistas.setViewVisibility(R.id.widget_pago, View.GONE)
       }
       return vistas
     }

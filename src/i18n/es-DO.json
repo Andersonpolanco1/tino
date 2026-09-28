@@ -830,12 +830,6 @@
   },
   "widget": {
     "titulo": "Hoy te conviene usar",
-    "evitarHoy": "Evita {{alias}}: corta hoy",
-    "evitarManana": "Evita {{alias}}: corta mañana",
-    "evitarEnDias": "Evita {{alias}}: corta en {{dias}} días",
-    "pagoHoy": "{{alias}} vence hoy",
-    "pagoManana": "{{alias}} vence mañana",
-    "pagoEl": "{{alias}} vence el {{fecha}}",
     "sinTarjetas": "Agrega tu primera tarjeta en Tino.",
     "enPausa": "Tus tarjetas están en pausa. Actívalas en Tino.",
     "abrir": "Abre Tino para actualizar.",
