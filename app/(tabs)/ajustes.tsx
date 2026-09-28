@@ -74,6 +74,38 @@ export default function Ajustes() {
   const contextoPrecision = { hayIngresos: ingresos.length > 0, catalogoDisponible: config.catalogoDisponible };
   const precision = precisionGeneral(tarjetas, contextoPrecision);
   const pista = pistaPrecision(tarjetas, contextoPrecision);
+  const textoPista = pista === 'punto' ? t('ajustes.precisionPistaPunto', { count: porConfirmar.length }) : t(`ajustes.precisionPista.${pista}`);
+  // Decisión D82: lo que falta para subir la precisión va en filas dentro del mismo bloque, cada
+  // una lleva al lugar donde se completa.
+  const filasPista =
+    pista === 'punto'
+      ? porConfirmar.map(tarjeta => (
+          <FilaLista
+            key={tarjeta.id}
+            icono="moneda"
+            tono="recompensa"
+            titulo={tarjeta.alias}
+            detalle={t('ajustes.confirmarPunto')}
+            flecha
+            onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
+          />
+        ))
+      : pista === 'cobros'
+        ? [<FilaLista key="cobros" icono="calendario" titulo={t('ajustes.agregarCobros')} flecha onPress={() => router.push('/cobros/nuevo')} />]
+        : pista === 'producto'
+          ? tarjetas
+              .filter(tarjeta => tarjeta.productoId === null)
+              .map(tarjeta => (
+                <FilaLista
+                  key={tarjeta.id}
+                  icono="tarjetas"
+                  titulo={tarjeta.alias}
+                  detalle={t('ajustes.elegirTipo')}
+                  flecha
+                  onPress={() => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id, seccion: 'tarjeta' } })}
+                />
+              ))
+          : [];
   const nombreMoneda = (m: string) => t(`monedas.${m}`, { defaultValue: m });
   const monedas = config.monedaSecundaria
     ? t('ajustes.monedasDos', { principal: nombreMoneda(config.monedaPrincipal), secundaria: nombreMoneda(config.monedaSecundaria).toLocaleLowerCase(idioma) })
@@ -180,50 +212,43 @@ export default function Ajustes() {
       </Texto>
 
       {precision !== null ? (
-        <Superficie radio={24} style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.l, padding: 18 }}>
-          <View style={{ width: LADO_ANILLO, height: LADO_ANILLO }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
-            <Svg width={LADO_ANILLO} height={LADO_ANILLO} viewBox={`0 0 ${LADO_ANILLO} ${LADO_ANILLO}`}>
-              <Circle cx={LADO_ANILLO / 2} cy={LADO_ANILLO / 2} r={RADIO_ANILLO} fill="none" stroke={tema.color.neutroFondo} strokeWidth={GROSOR_ANILLO} />
-              <Circle
-                cx={LADO_ANILLO / 2}
-                cy={LADO_ANILLO / 2}
-                r={RADIO_ANILLO}
-                fill="none"
-                stroke={tema.color.primario}
-                strokeWidth={GROSOR_ANILLO}
-                strokeLinecap="round"
-                strokeDasharray={`${(precision / 100) * CIRCUNFERENCIA} ${CIRCUNFERENCIA}`}
-                transform={`rotate(-90 ${LADO_ANILLO / 2} ${LADO_ANILLO / 2})`}
-              />
-            </Svg>
-            <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
-              <Texto variante="cifra" style={{ fontSize: 17 }}>
-                {t('comun.porcentaje', { valor: precision })}
+        <Superficie radio={24}>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.l, padding: 18 }}>
+            <View style={{ width: LADO_ANILLO, height: LADO_ANILLO }} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+              <Svg width={LADO_ANILLO} height={LADO_ANILLO} viewBox={`0 0 ${LADO_ANILLO} ${LADO_ANILLO}`}>
+                <Circle cx={LADO_ANILLO / 2} cy={LADO_ANILLO / 2} r={RADIO_ANILLO} fill="none" stroke={tema.color.neutroFondo} strokeWidth={GROSOR_ANILLO} />
+                <Circle
+                  cx={LADO_ANILLO / 2}
+                  cy={LADO_ANILLO / 2}
+                  r={RADIO_ANILLO}
+                  fill="none"
+                  stroke={tema.color.primario}
+                  strokeWidth={GROSOR_ANILLO}
+                  strokeLinecap="round"
+                  strokeDasharray={`${(precision / 100) * CIRCUNFERENCIA} ${CIRCUNFERENCIA}`}
+                  transform={`rotate(-90 ${LADO_ANILLO / 2} ${LADO_ANILLO / 2})`}
+                />
+              </Svg>
+              <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
+                <Texto variante="cifra" style={{ fontSize: 17 }}>
+                  {t('comun.porcentaje', { valor: precision })}
+                </Texto>
+              </View>
+            </View>
+            <View style={{ flex: 1, gap: tema.espacio.xs }} accessible accessibilityLabel={`${t('ajustes.precision', { porcentaje: precision })}. ${textoPista}`}>
+              <Texto variante="cuerpoFuerte">{t('ajustes.precisionTitulo')}</Texto>
+              <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+                {textoPista}
               </Texto>
             </View>
           </View>
-          <View style={{ flex: 1, gap: tema.espacio.xs }} accessible accessibilityLabel={t('ajustes.precision', { porcentaje: precision })}>
-            <Texto variante="cuerpoFuerte">{t('ajustes.precisionTitulo')}</Texto>
-            <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
-              {pista === 'punto' ? t('ajustes.precisionPistaPunto', { count: porConfirmar.length }) : t(`ajustes.precisionPista.${pista}`)}
-            </Texto>
-          </View>
-        </Superficie>
-      ) : null}
-      {porConfirmar.length ? (
-        <ListaAgrupada sangria={16}>
-          {porConfirmar.map(tarjeta => (
-            <FilaLista
-              key={tarjeta.id}
-              icono="moneda"
-              tono="recompensa"
-              titulo={tarjeta.alias}
-              detalle={t('ajustes.confirmarPunto')}
-              flecha
-              onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: tarjeta.id } })}
-            />
+          {filasPista.map(fila => (
+            <View key={fila.key}>
+              <View style={{ height: 1, marginLeft: tema.espacio.l, backgroundColor: tema.color.divisor }} />
+              {fila}
+            </View>
           ))}
-        </ListaAgrupada>
+        </Superficie>
       ) : null}
 
       {preferencias ? (

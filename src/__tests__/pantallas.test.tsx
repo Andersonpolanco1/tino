@@ -114,3 +114,63 @@ test('Tarjetas: cada fila dice el estado de su pago, sin una lista aparte (decis
   expect(screen.getByText(/^Pagado · vence el /)).toBeOnTheScreen();
   expect(screen.queryByText('Próximos pagos')).toBeNull();
 });
+
+describe('Ajustes: lo que falta para subir la precisión va dentro de su bloque y lleva a completarlo (decisión D82)', () => {
+  const tarjeta: Tarjeta = {
+    id: 'A',
+    alias: 'Visa A',
+    emisorId: null,
+    emisorTextoLibre: 'Banco A',
+    productoId: 'visa-a',
+    productoDesconocido: false,
+    diaCorte: 5,
+    fechaLimite: { tipo: 'dia_del_mes', dia: 25 },
+    ajusteDiaNoHabil: 'ninguno',
+    compraEnDiaDeCorte: 'entra_en_siguiente',
+    monedaFacturacion: 'solo_principal',
+    recompensa: { tipo: 'puntos', regla: { tipo: 'por_monto', puntos: 1, porCadaMonto: 100 }, valorPunto: 1, valorPuntoConfirmado: false },
+    enPausa: false,
+    creadaEn: '2026-09-01',
+  };
+  const confirmada = { ...tarjeta, recompensa: { tipo: 'cashback' as const, porcentaje: 1 } };
+  const nomina = { id: 'n', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos' as const, dias: [15, 30] as [number, number] }, ajusteDiaNoHabil: 'adelantar' as const };
+
+  beforeEach(() => mockRouter.push.mockClear());
+
+  test('valor del punto: una fila por tarjeta que abre su detalle', async () => {
+    const almacen = await almacenCon('DO');
+    await almacen.getState().guardarTarjeta(tarjeta);
+    await render(conPais([rd], almacen, <Ajustes />));
+    expect(screen.getByText('Confirma el valor del punto de esta tarjeta para subirla.')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByText('Confirmar el valor del punto'));
+    expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/[id]', params: { id: 'A' } });
+  });
+
+  test('cobros: una fila que abre el registro de un cobro', async () => {
+    const almacen = await almacenCon('DO');
+    await almacen.getState().guardarTarjeta(confirmada);
+    await render(conPais([rd], almacen, <Ajustes />));
+    await fireEvent.press(screen.getByText('Agregar tus días de cobro'));
+    expect(mockRouter.push).toHaveBeenCalledWith('/cobros/nuevo');
+  });
+
+  test('tipo de tarjeta: una fila por tarjeta sin tipo que abre ese paso de la edición', async () => {
+    const almacen = await almacenCon('DO');
+    await almacen.getState().guardarTarjeta({ ...confirmada, productoId: null, productoDesconocido: true });
+    await almacen.getState().guardarIngreso(nomina);
+    await render(conPais([rd], almacen, <Ajustes />));
+    await fireEvent.press(screen.getByText('Elegir el tipo de tarjeta'));
+    expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'A', seccion: 'tarjeta' } });
+  });
+
+  test('con todo completo no hay filas', async () => {
+    const almacen = await almacenCon('DO');
+    await almacen.getState().guardarTarjeta(confirmada);
+    await almacen.getState().guardarIngreso(nomina);
+    await render(conPais([rd], almacen, <Ajustes />));
+    expect(screen.getByText('Tienes todo lo que Tino necesita para recomendarte bien.')).toBeOnTheScreen();
+    expect(screen.queryByText('Confirmar el valor del punto')).toBeNull();
+    expect(screen.queryByText('Agregar tus días de cobro')).toBeNull();
+    expect(screen.queryByText('Elegir el tipo de tarjeta')).toBeNull();
+  });
+});

@@ -327,6 +327,8 @@
     "precisionPistaPunto_one": "Confirma el valor del punto de esta tarjeta para subirla.",
     "precisionPistaPunto_other": "Confirma el valor del punto de estas {{count}} tarjetas para subirla.",
     "confirmarPunto": "Confirmar el valor del punto",
+    "agregarCobros": "Agregar tus días de cobro",
+    "elegirTipo": "Elegir el tipo de tarjeta",
     "cobrosN_one": "{{count}} cobro",
     "cobrosN_other": "{{count}} cobros",
     "cobrosNinguno": "Agregar",
