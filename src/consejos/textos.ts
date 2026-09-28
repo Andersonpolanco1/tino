@@ -1,17 +1,16 @@
 import type { Tarjeta } from '../tipos/tipos';
-import { fechaCorta, type Traducir } from '../inicio/vista';
+import type { Traducir } from '../inicio/vista';
 import type { ConsejoFechas } from './fechas';
 
 export interface TextosConsejo {
   titulo: string;
-  // Qué pasa hoy, en una o dos frases.
+  // Qué pasa hoy, con las fechas del usuario.
   problema: string;
-  // Qué pedirle al banco y qué gana.
+  // Qué pedirle al banco, sin fechas exactas: Tino no sabe qué ciclos ofrece cada banco (D73).
   solucion: string;
-  // Qué hacer si el banco no puede cambiar la fecha.
+  siNoPuedeTitulo: string;
+  // Qué hacer mientras tanto o si el banco no puede.
   siNoPuede: string;
-  // "entre el 17 y el 21" o "el día 19".
-  rango: string;
   // Una línea para la lista de la pestaña Tarjetas.
   resumen: string;
   pasos: string[];
@@ -24,40 +23,40 @@ function listaDias(dias: number[], t: Traducir): string {
   return t('consejos.listaY', { inicio: unicos.slice(0, -1).join(', '), ultimo: unicos[unicos.length - 1] });
 }
 
-// Los textos de un consejo de fechas (decisión D65), en palabras simples y sin montos.
-export function textosConsejo(consejo: ConsejoFechas, tarjetas: Tarjeta[], t: Traducir, idioma: string): TextosConsejo {
+// Los textos de un consejo de fechas (decisión D73), en palabras simples y sin montos.
+export function textosConsejo(consejo: ConsejoFechas, tarjetas: Tarjeta[], t: Traducir): TextosConsejo {
   const alias = tarjetas.find(x => x.id === consejo.tarjetaId)?.alias ?? '';
-  const rango =
-    consejo.corteDesde === consejo.corteHasta
-      ? t('consejos.dia', { dia: consejo.corteSugerido })
-      : t('consejos.rango', { desde: consejo.corteDesde, hasta: consejo.corteHasta });
-  const fecha = (f: string | undefined) => (f ? fechaCorta(f, idioma, t) : '');
-  const datos = {
-    alias,
-    rango,
-    antes: consejo.mesesAntes,
-    revisados: consejo.mesesRevisados,
-    diasAntes: consejo.peorDiaAntes,
-    diasDespues: consejo.peorDiaDespues,
-    pago: fecha(consejo.pagoEjemplo),
-    cobro: fecha(consejo.cobroEjemplo),
-    cargado: fecha(consejo.cobroCargado),
-    libre: fecha(consejo.cobroLibre),
-    cortes: listaDias(consejo.cortesActuales, t),
-    cantidad: consejo.cortesActuales.length,
-  };
-  const tipo = `consejos.${consejo.tipo}`;
-  let problema = t(consejo.enDolares ? `${tipo}.problemaDolares` : `${tipo}.problema`, datos);
-  if (consejo.tipo === 'pagoAntesDelCobro' && consejo.cobroEstimado) problema += ` ${t('consejos.pagoAntesDelCobro.margenEstimado')}`;
-  let solucion = t(consejo.cobroEjemplo ? `${tipo}.solucion` : `${tipo}.solucionSinCobro`, datos);
-  if (consejo.tambienDias) solucion += ` ${t('consejos.mismoCobro.tambienDias', datos)}`;
+  const pasoFinal = [t('consejos.paso3'), t('consejos.paso4')];
+
+  if (consejo.tipo === 'cortesJuntos') {
+    const datos = { alias, cortes: listaDias(consejo.cortes, t), peorDia: consejo.peorDia };
+    const solucion = t('consejos.cortesJuntos.solucion', datos);
+    return {
+      titulo: t('consejos.cortesJuntos.titulo'),
+      problema: t('consejos.cortesJuntos.problema', datos),
+      solucion: consejo.conCobros ? `${solucion} ${t('consejos.cortesJuntos.cuidaCobro')}` : solucion,
+      siNoPuedeTitulo: t('consejos.cortesJuntos.siNoPuedeTitulo'),
+      siNoPuede: t('consejos.cortesJuntos.siNoPuede'),
+      resumen: t('consejos.cortesJuntos.resumen', datos),
+      pasos: [t('consejos.paso1', datos), t('consejos.cortesJuntos.paso2'), ...pasoFinal],
+    };
+  }
+
+  // Sin el día del cobro siguiente (pasa si solo hay fechas personalizadas cortas), sin fechas.
+  const conDia = consejo.diaCobro > 0;
+  const datos = { alias, pago: consejo.diaPago, cobro: consejo.diaCobro, dias: consejo.diasDesdeCobro };
+  const clave = (nombre: string, sinDia: string) => `consejos.pagoLejosDelCobro.${conDia ? nombre : sinDia}`;
+  let problema = t(clave(consejo.enDolares ? 'problemaDolares' : 'problema', 'problemaSinDia'), datos);
+  if (consejo.cobroEstimado) problema += ` ${t('consejos.pagoLejosDelCobro.margenEstimado')}`;
+  let solucion = t(clave('solucion', 'solucionSinDia'), datos);
+  if (consejo.separaCortes) solucion += ` ${t('consejos.pagoLejosDelCobro.separa')}`;
   return {
-    titulo: t(`${tipo}.titulo`, datos),
+    titulo: t('consejos.pagoLejosDelCobro.titulo', datos),
     problema,
     solucion,
-    siNoPuede: t(`${tipo}.siNoPuede`, datos),
-    rango,
-    resumen: t('consejos.resumen', datos),
-    pasos: [t('consejos.paso1', datos), t('consejos.paso2', datos), t('consejos.paso3'), t('consejos.paso4')],
+    siNoPuedeTitulo: t('consejos.pagoLejosDelCobro.siNoPuedeTitulo'),
+    siNoPuede: t('consejos.pagoLejosDelCobro.siNoPuede'),
+    resumen: t(clave('resumen', 'resumenSinDia'), datos),
+    pasos: [t('consejos.paso1', datos), t(clave('paso2', 'paso2SinDia'), datos), ...pasoFinal],
   };
 }

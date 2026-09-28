@@ -85,16 +85,16 @@ export default function Tarjetas() {
         {t('tarjetas.titulo')}
       </Texto>
       {tarjetas.length === 0 ? <Texto color="textoSecundario">{t('tarjetas.vacio')}</Texto> : null}
-      {/* Decisiones D65 y D68: qué fecha de corte pedirle al banco, arriba para verlo rápido. */}
+      {/* Decisiones D68 y D73: qué cambio pedirle al banco, arriba para verlo rápido. */}
       {consejos.length ? (
         <ListaAgrupada titulo={t('consejos.seccion')}>
           {consejos.map(consejo => {
-            const textos = textosConsejo(consejo, tarjetas, t as unknown as TraducirVista, idioma);
+            const textos = textosConsejo(consejo, tarjetas, t as unknown as TraducirVista);
             return (
               <FilaLista
                 key={`${consejo.tipo}:${consejo.tarjetaId}`}
                 icono="calendario"
-                tono={consejo.tipo === 'pagoAntesDelCobro' ? 'alerta' : 'primario'}
+                tono={consejo.tipo === 'pagoLejosDelCobro' ? 'alerta' : 'primario'}
                 titulo={textos.titulo}
                 detalle={textos.resumen}
                 debajo={

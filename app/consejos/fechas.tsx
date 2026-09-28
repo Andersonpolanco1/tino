@@ -3,21 +3,20 @@ import { View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { BarraSuperior, Boton, Pantalla, Superficie, Texto, useTema } from '@/diseno';
-import { usePais } from '@/paises';
 import { useTarjetasEnPlan } from '@/suscripciones';
 import { textosConsejo, useConsejosNuevos } from '@/consejos';
 import type { Traducir } from '@/inicio/vista';
 import { useVolver } from '@/utilidades/useVolver';
 
-// Consejos de fechas (decisión D65): qué pedirle al banco y cómo, paso a paso.
+// Consejos de fechas (decisión D73): qué pasa, qué pedirle al banco y cómo, sin fechas exactas.
+// "Ya lo sé" oculta el consejo mientras sus fechas y cobros sigan iguales.
 export default function ConsejosFechas() {
   const { t } = useTranslation();
   const tema = useTema();
   const router = useRouter();
   const volver = useVolver();
-  const { idioma } = usePais();
   const tarjetas = useTarjetasEnPlan();
-  const { consejos, marcar } = useConsejosNuevos();
+  const { consejos, marcar, ocultar } = useConsejosNuevos();
   // Decisión D68: al abrir la pantalla, los consejos quedan vistos (siguen aquí y en Tarjetas).
   const marcarAlAbrir = useRef(marcar);
   marcarAlAbrir.current = marcar;
@@ -34,7 +33,7 @@ export default function ConsejosFechas() {
       </View>
       {consejos.length === 0 ? <Texto>{t('consejos.sinConsejos')}</Texto> : null}
       {consejos.map(consejo => {
-        const textos = textosConsejo(consejo, tarjetas, t as unknown as Traducir, idioma);
+        const textos = textosConsejo(consejo, tarjetas, t as unknown as Traducir);
         const alias = tarjetas.find(x => x.id === consejo.tarjetaId)?.alias ?? '';
         return (
           <Superficie key={`${consejo.tipo}:${consejo.tarjetaId}`} radio={tema.radio.destacada} style={{ padding: 20, gap: tema.espacio.m }}>
@@ -47,7 +46,7 @@ export default function ConsejosFechas() {
               <Texto>{textos.solucion}</Texto>
             </View>
             <View style={{ gap: tema.espacio.xs }}>
-              <Texto variante="cuerpoFuerte">{t('consejos.siNoPuedeTitulo')}</Texto>
+              <Texto variante="cuerpoFuerte">{textos.siNoPuedeTitulo}</Texto>
               <Texto color="textoSecundario">{textos.siNoPuede}</Texto>
             </View>
             <Texto variante="cuerpoFuerte" style={{ paddingTop: tema.espacio.s }}>
@@ -68,12 +67,18 @@ export default function ConsejosFechas() {
               icono="editar"
               onPress={() => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: consejo.tarjetaId, seccion: 'fechas' } })}
             />
+            <View style={{ gap: tema.espacio.xs }}>
+              <Boton titulo={t('consejos.ocultar')} variante="texto" onPress={() => ocultar(consejo)} />
+              <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
+                {t('consejos.ocultarDetalle')}
+              </Texto>
+            </View>
           </Superficie>
         );
       })}
-      {consejos[0]?.otrasConProblemaDeCobro ? (
+      {consejos[0]?.otrasPendientes ? (
         <Texto variante="apoyo" color="textoSecundario">
-          {t('consejos.otrasConProblema', { count: consejos[0].otrasConProblemaDeCobro })}
+          {t('consejos.otrasPendientes', { count: consejos[0].otrasPendientes })}
         </Texto>
       ) : null}
     </Pantalla>

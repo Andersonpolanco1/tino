@@ -1,54 +1,47 @@
-import type { ConfigPais, FechaISO, FuenteIngreso, ReglaFechaLimite, Tarjeta } from '../tipos/tipos';
+import type { ConfigPais, FechaISO, FuenteIngreso, ModoEnfoque, ReglaFechaLimite, Tarjeta } from '../tipos/tipos';
 import { aFecha, fechaLimite, numeroDe, proximoCorte } from '../motor/fechas';
 import { cobrosEntre, type Cobro } from '../motor/ingresos';
 
-// Consejos de fechas (decisión D65): cuándo conviene pedirle al banco otra fecha de corte.
-// Se simula un año con las fechas de hoy y con el corte de una sola tarjeta cambiado, para que
-// cada consejo pida una sola llamada. No toca el ranking: usa las mismas reglas de fechas del
-// motor, pero no cambia sus puntajes ni sus casos.
+// Consejos de fechas (decisión D73, reemplaza a D65): cuándo conviene pedirle al banco que mueva
+// las fechas de una tarjeta. Tino no sabe qué ciclos ofrece cada banco, así que el consejo dice
+// el problema con las fechas del usuario y la dirección del cambio, nunca un día exacto. Por
+// dentro se simula un año para dar el consejo solo si existe un cambio que lo arregla sin crear
+// otro problema. No toca el ranking: usa las reglas de fechas del motor sin cambiar sus casos.
 //
-// Tres problemas, en orden de importancia:
-// - pagoAntesDelCobro (por tarjeta, con 1 o más): el pago vence sin un cobro antes y empuja a
-//   la mora. Se revisa la fecha más temprana (la de dólares en doble balance) y, con cobros
-//   estimados, se piden 3 días de margen.
-// - mismoCobro (2 o más tarjetas, 2 o más cobros al mes): todos los pagos salen del mismo
-//   cobro y otro queda libre.
-// - diasSinTarjetaBuena (2 o más): hay días del mes en que ninguna tarjeta da muchos días
-//   porque los cortes están amontonados. Se mide con el peor día del año, así que con 4 o más
-//   tarjetas repartidas no aparece aunque haya fechas cerca.
+// Dos consejos, calculados en orden (el segundo cuenta con el cambio del primero):
+// - pagoLejosDelCobro: en la mitad o más de los próximos 12 estados, el pago cae más de 3
+//   semanas después del último cobro. El dinero tiene que durar casi un mes y ahí se cae en
+//   mora. Solo con cobros de fecha regular: los de fechas variables no sirven para alinear.
+// - cortesJuntos (2 a 4 tarjetas, enfoque Días o Equilibrado): todas cortan a menos de una
+//   semana, así que hay días del mes en que ninguna da muchos días para pagar.
+// Nada con 5 tarjetas o más: mover una casi siempre desordena otra.
 
-export type TipoConsejoFechas = 'pagoAntesDelCobro' | 'mismoCobro' | 'diasSinTarjetaBuena';
+export type TipoConsejoFechas = 'pagoLejosDelCobro' | 'cortesJuntos';
 
 export interface ConsejoFechas {
   tipo: TipoConsejoFechas;
+  // La tarjeta cuyas fechas conviene pedir que cambien.
   tarjetaId: string;
-  corteSugerido: number;
-  corteDesde: number;
-  corteHasta: number;
-  // Ejemplo concreto con el corte sugerido: el próximo pago y el cobro con que se pagaría.
-  pagoEjemplo: FechaISO;
-  cobroEjemplo?: FechaISO;
-  // Con doble balance, si la fecha que vence antes del cobro es la de dólares.
+  // Identifica la situación (fechas de las tarjetas y cobros): un consejo descartado solo vuelve
+  // si cambia (decisión D73).
+  huella: string;
+  // pagoLejosDelCobro: el día típico en que vence, el del cobro que llega justo después y
+  // cuántos días tiene que durar el cobro anterior, en promedio.
+  diaPago: number;
+  diaCobro: number;
+  diasDesdeCobro: number;
+  // Con doble balance, si el pago que queda lejos del cobro es el de dólares.
   enDolares: boolean;
-  // Si hay cobros estimados (se pidieron 3 días de margen).
   cobroEstimado: boolean;
-  // Estados de cuenta revisados de esta tarjeta y cuántos vencen antes del cobro, hoy y después.
-  mesesRevisados: number;
-  mesesAntes: number;
-  mesesDespues: number;
-  // El peor día del año (días para pagar de la mejor tarjeta ese día), hoy y después.
-  peorDiaAntes: number;
-  peorDiaDespues: number;
-  // Los días de corte de hoy, en orden.
-  cortesActuales: number[];
-  // mismoCobro: un ejemplo del cobro que paga todo y del que queda libre.
-  cobroCargado?: FechaISO;
-  cobroLibre?: FechaISO;
-  // mismoCobro: si además mejora el peor día al menos MEJORA_MINIMA_DIAS.
-  tambienDias: boolean;
-  // Tarjetas que seguirían venciendo antes del cobro después de estos consejos (hay un máximo
-  // de 2 a la vez): se revisan cuando el usuario actualice sus fechas.
-  otrasConProblemaDeCobro: number;
+  // Si el mismo cambio también separa los cortes amontonados.
+  separaCortes: boolean;
+  // cortesJuntos: los días de corte de hoy y los días para pagar del peor día del año.
+  cortes: number[];
+  peorDia: number;
+  // Si hay cobros registrados (el consejo de cortes recuerda cuidar el pago).
+  conCobros: boolean;
+  // Tarjetas que también se pagan lejos del cobro y quedan para después (máximo 2 consejos).
+  otrasPendientes: number;
 }
 
 export interface EntradaConsejos {
@@ -57,6 +50,7 @@ export interface EntradaConsejos {
   tarjetas: Tarjeta[];
   ingresos: FuenteIngreso[];
   pais: ConfigPais;
+  enfoque: ModoEnfoque;
 }
 
 const DIAS_SIMULADOS = 365;
@@ -64,12 +58,21 @@ const ESTADOS_SIMULADOS = 12;
 // Los bancos suelen ofrecer cortes del 1 al 28; así el día existe todos los meses.
 const CORTES_POSIBLES = Array.from({ length: 28 }, (_, i) => i + 1);
 export const MINIMO_ESTADOS_REVISADOS = 3;
-export const MARGEN_COBRO = 1;
+// Más de 3 semanas desde el último cobro hasta el pago.
+export const DIAS_LEJOS_DEL_COBRO = 21;
+// Un pago desde otro banco tarda 1 o 2 días laborables y las nóminas a veces se atrasan: un
+// cobro cuenta si llega al menos 2 días antes del pago (3 si es estimado).
+export const MARGEN_COBRO = 2;
 export const MARGEN_COBRO_ESTIMADO = 3;
+// Un cobro de fechas variables que se mueve más de esto de un mes a otro no sirve para alinear.
+export const VARIACION_MAXIMA_COBRO = 5;
+export const CORTES_JUNTOS = 7;
 export const MEJORA_MINIMA_DIAS = 7;
-export const MAXIMO_CONSEJOS_COBRO = 2;
-const TOLERANCIA_DIAS = 3;
-const ANCHO_RANGO = 2;
+// Evitar la mora pesa más que unos días de gracia: el arreglo del cobro puede costar días
+// mientras el peor día del año no baje de este piso.
+export const PISO_PEOR_DIA = 20;
+export const MAXIMO_CONSEJOS = 2;
+export const MAXIMO_TARJETAS = 4;
 
 // Distancia entre dos días del mes, dando la vuelta (el 29 y el 2 están a 3 días).
 export function distanciaCircular(a: number, b: number): number {
@@ -93,41 +96,41 @@ export function conCorte(tarjeta: Tarjeta, diaCorte: number, hoy: number): Tarje
   };
 }
 
+// Cobros de fecha regular: los fijos, y los personalizados que caen casi el mismo día cada mes.
+export function cobrosRegulares(ingresos: FuenteIngreso[]): FuenteIngreso[] {
+  return ingresos.filter(i => {
+    if (i.frecuencia.tipo !== 'personalizada') return true;
+    const dias = i.frecuencia.fechas.map(f => Number(f.fecha.slice(8)));
+    return dias.every(a => dias.every(b => distanciaCircular(a, b) <= VARIACION_MAXIMA_COBRO));
+  });
+}
+
 interface Contexto {
   hoy: number;
   feriados: ReadonlySet<FechaISO>;
   cobros: Cobro[];
-  // Hasta qué día se conocen los cobros: con solo fechas personalizadas, la última.
-  limiteCobros: number;
-  cobrosPorMes: number;
+  // Qué días se conocen: con solo fechas personalizadas, entre la primera y la última.
+  primerCobro: number;
+  ultimoCobro: number;
 }
 
 interface Estado {
   pago: number;
   enDolares: boolean;
-  // El cobro con que se paga: el último con margen antes del pago; null si no hay.
-  cobro: Cobro | null;
-  // Si entra en la revisión de cobros (con cobros conocidos hasta esa fecha).
-  revisado: boolean;
+  // Días desde el último cobro (con margen) hasta el pago; null si no se sabe.
+  desdeCobro: number | null;
+  // El cobro que llega justo después del pago.
+  siguiente: number | null;
 }
 
 interface Simulacion {
   gracia: number[];
   estados: Estado[];
-}
-
-function cobroPara(ctx: Contexto, corte: number, pago: number): Cobro | null {
-  let elegido: Cobro | null = null;
-  for (const c of ctx.cobros) {
-    if (c.dia <= corte) continue;
-    if (c.dia > pago - MARGEN_COBRO) break;
-    if (c.dia <= pago - (c.estimada ? MARGEN_COBRO_ESTIMADO : MARGEN_COBRO)) elegido = c;
-  }
-  return elegido;
+  lejos: boolean;
 }
 
 function simular(tarjeta: Tarjeta, ctx: Contexto): Simulacion {
-  const { hoy, feriados } = ctx;
+  const { hoy, feriados, cobros } = ctx;
   const gracia: number[] = [];
   for (let d = hoy; d < hoy + DIAS_SIMULADOS; d++) {
     gracia.push(fechaLimite(proximoCorte(d, tarjeta), tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, feriados) - d);
@@ -139,211 +142,167 @@ function simular(tarjeta: Tarjeta, ctx: Contexto): Simulacion {
     const usd =
       tarjeta.monedaFacturacion === 'doble_balance' && tarjeta.fechaLimiteUsd ? fechaLimite(corte, tarjeta.fechaLimiteUsd, tarjeta.ajusteDiaNoHabil, feriados) : null;
     const pago = usd !== null && usd < principal ? usd : principal;
-    const revisado = ctx.cobros.length > 0 && pago <= ctx.limiteCobros;
-    estados.push({ pago, enDolares: pago !== principal, cobro: revisado ? cobroPara(ctx, corte, pago) : null, revisado });
+    let ultimo: Cobro | undefined;
+    let siguiente: Cobro | undefined;
+    for (const c of cobros) {
+      if (c.dia <= pago - (c.estimada ? MARGEN_COBRO_ESTIMADO : MARGEN_COBRO)) ultimo = c;
+      else if (c.dia >= pago) {
+        siguiente = c;
+        break;
+      }
+    }
+    const conocido = !!ultimo && ultimo.dia >= ctx.primerCobro && pago <= ctx.ultimoCobro;
+    estados.push({ pago, enDolares: pago !== principal, desdeCobro: conocido ? pago - ultimo!.dia : null, siguiente: siguiente?.dia ?? null });
     corte = proximoCorte(corte + 1, { diaCorte: tarjeta.diaCorte, compraEnDiaDeCorte: 'entra_en_corte_actual' });
   }
-  return { gracia, estados };
+  const conocidos = estados.filter(x => x.desdeCobro !== null);
+  const lejos = conocidos.length >= MINIMO_ESTADOS_REVISADOS && conocidos.filter(x => x.desdeCobro! > DIAS_LEJOS_DEL_COBRO).length * 2 >= conocidos.length;
+  return { gracia, estados, lejos };
 }
 
-interface Medida {
-  peorDia: number;
-  // Por tarjeta: estados revisados y cuántos vencen sin cobro antes.
-  revisados: Record<string, number>;
-  antes: Record<string, number>;
-  conProblemaDeCobro: number;
-  // Meses en que todos los pagos salen del mismo cobro habiendo otro.
-  mesesMismoCobro: number;
+// Días para pagar de la mejor tarjeta el peor día del año.
+function peorDia(tarjetas: Tarjeta[], sims: Record<string, Simulacion>): number {
+  let peor = Infinity;
+  for (let i = 0; i < DIAS_SIMULADOS; i++) peor = Math.min(peor, Math.max(...tarjetas.map(t => sims[t.id].gracia[i])));
+  return peor;
 }
 
-export function tieneProblemaDeCobro(revisados: number, antes: number): boolean {
-  return revisados >= MINIMO_ESTADOS_REVISADOS && antes * 2 >= revisados;
+function amontonadas(tarjetas: Tarjeta[]): boolean {
+  if (tarjetas.length < 2) return false;
+  return tarjetas.every(a => tarjetas.every(b => distanciaCircular(a.diaCorte, b.diaCorte) < CORTES_JUNTOS));
 }
 
-function medir(tarjetas: Tarjeta[], sims: Record<string, Simulacion>, ctx: Contexto): Medida {
-  let peorDia = Infinity;
-  for (let i = 0; i < DIAS_SIMULADOS; i++) peorDia = Math.min(peorDia, Math.max(...tarjetas.map(t => sims[t.id].gracia[i])));
-  const revisados: Record<string, number> = {};
-  const antes: Record<string, number> = {};
-  let conProblemaDeCobro = 0;
-  for (const t of tarjetas) {
-    const estados = sims[t.id].estados.filter(x => x.revisado);
-    revisados[t.id] = estados.length;
-    antes[t.id] = estados.filter(x => !x.cobro).length;
-    if (tieneProblemaDeCobro(revisados[t.id], antes[t.id])) conProblemaDeCobro++;
-  }
-  // Mismo cobro: solo con 2 o más tarjetas y 2 o más cobros al mes. Se agrupan los pagos por
-  // mes del calendario (los estados de cuenta de tarjetas con cortes distintos van desfasados).
-  let mesesMismoCobro = 0;
-  if (tarjetas.length >= 2 && ctx.cobrosPorMes >= 2) {
-    const mesDe = (n: number) => aFecha(n).slice(0, 7);
-    const meses = new Set(tarjetas.flatMap(t => sims[t.id].estados.map(x => mesDe(x.pago))));
-    for (const mes of meses) {
-      const estados = tarjetas.map(t => sims[t.id].estados.find(x => mesDe(x.pago) === mes));
-      if (estados.some(x => !x || !x.revisado || !x.cobro)) continue;
-      const usados = new Set(estados.map(x => x!.cobro!.dia));
-      const ultimo = Math.max(...estados.map(x => x!.pago));
-      const disponibles = ctx.cobros.filter(c => c.dia > ultimo - 30 && c.dia <= ultimo).length;
-      if (usados.size === 1 && disponibles >= 2) mesesMismoCobro++;
-    }
-  }
-  return { peorDia, revisados, antes, conProblemaDeCobro, mesesMismoCobro };
+// El valor más repetido (el día típico del mes).
+function moda(valores: number[]): number {
+  const cuenta = new Map<number, number>();
+  for (const v of valores) cuenta.set(v, (cuenta.get(v) ?? 0) + 1);
+  return [...cuenta.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? 0;
 }
+const diaDelMes = (n: number) => Number(aFecha(n).slice(8));
 
-interface Candidata {
-  corte: number;
-  medida: Medida;
+// Una huella corta y estable de las fechas que importan: si cambia, es otra situación.
+function huellaDe(partes: unknown): string {
+  const texto = JSON.stringify(partes);
+  let h = 5381;
+  for (let i = 0; i < texto.length; i++) h = ((h << 5) + h + texto.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
+}
+const fechasDe = (t: Tarjeta) => [t.id, t.diaCorte, t.fechaLimite, t.fechaLimiteUsd ?? null, t.ajusteDiaNoHabil];
+
+interface Movida {
+  tarjeta: Tarjeta;
   simulacion: Simulacion;
-}
-
-interface Criterio {
-  // Negativo = a es mejor.
-  comparar: (a: Candidata, b: Candidata) => number;
-  // Qué candidatas resuelven el problema sin crear otro; la mejor y sus vecinas forman el rango.
-  sirve: (c: Candidata) => boolean;
-}
-
-interface Propuesta {
-  mejor: Candidata;
-  desde: number;
-  hasta: number;
+  peor: number;
 }
 
 export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
-  if (!e.tarjetas.length) return [];
+  if (!e.tarjetas.length || e.tarjetas.length > MAXIMO_TARJETAS) return [];
   const hoy = numeroDe(e.hoy);
   const feriados = new Set(e.pais.feriados);
-  const soloPersonalizadas = e.ingresos.length > 0 && e.ingresos.every(i => i.frecuencia.tipo === 'personalizada');
-  const cobros = e.ingresos.length ? cobrosEntre(e.ingresos, hoy - 62, hoy + DIAS_SIMULADOS + 62, feriados) : [];
-  const limiteCobros = soloPersonalizadas ? Math.max(-Infinity, ...cobros.map(c => c.dia)) : Infinity;
-  const cobrosPorMes = e.ingresos.length ? cobrosEntre(e.ingresos, hoy, hoy + 364, feriados).length / 12 : 0;
-  const ctx: Contexto = { hoy, feriados, cobros, limiteCobros, cobrosPorMes };
+  const regulares = cobrosRegulares(e.ingresos);
+  const cobros = regulares.length ? cobrosEntre(regulares, hoy - 62, hoy + DIAS_SIMULADOS + 62, feriados) : [];
+  const soloPersonalizadas = regulares.length > 0 && regulares.every(i => i.frecuencia.tipo === 'personalizada');
+  const ctx: Contexto = {
+    hoy,
+    feriados,
+    cobros,
+    primerCobro: soloPersonalizadas ? Math.min(...cobros.map(c => c.dia)) : -Infinity,
+    ultimoCobro: soloPersonalizadas ? Math.max(...cobros.map(c => c.dia)) : Infinity,
+  };
+  const cobroEstimado = cobros.some(c => c.estimada);
+  const huellaCobros = regulares.map(i => [i.frecuencia, i.ajusteDiaNoHabil]);
 
-  // La configuración avanza con cada consejo aceptado: el siguiente ya cuenta con él, así dos
-  // consejos nunca mandan dos tarjetas al mismo lugar.
+  // La configuración avanza con cada consejo aceptado.
   let tarjetas = e.tarjetas;
   const sims: Record<string, Simulacion> = {};
   for (const t of tarjetas) sims[t.id] = simular(t, ctx);
-  let actual = medir(tarjetas, sims, ctx);
-  const cortesActuales = e.tarjetas.map(t => t.diaCorte).sort((a, b) => a - b);
-  const conConsejo = new Set<string>();
+  const cortesJuntosHoy = amontonadas(tarjetas) && (e.enfoque === 'liquidez' || e.enfoque === 'equilibrado');
+  const peorHoy = peorDia(tarjetas, sims);
   const consejos: ConsejoFechas[] = [];
+  let separadas = !cortesJuntosHoy;
+  let otrasPendientes = 0;
 
-  function proponer(tarjeta: Tarjeta, criterio: Criterio): Propuesta | null {
-    const lista = CORTES_POSIBLES.filter(c => c !== tarjeta.diaCorte).map(corte => {
-      const simulacion = simular(conCorte(tarjeta, corte, hoy), ctx);
-      return { corte, simulacion, medida: medir(tarjetas, { ...sims, [tarjeta.id]: simulacion }, ctx) };
+  // Todas las formas de mover el corte de una tarjeta, con cómo queda el año.
+  const movidas = (tarjeta: Tarjeta): Movida[] =>
+    CORTES_POSIBLES.filter(c => c !== tarjeta.diaCorte).map(corte => {
+      const movida = conCorte(tarjeta, corte, hoy);
+      const simulacion = simular(movida, ctx);
+      const nuevas = tarjetas.map(t => (t.id === tarjeta.id ? movida : t));
+      return { tarjeta: movida, simulacion, peor: peorDia(nuevas, { ...sims, [tarjeta.id]: simulacion }) };
     });
-    const cambio = (c: Candidata) => distanciaCircular(c.corte, tarjeta.diaCorte);
-    const [mejor] = lista.filter(criterio.sirve).sort((a, b) => criterio.comparar(a, b) || cambio(a) - cambio(b) || a.corte - b.corte);
-    if (!mejor) return null;
-    // Rango: los cortes vecinos que también sirven y no son mucho peores, hasta 2 días a cada lado.
-    const vecinoBueno = (corte: number) => {
-      const c = lista.find(x => x.corte === corte);
-      return !!c && criterio.sirve(c) && c.medida.peorDia >= mejor.medida.peorDia - ANCHO_RANGO;
-    };
-    let desde = mejor.corte;
-    let hasta = mejor.corte;
-    while (desde > 1 && mejor.corte - (desde - 1) <= ANCHO_RANGO && vecinoBueno(desde - 1)) desde--;
-    while (hasta < 28 && hasta + 1 - mejor.corte <= ANCHO_RANGO && vecinoBueno(hasta + 1)) hasta++;
-    return { mejor, desde, hasta };
-  }
+  const aceptar = (m: Movida) => {
+    tarjetas = tarjetas.map(t => (t.id === m.tarjeta.id ? m.tarjeta : t));
+    sims[m.tarjeta.id] = m.simulacion;
+  };
+  const base = {
+    diaPago: 0,
+    diaCobro: 0,
+    diasDesdeCobro: 0,
+    enDolares: false,
+    cobroEstimado,
+    separaCortes: false,
+    cortes: e.tarjetas.map(t => t.diaCorte).sort((a, b) => a - b),
+    peorDia: peorHoy,
+    conCobros: cobros.length > 0,
+  };
 
-  function aceptar(tipo: TipoConsejoFechas, tarjeta: Tarjeta, p: Propuesta, extra: Partial<ConsejoFechas> = {}) {
-    const ejemplo = p.mejor.simulacion.estados[0];
+  // 1. Pago lejos del cobro: primero la que estira más el cobro.
+  const promedio = (s: Simulacion) => {
+    const v = s.estados.filter(x => x.desdeCobro !== null).map(x => x.desdeCobro!);
+    return v.reduce((a, b) => a + b, 0) / v.length;
+  };
+  const lejos = e.tarjetas.filter(t => sims[t.id].lejos).sort((a, b) => promedio(sims[b.id]) - promedio(sims[a.id]));
+  for (const original of lejos) {
+    // Pasado el máximo, las demás siguen lejos del cobro: se cuentan para decírselo al usuario.
+    if (consejos.length >= MAXIMO_CONSEJOS) {
+      otrasPendientes++;
+      continue;
+    }
+    const tarjeta = tarjetas.find(t => t.id === original.id)!;
+    const antes = peorDia(tarjetas, sims);
+    const [mejor] = movidas(tarjeta)
+      .filter(m => !m.simulacion.lejos && !amontonadas(tarjetas.map(t => (t.id === tarjeta.id ? m.tarjeta : t))) && m.peor >= Math.min(antes, PISO_PEOR_DIA))
+      .sort((a, b) => b.peor - a.peor || distanciaCircular(a.tarjeta.diaCorte, tarjeta.diaCorte) - distanciaCircular(b.tarjeta.diaCorte, tarjeta.diaCorte));
+    if (!mejor) continue;
+    const sim = sims[tarjeta.id];
+    const revisados = sim.estados.filter(x => x.desdeCobro !== null);
+    const lejanos = revisados.filter(x => x.desdeCobro! > DIAS_LEJOS_DEL_COBRO);
+    const separa = !separadas && mejor.peor >= peorHoy + MEJORA_MINIMA_DIAS;
+    if (separa) separadas = true;
     consejos.push({
-      tipo,
+      ...base,
+      tipo: 'pagoLejosDelCobro',
       tarjetaId: tarjeta.id,
-      corteSugerido: p.mejor.corte,
-      corteDesde: p.desde,
-      corteHasta: p.hasta,
-      pagoEjemplo: aFecha(ejemplo.pago),
-      cobroEjemplo: ejemplo.cobro ? aFecha(ejemplo.cobro.dia) : undefined,
-      enDolares: sims[tarjeta.id].estados.some(x => x.revisado && !x.cobro && x.enDolares),
-      cobroEstimado: cobros.some(c => c.estimada),
-      mesesRevisados: actual.revisados[tarjeta.id],
-      mesesAntes: actual.antes[tarjeta.id],
-      mesesDespues: p.mejor.medida.antes[tarjeta.id],
-      peorDiaAntes: actual.peorDia,
-      peorDiaDespues: p.mejor.medida.peorDia,
-      cortesActuales,
-      tambienDias: false,
-      otrasConProblemaDeCobro: 0,
-      ...extra,
+      huella: huellaDe([fechasDe(original), huellaCobros]),
+      diaPago: moda(lejanos.map(x => diaDelMes(x.pago))),
+      diaCobro: moda(lejanos.filter(x => x.siguiente !== null).map(x => diaDelMes(x.siguiente!))),
+      diasDesdeCobro: Math.round(promedio(sim)),
+      enDolares: lejanos.filter(x => x.enDolares).length * 2 > lejanos.length,
+      separaCortes: separa,
+      otrasPendientes: 0,
     });
-    conConsejo.add(tarjeta.id);
-    tarjetas = tarjetas.map(t => (t.id === tarjeta.id ? conCorte(tarjeta, p.mejor.corte, hoy) : t));
-    sims[tarjeta.id] = p.mejor.simulacion;
-    actual = p.mejor.medida;
+    aceptar(mejor);
   }
 
-  // Entre las tarjetas sin consejo, la que da mejor resultado al moverla; en empate, la más
-  // nueva, que suele ser la más fácil de cambiar.
-  function mejorEntreTarjetas(criterio: Criterio) {
+  // 2. Cortes juntos: la tarjeta que más sube el peor día sin quedar lejos del cobro; en
+  // empate, la más nueva, que suele ser la más fácil de cambiar.
+  if (!separadas && consejos.length < MAXIMO_CONSEJOS) {
+    const actual = peorDia(tarjetas, sims);
     const opciones = tarjetas
-      .filter(t => !conConsejo.has(t.id))
-      .map(t => ({ t, p: proponer(t, criterio) }))
-      .filter((x): x is { t: Tarjeta; p: Propuesta } => !!x.p);
-    opciones.sort((a, b) => criterio.comparar(a.p.mejor, b.p.mejor) || (a.t.creadaEn < b.t.creadaEn ? 1 : a.t.creadaEn > b.t.creadaEn ? -1 : 0));
-    return opciones[0] ?? null;
-  }
-
-  // 1. Pago antes del cobro: hasta 2, primero las que fallan más meses. Tiene que quedar en 2
-  // de 12 o menos, sin que otra tarjeta pase a pagar antes del cobro.
-  const conProblema = e.tarjetas
-    .filter(t => tieneProblemaDeCobro(actual.revisados[t.id], actual.antes[t.id]))
-    .sort((a, b) => actual.antes[b.id] - actual.antes[a.id])
-    .slice(0, MAXIMO_CONSEJOS_COBRO);
-  for (const { id } of conProblema) {
-    const tarjeta = tarjetas.find(t => t.id === id)!;
-    const p = proponer(tarjeta, {
-      comparar: (a, b) => a.medida.antes[id] - b.medida.antes[id] || a.medida.mesesMismoCobro - b.medida.mesesMismoCobro || b.medida.peorDia - a.medida.peorDia,
-      sirve: c =>
-        c.medida.antes[id] * 6 <= c.medida.revisados[id] &&
-        c.medida.conProblemaDeCobro < actual.conProblemaDeCobro &&
-        c.medida.peorDia >= actual.peorDia - TOLERANCIA_DIAS,
-    });
-    if (p) aceptar('pagoAntesDelCobro', tarjeta, p);
-  }
-  const otras = actual.conProblemaDeCobro;
-  const conOtras = () => consejos.map(c => ({ ...c, otrasConProblemaDeCobro: otras }));
-
-  if (tarjetas.length < 2) return conOtras();
-
-  // 2. Todos los pagos con el mismo cobro en 6 o más meses: mover una tarjeta para repartirlos.
-  // Tiene que quedar en 2 de 12 o menos.
-  if (actual.mesesMismoCobro * 2 >= ESTADOS_SIMULADOS) {
-    const diasAntes = actual.peorDia;
-    const opcion = mejorEntreTarjetas({
-      comparar: (a, b) => a.medida.mesesMismoCobro - b.medida.mesesMismoCobro || b.medida.peorDia - a.medida.peorDia,
-      sirve: c =>
-        c.medida.mesesMismoCobro * 6 <= ESTADOS_SIMULADOS &&
-        c.medida.conProblemaDeCobro <= actual.conProblemaDeCobro &&
-        c.medida.peorDia >= actual.peorDia - TOLERANCIA_DIAS,
-    });
+      .flatMap(tarjeta => movidas(tarjeta).map(m => ({ original: tarjeta, m })))
+      .filter(({ m }) => !m.simulacion.lejos && m.peor >= actual + MEJORA_MINIMA_DIAS)
+      .sort((a, b) => b.m.peor - a.m.peor || (a.original.creadaEn < b.original.creadaEn ? 1 : a.original.creadaEn > b.original.creadaEn ? -1 : 0));
+    const [opcion] = opciones;
     if (opcion) {
-      const cargado = sims[opcion.t.id].estados.find(x => x.cobro)?.cobro?.dia;
-      const libre = cargado === undefined ? undefined : cobros.find(c => c.dia > cargado)?.dia;
-      aceptar('mismoCobro', opcion.t, opcion.p, {
-        cobroCargado: cargado === undefined ? undefined : aFecha(cargado),
-        cobroLibre: libre === undefined ? undefined : aFecha(libre),
-        tambienDias: opcion.p.mejor.medida.peorDia >= diasAntes + MEJORA_MINIMA_DIAS,
+      consejos.push({
+        ...base,
+        tipo: 'cortesJuntos',
+        tarjetaId: opcion.original.id,
+        huella: huellaDe([e.tarjetas.map(fechasDe), huellaCobros]),
+        otrasPendientes: 0,
       });
-      // Una sola llamada para repartir pagos o días: no se suma el consejo de días.
-      return conOtras();
     }
   }
 
-  // 3. Días sin tarjeta buena: mover una tarjeta si el peor día mejora al menos 7, sin crear
-  // otro problema.
-  const opcion = mejorEntreTarjetas({
-    comparar: (a, b) => b.medida.peorDia - a.medida.peorDia || a.medida.mesesMismoCobro - b.medida.mesesMismoCobro,
-    sirve: c =>
-      c.medida.peorDia >= actual.peorDia + MEJORA_MINIMA_DIAS &&
-      c.medida.conProblemaDeCobro <= actual.conProblemaDeCobro &&
-      c.medida.mesesMismoCobro <= actual.mesesMismoCobro,
-  });
-  if (opcion) aceptar('diasSinTarjetaBuena', opcion.t, opcion.p);
-
-  return conOtras();
+  return consejos.map(c => ({ ...c, otrasPendientes }));
 }

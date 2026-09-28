@@ -91,15 +91,15 @@ test('el detalle explica el corte con el día de la tarjeta, la fecha límite y 
   expect(screen.getByText(/^Si pagas el total del estado de cuenta/)).toBeOnTheScreen();
 });
 
-// Decisión D65: dos tarjetas que cortan casi el mismo día.
+// Decisión D73: dos tarjetas que cortan casi el mismo día.
 const juntas = () => [tarjeta('P'), tarjeta('Q', { diaCorte: 6, creadaEn: '2026-09-20' })];
 
 test('Tarjetas muestra el consejo de fechas y lleva a sus pasos', async () => {
   await render(envolver(await almacenCon(juntas()), <Tarjetas />));
   expect(screen.getByText('Consejos para tus fechas')).toBeOnTheScreen();
-  expect(screen.getByText('Tus tarjetas cortan muy cerca')).toBeOnTheScreen();
-  expect(screen.getByText(/^Pide que el corte de Tarjeta Q sea (entre el \d+ y el \d+|el día \d+)$/)).toBeOnTheScreen();
-  await act(async () => fireEvent.press(screen.getByText('Tus tarjetas cortan muy cerca')));
+  expect(screen.getByText('Tus tarjetas cortan casi al mismo tiempo')).toBeOnTheScreen();
+  expect(screen.getByText('Pide separar el corte de tu Tarjeta Q de las demás')).toBeOnTheScreen();
+  await act(async () => fireEvent.press(screen.getByText('Tus tarjetas cortan casi al mismo tiempo')));
   expect(mockRouter.push).toHaveBeenCalledWith('/consejos/fechas');
 });
 
@@ -108,11 +108,12 @@ test('sin problemas de fechas no hay sección de consejos', async () => {
   expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
 });
 
-test('la pantalla de consejos explica qué pasa, qué pedir, qué hacer si el banco no puede y lleva a editar las fechas', async () => {
+test('la pantalla de consejos explica qué pasa, qué pedir sin fechas exactas, qué hacer si el banco no puede y lleva a editar las fechas', async () => {
   await render(envolver(await almacenCon(juntas()), <ConsejosFechas />));
   expect(screen.getByText(/^Tus tarjetas cortan los días 5 y 6\. Por eso hay días del mes en que ninguna te da más de \d+ días para pagar\.$/)).toBeOnTheScreen();
-  expect(screen.getByText(/^Pide que el corte de Tarjeta Q sea .*: siempre tendrías una tarjeta con al menos \d+ días para pagar\.$/)).toBeOnTheScreen();
-  expect(screen.getByText('Si tu banco no puede, no pasa nada: Tino te sigue diciendo cada día cuál usar.')).toBeOnTheScreen();
+  expect(screen.getByText(/^Pide que la fecha de corte de tu Tarjeta Q quede unas dos semanas lejos de las de tus otras tarjetas\./)).toBeOnTheScreen();
+  expect(screen.getByText('Si tu banco no puede')).toBeOnTheScreen();
+  expect(screen.getByText('No pasa nada: Tino te sigue diciendo cada día cuál usar.')).toBeOnTheScreen();
   expect(screen.getByText(/^Llama al número que está detrás de tu Tarjeta Q/)).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByText('Actualizar fechas de Tarjeta Q')));
   expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'Q', seccion: 'fechas' } });
@@ -126,7 +127,7 @@ test('el consejo nuevo lleva "Nuevo", queda visto al abrir Tarjetas y sigue ahí
   expect(almacen.getState().preferencias?.consejosVistos).toHaveLength(1);
   await screen.unmount();
   await render(envolver(almacen, <Tarjetas />));
-  expect(screen.getByText('Tus tarjetas cortan muy cerca')).toBeOnTheScreen();
+  expect(screen.getByText('Tus tarjetas cortan casi al mismo tiempo')).toBeOnTheScreen();
   expect(screen.queryByText('Nuevo')).toBeNull();
 });
 
@@ -139,6 +140,22 @@ test('el consejo desaparece cuando el problema se resuelve: otra fecha de corte 
   expect(screen.getByText('Consejos para tus fechas')).toBeOnTheScreen();
   await act(async () => almacen.getState().alternarPausa('Q'));
   expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
+});
+
+// Decisión D73: "Ya lo sé" oculta el consejo en Tarjetas e Inicio mientras las fechas sigan
+// iguales; Ajustes lo puede volver a mostrar, y vuelve solo si cambian las fechas.
+test('ocultar un consejo con "Ya lo sé" y volver a mostrarlo', async () => {
+  const almacen = await almacenCon(juntas());
+  await render(envolver(almacen, <ConsejosFechas />));
+  await act(async () => fireEvent.press(screen.getByText('Ya lo sé, no mostrar más')));
+  expect(almacen.getState().preferencias?.consejosDescartados).toHaveLength(1);
+  expect(screen.getByText('Tus fechas están bien: no hay nada que cambiar por ahora.')).toBeOnTheScreen();
+  await screen.unmount();
+  await render(envolver(almacen, <Tarjetas />));
+  expect(screen.queryByText('Consejos para tus fechas')).toBeNull();
+  // Otras fechas: es otra situación y vuelve.
+  await act(async () => almacen.getState().guardarTarjeta(tarjeta('Q', { diaCorte: 7, creadaEn: '2026-09-20' })));
+  expect(screen.getByText('Consejos para tus fechas')).toBeOnTheScreen();
 });
 
 test('Inicio sugiere el consejo solo mientras es nuevo', async () => {

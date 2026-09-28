@@ -371,7 +371,10 @@
     "misDatosTitulo": "Ver mis datos",
     "misDatosAviso": "Vas a compartir un texto con todo lo que Tino guarda sobre ti. No va cifrado: compártelo solo donde confíes. Para cambiar de teléfono usa \"Crear respaldo\".",
     "misDatosConfirmar": "Compartir",
-    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo."
+    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo.",
+    "consejosOcultos": "Mostrar consejos ocultos",
+    "consejosOcultosDetalle_one": "Ocultaste 1 consejo de fechas",
+    "consejosOcultosDetalle_other": "Ocultaste {{count}} consejos de fechas"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -580,7 +583,7 @@
     },
     "agregar": "Agregar un cobro",
     "agregarOtro": "Agregar otro cobro",
-    "explicacion": "Con tus fechas de cobro te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
+    "explicacion": "Registra los cobros con los que pagas tus tarjetas. Con sus fechas te avisamos si una tarjeta vence antes de que cobres. Solo guardamos fechas, nunca montos.",
     "vacio": "Todavía no tienes días de cobro registrados.",
     "proximo": "próximo: {{fecha}}"
   },
@@ -611,47 +614,46 @@
   },
   "consejos": {
     "titulo": "Mejora tus fechas",
-    "intro": "Tino no puede cambiar tus fechas: lo decide tu banco. Pero muchos bancos te cambian el día de corte si lo pides, y con eso puedes evitar moras y tener más días para pagar.",
+    "intro": "Tino no puede cambiar tus fechas: las decide tu banco. Pero muchos bancos las cambian si lo pides, y con eso puedes evitar pagar tarde o tener más días para pagar.",
     "seccion": "Consejos para tus fechas",
     "nuevo": "Nuevo",
-    "rango": "entre el {{desde}} y el {{hasta}}",
-    "dia": "el día {{dia}}",
-    "resumen": "Pide que el corte de {{alias}} sea {{rango}}",
     "listaY": "{{inicio}} y {{ultimo}}",
-    "pagoAntesDelCobro": {
-      "titulo": "Tu {{alias}} vence antes de tu cobro",
-      "problema": "En {{antes}} de los próximos {{revisados}} meses, el pago vence antes de que cobres. Tienes que apartar el dinero con tiempo o te arriesgas a pagar tarde.",
-      "problemaDolares": "En {{antes}} de los próximos {{revisados}} meses, el pago en dólares vence antes de que cobres. Tienes que apartar el dinero con tiempo o te arriesgas a pagar tarde.",
+    "pagoLejosDelCobro": {
+      "titulo": "Tu {{alias}} se paga justo antes de tu cobro",
+      "problema": "Pagas tu {{alias}} alrededor del día {{pago}} y cobras el {{cobro}}. Así, el dinero de tu cobro anterior tiene que durarte unos {{dias}} días, y si se va en otros gastos, terminas pagando tarde.",
+      "problemaDolares": "El balance en dólares de tu {{alias}} se paga alrededor del día {{pago}} y cobras el {{cobro}}. Así, el dinero de tu cobro anterior tiene que durarte unos {{dias}} días, y si se va en otros gastos, terminas pagando tarde.",
+      "problemaSinDia": "El pago de tu {{alias}} cae lejos de tu último cobro: el dinero tiene que durarte unos {{dias}} días, y si se va en otros gastos, terminas pagando tarde.",
       "margenEstimado": "Como tus cobros son estimados, Tino cuenta 3 días de margen.",
-      "solucion": "Pide que el corte sea {{rango}}. Así pagarías después de cobrar: por ejemplo, cobras el {{cobro}} y pagas el {{pago}}.",
-      "solucionSinCobro": "Pide que el corte sea {{rango}}. Así pagarías después de cobrar.",
-      "siNoPuede": "Si tu banco no puede, aparta el dinero del pago en cuanto cobres el mes anterior."
+      "solucion": "Pide que tu fecha de pago caiga pocos días después de tu cobro del {{cobro}}. Muchos bancos lo hacen cambiando la fecha de corte.",
+      "solucionSinDia": "Pide que tu fecha de pago caiga pocos días después de uno de tus cobros. Muchos bancos lo hacen cambiando la fecha de corte.",
+      "separa": "Además, así tus tarjetas dejarían de cortar casi juntas y siempre tendrías una con más días para pagar.",
+      "siNoPuedeTitulo": "Mientras tanto",
+      "siNoPuede": "Paga apenas salga tu estado de cuenta, con el dinero de tu cobro, sin esperar la fecha límite. Así no dependes de que te dure.",
+      "resumen": "Pide que se pague después de tu cobro del {{cobro}}",
+      "resumenSinDia": "Pide que se pague pocos días después de un cobro",
+      "paso2": "Pide que tu fecha de pago caiga unos días después de tu cobro del {{cobro}}. Si solo pueden cambiar la fecha de corte, pide la que deje el pago en esos días.",
+      "paso2SinDia": "Pide que tu fecha de pago caiga unos días después de uno de tus cobros. Si solo pueden cambiar la fecha de corte, pide la que deje el pago en esos días."
     },
-    "mismoCobro": {
-      "titulo": "Todas tus tarjetas se pagan con el mismo cobro",
-      "problema": "Casi todos los meses, tus {{cantidad}} tarjetas se pagan con el mismo cobro y otro queda libre. Por ejemplo, todas con el del {{cargado}} y ninguna con el del {{libre}}.",
-      "solucion": "Pide que el corte de {{alias}} sea {{rango}}: la pagarías con otro cobro, por ejemplo el del {{cobro}}, y el peso queda repartido.",
-      "solucionSinCobro": "Pide que el corte de {{alias}} sea {{rango}}: la pagarías con otro cobro y el peso queda repartido.",
-      "tambienDias": "Además, siempre tendrías una tarjeta con al menos {{diasDespues}} días para pagar.",
-      "siNoPuede": "Si tu banco no puede, aparta una parte de cada cobro para los pagos que vienen."
-    },
-    "diasSinTarjetaBuena": {
-      "titulo": "Tus tarjetas cortan muy cerca",
-      "problema": "Tus tarjetas cortan los días {{cortes}}. Por eso hay días del mes en que ninguna te da más de {{diasAntes}} días para pagar.",
-      "solucion": "Pide que el corte de {{alias}} sea {{rango}}: siempre tendrías una tarjeta con al menos {{diasDespues}} días para pagar.",
-      "solucionSinCobro": "Pide que el corte de {{alias}} sea {{rango}}: siempre tendrías una tarjeta con al menos {{diasDespues}} días para pagar.",
-      "siNoPuede": "Si tu banco no puede, no pasa nada: Tino te sigue diciendo cada día cuál usar."
+    "cortesJuntos": {
+      "titulo": "Tus tarjetas cortan casi al mismo tiempo",
+      "problema": "Tus tarjetas cortan los días {{cortes}}. Por eso hay días del mes en que ninguna te da más de {{peorDia}} días para pagar.",
+      "solucion": "Pide que la fecha de corte de tu {{alias}} quede unas dos semanas lejos de las de tus otras tarjetas. Así siempre tendrías una con más días para pagar.",
+      "cuidaCobro": "Cuida que su nueva fecha de pago caiga pocos días después de un cobro.",
+      "siNoPuedeTitulo": "Si tu banco no puede",
+      "siNoPuede": "No pasa nada: Tino te sigue diciendo cada día cuál usar.",
+      "resumen": "Pide separar el corte de tu {{alias}} de las demás",
+      "paso2": "Pide que tu fecha de corte quede unas dos semanas lejos de la de tus otras tarjetas."
     },
     "quePedir": "Qué pedir",
-    "siNoPuedeTitulo": "Si tu banco no puede",
-    "otrasConProblema_one": "Otra tarjeta también vence antes de tu cobro. Cuando actualices estas fechas, Tino te dirá qué hacer con ella.",
-    "otrasConProblema_other": "Otras {{count}} tarjetas también vencen antes de tu cobro. Cuando actualices estas fechas, Tino te dirá qué hacer con ellas.",
+    "otrasPendientes_one": "Otra tarjeta también se paga justo antes de tu cobro. Cuando actualices estas fechas, Tino te dirá qué hacer con ella.",
+    "otrasPendientes_other": "Otras {{count}} tarjetas también se pagan justo antes de tu cobro. Cuando actualices estas fechas, Tino te dirá qué hacer con ellas.",
     "pasosTitulo": "Cómo pedirlo",
     "paso1": "Llama al número que está detrás de tu {{alias}}, o escríbele al banco por su app.",
-    "paso2": "Pide que tu fecha de corte sea {{rango}}. Si no tienen ese día, pide el más cercano.",
-    "paso3": "Pregunta si tiene algún costo. El primer estado de cuenta después del cambio puede venir con un ciclo más corto o más largo.",
+    "paso3": "Pregunta si tiene algún costo. Casi siempre es gratis, pero el primer estado de cuenta después del cambio puede venir con un ciclo más corto o más largo.",
     "paso4": "Cuando te lo cambien, actualiza las fechas en Tino.",
     "actualizar": "Actualizar fechas de {{alias}}",
+    "ocultar": "Ya lo sé, no mostrar más",
+    "ocultarDetalle": "No volverá a aparecer mientras tus fechas y cobros sigan iguales.",
     "sinConsejos": "Tus fechas están bien: no hay nada que cambiar por ahora."
   },
   "sugerencias": {
@@ -788,7 +790,9 @@
     "sugerenciaDescartes_one": "Descartaste la sugerencia de {{tipo}} {{count}} vez, la última el {{fecha}}",
     "sugerenciaDescartes_other": "Descartaste la sugerencia de {{tipo}} {{count}} veces, la última el {{fecha}}",
     "identificador": "Tu identificador anónimo: {{id}}. Con él puedes pedir que se borren tus datos de uso.",
-    "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino."
+    "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino.",
+    "consejosDescartados_one": "Ocultaste 1 consejo de fechas",
+    "consejosDescartados_other": "Ocultaste {{count}} consejos de fechas"
   },
   "respaldo": {
     "crearTitulo": "Crear respaldo",

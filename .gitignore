@@ -26,3 +26,6 @@ expo-env.d.ts
 npm-debug.*
 *.tsbuildinfo
 coverage/
+
+# Reporte que genera el simulador de consejos
+herramientas/consejos/reporte.md

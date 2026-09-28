@@ -1,13 +1,13 @@
-import type { ConfigPais, FuenteIngreso, Tarjeta } from '../../tipos/tipos';
+import type { ConfigPais, FuenteIngreso, ModoEnfoque, Tarjeta } from '../../tipos/tipos';
 import pais from '../../paises/do.json';
-import { consejosDeFechas, distanciaCircular, MEJORA_MINIMA_DIAS, type ConsejoFechas } from '../fechas';
+import { cobrosRegulares, consejosDeFechas, distanciaCircular } from '../fechas';
 
-// Decisión D65: un caso por cada escenario del análisis, con 1, 2, 3 y 4 tarjetas.
-// Hoy fijo: el martes 6 de octubre de 2026, como en las pruebas de Inicio.
+// Decisión D73: las reglas, caso por caso. Los 172 escenarios de la vida real están en
+// escenarios.test.ts. Hoy fijo: el martes 6 de octubre de 2026, como en las pruebas de Inicio.
 const hoy = '2026-10-06';
 const config = pais as ConfigPais;
 
-function tarjeta(id: string, diaCorte: number, dia: number, extra: Partial<Tarjeta> = {}): Tarjeta {
+function tarjeta(id: string, diaCorte: number, dias: number, extra: Partial<Tarjeta> = {}): Tarjeta {
   return {
     id,
     alias: `Tarjeta ${id}`,
@@ -15,7 +15,7 @@ function tarjeta(id: string, diaCorte: number, dia: number, extra: Partial<Tarje
     productoId: null,
     productoDesconocido: false,
     diaCorte,
-    fechaLimite: { tipo: 'dia_del_mes', dia },
+    fechaLimite: { tipo: 'dias_despues_corte', dias },
     ajusteDiaNoHabil: 'ninguno',
     compraEnDiaDeCorte: 'entra_en_siguiente',
     monedaFacturacion: 'solo_principal',
@@ -26,18 +26,19 @@ function tarjeta(id: string, diaCorte: number, dia: number, extra: Partial<Tarje
   };
 }
 
-const quincenal: FuenteIngreso = { id: 'q', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos', dias: [15, 30] }, ajusteDiaNoHabil: 'adelantar' };
-const mensual: FuenteIngreso = { id: 'm', nombre: 'Sueldo', frecuencia: { tipo: 'mensual', dia: 30 }, ajusteDiaNoHabil: 'adelantar' };
-const semanal: FuenteIngreso = { id: 's', nombre: 'Semanal', frecuencia: { tipo: 'semanal', diaSemana: 5 }, ajusteDiaNoHabil: 'adelantar' };
+const fuente = (id: string, frecuencia: FuenteIngreso['frecuencia']): FuenteIngreso => ({ id, nombre: id, frecuencia, ajusteDiaNoHabil: 'ninguno' });
+const mensual = (dia: number) => fuente(`m${dia}`, { tipo: 'mensual', dia });
+const quincenal = fuente('q', { tipo: 'quincenal_dias_fijos', dias: [15, 30] });
+const uber = fuente('uber', { tipo: 'semanal', diaSemana: 2 });
+// Cobros estimados cada mes el día dado, o con días que varían.
+const estimados = (dias: number[]) =>
+  fuente('p', {
+    tipo: 'personalizada',
+    fechas: dias.map((dia, i) => ({ fecha: new Date(Date.UTC(2026, 9 + i, dia)).toISOString().slice(0, 10), estimada: true })),
+  });
 
-// Cobros estimados el mismo día de cada mes (freelance).
-function estimados(dia: number, meses = 14): FuenteIngreso {
-  const fechas = Array.from({ length: meses }, (_, i) => ({ fecha: new Date(Date.UTC(2026, 9 + i, dia)).toISOString().slice(0, 10), estimada: true }));
-  return { id: 'p', nombre: 'Clientes', frecuencia: { tipo: 'personalizada', fechas }, ajusteDiaNoHabil: 'ninguno' };
-}
-
-const consejos = (tarjetas: Tarjeta[], ingresos: FuenteIngreso[] = []) => consejosDeFechas({ hoy, tarjetas, ingresos, pais: config });
-const rangoValido = (c: ConsejoFechas) => c.corteDesde <= c.corteSugerido && c.corteSugerido <= c.corteHasta && c.corteHasta - c.corteDesde <= 4;
+const consejos = (tarjetas: Tarjeta[], ingresos: FuenteIngreso[] = [], enfoque: ModoEnfoque = 'equilibrado') =>
+  consejosDeFechas({ hoy, tarjetas, ingresos, pais: config, enfoque });
 
 test('la distancia entre días del mes da la vuelta', () => {
   expect(distanciaCircular(5, 6)).toBe(1);
@@ -45,110 +46,116 @@ test('la distancia entre días del mes da la vuelta', () => {
   expect(distanciaCircular(5, 20)).toBe(15);
 });
 
-describe('una tarjeta', () => {
-  test('vence antes del cobro mensual: propone un corte que pague después, con ejemplo', () => {
-    const [consejo, ...resto] = consejos([tarjeta('A', 5, 25)], [mensual]);
+describe('pago lejos del cobro', () => {
+  test('el caso del usuario: cobra el 22 y paga el ~19; cuenta el cobro anterior al corte', () => {
+    const [c, ...resto] = consejos([tarjeta('SC', 23, 27)], [mensual(22)]);
     expect(resto).toEqual([]);
-    expect(consejo).toMatchObject({ tipo: 'pagoAntesDelCobro', tarjetaId: 'A', mesesAntes: 12, mesesRevisados: 12, mesesDespues: 0, enDolares: false });
-    expect(rangoValido(consejo)).toBe(true);
-    expect(consejo.cobroEjemplo! < consejo.pagoEjemplo).toBe(true);
+    expect(c).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'SC', diaCobro: 22, diasDesdeCobro: 28, enDolares: false });
+    expect([17, 18, 19, 20, 21, 22]).toContain(c.diaPago);
   });
 
-  test('con cobro quincenal o semanal siempre hay un cobro antes: sin consejo', () => {
-    expect(consejos([tarjeta('A', 5, 25)], [quincenal])).toEqual([]);
-    expect(consejos([tarjeta('A', 5, 25)], [semanal])).toEqual([]);
+  test('cobra el 30 y paga el ~20: el cobro dura unas 3 semanas, sin consejo', () => {
+    expect(consejos([tarjeta('SC', 23, 27)], [mensual(30)])).toEqual([]);
+  });
+
+  test('un cobro el mismo día o el día antes del pago no alcanza (2 días de margen)', () => {
+    // Corta el 8 y paga el 30, el mismo día del cobro: se paga con el del mes anterior.
+    expect(consejos([tarjeta('BR', 8, 22)], [mensual(30)])[0]).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'BR' });
+  });
+
+  test('con cobros semanales, cada 2 semanas o quincenales nunca queda lejos', () => {
+    for (const cobros of [[uber], [quincenal], [fuente('c2s', { tipo: 'cada_dos_semanas', diaSemana: 5, referencia: '2026-09-18' })]]) {
+      expect(consejos([tarjeta('A', 5, 20)], cobros)).toEqual([]);
+    }
   });
 
   test('sin cobros registrados no habla del cobro', () => {
-    expect(consejos([tarjeta('A', 5, 25)])).toEqual([]);
+    expect(consejos([tarjeta('A', 5, 20)])).toEqual([]);
   });
 
-  test('doble balance: revisa la fecha en dólares aunque la de pesos esté bien', () => {
-    const doble = tarjeta('A', 5, 25, { monedaFacturacion: 'doble_balance', fechaLimiteUsd: { tipo: 'dia_del_mes', dia: 14 } });
-    const [consejo] = consejos([doble], [quincenal]);
-    expect(consejo).toMatchObject({ tipo: 'pagoAntesDelCobro', enDolares: true });
-    expect(consejo.cobroEjemplo! < consejo.pagoEjemplo).toBe(true);
+  test('cobros de fechas variables no sirven para alinear el pago', () => {
+    const variable = estimados([8, 12, 3, 15, 10, 18, 9]);
+    expect(cobrosRegulares([variable])).toEqual([]);
+    expect(consejos([tarjeta('A', 15, 25)], [variable])).toEqual([]);
+    // Una remesa que llega casi el mismo día cada mes sí cuenta.
+    const remesa = estimados([5, 6, 4, 7, 5, 5, 6]);
+    expect(cobrosRegulares([remesa])).toEqual([remesa]);
   });
 
-  test('cobros estimados: pide 3 días de margen entre el cobro y el pago', () => {
-    // Cobra alrededor del 20: pagar el 22 no deja margen; el 25 sí.
-    expect(consejos([tarjeta('A', 5, 22)], [estimados(20)])[0]).toMatchObject({ tipo: 'pagoAntesDelCobro', cobroEstimado: true });
-    expect(consejos([tarjeta('A', 5, 25)], [estimados(20)])).toEqual([]);
+  test('cobros estimados: 3 días de margen y el consejo lo sabe', () => {
+    const [c] = consejos([tarjeta('A', 8, 22)], [estimados([5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5])]);
+    expect(c).toMatchObject({ tipo: 'pagoLejosDelCobro', cobroEstimado: true });
   });
 
-  test('con pocas fechas de cobro anotadas no juzga los meses sin datos', () => {
-    const pocas: FuenteIngreso = {
-      ...estimados(20),
-      frecuencia: { tipo: 'personalizada', fechas: [{ fecha: '2026-10-20', estimada: false }, { fecha: '2026-11-20', estimada: false }] },
-    };
-    expect(consejos([tarjeta('A', 5, 10)], [pocas])).toEqual([]);
+  test('doble balance: mira el pago en dólares si vence antes', () => {
+    const doble = tarjeta('D', 10, 20, { monedaFacturacion: 'doble_balance', fechaLimiteUsd: { tipo: 'dias_despues_corte', dias: 15 } });
+    const [c] = consejos([doble], [mensual(30)]);
+    expect(c).toMatchObject({ tipo: 'pagoLejosDelCobro', enDolares: true });
   });
-});
 
-describe('dos tarjetas', () => {
-  test('cortes casi el mismo día: mover la más nueva medio mes, con al menos 7 días más', () => {
-    const [consejo, ...resto] = consejos([tarjeta('A', 5, 25), tarjeta('B', 6, 26, { creadaEn: '2026-09-20' })]);
+  test('evitar la mora pesa más que unos días de gracia, sin amontonar los cortes', () => {
+    // Tarjetas repartidas: pagar A después del cobro cuesta unos días en el peor día del año,
+    // pero sigue en 20 o más, así que se aconseja.
+    const [c, ...resto] = consejos([tarjeta('A', 5, 20), tarjeta('B', 20, 20)], [mensual(30)]);
     expect(resto).toEqual([]);
-    expect(consejo).toMatchObject({ tipo: 'diasSinTarjetaBuena', tarjetaId: 'B', cortesActuales: [5, 6] });
-    expect(distanciaCircular(consejo.corteSugerido, 5)).toBeGreaterThanOrEqual(12);
-    expect(consejo.peorDiaDespues).toBeGreaterThanOrEqual(consejo.peorDiaAntes + MEJORA_MINIMA_DIAS);
-  });
-
-  test('con quincena y los dos pagos en el mismo cobro: repartirlos, en una sola llamada', () => {
-    const lista = consejos([tarjeta('A', 5, 25), tarjeta('B', 8, 28, { creadaEn: '2026-09-20' })], [quincenal]);
-    expect(lista).toHaveLength(1);
-    expect(lista[0]).toMatchObject({ tipo: 'mismoCobro', tarjetaId: 'B', tambienDias: true });
-    expect(lista[0].cobroCargado).toBeDefined();
-    expect(lista[0].cobroLibre! > lista[0].cobroCargado!).toBe(true);
-  });
-
-  test('cortes separados y cada pago con su cobro: sin consejo', () => {
-    expect(consejos([tarjeta('A', 5, 25), tarjeta('B', 20, 10)], [quincenal])).toEqual([]);
-  });
-
-  test('con cobro mensual los pagos siempre salen del mismo sueldo: no hay consejo de mismo cobro', () => {
-    expect(consejos([tarjeta('A', 5, 25), tarjeta('B', 20, 10)], [mensual]).map(c => c.tipo)).not.toContain('mismoCobro');
+    expect(c).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'A', separaCortes: false });
   });
 });
 
-describe('tres o más tarjetas', () => {
-  test('tres cortes iguales: una sola llamada', () => {
-    const lista = consejos([tarjeta('A', 5, 25), tarjeta('B', 5, 25, { creadaEn: '2026-09-02' }), tarjeta('C', 5, 25, { creadaEn: '2026-09-03' })]);
+describe('cortes juntos', () => {
+  test('dos tarjetas que cortan casi el mismo día: conviene separar una', () => {
+    const [c, ...resto] = consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal]);
+    expect(resto).toEqual([]);
+    expect(c).toMatchObject({ tipo: 'cortesJuntos', cortes: [5, 8], conCobros: true });
+    expect(c.peorDia).toBeLessThan(25);
+  });
+
+  test('con enfoque Puntos o Cashback no importa: casi siempre gana la misma tarjeta', () => {
+    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal], 'puntos')).toEqual([]);
+    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal], 'cashback')).toEqual([]);
+    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 8, 20)], [quincenal], 'liquidez')).toHaveLength(1);
+  });
+
+  test('cortes que cruzan el fin de mes también están juntos (28 y 1)', () => {
+    expect(consejos([tarjeta('A', 28, 20), tarjeta('B', 1, 22)])[0]).toMatchObject({ tipo: 'cortesJuntos' });
+  });
+
+  test('cortes repartidos: sin consejo', () => {
+    expect(consejos([tarjeta('A', 5, 20), tarjeta('B', 20, 20)], [quincenal])).toEqual([]);
+    expect(consejos([tarjeta('A', 1, 20), tarjeta('B', 8, 20), tarjeta('C', 15, 20), tarjeta('D', 22, 20)], [quincenal])).toEqual([]);
+  });
+
+  test('una tarjeta sola nunca tiene cortes juntos', () => {
+    expect(consejos([tarjeta('A', 5, 20)])).toEqual([]);
+  });
+});
+
+describe('juntos', () => {
+  test('si mover la del cobro también separa los cortes, es un solo consejo', () => {
+    const lista = consejos([tarjeta('A', 28, 20), tarjeta('B', 1, 22)], [mensual(30)]);
     expect(lista).toHaveLength(1);
-    expect(lista[0]).toMatchObject({ tipo: 'diasSinTarjetaBuena', tarjetaId: 'C' });
+    expect(lista[0]).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'B', separaCortes: true });
   });
 
-  test('cuatro tarjetas amontonadas del 1 al 8: mover una al otro lado del mes', () => {
-    const lista = consejos([tarjeta('A', 1, 21), tarjeta('B', 3, 23), tarjeta('C', 5, 25), tarjeta('D', 8, 28)]);
-    expect(lista).toHaveLength(1);
-    expect(lista[0].tipo).toBe('diasSinTarjetaBuena');
-    expect(lista[0].corteSugerido).toBeGreaterThanOrEqual(14);
-  });
-
-  test('cuatro tarjetas repartidas: fechas cerca, pero sin consejo', () => {
-    expect(consejos([tarjeta('A', 1, 21), tarjeta('B', 8, 28), tarjeta('C', 15, 5), tarjeta('D', 22, 12)], [quincenal])).toEqual([]);
-  });
-
-  test('tres pagos con el mismo cobro de la quincena: mover una para usar el otro cobro', () => {
-    const lista = consejos([tarjeta('A', 1, 21), tarjeta('B', 3, 23), tarjeta('C', 5, 25)], [quincenal]);
-    expect(lista).toHaveLength(1);
-    expect(lista[0].tipo).toBe('mismoCobro');
-  });
-
-  test('cuatro tarjetas antes del cobro: como máximo 2 consejos, en lugares distintos, y avisa de las otras', () => {
-    const cuatro = ['A', 'B', 'C', 'D'].map(id => tarjeta(id, 5, 25));
-    const lista = consejos(cuatro, [mensual]);
-    expect(lista.map(c => c.tipo)).toEqual(['pagoAntesDelCobro', 'pagoAntesDelCobro']);
+  test('como máximo 2 consejos; las demás quedan para después y se cuentan', () => {
+    const lista = consejos([tarjeta('A', 1, 20), tarjeta('B', 3, 20), tarjeta('C', 5, 20), tarjeta('D', 7, 20)], [mensual(30)]);
+    expect(lista).toHaveLength(2);
     expect(new Set(lista.map(c => c.tarjetaId)).size).toBe(2);
-    expect(lista[0].corteSugerido).not.toBe(lista[1].corteSugerido);
-    expect(lista[0].otrasConProblemaDeCobro).toBe(2);
+    // A (paga ~21) y B (~23) también se pagan lejos del cobro del 30: quedan para después.
+    expect(lista.map(c => c.otrasPendientes)).toEqual([2, 2]);
   });
-});
 
-test('una tarjeta con consejo nunca recibe otro, y el consejo de cobro deja 2 de 12 meses o menos', () => {
-  const lista = consejos([tarjeta('A', 5, 25), tarjeta('B', 6, 26, { creadaEn: '2026-09-20' })], [mensual]);
-  const ids = lista.map(c => c.tarjetaId);
-  expect(new Set(ids).size).toBe(ids.length);
-  expect(lista[0].tipo).toBe('pagoAntesDelCobro');
-  for (const c of lista.filter(x => x.tipo === 'pagoAntesDelCobro')) expect(c.mesesDespues * 6).toBeLessThanOrEqual(c.mesesRevisados);
+  test('con 5 tarjetas o más no hay consejos de fechas', () => {
+    const cinco = [1, 3, 5, 7, 9].map((d, i) => tarjeta(String(i), d, 20));
+    expect(consejos(cinco, [mensual(30)])).toEqual([]);
+  });
+
+  test('la huella es estable con el calendario y cambia si cambian las fechas o los cobros', () => {
+    const tarjetas = [tarjeta('SC', 23, 27)];
+    const hoyC = consejos(tarjetas, [mensual(22)])[0].huella;
+    const manana = consejosDeFechas({ hoy: '2026-10-20', tarjetas, ingresos: [mensual(22)], pais: config, enfoque: 'equilibrado' })[0].huella;
+    expect(manana).toBe(hoyC);
+    expect(consejos([tarjeta('SC', 23, 26)], [mensual(22)])[0].huella).not.toBe(hoyC);
+    expect(consejos(tarjetas, [{ ...mensual(22), ajusteDiaNoHabil: 'adelantar' }])[0].huella).not.toBe(hoyC);
+  });
 });

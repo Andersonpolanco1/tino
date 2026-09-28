@@ -4,84 +4,71 @@ import type { Traducir } from '../../inicio/vista';
 import type { ConsejoFechas } from '../fechas';
 import { textosConsejo } from '../textos';
 
+// Decisión D73: el problema con las fechas del usuario y la dirección del cambio, nunca un día
+// de corte exacto.
 const t = iniciarI18n('es-DO').t as unknown as Traducir;
 const tarjetas = [
-  { id: 'A', alias: 'Tarjeta A' },
-  { id: 'B', alias: 'Tarjeta B' },
+  { id: 'SC', alias: 'Visa Santa Cruz' },
+  { id: 'B', alias: 'Mastercard BHD' },
 ] as Tarjeta[];
 const base: ConsejoFechas = {
-  tipo: 'pagoAntesDelCobro',
-  tarjetaId: 'A',
-  corteSugerido: 11,
-  corteDesde: 11,
-  corteHasta: 13,
-  pagoEjemplo: '2026-10-31',
-  cobroEjemplo: '2026-10-30',
+  tipo: 'pagoLejosDelCobro',
+  tarjetaId: 'SC',
+  huella: 'x',
+  diaPago: 19,
+  diaCobro: 22,
+  diasDesdeCobro: 28,
   enDolares: false,
   cobroEstimado: false,
-  mesesRevisados: 12,
-  mesesAntes: 10,
-  mesesDespues: 0,
-  peorDiaAntes: 21,
-  peorDiaDespues: 21,
-  cortesActuales: [5],
-  tambienDias: false,
-  otrasConProblemaDeCobro: 0,
+  separaCortes: false,
+  cortes: [8, 23],
+  peorDia: 36,
+  conCobros: true,
+  otrasPendientes: 0,
 };
-const textos = (c: Partial<ConsejoFechas>) => textosConsejo({ ...base, ...c }, tarjetas, t, 'es-DO');
+const textos = (c: Partial<ConsejoFechas>) => textosConsejo({ ...base, ...c }, tarjetas, t);
 
-test('vence antes del cobro: qué pasa, qué pedir con un ejemplo y qué hacer si el banco no puede', () => {
+test('pago lejos del cobro: el problema con sus fechas, qué pedir sin día exacto y qué hacer mientras tanto', () => {
   const x = textos({});
-  expect(x.titulo).toBe('Tu Tarjeta A vence antes de tu cobro');
-  expect(x.problema).toBe('En 10 de los próximos 12 meses, el pago vence antes de que cobres. Tienes que apartar el dinero con tiempo o te arriesgas a pagar tarde.');
-  expect(x.solucion).toBe('Pide que el corte sea entre el 11 y el 13. Así pagarías después de cobrar: por ejemplo, cobras el 30 de octubre y pagas el 31 de octubre.');
-  expect(x.siNoPuede).toBe('Si tu banco no puede, aparta el dinero del pago en cuanto cobres el mes anterior.');
-  expect(x.resumen).toBe('Pide que el corte de Tarjeta A sea entre el 11 y el 13');
-  expect(x.pasos).toHaveLength(4);
-});
-
-test('vence antes del cobro en dólares y con cobros estimados', () => {
-  const x = textos({ enDolares: true, cobroEstimado: true });
-  expect(x.problema).toMatch(/^En 10 de los próximos 12 meses, el pago en dólares vence antes/);
-  expect(x.problema).toMatch(/Como tus cobros son estimados, Tino cuenta 3 días de margen\.$/);
-});
-
-test('mismo cobro: con los dos cobros de ejemplo y, si aplica, los días que gana', () => {
-  const x = textos({
-    tipo: 'mismoCobro',
-    tarjetaId: 'B',
-    cortesActuales: [5, 8],
-    cobroCargado: '2026-10-15',
-    cobroLibre: '2026-10-30',
-    cobroEjemplo: '2026-10-30',
-    pagoEjemplo: '2026-11-08',
-    tambienDias: true,
-    peorDiaDespues: 35,
-  });
-  expect(x.titulo).toBe('Todas tus tarjetas se pagan con el mismo cobro');
+  expect(x.titulo).toBe('Tu Visa Santa Cruz se paga justo antes de tu cobro');
   expect(x.problema).toBe(
-    'Casi todos los meses, tus 2 tarjetas se pagan con el mismo cobro y otro queda libre. Por ejemplo, todas con el del 15 de octubre y ninguna con el del 30 de octubre.',
+    'Pagas tu Visa Santa Cruz alrededor del día 19 y cobras el 22. Así, el dinero de tu cobro anterior tiene que durarte unos 28 días, y si se va en otros gastos, terminas pagando tarde.',
   );
-  expect(x.solucion).toBe(
-    'Pide que el corte de Tarjeta B sea entre el 11 y el 13: la pagarías con otro cobro, por ejemplo el del 30 de octubre, y el peso queda repartido. Además, siempre tendrías una tarjeta con al menos 35 días para pagar.',
-  );
+  expect(x.solucion).toBe('Pide que tu fecha de pago caiga pocos días después de tu cobro del 22. Muchos bancos lo hacen cambiando la fecha de corte.');
+  expect(x.siNoPuedeTitulo).toBe('Mientras tanto');
+  expect(x.siNoPuede).toMatch(/^Paga apenas salga tu estado de cuenta/);
+  expect(x.resumen).toBe('Pide que se pague después de tu cobro del 22');
+  expect(x.pasos).toHaveLength(4);
+  expect(x.pasos[1]).toMatch(/después de tu cobro del 22/);
+  expect(x.pasos[2]).toMatch(/Casi siempre es gratis/);
 });
 
-test('días sin tarjeta buena: con los cortes de hoy, sin repetir, y "el día" si es uno solo', () => {
-  const x = textos({
-    tipo: 'diasSinTarjetaBuena',
-    tarjetaId: 'B',
-    cortesActuales: [5, 5, 6, 12],
-    corteDesde: 19,
-    corteHasta: 19,
-    corteSugerido: 19,
-    cobroEjemplo: undefined,
-    peorDiaAntes: 22,
-    peorDiaDespues: 35,
-  });
-  expect(x.titulo).toBe('Tus tarjetas cortan muy cerca');
-  expect(x.problema).toBe('Tus tarjetas cortan los días 5, 6 y 12. Por eso hay días del mes en que ninguna te da más de 22 días para pagar.');
-  expect(x.solucion).toBe('Pide que el corte de Tarjeta B sea el día 19: siempre tendrías una tarjeta con al menos 35 días para pagar.');
-  expect(x.siNoPuede).toBe('Si tu banco no puede, no pasa nada: Tino te sigue diciendo cada día cuál usar.');
-  expect(x.pasos[1]).toBe('Pide que tu fecha de corte sea el día 19. Si no tienen ese día, pide el más cercano.');
+test('ningún consejo da un día de corte para pedir', () => {
+  for (const c of [textos({}), textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8], peorDia: 22 })]) {
+    const todo = [c.titulo, c.problema, c.solucion, c.siNoPuede, c.resumen, ...c.pasos].join(' ');
+    expect(todo).not.toMatch(/corte (sea|entre|el día)|entre el \d+ y el \d+/);
+  }
+});
+
+test('en dólares, con cobros estimados y cuando también separa los cortes', () => {
+  expect(textos({ enDolares: true }).problema).toMatch(/^El balance en dólares de tu Visa Santa Cruz se paga alrededor del día 19/);
+  expect(textos({ cobroEstimado: true }).problema).toMatch(/Tino cuenta 3 días de margen\.$/);
+  expect(textos({ separaCortes: true }).solucion).toMatch(/dejarían de cortar casi juntas/);
+});
+
+test('sin el día del cobro siguiente, sin fechas', () => {
+  const x = textos({ diaCobro: 0 });
+  expect(x.problema).toBe('El pago de tu Visa Santa Cruz cae lejos de tu último cobro: el dinero tiene que durarte unos 28 días, y si se va en otros gastos, terminas pagando tarde.');
+  expect(x.resumen).toBe('Pide que se pague pocos días después de un cobro');
+});
+
+test('cortes juntos: con los cortes de hoy y el peor día; recuerda el cobro solo si hay cobros', () => {
+  const x = textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8], peorDia: 22 });
+  expect(x.titulo).toBe('Tus tarjetas cortan casi al mismo tiempo');
+  expect(x.problema).toBe('Tus tarjetas cortan los días 5 y 8. Por eso hay días del mes en que ninguna te da más de 22 días para pagar.');
+  expect(x.solucion).toMatch(/^Pide que la fecha de corte de tu Mastercard BHD quede unas dos semanas lejos/);
+  expect(x.solucion).toMatch(/Cuida que su nueva fecha de pago caiga pocos días después de un cobro\.$/);
+  expect(x.resumen).toBe('Pide separar el corte de tu Mastercard BHD de las demás');
+  expect(textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8, 8], conCobros: false }).solucion).not.toMatch(/Cuida/);
+  expect(textos({ tipo: 'cortesJuntos', cortes: [3, 5, 7] }).problema).toMatch(/los días 3, 5 y 7\./);
 });
