@@ -58,11 +58,17 @@ describe('pago lejos del cobro', () => {
     expect(consejos([tarjeta('SC', 23, 27)], [mensual(30)])).toEqual([]);
   });
 
-  test('un cobro el mismo día o el día antes del pago no alcanza (2 días de margen)', () => {
+  test('un cobro el mismo día del pago no alcanza; el día antes, sí (D78)', () => {
     // Corta el 8 y paga el 30, el mismo día del cobro: se paga con el del mes anterior.
     expect(consejos([tarjeta('BR', 8, 22)], [mensual(30)])[0]).toMatchObject({ tipo: 'pagoLejosDelCobro', tarjetaId: 'BR', cobroJusto: true, diaCobro: 30 });
     // El caso del usuario con la fecha movida: paga el 22, el mismo día que cobra.
-    expect(consejos([tarjeta('SC', 26, 27)], [mensual(22)])[0]).toMatchObject({ tarjetaId: 'SC', cobroJusto: true, diaCobro: 22 });
+    expect(consejos([tarjeta('SC', 26, 27)], [mensual(22)])[0]).toMatchObject({ tarjetaId: 'SC', cobroJusto: true, diaCobro: 22, diaPago: 22 });
+    // El caso que reportó el usuario: paga el ~23 y cobra el 22. Pagar al día siguiente de cobrar
+    // es normal: sin consejo.
+    expect(consejos([tarjeta('SC', 27, 27)], [mensual(22)])).toEqual([]);
+    // Si el pago cae unos días antes del cobro casi siempre, el texto es "antes de cobrar", con
+    // los días de esos meses, aunque algún mes el cobro coincida.
+    expect(consejos([tarjeta('SC', 24, 27)], [mensual(22)])[0]).toMatchObject({ cobroJusto: false, diaCobro: 22 });
   });
 
   test('con cobros semanales, cada 2 semanas o quincenales nunca queda lejos', () => {

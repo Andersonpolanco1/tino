@@ -63,9 +63,10 @@ const CORTES_POSIBLES = Array.from({ length: 28 }, (_, i) => i + 1);
 export const MINIMO_ESTADOS_REVISADOS = 3;
 // Más de 3 semanas desde el último cobro hasta el pago.
 export const DIAS_LEJOS_DEL_COBRO = 21;
-// Un pago desde otro banco tarda 1 o 2 días laborables y las nóminas a veces se atrasan: un
-// cobro cuenta si llega al menos 2 días antes del pago (3 si es estimado).
-export const MARGEN_COBRO = 2;
+// Un cobro cuenta si llega al menos el día antes del pago: pagar al día siguiente de cobrar es
+// normal. Uno que llega el mismo día del pago no cuenta (si se atrasa, el pago llega tarde). Con
+// fechas estimadas, 3 días de margen porque la fecha es incierta (D78).
+export const MARGEN_COBRO = 1;
 export const MARGEN_COBRO_ESTIMADO = 3;
 // Un cobro de fechas variables que se mueve más de esto de un mes a otro no sirve para alinear.
 export const VARIACION_MAXIMA_COBRO = 5;
@@ -275,7 +276,12 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
     const sim = sims[tarjeta.id];
     const revisados = sim.estados.filter(x => x.desdeCobro !== null);
     const lejanos = revisados.filter(x => x.desdeCobro! > DIAS_LEJOS_DEL_COBRO);
+    // "Mismo día" solo si en la mayoría de los meses el cobro cae el día del pago; los días que
+    // se muestran salen de esos mismos meses, para que el texto no mezcle situaciones (D78).
     const justos = lejanos.filter(x => x.justo !== null);
+    const cobroJusto = justos.length * 2 > lejanos.length;
+    const antesDelCobro = lejanos.filter(x => x.justo === null && x.siguiente !== null);
+    const muestra = cobroJusto ? justos : antesDelCobro.length ? antesDelCobro : lejanos;
     const separa = !separadas && mejor.peor >= peorHoy + MEJORA_MINIMA_DIAS;
     if (separa) separadas = true;
     consejos.push({
@@ -283,9 +289,9 @@ export function consejosDeFechas(e: EntradaConsejos): ConsejoFechas[] {
       tipo: 'pagoLejosDelCobro',
       tarjetaId: tarjeta.id,
       huella: huellaDe([fechasDe(original), huellaCobros]),
-      diaPago: moda(lejanos.map(x => diaDelMes(x.pago))),
-      diaCobro: justos.length * 2 > lejanos.length ? moda(justos.map(x => diaDelMes(x.justo!))) : moda(lejanos.filter(x => x.siguiente !== null).map(x => diaDelMes(x.siguiente!))),
-      cobroJusto: justos.length * 2 > lejanos.length,
+      diaPago: moda(muestra.map(x => diaDelMes(x.pago))),
+      diaCobro: cobroJusto ? moda(justos.map(x => diaDelMes(x.justo!))) : moda(muestra.filter(x => x.siguiente !== null).map(x => diaDelMes(x.siguiente!))),
+      cobroJusto,
       diasDesdeCobro: Math.round(promedio(sim)),
       enDolares: lejanos.filter(x => x.enDolares).length * 2 > lejanos.length,
       separaCortes: separa,

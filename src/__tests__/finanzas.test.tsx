@@ -100,7 +100,7 @@ test('Tarjetas muestra el bombillo con punto y lleva a los consejos, sin listarl
   await render(envolver(await almacenCon(juntas()), <Tarjetas />));
   expect(screen.getByLabelText('Consejos para tus fechas, 1 nuevo')).toBeOnTheScreen();
   expect(screen.getByTestId('consejos-aviso')).toBeOnTheScreen();
-  expect(screen.queryByText('Tus tarjetas cortan casi el mismo día')).toBeNull();
+  expect(screen.queryByText('Tus tarjetas cortan muy cerca')).toBeNull();
   await act(async () => fireEvent.press(screen.getByTestId('consejos')));
   expect(mockRouter.push).toHaveBeenCalledWith('/consejos/fechas');
 });
@@ -112,7 +112,7 @@ test('sin problemas de fechas no hay bombillo', async () => {
 
 test('la pantalla de consejos dice qué pasa y qué hacer, breve, y lleva a editar las fechas', async () => {
   await render(envolver(await almacenCon(juntas()), <ConsejosFechas />));
-  expect(screen.getByText('Tus tarjetas cortan casi el mismo día')).toBeOnTheScreen();
+  expect(screen.getByText('Tus tarjetas cortan muy cerca')).toBeOnTheScreen();
   expect(screen.getByText(/^Cortan los días 5 y 6, así que hay días del mes en que ninguna te da más de \d+ días para pagar\.$/)).toBeOnTheScreen();
   expect(screen.getByText('Qué hacer')).toBeOnTheScreen();
   expect(screen.getByText('Llama al banco de tu Tarjeta Q y pide mover su fecha de corte unas dos semanas.')).toBeOnTheScreen();

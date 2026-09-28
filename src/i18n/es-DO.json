@@ -621,7 +621,7 @@
     "nota": "El cambio casi siempre es gratis. El primer estado de cuenta después del cambio puede venir más corto o más largo.",
     "pagoLejosDelCobro": {
       "titulo": "Pagas tu {{alias}} antes de cobrar",
-      "tituloJusto": "Tu {{alias}} vence el mismo día que cobras",
+      "tituloJusto": "Tu {{alias}} vence justo cuando cobras",
       "problema": "Vence alrededor del {{pago}} y cobras el {{cobro}}: tienes que guardar el dinero {{dias}} días para pagarla.",
       "problemaDolares": "El balance en dólares vence alrededor del {{pago}} y cobras el {{cobro}}: tienes que guardar el dinero {{dias}} días para pagarlo.",
       "problemaSinDia": "Vence lejos de tu último cobro: tienes que guardar el dinero {{dias}} días para pagarla.",
@@ -634,8 +634,9 @@
       "mientrasJusto": "Paga apenas te llegue el cobro, sin dejarlo para el último momento."
     },
     "cortesJuntos": {
-      "titulo": "Tus tarjetas cortan casi el mismo día",
+      "titulo": "Tus tarjetas cortan muy cerca",
       "problema": "Cortan los días {{cortes}}, así que hay días del mes en que ninguna te da más de {{peorDia}} días para pagar.",
+      "problemaMismoDia": "Cortan el mismo día, el {{dia}}, así que hay días del mes en que ninguna te da más de {{peorDia}} días para pagar.",
       "solucion": "Llama al banco de tu {{alias}} y pide mover su fecha de corte unas dos semanas.",
       "cuidaCobro": "Que el pago quede unos días después de un cobro."
     },

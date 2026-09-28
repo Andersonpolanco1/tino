@@ -29,7 +29,7 @@ export function textosConsejo(consejo: ConsejoFechas, tarjetas: Tarjeta[], t: Tr
     const solucion = t('consejos.cortesJuntos.solucion', datos);
     return {
       titulo: t('consejos.cortesJuntos.titulo'),
-      problema: t('consejos.cortesJuntos.problema', datos),
+      problema: t(new Set(consejo.cortes).size === 1 ? 'consejos.cortesJuntos.problemaMismoDia' : 'consejos.cortesJuntos.problema', { ...datos, dia: consejo.cortes[0] }),
       solucion: consejo.conCobros ? `${solucion} ${t('consejos.cortesJuntos.cuidaCobro')}` : solucion,
       mientras: null,
     };

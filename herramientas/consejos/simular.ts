@@ -20,7 +20,7 @@ const MEJORA_MINIMA = 7; // separar cortes solo si el peor día sube al menos es
 const MAXIMO_CONSEJOS = 2;
 // Un pago desde otro banco tarda 1 o 2 días laborables y las nóminas a veces se atrasan: un cobro
 // cuenta si llega al menos 2 días antes del pago (3 si es estimado).
-const MARGEN_COBRO = 2;
+const MARGEN_COBRO = 1;
 const MARGEN_ESTIMADO = 3;
 // Arreglar el cobro puede costar días de gracia mientras el peor día del año no baje de este piso.
 const PISO_PEOR_DIA = 20;
