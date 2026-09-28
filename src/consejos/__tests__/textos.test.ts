@@ -76,7 +76,7 @@ test('cortes juntos: con los cortes de hoy y el peor día; recuerda el cobro sol
   expect(x).toEqual({
     titulo: 'Tus tarjetas cortan muy cerca',
     problema: 'Cortan los días 5 y 8, así que hay días del mes en que ninguna te da más de 22 días para pagar.',
-    solucion: 'Llama al banco de tu Mastercard BHD y pide mover su fecha de corte unas dos semanas. Que el pago quede unos días después de un cobro.',
+    solucion: 'Llama al banco de una de tus tarjetas, la que te sea más fácil, y pide mover su fecha de corte unas dos semanas. Que el pago quede unos días después de un cobro.',
     mientras: null,
   });
   expect(textos({ tipo: 'cortesJuntos', tarjetaId: 'B', cortes: [5, 8, 8], conCobros: false }).solucion).not.toMatch(/cobro/);

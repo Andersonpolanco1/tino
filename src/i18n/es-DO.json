@@ -637,13 +637,14 @@
       "titulo": "Tus tarjetas cortan muy cerca",
       "problema": "Cortan los días {{cortes}}, así que hay días del mes en que ninguna te da más de {{peorDia}} días para pagar.",
       "problemaMismoDia": "Cortan el mismo día, el {{dia}}, así que hay días del mes en que ninguna te da más de {{peorDia}} días para pagar.",
-      "solucion": "Llama al banco de tu {{alias}} y pide mover su fecha de corte unas dos semanas.",
+      "solucion": "Llama al banco de una de tus tarjetas, la que te sea más fácil, y pide mover su fecha de corte unas dos semanas.",
       "cuidaCobro": "Que el pago quede unos días después de un cobro."
     },
     "otrasPendientes_one": "Otra tarjeta también vence antes de tu cobro. Tino te dirá qué hacer cuando actualices estas fechas.",
     "otrasPendientes_other": "Otras {{count}} tarjetas también vencen antes de tu cobro. Tino te dirá qué hacer cuando actualices estas fechas.",
     "actualizar": "Actualizar fechas de {{alias}}",
-    "sinConsejos": "Tus fechas están bien: no hay nada que cambiar por ahora."
+    "sinConsejos": "Tus fechas están bien: no hay nada que cambiar por ahora.",
+    "verTarjetas": "Ver mis tarjetas"
   },
   "sugerencias": {
     "cobros": "Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.",

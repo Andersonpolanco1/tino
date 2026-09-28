@@ -52,11 +52,16 @@ export default function ConsejosFechas() {
             <Texto variante="apoyo" color="textoSecundario">
               {t('consejos.nota')}
             </Texto>
-            <Boton
-              titulo={t('consejos.actualizar', { alias })}
-              icono="editar"
-              onPress={() => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: consejo.tarjetaId, seccion: 'fechas' } })}
-            />
+            {/* Cortes juntos no nombra tarjeta (D80): se vuelve a la lista para actualizar la que se cambie. */}
+            {consejo.tipo === 'cortesJuntos' ? (
+              <Boton titulo={t('consejos.verTarjetas')} icono="tarjetas" onPress={volver} />
+            ) : (
+              <Boton
+                titulo={t('consejos.actualizar', { alias })}
+                icono="editar"
+                onPress={() => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: consejo.tarjetaId, seccion: 'fechas' } })}
+              />
+            )}
           </Superficie>
         );
       })}

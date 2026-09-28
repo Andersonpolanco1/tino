@@ -115,10 +115,12 @@ test('la pantalla de consejos dice qué pasa y qué hacer, breve, y lleva a edit
   expect(screen.getByText('Tus tarjetas cortan muy cerca')).toBeOnTheScreen();
   expect(screen.getByText(/^Cortan los días 5 y 6, así que hay días del mes en que ninguna te da más de \d+ días para pagar\.$/)).toBeOnTheScreen();
   expect(screen.getByText('Qué hacer')).toBeOnTheScreen();
-  expect(screen.getByText('Llama al banco de tu Tarjeta Q y pide mover su fecha de corte unas dos semanas.')).toBeOnTheScreen();
+  expect(screen.getByText('Llama al banco de una de tus tarjetas, la que te sea más fácil, y pide mover su fecha de corte unas dos semanas.')).toBeOnTheScreen();
   expect(screen.queryByText('Mientras tanto')).toBeNull();
-  await act(async () => fireEvent.press(screen.getByText('Actualizar fechas de Tarjeta Q')));
-  expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/editar/[id]', params: { id: 'Q', seccion: 'fechas' } });
+  // No elige tarjeta (D80): lleva de vuelta a la lista para actualizar la que se cambie.
+  expect(screen.queryByText(/^Actualizar fechas de/)).toBeNull();
+  await act(async () => fireEvent.press(screen.getByText('Ver mis tarjetas')));
+  expect(mockRouter.back).toHaveBeenCalled();
 });
 
 test('abrir los consejos los marca vistos: el bombillo sigue, pero sin punto', async () => {
