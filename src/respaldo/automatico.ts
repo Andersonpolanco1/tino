@@ -30,6 +30,7 @@ export interface Almacenamiento {
 // Carpeta de documentos de la app: en Android se incluye en sus reglas de respaldo
 // (plugins/respaldo-android.js); en iPhone, iCloud respalda los documentos.
 function almacenamientoDelTelefono(): Almacenamiento {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports -- carga diferida, solo en el teléfono
   const { File, Paths } = require('expo-file-system') as typeof import('expo-file-system');
   const archivo = (nombre: string) => new File(Paths.document, nombre);
   return {

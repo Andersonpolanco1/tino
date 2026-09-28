@@ -16,7 +16,9 @@ function useGuardarPlan() {
   const preferencias = useAlmacen(s => s.preferencias);
   const guardar = useAlmacen(s => s.guardarPreferencias);
   const actual = useRef(preferencias);
-  actual.current = preferencias;
+  useEffect(() => {
+    actual.current = preferencias;
+  }, [preferencias]);
   return useCallback(
     (estado: EstadoPro) => {
       const p = actual.current;

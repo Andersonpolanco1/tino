@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { Pressable, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -37,7 +37,9 @@ export default function Inicio() {
 
   // Un evento cada vez que se abre Inicio, con el enfoque y las tarjetas de ese momento.
   const actual = useRef({ modo, cuantas });
-  actual.current = { modo, cuantas };
+  useEffect(() => {
+    actual.current = { modo, cuantas };
+  }, [modo, cuantas]);
   useFocusEffect(
     useCallback(() => {
       const { modo: enfoque, cuantas: tarjetas } = actual.current;

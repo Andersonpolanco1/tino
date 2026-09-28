@@ -196,7 +196,7 @@ Criterios de la especificación:
 - [ ] Limitar la disponibilidad de Tino a República Dominicana en App Store Connect y Google Play Console mientras `elegirPais` esté apagado (D84)
 - [ ] Actualizar en claude.ai la especificación (sección 18) y la documentación técnica (sección 9): lanzamiento solo en RD sin elegir país (D84), y reexportarlas a `docs/`
 - [ ] (v2) Copia automática en el espacio de Tino en iCloud Drive (iPhone) y Google Drive (Android), que suba en minutos y también con datos móviles (D85)
-- [ ] Configurar lint (`npx expo lint`)
+- [x] Configurar lint (`npm run lint`, con `eslint-config-expo` en `eslint.config.js`); sin errores ni avisos
 - [x] Pruebas inestables de pantallas: con la caché fría la primera prueba de cada archivo pasaba de 5 segundos cargando módulos, y con el cifrado en paralelo las esperas de 1 segundo no alcanzaban. Ahora 20 segundos por prueba y 5 de espera (`jest.setup.ts`)
 - [ ] Confirmar la regla de fecha límite en día no laborable (¿se paga el siguiente día hábil sin cargo?). No aparece en el reglamento de la Superintendencia ni en los contratos de Promerica y Banesco; si se confirma, el valor por defecto pasa a "atrasar" y la pregunta se puede quitar
 - [ ] Actualizar en claude.ai la especificación (12.2) y la documentación técnica (sección 6): sin bloqueo propio ni cobertura en segundo plano (decisión D25)

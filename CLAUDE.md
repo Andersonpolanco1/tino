@@ -48,6 +48,7 @@ Los enlaces a claude.ai dentro de los documentos no son accesibles desde aquí; 
 - Si la app se queda en "Refreshing..." (el firewall de Windows bloquea la IP de la PC): `adb reverse tcp:8081 tcp:8081` y abrir con `adb shell am start -a android.intent.action.VIEW -d "exp+tino://expo-development-client/?url=http%3A%2F%2Flocalhost%3A8081" com.polanco.tino`. El túnel se pierde al reiniciar el emulador. Si la app sigue mostrando código viejo, Metro no vio los cambios: detenlo y arráncalo con `npx expo start --dev-client --clear`.
 - Pruebas: `npm test`
 - Tipos: `npm run typecheck`
+- Lint: `npm run lint`
 - Diagnóstico de dependencias: `npx expo-doctor`
 - Regenerar casos del motor: `cd herramientas/motor-referencia && python3 generar_casos.py && python3 generar_aleatorios.py` (en Windows, `python`)
 

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Alert, View } from 'react-native';
+import { Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
 import { randomUUID } from 'expo-crypto';
 import type { Tarjeta } from '../tipos/tipos';
@@ -108,7 +108,10 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
       if (!editando) registrarTarjetaRegistrada(r.tarjeta);
       setB(borrador);
       setGuardada(borrador);
-      if (editando) seccionInicial ? onCerrar() : ir('secciones');
+      if (editando) {
+        if (seccionInicial) onCerrar();
+        else ir('secciones');
+      }
       onListo(r.tarjeta, tieneDolares(r.tarjeta) && pagoBalanceUsd === null);
     } catch {
       Alert.alert(t('registro.errorGuardar'));

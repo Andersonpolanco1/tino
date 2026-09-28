@@ -20,7 +20,9 @@ export default function ConsejosFechas() {
   const { consejos, marcar } = useConsejosNuevos();
   // Decisión D68: al abrir la pantalla, los consejos quedan vistos y se apaga el punto del bombillo.
   const marcarAlAbrir = useRef(marcar);
-  marcarAlAbrir.current = marcar;
+  useEffect(() => {
+    marcarAlAbrir.current = marcar;
+  }, [marcar]);
   useEffect(() => marcarAlAbrir.current(), []);
 
   return (

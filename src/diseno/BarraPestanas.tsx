@@ -30,6 +30,7 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDe
   const margenes = useSafeAreaInsets();
   // El desenfoque se monta después del contenido, cuando su BlurTargetView ya existe.
   const [montada, setMontada] = useState(false);
+  // eslint-disable-next-line react-hooks/set-state-in-effect -- el segundo render es lo que se busca
   useEffect(() => setMontada(true), []);
   return (
     <View

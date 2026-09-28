@@ -102,6 +102,8 @@ function CuandoCargue({ children }: { children: ReactNode }) {
   const elegirPais = useElegirPais();
   // Solo la primera vez se espera a que coincidan; después no se desmonta la navegación.
   const [sincronizado, setSincronizado] = useState(false);
+  const coinciden = cargado && !!paisGuardado && paisPermitido(paisGuardado) && paisGuardado === config.codigo;
+  if (coinciden && !sincronizado) setSincronizado(true);
 
   useEffect(() => {
     if (!cargado) return;
@@ -110,7 +112,6 @@ function CuandoCargue({ children }: { children: ReactNode }) {
     // un solo país) pasa al predeterminado; las tarjetas se conservan.
     else if (!paisPermitido(paisGuardado)) elegirPais(PAIS_PREDETERMINADO);
     else if (paisGuardado !== config.codigo) cambiarPais(paisGuardado);
-    else setSincronizado(true);
   }, [cargado, paisGuardado, asegurarPreferencias, cambiarPais, elegirPais, config.codigo, idioma]);
 
   if (!sincronizado) return null;
