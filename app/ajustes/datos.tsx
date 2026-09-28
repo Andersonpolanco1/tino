@@ -81,7 +81,10 @@ export default function Datos() {
     if (!preferencias) return;
     if (valor) {
       guardarPreferencias({ ...preferencias, respaldoAutomatico: true }).catch(() => {});
-      Alert.alert(t('ajustes.respaldoActivadoTitulo'), t(Platform.OS === 'ios' ? 'ajustes.respaldoActivadoIos' : 'ajustes.respaldoActivadoAndroid'), [{ text: t('ajustes.entendido') }]);
+      Alert.alert(t('ajustes.respaldoActivadoTitulo'), t(Platform.OS === 'ios' ? 'ajustes.respaldoActivadoIos' : 'ajustes.respaldoActivadoAndroid'), [
+        { text: t('ajustes.respaldoVerComo'), onPress: () => router.push('/ajustes/respaldo') },
+        { text: t('ajustes.entendido') },
+      ]);
       return;
     }
     Alert.alert(t('ajustes.respaldoApagarTitulo'), t('ajustes.respaldoApagarTexto'), [
@@ -118,6 +121,8 @@ export default function Datos() {
             onPress={() => router.push({ pathname: '/pro', params: { motivo: 'funcion_avanzada' } })}
           />
         )}
+        {/* D85: cuándo sube la copia el respaldo del teléfono y cómo hacerlo sin Wi-Fi. */}
+        <FilaLista icono="reloj" titulo={t('ajustes.respaldoComo')} flecha onPress={() => router.push('/ajustes/respaldo')} />
         <FilaLista icono="descargar" titulo={t('ajustes.crearRespaldo')} detalle={t('ajustes.crearRespaldoDetalle')} flecha onPress={() => router.push('/respaldo/crear')} />
         <FilaLista icono="reiniciar" titulo={t('ajustes.restaurarRespaldo')} flecha onPress={() => router.push('/respaldo/restaurar')} />
         <FilaLista icono="info" titulo={t('ajustes.misDatos')} flecha onPress={verMisDatos} />

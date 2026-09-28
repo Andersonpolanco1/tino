@@ -213,7 +213,7 @@
     "beneficioTarjetas": "Tarjetas ilimitadas",
     "beneficioTarjetasDetalle": "Tino las compara todas cada día y te dice cuál usar",
     "beneficioRespaldo": "Respaldo automático",
-    "beneficioRespaldoDetalle": "Si cambias de teléfono, tus datos vuelven solos",
+    "beneficioRespaldoDetalle": "Una copia de tus datos viaja con el respaldo de tu teléfono",
     "beneficioDatos": "Tus datos se quedan en tu teléfono",
     "beneficioDatosDetalle": "Si un día cancelas, no se borra nada",
     "mensaje": "Tino Pro cuesta menos que un solo cargo por mora.",
@@ -384,14 +384,16 @@
     "misDatosConfirmar": "Compartir",
     "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo.",
     "respaldoAutomatico": "Respaldo automático",
-    "respaldoAutomaticoDetalle": "Tus datos vuelven solos si cambias de teléfono.",
-    "respaldoSoloPro": "Con Tino Pro, tus datos vuelven solos si cambias de teléfono.",
+    "respaldoAutomaticoDetalle": "Una copia de tus datos viaja con el respaldo de tu teléfono.",
+    "respaldoSoloPro": "Con Tino Pro, una copia de tus datos viaja con el respaldo de tu teléfono.",
     "respaldoUltima": "Última copia: {{fecha}}",
     "respaldoPendiente": "Guardando la primera copia…",
     "respaldoFallo": "No se pudo guardar la última copia. Revisa si tu teléfono tiene espacio.",
     "respaldoActivadoTitulo": "Respaldo automático activado",
-    "respaldoActivadoAndroid": "Tu copia viaja con la copia de seguridad de Google de tu teléfono. Revisa que esté encendida y que tengas espacio en Google: en los ajustes del teléfono, busca «Copia de seguridad».",
-    "respaldoActivadoIos": "Tu copia viaja con el respaldo de iCloud de tu teléfono. Revisa que esté encendido y que tengas espacio: Configuración > tu nombre > iCloud > Respaldo en iCloud.",
+    "respaldoActivadoAndroid": "Tu copia viaja con la copia de seguridad de Google de tu teléfono, que se hace con el teléfono cargando y en Wi-Fi. Revisa que esté encendida y que tengas espacio en Google.",
+    "respaldoActivadoIos": "Tu copia viaja con el respaldo de iCloud de tu teléfono, que se hace de noche, con el iPhone cargando y en Wi-Fi. Revisa que esté encendido y que tengas espacio en iCloud.",
+    "respaldoVerComo": "Ver cómo funciona",
+    "respaldoComo": "Cómo funciona tu respaldo",
     "respaldoApagarTitulo": "¿Apagar el respaldo automático?",
     "respaldoApagarTexto": "Se borra la copia de este teléfono. Si cambias de teléfono, tus datos no volverán solos.",
     "respaldoApagar": "Apagar",
@@ -815,6 +817,26 @@
     "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino.",
     "respaldoAutomatico": "Respaldo automático: {{valor}}",
     "ultimoRespaldoManual": "Último respaldo manual: {{fecha}}"
+  },
+  "comoRespaldo": {
+    "titulo": "Cómo funciona tu respaldo",
+    "intro": "Tino guarda una copia de tus datos en este teléfono cada vez que cambias algo. El respaldo de tu teléfono la lleva a la nube cuando le toca; Tino no puede subirla por su cuenta.",
+    "cuandoTitulo": "¿Cuándo sube a la nube?",
+    "datosTitulo": "Respaldar sin Wi-Fi o ahora mismo",
+    "volverTitulo": "¿Cómo vuelven tus datos?",
+    "ios": {
+      "cuando": "iCloud respalda tu iPhone de noche, cuando está cargando, bloqueado y conectado a Wi-Fi. Si eso no pasa, tu copia en iCloud se queda con la fecha de la última vez.",
+      "datos": "En Configuración, toca tu nombre, luego iCloud y Respaldo en iCloud. Ahí puedes encender el respaldo con datos celulares y tocar «Respaldar ahora».",
+      "volver": "Al configurar tu iPhone nuevo, elige restaurar desde el respaldo de iCloud. Cuando abras Tino, te ofrecemos tus datos. Borrar Tino y volver a instalarlo no los trae."
+    },
+    "android": {
+      "cuando": "Google respalda tu teléfono cuando está cargando, conectado a Wi-Fi y sin usarse, y puede pasar varios días entre una copia y otra.",
+      "datos": "En los ajustes del teléfono, busca «Copia de seguridad». Ahí puedes permitir que use datos móviles y crear una copia de seguridad ahora. El nombre cambia un poco según la marca.",
+      "volver": "Al configurar tu teléfono nuevo con la misma cuenta de Google, elige restaurar tus apps y datos; también vuelven si instalas Tino otra vez con esa cuenta. Cuando abras Tino, te ofrecemos tus datos."
+    },
+    "ahoraTitulo": "¿Vas a cambiar de teléfono pronto?",
+    "ahora": "No esperes al respaldo del teléfono: guarda una copia ahora, protegida con tu contraseña, donde quieras (Drive, iCloud Drive, WhatsApp o tu correo).",
+    "ahoraBoton": "Guardar una copia ahora"
   },
   "respaldo": {
     "crearTitulo": "Crear respaldo",

@@ -21,6 +21,7 @@ import {
 import { ESPERA_RESPALDO_MS, useRespaldoAutomatico } from '../useRespaldoAutomatico';
 import Bienvenida from '../../../app/onboarding/index';
 import Datos from '../../../app/ajustes/datos';
+import ComoFuncionaRespaldo from '../../../app/ajustes/respaldo';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
 
 // Decisión D81: respaldo automático sin contraseña, que viaja con el respaldo del teléfono.
@@ -218,7 +219,7 @@ describe('Ajustes > Tus datos', () => {
   test('sin Pro, la fila lleva al muro de pago', async () => {
     const { almacen } = await almacenCon();
     await render(envolver(almacen, <Datos />));
-    await act(async () => fireEvent.press(screen.getByText('Con Tino Pro, tus datos vuelven solos si cambias de teléfono.')));
+    await act(async () => fireEvent.press(screen.getByText('Con Tino Pro, una copia de tus datos viaja con el respaldo de tu teléfono.')));
     expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/pro', params: { motivo: 'funcion_avanzada' } });
   });
 
@@ -228,7 +229,10 @@ describe('Ajustes > Tus datos', () => {
     await render(envolver(almacen, <Datos />));
     await act(async () => fireEvent.press(screen.getByLabelText('Respaldo automático')));
     expect(almacen.getState().preferencias?.respaldoAutomatico).toBe(true);
-    expect(alerta).toHaveBeenCalledWith('Respaldo automático activado', expect.stringMatching(/Copia de seguridad|Respaldo en iCloud/), expect.anything());
+    expect(alerta).toHaveBeenCalledWith('Respaldo automático activado', expect.stringMatching(/Wi-Fi/), expect.anything());
+    // D85: el aviso lleva a la explicación de cuándo sube la copia.
+    await act(async () => alerta.mock.calls.at(-1)![2]!.find(b => b.text === 'Ver cómo funciona')!.onPress!());
+    expect(mockRouter.push).toHaveBeenCalledWith('/ajustes/respaldo');
 
     await guardarRespaldoAutomatico(contenido);
     await act(async () => fireEvent.press(screen.getByLabelText('Respaldo automático')));
@@ -247,6 +251,27 @@ describe('Ajustes > Tus datos', () => {
     memoria.fallar = true;
     await act(async () => guardarRespaldoAutomatico(contenido).catch(() => {}));
     expect(screen.getByText('No se pudo guardar la última copia. Revisa si tu teléfono tiene espacio.')).toBeOnTheScreen();
+  });
+});
+
+// Decisión D85: qué hace el respaldo del teléfono, sin prometer que la copia vuelve sola.
+describe('Cómo funciona tu respaldo', () => {
+  test('Tus datos tiene la fila que lleva a la explicación', async () => {
+    const { almacen } = await almacenCon({ plan: 'pro', respaldoAutomatico: true });
+    await render(envolver(almacen, <Datos />));
+    await act(async () => fireEvent.press(screen.getByText('Cómo funciona tu respaldo')));
+    expect(mockRouter.push).toHaveBeenCalledWith('/ajustes/respaldo');
+  });
+
+  test('explica cuándo sube, cómo hacerlo sin Wi-Fi y ofrece guardar una copia ahora', async () => {
+    const { almacen } = await almacenCon();
+    await render(envolver(almacen, <ComoFuncionaRespaldo />));
+    // Las pruebas corren como iPhone.
+    expect(screen.getByText(/iCloud respalda tu iPhone de noche/)).toBeOnTheScreen();
+    expect(screen.getByText(/datos celulares/)).toBeOnTheScreen();
+    expect(screen.getByText(/Borrar Tino y volver a instalarlo no los trae/)).toBeOnTheScreen();
+    await act(async () => fireEvent.press(screen.getByText('Guardar una copia ahora')));
+    expect(mockRouter.push).toHaveBeenCalledWith('/respaldo/crear');
   });
 });
 
