@@ -95,8 +95,8 @@ export default function Ajustes() {
     if (url) Linking.openURL(url);
   }
 
-  // Versión visible y número de compilación que pone la tienda (sección 12 técnica).
-  const version = t('ajustes.acercaVersion', { version: Application.nativeApplicationVersion ?? '', compilacion: Application.nativeBuildVersion ?? '' });
+  // Solo la versión visible (sección 12 técnica); el número de compilación no le dice nada al usuario y Sentry ya lo registra.
+  const version = t('ajustes.acercaVersion', { version: Application.nativeApplicationVersion ?? '' });
   const derechos = t('ajustes.acercaDerechos', { anio: new Date().getFullYear() });
 
   return (
@@ -131,7 +131,7 @@ export default function Ajustes() {
             </View>
             <View style={{ flex: 1, gap: tema.espacio.xs }} accessible accessibilityLabel={`${t('ajustes.precision', { porcentaje: precision })}. ${textoPista}`}>
               <Texto variante="cuerpoFuerte">{t('ajustes.precisionTitulo')}</Texto>
-              <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+              <Texto variante="apoyo" color="textoSecundario">
                 {textoPista}
               </Texto>
             </View>
@@ -208,17 +208,14 @@ export default function Ajustes() {
       ) : null}
 
       {/* Acerca de Tino: al final, discreto. */}
-      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos, t('ajustes.acercaMarcas')].join('. ')}>
+      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos].join('. ')}>
         <LogoTino tamano={64} />
         <Texto variante="cuerpoFuerte">{t('ajustes.acercaNombre')}</Texto>
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+        <Texto variante="apoyo" color="textoSecundario">
           {version}
         </Texto>
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
+        <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
           {derechos}
-        </Texto>
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
-          {t('ajustes.acercaMarcas')}
         </Texto>
       </View>
 

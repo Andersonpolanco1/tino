@@ -184,6 +184,7 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
             },
           },
         ]}
+        nota={t('registro.sinAfiliacion')}
       />,
       { info: t('registro.porQue') },
     );
