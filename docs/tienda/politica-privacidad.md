@@ -8,7 +8,7 @@ los reportes de fallos, el respaldo o las suscripciones, se actualiza aquí en e
 
 # Política de privacidad de Tino
 
-Última actualización: [POR COMPLETAR: fecha de publicación]
+Última actualización: 29 de septiembre de 2026
 
 Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso necesita algunos datos de tus tarjetas, y queremos que sepas exactamente cuáles, dónde se guardan y qué sale de tu teléfono. Lo resumimos así:
 

@@ -6,7 +6,7 @@ Los precios y reglas de Tino Pro deben coincidir con las tiendas y RevenueCat (D
 
 # Términos de uso de Tino
 
-Última actualización: [POR COMPLETAR: fecha de publicación]
+Última actualización: 29 de septiembre de 2026
 
 Estos términos son el acuerdo entre tú y Polanco Labs ("nosotros") para usar Tino. Al usar la app aceptas estos términos. Si no estás de acuerdo, no uses Tino.
 
