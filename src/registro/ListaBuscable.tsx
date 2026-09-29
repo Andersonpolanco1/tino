@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { View, type ImageSourcePropType } from 'react-native';
-import { Campo, FilaLista, ListaAgrupada, Texto, useTema } from '../diseno';
+import { Campo, FilaLista, ListaAgrupada, useTema } from '../diseno';
 import { filtrar } from './borrador';
 
 export interface ElementoLista {
@@ -18,12 +18,10 @@ interface Props {
   onElegir: (id: string) => void;
   // Salidas que nunca se filtran: "Mi tarjeta no está en la lista", "No sé el tipo"...
   salidas: { titulo: string; onPress: () => void }[];
-  // Texto al pie, debajo de las salidas.
-  nota?: string;
 }
 
 // Elegir banco o producto en dos toques, con buscador (sección 4.1), en listas agrupadas.
-export function ListaBuscable({ buscador, elementos, onElegir, salidas, nota }: Props) {
+export function ListaBuscable({ buscador, elementos, onElegir, salidas }: Props) {
   const tema = useTema();
   const [texto, setTexto] = useState('');
   const visibles = useMemo(() => filtrar(elementos, texto, e => e.buscarEn), [elementos, texto]);
@@ -43,11 +41,6 @@ export function ListaBuscable({ buscador, elementos, onElegir, salidas, nota }: 
           <FilaLista key={s.titulo} titulo={s.titulo} flecha onPress={s.onPress} />
         ))}
       </ListaAgrupada>
-      {nota ? (
-        <Texto variante="apoyo" color="textoSecundario" style={{ paddingHorizontal: tema.espacio.l }}>
-          {nota}
-        </Texto>
-      ) : null}
     </View>
   );
 }
