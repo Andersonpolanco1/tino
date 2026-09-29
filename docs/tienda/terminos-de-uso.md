@@ -71,7 +71,7 @@ Podemos actualizar estos términos. Si el cambio es importante, lo avisaremos en
 
 ## 11. Ley aplicable
 
-Estos términos se rigen por las leyes de la República Dominicana. Cualquier desacuerdo se resolverá ante los tribunales de [POR COMPLETAR: ciudad, por ejemplo Santo Domingo], salvo que la ley de protección al consumidor te dé derecho a otro fuero.
+Estos términos se rigen por las leyes de la República Dominicana. Cualquier desacuerdo se resolverá ante los tribunales de Santo Domingo, salvo que la ley de protección al consumidor te dé derecho a otro fuero.
 
 ## 12. Contacto
 

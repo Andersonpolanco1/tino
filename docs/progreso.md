@@ -195,10 +195,11 @@ Criterios de la especificación:
 - [x] Sitio para los documentos: repositorio `polancolabs-web` (Astro, carpeta hermana de `tino`), con la página de Tino, privacidad, términos y soporte en `polancolabs.com/apps/tino/…` (D87). Su compilación falla mientras quede un `[POR COMPLETAR]`
 - [ ] Subir `polancolabs-web` a GitHub, crear el proyecto en Vercel y apuntar el DNS de `polancolabs.com` en Namecheap a Vercel (pasos en su README)
 - [ ] Publicar términos de uso y política de privacidad, y poner sus direcciones en `EXPO_PUBLIC_URL_TERMINOS` (`https://polancolabs.com/apps/tino/terminos`) y `EXPO_PUBLIC_URL_PRIVACIDAD` (`https://polancolabs.com/apps/tino/privacidad`) como secretos de EAS (el muro de pago los enlaza; Apple los exige)
-- [ ] Completar lo marcado `[POR COMPLETAR]` en `docs/tienda/` y en `polancolabs-web`: dirección de Polanco Labs, fecha de publicación, ciudad de los tribunales y retención de PostHog (las direcciones de los documentos y de soporte ya están)
+- [x] Completar lo marcado `[POR COMPLETAR]` en `docs/tienda/` y en `polancolabs-web`: domicilio (Calle Principal #1, Brisa Oriental, Santo Domingo Este), tribunales de Santo Domingo, retención de 12 meses y direcciones de los documentos
+- [ ] Poner la fecha de "Última actualización" en la política y los términos (en `docs/tienda/` y en `polancolabs-web`) el día que se publique Tino, al terminar el MVP; hasta entonces el sitio no compila a propósito
 - [ ] Revisión de la política de privacidad y los términos de uso por un abogado (Ley 172-13 y Ley 358-05)
 - [ ] Decidir si "Datos de uso anónimos" sigue encendido por defecto (hoy `analiticaActiva: true`, con una línea en la bienvenida) o pasa a pedirse al usuario: la Ley 172-13 pide consentimiento, y es la pregunta principal para el abogado
-- [ ] PostHog: fijar la retención de eventos y ponerla en la sección 7 de la política (hoy dice `[POR COMPLETAR]`)
+- [x] PostHog: retención de eventos en la sección 7 de la política: hasta 12 meses, el máximo del plan gratis. Confirmarlo en la facturación de PostHog antes de publicar, y si se pasa a un plan pago, fijar la retención en 12 meses para que la política siga siendo cierta
 - [ ] RevenueCat: la Test Store muestra Tino Pro anual a USD 79.99; ajustar el producto de prueba a los precios de D58 (2.49, 19.99 y 14.99) para que el muro de pago se vea como en las tiendas
 - [x] Recompilar la app de desarrollo con `react-native-purchases`
 - [x] Proyecto en RevenueCat con la Test Store: derecho `pro`, productos `tino_pro_mensual` y `tino_pro_anual`, oferta por defecto

@@ -20,7 +20,7 @@ Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso neces
 
 ## 1. Quién es responsable de tus datos
 
-El responsable de Tino es Polanco Labs, con domicilio en [POR COMPLETAR: dirección], República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a polancolabsrd@gmail.com.
+El responsable de Tino es Polanco Labs, con domicilio en Calle Principal #1, Brisa Oriental, Santo Domingo Este, República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a polancolabsrd@gmail.com.
 
 Esta política se rige por la Ley 172-13 sobre protección de datos de carácter personal de la República Dominicana.
 
@@ -100,7 +100,7 @@ Podríamos tener que entregar información si una autoridad competente lo exige 
 ## 7. Cuánto tiempo guardamos los datos
 
 - **En tu teléfono:** hasta que los borres o desinstales Tino.
-- **Datos de uso anónimos:** hasta [POR COMPLETAR: por ejemplo, 24 meses], y luego se borran.
+- **Datos de uso anónimos:** hasta 12 meses, y luego se borran.
 - **Reportes de fallos:** hasta 90 días.
 - **Compras:** mientras tengas o hayas tenido Tino Pro, y lo que exijan las tiendas y las leyes fiscales.
 
@@ -129,6 +129,6 @@ Si cambiamos algo importante, lo avisaremos dentro de la app antes de que entre 
 
 ## 12. Contacto
 
-Polanco Labs
-polancolabsrd@gmail.com
-[POR COMPLETAR: dirección]
+Polanco Labs\
+polancolabsrd@gmail.com\
+Calle Principal #1, Brisa Oriental, Santo Domingo Este, República Dominicana
