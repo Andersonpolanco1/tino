@@ -50,10 +50,11 @@ Reglas para todas las fichas:
 
 | Campo | Valor |
 | --- | --- |
-| Política de privacidad | [POR COMPLETAR: la misma de `EXPO_PUBLIC_URL_PRIVACIDAD`] |
-| Términos de uso (EULA) | [POR COMPLETAR: la misma de `EXPO_PUBLIC_URL_TERMINOS`] |
-| Soporte | [POR COMPLETAR: página de soporte o `mailto:polancolabsrd@gmail.com`] |
+| Política de privacidad | https://polancolabs.com/apps/tino/privacidad (la misma de `EXPO_PUBLIC_URL_PRIVACIDAD`) |
+| Términos de uso (EULA) | https://polancolabs.com/apps/tino/terminos (la misma de `EXPO_PUBLIC_URL_TERMINOS`) |
+| Soporte | https://polancolabs.com/apps/tino/soporte |
 | Correo de contacto | polancolabsrd@gmail.com |
+| Sitio web (opcional en Google Play) | https://polancolabs.com/apps/tino |
 
 ## 2. App Store
 

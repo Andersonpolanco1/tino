@@ -20,7 +20,7 @@ Tino **no** es un banco, no hace pagos, no solicita tarjetas, no da crédito y n
 
 Las recomendaciones dependen de los datos que registras y de reglas generales de cálculo. Los bancos pueden cambiar sus fechas, cargos y programas de recompensas, y las fechas pueden moverse por feriados u otras razones. **Antes de pagar, confirma siempre la fecha límite y el monto en tu estado de cuenta o con tu banco.** No somos responsables por intereses, cargos por mora u otros costos que resulten de datos incorrectos o de decisiones que tomes con base en Tino.
 
-Cómo tratamos tus datos está en la [Política de privacidad]([POR COMPLETAR: dirección de la política]).
+Cómo tratamos tus datos está en la [Política de privacidad](https://polancolabs.com/apps/tino/privacidad).
 
 ## 3. Uso permitido
 
