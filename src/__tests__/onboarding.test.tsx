@@ -112,12 +112,4 @@ describe('pregunta de los datos de uso al final (D88)', () => {
     expect(almacen.getState().preferencias?.analiticaPreguntas).toHaveLength(1);
     expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
   });
-
-  test('"Qué se comparte" abre la lista completa', async () => {
-    const almacen = await preparar();
-    await render(envolver(almacen, <DatosDeUsoOnboarding />));
-    await act(async () => fireEvent.press(screen.getByText('Qué se comparte')));
-    expect(screen.getByText('Qué nunca incluye')).toBeOnTheScreen();
-    expect(screen.getByText('Montos, balances ni límites')).toBeOnTheScreen();
-  });
 });

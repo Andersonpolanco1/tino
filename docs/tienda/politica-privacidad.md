@@ -45,7 +45,7 @@ Tino no usa tu ubicación, tus contactos, tus fotos, tus mensajes ni tu cámara.
 
 Si aceptas compartir los **datos de uso anónimos**, Tino envía eventos como "se registró una tarjeta" o "se cambió el enfoque", para saber qué partes de la app se usan y cuáles mejorar.
 
-**Cómo te lo preguntamos.** Al terminar de configurar Tino te preguntamos si quieres compartirlos, con la lista de lo que se envía a un toque. Hasta que respondas no sale nada: lo que hiciste mientras configurabas Tino se envía solo si aceptas, y si no, se borra. Si respondes que no, te lo volvemos a preguntar como máximo dos veces más desde la pantalla de inicio (a los 14 días y, si vuelves a decir que no, a los 60 días), y después no insistimos. Puedes cambiar tu respuesta cuando quieras en **Ajustes > Privacidad**; al apagarla, Tino deja de enviar eventos al instante y no los guarda para enviarlos después.
+**Cómo te lo preguntamos.** Al terminar de configurar Tino te preguntamos si quieres compartirlos, con un enlace a esta política. Hasta que respondas no sale nada: lo que hiciste mientras configurabas Tino se envía solo si aceptas, y si no, se borra. Si respondes que no, te lo volvemos a preguntar como máximo dos veces más desde la pantalla de inicio (a los 14 días y, si vuelves a decir que no, a los 60 días), y después no insistimos. Puedes cambiar tu respuesta cuando quieras en **Ajustes > Privacidad**; al apagarla, Tino deja de enviar eventos al instante y no los guarda para enviarlos después.
 
 Cada evento puede llevar:
 
@@ -53,7 +53,7 @@ Cada evento puede llevar:
 - categorías, nunca valores exactos: por ejemplo, el banco y el tipo de tarjeta del catálogo (o "otro"), la moneda en que factura, el tipo de recompensa, el enfoque elegido o cuántas tarjetas tienes en rangos (1, 2, 3 a 4, 5 o más);
 - la versión de Tino y la del sistema operativo de tu teléfono, y el tamaño de su pantalla;
 - la versión de la herramienta que envía los eventos y un identificador de la sesión de uso, que cambia cada vez que vuelves a Tino después de un rato;
-- un identificador aleatorio creado por Tino en tu teléfono, que no está ligado a tu nombre, a tu cuenta de la tienda ni al teléfono. Puedes cambiarlo por uno nuevo en Ajustes > Privacidad, y también se crea uno nuevo si usas "Borrar todo".
+- un identificador aleatorio creado por Tino en tu teléfono, que no está ligado a tu nombre, a tu cuenta de la tienda ni al teléfono. Si usas "Borrar todo", se crea uno nuevo.
 
 **Nunca se envían** montos, balances, límites, números de tarjeta (ni los últimos 4 dígitos), los nombres que les pones a tus tarjetas o cobros, ni tus fechas de cobro. Como en cualquier conexión a internet, el servicio que recibe los eventos ve la dirección IP de tu teléfono: lo tenemos configurado para no guardarla ni usarla para ubicarte.
 

@@ -14,7 +14,7 @@ export async function leerIdentificador(): Promise<string> {
   return existente ?? nuevoIdentificador();
 }
 
-// Desde Ajustes, y con "Borrar todo": los eventos siguientes no se pueden unir con los anteriores.
+// Con "Borrar todo": los eventos siguientes no se pueden unir con los anteriores.
 export async function nuevoIdentificador(): Promise<string> {
   const id = Crypto.randomUUID();
   await SecureStore.setItemAsync(NOMBRE, id, opciones);

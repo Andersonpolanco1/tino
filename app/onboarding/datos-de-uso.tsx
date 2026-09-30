@@ -1,25 +1,21 @@
-import { useState } from 'react';
 import { Linking, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { BarraSuperior, Boton, Pantalla, Texto, useTema } from '@/diseno';
+import { BarraSuperior, Boton, Pantalla, Texto } from '@/diseno';
 import { useAlmacen } from '@/estado';
 import { useHoy } from '@/inicio/useHoy';
 import { responderAnalitica } from '@/privacidad/consentimiento';
-import { HojaQueSeComparte } from '@/privacidad/QueSeComparte';
 import { DOCUMENTOS } from '@/privacidad/terminos';
 
 // Onboarding, último paso (decisión D88): el primer intento de pedir los datos de uso, cuando el
-// usuario ya vio lo que Tino hace. Breve, con el detalle a un toque. Los eventos del onboarding
+// usuario ya vio lo que Tino hace. Breve, con el detalle en la política (D91). Los eventos del onboarding
 // esperan en memoria esta respuesta.
 export default function DatosDeUsoOnboarding() {
   const { t } = useTranslation();
-  const tema = useTema();
   const router = useRouter();
   const hoy = useHoy();
   const preferencias = useAlmacen(s => s.preferencias);
   const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
-  const [detalle, setDetalle] = useState(false);
 
   async function responder(si: boolean) {
     if (preferencias) await guardarPreferencias(responderAnalitica(preferencias, si, hoy));
@@ -43,11 +39,11 @@ export default function DatosDeUsoOnboarding() {
       <Texto variante="apoyo" color="textoSecundario">
         {t('datosDeUso.cambiar')}
       </Texto>
-      <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: tema.espacio.l }}>
-        <Boton titulo={t('datosDeUso.verQue')} variante="texto" onPress={() => setDetalle(true)} />
-        {DOCUMENTOS.privacidad ? <Boton titulo={t('datosDeUso.politica')} variante="texto" onPress={() => Linking.openURL(DOCUMENTOS.privacidad)} /> : null}
-      </View>
-      <HojaQueSeComparte visible={detalle} onCerrar={() => setDetalle(false)} />
+      {DOCUMENTOS.privacidad ? (
+        <View style={{ alignItems: 'flex-start' }}>
+          <Boton titulo={t('datosDeUso.politica')} variante="texto" onPress={() => Linking.openURL(DOCUMENTOS.privacidad)} />
+        </View>
+      ) : null}
     </Pantalla>
   );
 }

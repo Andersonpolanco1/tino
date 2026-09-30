@@ -306,11 +306,7 @@
     "precisionInfo": "Qué tan completa está la información de tus tarjetas. Sube si confirmas el valor del punto de cada tarjeta y, más adelante, si registras tus días de cobro.",
     "privacidadTitulo": "Privacidad",
     "analitica": "Compartir datos de uso",
-    "analiticaDetalle": "Nos ayudan a mejorar Tino y a encontrar fallos.",
-    "reiniciarId": "Restablecer identificador",
-    "reiniciarIdTitulo": "¿Restablecer el identificador?",
-    "reiniciarIdAviso": "Tino usará un identificador nuevo. Lo que se envíe desde ahora no se podrá unir con lo anterior.",
-    "reiniciarIdConfirmar": "Restablecer",
+    "analiticaDetalle": "Nos ayudan a mejorar Tino y tu experiencia.",
     "datosTitulo": "Tus datos",
     "datosInfo": "Tus datos se guardan cifrados solo en este teléfono. Nunca pedimos el número de tu tarjeta. Con un respaldo los llevas a otro teléfono.",
     "borrar": "Borrar todo",
@@ -400,10 +396,7 @@
     "docTerminos": "Términos de uso",
     "docPrivacidad": "Política de privacidad",
     "docSoporte": "Ayuda y soporte",
-    "seccionDatosUso": "Datos de uso",
-    "seccionIdentificador": "Identificador de uso",
-    "identificadorTexto": "Tino usa un identificador aleatorio para agrupar los datos de uso de esta instalación, sin saber quién eres.",
-    "reiniciarIdDetalle": "Lo que se envíe después no se une con lo anterior."
+    "analiticaExplicacion": "Son datos anónimos sobre cómo usas la app. Nunca incluyen datos sensibles, como montos, ni nada que te identifique."
   },
   "paises": {
     "DO": "República Dominicana",
@@ -908,24 +901,6 @@
     "textoInicio": "¿Nos ayudas a mejorar Tino? Comparte datos anónimos de uso.",
     "si": "Compartir datos de uso",
     "no": "Ahora no",
-    "verQue": "Qué se comparte",
-    "politica": "Política de privacidad",
-    "hojaTitulo": "Qué se comparte",
-    "seEnvia": "Qué puede incluir",
-    "envia": {
-      "funciones": "Funciones que usas",
-      "catalogo": "El banco y el tipo de tarjeta que elegiste del catálogo",
-      "cantidad": "Cuántas tarjetas tienes",
-      "version": "La versión de Tino y datos técnicos del teléfono, como el sistema y el tamaño de la pantalla",
-      "fallos": "Información técnica sobre errores"
-    },
-    "nuncaSeEnvia": "Qué nunca incluye",
-    "nunca": {
-      "montos": "Montos, balances ni límites",
-      "numeros": "Números de tarjeta, incluidos los últimos 4 dígitos",
-      "nombres": "Los nombres de tus tarjetas ni tus fechas de cobro",
-      "persona": "Tu nombre, correo, teléfono ni ubicación"
-    },
-    "donde": "No incluyen nada que te identifique directamente y se guardan en servicios de la Unión Europea."
+    "politica": "Política de privacidad"
   }
 }

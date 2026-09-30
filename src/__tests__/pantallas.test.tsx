@@ -222,7 +222,7 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
   test('Privacidad: el interruptor de datos de uso anónimos lo guarda como decisión (D88)', async () => {
     const almacen = await almacenCon('DO');
     await render(conPais([rd], almacen, <Privacidad />));
-    expect(screen.getByText('Números de tarjeta, incluidos los últimos 4 dígitos')).toBeOnTheScreen();
+    expect(screen.getByText('Son datos anónimos sobre cómo usas la app. Nunca incluyen datos sensibles, como montos, ni nada que te identifique.')).toBeOnTheScreen();
     await fireEvent.press(screen.getByLabelText('Compartir datos de uso'));
     await act(async () => {});
     expect(almacen.getState().preferencias?.analiticaActiva).toBe(true);

@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { View } from 'react-native';
+import { useEffect, useMemo } from 'react';
+import { Linking, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { Boton, BotonCircular, BotonPastilla, Icono, Superficie, Texto, useTema } from '../diseno';
@@ -14,7 +14,7 @@ import { descartarSugerencia, elegirSugerencia, type TipoSugerencia } from './el
 import { useConsejosNuevos } from '../consejos';
 import { registrarSugerenciaAceptada, registrarSugerenciaDescartada, registrarSugerenciaMostrada } from '../analitica';
 import { responderAnalitica, tocaPreguntarAnalitica } from '../privacidad/consentimiento';
-import { HojaQueSeComparte } from '../privacidad/QueSeComparte';
+import { DOCUMENTOS } from '../privacidad/terminos';
 
 // Días antes de una fecha límite en que tiene sentido sugerir los cobros (sección 2.2:
 // "al acercarse una fecha límite").
@@ -38,7 +38,6 @@ export function SugerenciaDatos() {
   const preferencias = useAlmacen(s => s.preferencias);
   const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
   const ultimoRespaldo = preferencias?.ultimoRespaldoManual;
-  const [detalle, setDetalle] = useState(false);
 
   const activas = tarjetas.filter(x => !x.enPausa);
   const sinConfirmar = activas.find(valorPuntoPorConfirmar);
@@ -96,10 +95,11 @@ export function SugerenciaDatos() {
           <BotonPastilla icono={ICONO_ACCION.analitica} titulo={t('datosDeUso.si')} onPress={() => responder(true)} />
           <Boton titulo={t('datosDeUso.no')} variante="texto" onPress={() => responder(false)} />
         </View>
-        <View style={{ alignItems: 'flex-start' }}>
-          <Boton titulo={t('datosDeUso.verQue')} variante="texto" onPress={() => setDetalle(true)} />
-        </View>
-        <HojaQueSeComparte visible={detalle} onCerrar={() => setDetalle(false)} />
+        {DOCUMENTOS.privacidad ? (
+          <View style={{ alignItems: 'flex-start' }}>
+            <Boton titulo={t('datosDeUso.politica')} variante="texto" onPress={() => Linking.openURL(DOCUMENTOS.privacidad)} />
+          </View>
+        ) : null}
       </Superficie>
     );
   }
