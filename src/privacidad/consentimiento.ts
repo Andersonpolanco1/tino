@@ -5,7 +5,7 @@ import { numeroDe } from '../motor/fechas';
 // libre, expreso y consciente del usuario (Ley 172-13, arts. 5.4 y 80). Se pregunta al terminar el
 // onboarding y, si dice que no, hasta dos veces más desde Inicio, bien espaciadas.
 
-// Días que esperan el segundo y el tercer intento después de cada "No, gracias".
+// Días que esperan el segundo y el tercer intento después de cada "Ahora no".
 export const DIAS_ENTRE_PREGUNTAS = [14, 60];
 export const MAXIMO_PREGUNTAS = 3;
 
@@ -31,7 +31,7 @@ export function tocaPreguntarAnalitica(p: Preferencias | null, hoy: FechaISO): b
   return numeroDe(hoy) - numeroDe(ultimo) >= DIAS_ENTRE_PREGUNTAS[noes.length - 1];
 }
 
-// "Sí, compartir" decide para siempre; "No, gracias" suma un intento.
+// "Compartir datos de uso" decide para siempre; "Ahora no" suma un intento.
 export function responderAnalitica(p: Preferencias, si: boolean, hoy: FechaISO): Preferencias {
   if (si) return { ...p, analiticaActiva: true, analiticaDecidida: hoy };
   return { ...p, analiticaActiva: false, analiticaPreguntas: [...(p.analiticaPreguntas ?? []), hoy] };

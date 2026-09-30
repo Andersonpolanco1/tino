@@ -199,7 +199,7 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
     expect(screen.queryByText('Borrar todo')).toBeNull();
     expect(screen.queryByText('Restaurar compras')).toBeNull();
     expect(screen.getByText(/^(\d de \d encendidos|Apagados: Tino necesita tu permiso)$/)).toBeOnTheScreen();
-    expect(screen.getByText(/^Datos de uso anónimos: (encendidos|apagados)$/)).toBeOnTheScreen();
+    expect(screen.getByText(/^Datos de uso: (se comparten|no se comparten)$/)).toBeOnTheScreen();
     expect(screen.getByText('Respaldo, ver y borrar tus datos')).toBeOnTheScreen();
 
     await fireEvent.press(screen.getByText('Avisos'));
@@ -222,8 +222,8 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
   test('Privacidad: el interruptor de datos de uso anónimos lo guarda como decisión (D88)', async () => {
     const almacen = await almacenCon('DO');
     await render(conPais([rd], almacen, <Privacidad />));
-    expect(screen.getByText('Números de tarjeta, ni siquiera los últimos 4')).toBeOnTheScreen();
-    await fireEvent.press(screen.getByLabelText('Datos de uso anónimos'));
+    expect(screen.getByText('Números de tarjeta, incluidos los últimos 4 dígitos')).toBeOnTheScreen();
+    await fireEvent.press(screen.getByLabelText('Compartir datos de uso'));
     await act(async () => {});
     expect(almacen.getState().preferencias?.analiticaActiva).toBe(true);
     expect(almacen.getState().preferencias?.analiticaDecidida).toBeTruthy();

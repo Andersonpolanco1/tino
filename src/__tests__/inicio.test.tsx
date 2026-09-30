@@ -178,7 +178,7 @@ test('sugerencia de datos: agregar los cobros cuando un pago está cerca, y se p
 });
 
 describe('volver a pedir los datos de uso desde Inicio (D88)', () => {
-  const PREGUNTA = '¿Nos ayudas a mejorar Tino con datos anónimos de uso? Nunca montos, números ni nombres de tus tarjetas.';
+  const PREGUNTA = '¿Nos ayudas a mejorar Tino? Comparte datos anónimos de uso.';
   async function conRespuestas(cambios: Partial<Preferencias>) {
     const almacen = await almacenCon([A, B, C]);
     const { analiticaDecidida: _sinDecidir, ...preferencias } = almacen.getState().preferencias!;
@@ -191,7 +191,7 @@ describe('volver a pedir los datos de uso desde Inicio (D88)', () => {
     await render(envolver(almacen, <Inicio />));
     expect(screen.getByText(PREGUNTA)).toBeOnTheScreen();
     expect(screen.queryByText('Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.')).toBeNull();
-    await act(async () => fireEvent.press(screen.getByText('Sí, compartir')));
+    await act(async () => fireEvent.press(screen.getByText('Compartir datos de uso')));
     expect(estadoAnalitica(almacen.getState().preferencias)).toBe('activa');
     expect(screen.queryByText(PREGUNTA)).toBeNull();
   });
@@ -199,7 +199,7 @@ describe('volver a pedir los datos de uso desde Inicio (D88)', () => {
   test('14 días después del primer "No" vuelve; otro "No" cuenta el segundo intento', async () => {
     const almacen = await conRespuestas({ analiticaPreguntas: ['2026-09-20'] });
     await render(envolver(almacen, <Inicio />));
-    await act(async () => fireEvent.press(screen.getByText('No, gracias')));
+    await act(async () => fireEvent.press(screen.getByText('Ahora no')));
     expect(almacen.getState().preferencias?.analiticaPreguntas).toEqual(['2026-09-20', '2026-10-06']);
     expect(estadoAnalitica(almacen.getState().preferencias)).toBe('apagada');
     expect(screen.queryByText(PREGUNTA)).toBeNull();

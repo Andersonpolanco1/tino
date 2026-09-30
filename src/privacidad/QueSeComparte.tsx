@@ -4,7 +4,7 @@ import { Hoja, Icono, Texto, useTema } from '../diseno';
 
 // Decisión D88: la información completa de los datos de uso, a un toque desde cada pregunta y
 // siempre a la vista en Ajustes, Privacidad (consentimiento informado, Ley 172-13, art. 5.3).
-const SE_ENVIA = ['funciones', 'catalogo', 'version', 'fallos'] as const;
+const SE_ENVIA = ['funciones', 'catalogo', 'cantidad', 'version', 'fallos'] as const;
 const NUNCA = ['montos', 'numeros', 'nombres', 'persona'] as const;
 
 export function QueSeComparte() {

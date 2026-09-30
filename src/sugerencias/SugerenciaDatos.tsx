@@ -72,7 +72,7 @@ export function SugerenciaDatos() {
     guardar(descartarSugerencia(estado, tipo, hoy)).catch(() => {});
   };
   if (tipo === 'analitica') {
-    // "No, gracias" y cerrar cuentan como un intento; "Sí, compartir" decide para siempre.
+    // "Ahora no" y cerrar cuentan como un intento; "Compartir datos de uso" decide para siempre.
     const responder = (si: boolean) => {
       if (!preferencias) return;
       if (si) registrarSugerenciaAceptada(tipo);

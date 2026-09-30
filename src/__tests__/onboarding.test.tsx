@@ -95,29 +95,29 @@ test('el permiso de avisos se pide al final y "Ahora no" sigue a la pregunta de 
 });
 
 describe('pregunta de los datos de uso al final (D88)', () => {
-  test('"Sí, compartir" la activa y lleva a inicio', async () => {
+  test('"Compartir datos de uso" la activa y lleva a inicio', async () => {
     const almacen = await preparar();
     expect(estadoAnalitica(almacen.getState().preferencias)).toBe('pendiente');
     await render(envolver(almacen, <DatosDeUsoOnboarding />));
-    await act(async () => fireEvent.press(screen.getByText('Sí, compartir')));
+    await act(async () => fireEvent.press(screen.getByText('Compartir datos de uso')));
     expect(estadoAnalitica(almacen.getState().preferencias)).toBe('activa');
     expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
   });
 
-  test('"No, gracias" la deja apagada, cuenta el intento y lleva a inicio', async () => {
+  test('"Ahora no" la deja apagada, cuenta el intento y lleva a inicio', async () => {
     const almacen = await preparar();
     await render(envolver(almacen, <DatosDeUsoOnboarding />));
-    await act(async () => fireEvent.press(screen.getByText('No, gracias')));
+    await act(async () => fireEvent.press(screen.getByText('Ahora no')));
     expect(estadoAnalitica(almacen.getState().preferencias)).toBe('apagada');
     expect(almacen.getState().preferencias?.analiticaPreguntas).toHaveLength(1);
     expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
   });
 
-  test('"Ver qué se comparte" abre la lista completa', async () => {
+  test('"Qué se comparte" abre la lista completa', async () => {
     const almacen = await preparar();
     await render(envolver(almacen, <DatosDeUsoOnboarding />));
-    await act(async () => fireEvent.press(screen.getByText('Ver qué se comparte')));
-    expect(screen.getByText('Nunca se envía')).toBeOnTheScreen();
+    await act(async () => fireEvent.press(screen.getByText('Qué se comparte')));
+    expect(screen.getByText('Qué nunca incluye')).toBeOnTheScreen();
     expect(screen.getByText('Montos, balances ni límites')).toBeOnTheScreen();
   });
 });

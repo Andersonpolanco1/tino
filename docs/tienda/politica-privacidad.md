@@ -119,7 +119,7 @@ La Ley 172-13 te da derecho a acceder a tus datos, corregirlos, pedir que se bor
 - **Acceder:** Ajustes > Tus datos > Ver mis datos te da un texto con todo lo que Tino guarda.
 - **Corregir:** edita tus tarjetas, cobros y preferencias cuando quieras.
 - **Borrar:** Ajustes > Tus datos > Borrar todo elimina todos tus datos del teléfono, incluida la clave de cifrado, y crea un identificador anónimo nuevo. Desinstalar Tino también borra los datos del teléfono (el respaldo automático, si lo encendiste, queda en el respaldo de tu teléfono hasta que lo borres ahí).
-- **Oponerte o retirar tu consentimiento:** apaga "Datos de uso anónimos" en Ajustes > Privacidad.
+- **Oponerte o retirar tu consentimiento:** apaga "Compartir datos de uso" en Ajustes > Privacidad.
 
 Si quieres saber qué datos de uso anónimos se enviaron, o que los borremos, escríbenos a polancolabsrd@gmail.com con el identificador que aparece en "Ver mis datos". Te respondemos en un máximo de 5 días hábiles si pides acceso a esos datos, y de 10 días hábiles si pides corregirlos o borrarlos (artículos 8 y 10 de la Ley 172-13). Si no estás conforme con la respuesta, puedes acudir a los tribunales mediante la acción de hábeas data.
 

@@ -305,12 +305,12 @@
     "precision": "Precisión de recomendaciones: {{porcentaje}}%",
     "precisionInfo": "Qué tan completa está la información de tus tarjetas. Sube si confirmas el valor del punto de cada tarjeta y, más adelante, si registras tus días de cobro.",
     "privacidadTitulo": "Privacidad",
-    "analitica": "Datos de uso anónimos",
-    "analiticaDetalle": "Nos ayudan a saber qué mejorar y a corregir fallos. Apagados, no se envía nada.",
-    "reiniciarId": "Reiniciar identificador anónimo",
-    "reiniciarIdTitulo": "¿Reiniciar el identificador?",
-    "reiniciarIdAviso": "Tino usará un identificador anónimo nuevo. Lo que se envíe desde ahora no se podrá unir con lo anterior.",
-    "reiniciarIdConfirmar": "Reiniciar",
+    "analitica": "Compartir datos de uso",
+    "analiticaDetalle": "Nos ayudan a mejorar Tino y a encontrar fallos.",
+    "reiniciarId": "Restablecer identificador",
+    "reiniciarIdTitulo": "¿Restablecer el identificador?",
+    "reiniciarIdAviso": "Tino usará un identificador nuevo. Lo que se envíe desde ahora no se podrá unir con lo anterior.",
+    "reiniciarIdConfirmar": "Restablecer",
     "datosTitulo": "Tus datos",
     "datosInfo": "Tus datos se guardan cifrados solo en este teléfono. Nunca pedimos el número de tu tarjeta. Con un respaldo los llevas a otro teléfono.",
     "borrar": "Borrar todo",
@@ -339,8 +339,8 @@
     "avisosExplicacion": "Elige de qué te avisamos. Los avisos nunca muestran montos.",
     "avisosResumen": "{{activos}} de {{total}} encendidos",
     "avisosResumenApagados": "Apagados: Tino necesita tu permiso",
-    "privacidadResumenSi": "Datos de uso anónimos: encendidos",
-    "privacidadResumenNo": "Datos de uso anónimos: apagados",
+    "privacidadResumenSi": "Datos de uso: se comparten",
+    "privacidadResumenNo": "Datos de uso: no se comparten",
     "datosResumen": "Respaldo, ver y borrar tus datos",
     "avisoFechaLimite": "Fecha límite próxima",
     "avisoFechaLimiteDetalle": "3 días antes de cada pago",
@@ -399,7 +399,11 @@
     "entendido": "Entendido",
     "docTerminos": "Términos de uso",
     "docPrivacidad": "Política de privacidad",
-    "docSoporte": "Ayuda y soporte"
+    "docSoporte": "Ayuda y soporte",
+    "seccionDatosUso": "Datos de uso",
+    "seccionIdentificador": "Identificador de uso",
+    "identificadorTexto": "Tino usa un identificador aleatorio para agrupar los datos de uso de esta instalación, sin saber quién eres.",
+    "reiniciarIdDetalle": "Lo que se envíe después no se une con lo anterior."
   },
   "paises": {
     "DO": "República Dominicana",
@@ -826,8 +830,8 @@
     "ultimoRespaldoManual": "Último respaldo manual: {{fecha}}",
     "terminosAceptados": "Aceptaste los términos y la política del {{version}} el {{fecha}}",
     "analiticaDecidida": "Decidiste sobre los datos de uso el {{fecha}}",
-    "analiticaPreguntas_one": "Respondiste \"No, gracias\" 1 vez a compartir los datos de uso",
-    "analiticaPreguntas_other": "Respondiste \"No, gracias\" {{count}} veces a compartir los datos de uso"
+    "analiticaPreguntas_one": "Respondiste \"Ahora no\" 1 vez a compartir los datos de uso",
+    "analiticaPreguntas_other": "Respondiste \"Ahora no\" {{count}} veces a compartir los datos de uso"
   },
   "comoRespaldo": {
     "titulo": "Cómo funciona tu respaldo",
@@ -898,27 +902,30 @@
     "sinDatos": "Abre Tino para ver qué tarjeta usar hoy."
   },
   "datosDeUso": {
-    "titulo": "¿Nos ayudas a mejorar Tino?",
-    "texto": "Comparte datos anónimos de uso, como qué funciones usas. Nunca montos, números ni nombres de tus tarjetas.",
-    "textoInicio": "¿Nos ayudas a mejorar Tino con datos anónimos de uso? Nunca montos, números ni nombres de tus tarjetas.",
-    "si": "Sí, compartir",
-    "no": "No, gracias",
-    "verQue": "Ver qué se comparte",
+    "titulo": "Ayúdanos a mejorar Tino",
+    "texto": "Puedes compartir datos anónimos sobre cómo usas Tino. Nos ayudan a mejorar la app y a encontrar fallos.",
+    "cambiar": "Puedes cambiarlo cuando quieras en Ajustes > Privacidad.",
+    "textoInicio": "¿Nos ayudas a mejorar Tino? Comparte datos anónimos de uso.",
+    "si": "Compartir datos de uso",
+    "no": "Ahora no",
+    "verQue": "Qué se comparte",
+    "politica": "Política de privacidad",
     "hojaTitulo": "Qué se comparte",
-    "seEnvia": "Si aceptas, se envía",
+    "seEnvia": "Qué puede incluir",
     "envia": {
-      "funciones": "Qué funciones usas; por ejemplo, \"se registró una tarjeta\"",
-      "catalogo": "El banco y el tipo de tarjeta que elegiste del catálogo, y cuántas tarjetas tienes (1, 2, 3 a 4, 5 o más)",
-      "version": "La versión de Tino y del sistema de tu teléfono, y el tamaño de su pantalla",
-      "fallos": "Si la app falla, un reporte técnico del error con datos del teléfono, como su modelo, memoria libre e idioma"
+      "funciones": "Funciones que usas",
+      "catalogo": "El banco y el tipo de tarjeta que elegiste del catálogo",
+      "cantidad": "Cuántas tarjetas tienes",
+      "version": "La versión de Tino y datos técnicos del teléfono, como el sistema y el tamaño de la pantalla",
+      "fallos": "Información técnica sobre errores"
     },
-    "nuncaSeEnvia": "Nunca se envía",
+    "nuncaSeEnvia": "Qué nunca incluye",
     "nunca": {
       "montos": "Montos, balances ni límites",
-      "numeros": "Números de tarjeta, ni siquiera los últimos 4",
+      "numeros": "Números de tarjeta, incluidos los últimos 4 dígitos",
       "nombres": "Los nombres de tus tarjetas ni tus fechas de cobro",
       "persona": "Tu nombre, correo, teléfono ni ubicación"
     },
-    "donde": "Se guardan en servicios de la Unión Europea, sin datos que te identifiquen. Puedes cambiar tu respuesta cuando quieras en Ajustes, Privacidad."
+    "donde": "No incluyen nada que te identifique directamente y se guardan en servicios de la Unión Europea."
   }
 }
