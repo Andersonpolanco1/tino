@@ -15,7 +15,7 @@ Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso neces
 - **Tus datos financieros se quedan en tu teléfono,** cifrados. No tenemos servidores donde se guarden tus tarjetas ni tus fechas.
 - **No necesitas crear una cuenta.** No te pedimos nombre, correo ni teléfono.
 - **Nunca te pedimos** el número completo de tu tarjeta, la fecha de vencimiento, el código de seguridad (CVV) ni tu usuario o clave del banco.
-- **Enviamos datos de uso anónimos** para mejorar Tino, sin montos, nombres de tarjetas ni fechas de cobro. Puedes apagarlos en cualquier momento.
+- **Solo si aceptas, enviamos datos de uso anónimos** para mejorar Tino, sin montos, números ni nombres de tarjetas ni fechas de cobro. Puedes cambiar tu respuesta en cualquier momento.
 - **No vendemos datos** ni mostramos publicidad.
 
 ## 1. Quién es responsable de tus datos
@@ -43,7 +43,9 @@ Tino no usa tu ubicación, tus contactos, tus fotos, tus mensajes ni tu cámara.
 
 ### 3.1 Datos de uso anónimos
 
-Si la opción **"Datos de uso anónimos"** está encendida, Tino envía eventos como "se registró una tarjeta" o "se cambió el enfoque", para saber qué partes de la app se usan y cuáles mejorar. La opción viene encendida y la puedes apagar en **Ajustes > Privacidad**. Al apagarla, Tino deja de enviar eventos al instante y no los guarda para enviarlos después.
+Si aceptas compartir los **datos de uso anónimos**, Tino envía eventos como "se registró una tarjeta" o "se cambió el enfoque", para saber qué partes de la app se usan y cuáles mejorar.
+
+**Cómo te lo preguntamos.** Al terminar de configurar Tino te preguntamos si quieres compartirlos, con la lista de lo que se envía a un toque. Hasta que respondas no sale nada: lo que hiciste mientras configurabas Tino se envía solo si aceptas, y si no, se borra. Si respondes que no, te lo volvemos a preguntar como máximo dos veces más desde la pantalla de inicio (a los 14 días y, si vuelves a decir que no, a los 60 días), y después no insistimos. Puedes cambiar tu respuesta cuando quieras en **Ajustes > Privacidad**; al apagarla, Tino deja de enviar eventos al instante y no los guarda para enviarlos después.
 
 Cada evento puede llevar:
 
@@ -52,15 +54,15 @@ Cada evento puede llevar:
 - la versión de Tino y la del sistema operativo de tu teléfono;
 - un identificador aleatorio creado por Tino en tu teléfono, que no está ligado a tu nombre, a tu cuenta de la tienda ni al teléfono. Si usas "Borrar todo", se crea uno nuevo.
 
-**Nunca se envían** montos, balances, límites, números de tarjeta (ni los últimos 4 dígitos), los nombres que les pones a tus tarjetas o cobros, ni tus fechas de cobro. Tino tampoco guarda tu ubicación a partir de la dirección IP.
+**Nunca se envían** montos, balances, límites, números de tarjeta (ni los últimos 4 dígitos), los nombres que les pones a tus tarjetas o cobros, ni tus fechas de cobro. Como en cualquier conexión a internet, el servicio que recibe los eventos ve la dirección IP de tu teléfono: lo tenemos configurado para no guardarla ni usarla para ubicarte.
 
 Estos eventos los recibe PostHog, en servidores de la Unión Europea.
 
 ### 3.2 Reportes de fallos
 
-Con la misma opción "Datos de uso anónimos" encendida, si Tino se cierra o tiene un error, envía un reporte técnico para que podamos corregirlo: qué parte del código falló, la versión de la app, el modelo y sistema del teléfono, y si la sesión terminó sin fallos. Antes de enviarlo, Tino le quita los datos de pantalla y el historial de acciones, y reemplaza cualquier secuencia larga de números por "[filtrado]". Los reportes no incluyen capturas de pantalla.
+Solo si aceptaste compartir los datos de uso, si Tino se cierra o tiene un error, envía un reporte técnico para que podamos corregirlo: qué parte del código falló, la versión de la app, el modelo y sistema del teléfono, y si la sesión terminó sin fallos. Antes de enviarlo, Tino le quita los datos de pantalla y el historial de acciones, y reemplaza cualquier secuencia larga de números por "[filtrado]". Los reportes no incluyen capturas de pantalla.
 
-Estos reportes los recibe Sentry, en servidores de la Unión Europea. Con la opción apagada no se envía ningún reporte.
+Estos reportes los recibe Sentry, en servidores de la Unión Europea, configurado para no guardar la dirección IP. Sin tu aceptación, o con la opción apagada, no se envía ningún reporte.
 
 ### 3.3 Compras de Tino Pro
 
@@ -93,7 +95,10 @@ Solo usamos estos proveedores, que tratan los datos por encargo nuestro y para l
 | RevenueCat | Estado de la suscripción a Tino Pro | Estados Unidos |
 | Apple y Google | Cobro de Tino Pro y respaldo del teléfono | Según su política |
 
-Algunos de estos servidores están fuera de la República Dominicana. Solo les llegan los datos anónimos o técnicos descritos en esta política, nunca tus datos financieros.
+Algunos de estos servidores están fuera de la República Dominicana. Solo les llegan los datos anónimos o técnicos descritos en esta política, nunca tus datos financieros:
+
+- a **PostHog y Sentry**, porque tú lo autorizas al aceptar compartir los datos de uso (artículo 80 de la Ley 172-13);
+- a **RevenueCat, Apple y Google**, porque es necesario para venderte Tino Pro y darte acceso a él.
 
 Podríamos tener que entregar información si una autoridad competente lo exige conforme a la ley. Como tus datos financieros no salen de tu teléfono, no los tenemos para entregarlos.
 
@@ -111,9 +116,9 @@ La Ley 172-13 te da derecho a acceder a tus datos, corregirlos, pedir que se bor
 - **Acceder:** Ajustes > Tus datos > Ver mis datos te da un texto con todo lo que Tino guarda.
 - **Corregir:** edita tus tarjetas, cobros y preferencias cuando quieras.
 - **Borrar:** Ajustes > Tus datos > Borrar todo elimina todos tus datos del teléfono, incluida la clave de cifrado, y crea un identificador anónimo nuevo. Desinstalar Tino también borra los datos del teléfono (el respaldo automático, si lo encendiste, queda en el respaldo de tu teléfono hasta que lo borres ahí).
-- **Oponerte:** apaga "Datos de uso anónimos" en Ajustes > Privacidad.
+- **Oponerte o retirar tu consentimiento:** apaga "Datos de uso anónimos" en Ajustes > Privacidad.
 
-Si quieres que borremos los datos de uso anónimos que ya se enviaron, escríbenos a polancolabsrd@gmail.com con el identificador que aparece en "Ver mis datos". Te respondemos en un máximo de 30 días.
+Si quieres saber qué datos de uso anónimos se enviaron, o que los borremos, escríbenos a polancolabsrd@gmail.com con el identificador que aparece en "Ver mis datos". Te respondemos en un máximo de 5 días hábiles si pides acceso a esos datos, y de 10 días hábiles si pides corregirlos o borrarlos (artículos 8 y 10 de la Ley 172-13). Si no estás conforme con la respuesta, puedes acudir a los tribunales mediante la acción de hábeas data.
 
 ## 9. Seguridad
 
