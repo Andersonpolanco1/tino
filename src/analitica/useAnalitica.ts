@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useAlmacen } from '../estado';
 import { usePais } from '../paises';
+import { estadoAnalitica } from '../privacidad/consentimiento';
 import { configurarAnalitica, esperarTransporte, usarTransporte } from './cliente';
 import { leerIdentificador, nuevoIdentificador } from './identificador';
 
@@ -22,14 +23,15 @@ export async function reiniciarIdentificadorAnalitica() {
   await iniciarTransporte(id);
 }
 
-// Mantiene la analítica al día con el interruptor de Ajustes y el país; no dibuja nada.
+// Mantiene la analítica al día con el consentimiento (D88), el interruptor de Ajustes y el país;
+// no dibuja nada.
 export function useAnalitica() {
-  const activa = useAlmacen(s => s.preferencias?.analiticaActiva ?? false);
+  const estado = useAlmacen(s => estadoAnalitica(s.preferencias));
   const { config } = usePais();
 
   useEffect(() => {
-    configurarAnalitica({ activa, pais: config.codigo });
-  }, [activa, config.codigo]);
+    configurarAnalitica({ activa: estado === 'activa', retener: estado === 'pendiente', pais: config.codigo });
+  }, [estado, config.codigo]);
 
   useEffect(() => {
     iniciarTransporte().catch(() => {});

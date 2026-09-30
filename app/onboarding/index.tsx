@@ -10,10 +10,13 @@ import { marcarInicioOnboarding } from '@/analitica';
 import { borrarRespaldoAutomatico, leerRespaldoAutomatico } from '@/respaldo/automatico';
 import { reemplazarDatos, type ContenidoRespaldo } from '@/respaldo/contenido';
 import { formatearFecha } from '@/i18n/formato';
+import { useHoy } from '@/inicio/useHoy';
+import { aceptarTerminos, conservarAceptacion } from '@/privacidad/terminos';
+import { LineaAceptacion } from '@/privacidad/LineaAceptacion';
 
 // Onboarding, paso 1: bienvenida (sección 13.1 de la especificación) y confirmación del país.
 // Si el respaldo del teléfono trajo la copia automática de Tino (decisión D81), primero ofrece
-// restaurarla.
+// restaurarla. Continuar, por cualquiera de los caminos, acepta los términos (D88).
 export default function Bienvenida() {
   const { t } = useTranslation();
   const tema = useTema();
@@ -22,6 +25,9 @@ export default function Bienvenida() {
   const elegirPais = useElegirPais();
   const datos = useEstadoDatos();
   const cargar = useAlmacen(s => s.cargar);
+  const preferencias = useAlmacen(s => s.preferencias);
+  const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
+  const hoy = useHoy();
   const [copia, setCopia] = useState<ContenidoRespaldo | null>(null);
   const [ocupado, setOcupado] = useState(false);
   useEffect(() => marcarInicioOnboarding(), []);
@@ -35,11 +41,20 @@ export default function Bienvenida() {
     };
   }, []);
 
+  async function aceptar() {
+    if (!preferencias) return null;
+    const aceptadas = aceptarTerminos(preferencias, hoy);
+    await guardarPreferencias(aceptadas);
+    return aceptadas;
+  }
+
   async function restaurar() {
     if (!copia || datos.estado !== 'lista') return;
     setOcupado(true);
     try {
-      await reemplazarDatos(datos.base.transaccion, copia, new Date().toISOString());
+      const aceptadas = await aceptar();
+      const contenido = copia.preferencias ? { ...copia, preferencias: conservarAceptacion(copia.preferencias, aceptadas) } : copia;
+      await reemplazarDatos(datos.base.transaccion, contenido, new Date().toISOString());
       await cargar();
       router.replace('/inicio');
     } catch {
@@ -54,7 +69,22 @@ export default function Bienvenida() {
   }
 
   return (
-    <Pantalla pie={copia ? undefined : <Boton titulo={t('onboarding.empezar')} onPress={() => router.push('/onboarding/tarjetas')} />}>
+    <Pantalla
+      pie={
+        copia ? undefined : (
+          <>
+            <Boton
+              titulo={t('onboarding.empezar')}
+              onPress={async () => {
+                await aceptar();
+                router.push('/onboarding/tarjetas');
+              }}
+            />
+            <LineaAceptacion />
+          </>
+        )
+      }
+    >
       <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>
         {t('onboarding.bienvenidaTitulo')}
       </Texto>
@@ -68,6 +98,7 @@ export default function Bienvenida() {
             <Boton titulo={t('onboarding.copiaRestaurar')} onPress={restaurar} deshabilitado={ocupado} />
             <Boton titulo={t('onboarding.copiaEmpezar')} variante="texto" onPress={empezarDeCero} deshabilitado={ocupado} />
           </View>
+          <LineaAceptacion />
         </Superficie>
       ) : (
         <>
@@ -85,7 +116,14 @@ export default function Bienvenida() {
             {t('onboarding.privacidad')}
           </Texto>
           {/* Quien ya usaba Tino en otro teléfono recupera todo con su respaldo (D62). */}
-          <Boton titulo={t('onboarding.restaurar')} variante="texto" onPress={() => router.push('/respaldo/restaurar')} />
+          <Boton
+            titulo={t('onboarding.restaurar')}
+            variante="texto"
+            onPress={async () => {
+              await aceptar();
+              router.push('/respaldo/restaurar');
+            }}
+          />
         </>
       )}
     </Pantalla>

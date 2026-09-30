@@ -116,6 +116,10 @@ const CAMPOS_PREFERENCIAS: Campos<Preferencias> = {
   consejosVistos: (x, c) => (x.consejosVistos?.length ? c.t('misDatos.consejosVistos', { count: x.consejosVistos.length }) : null),
   respaldoAutomatico: (x, c) => c.t('misDatos.respaldoAutomatico', { valor: siNo(x.respaldoAutomatico ?? false, c) }),
   ultimoRespaldoManual: (x, c) => (x.ultimoRespaldoManual ? c.t('misDatos.ultimoRespaldoManual', { fecha: fecha(x.ultimoRespaldoManual, c) }) : null),
+  terminosAceptados: (x, c) =>
+    x.terminosAceptados ? c.t('misDatos.terminosAceptados', { version: fecha(x.terminosAceptados.version, c), fecha: fecha(x.terminosAceptados.fecha, c) }) : null,
+  analiticaDecidida: (x, c) => (x.analiticaDecidida ? c.t('misDatos.analiticaDecidida', { fecha: fecha(x.analiticaDecidida, c) }) : null),
+  analiticaPreguntas: (x, c) => (x.analiticaPreguntas?.length ? c.t('misDatos.analiticaPreguntas', { count: x.analiticaPreguntas.length }) : null),
 };
 
 const CAMPOS_SUGERENCIAS: Campos<EstadoSugerencias> = {

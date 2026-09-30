@@ -112,6 +112,15 @@ export interface Preferencias {
   respaldoAutomatico?: boolean;
   // Decisión D81: último respaldo manual creado, para recordarlo pasados 3 meses.
   ultimoRespaldoManual?: FechaISO;
+  // Decisión D88: qué versión de los términos y la política aceptó el usuario al tocar
+  // "Empezar" (Ley 358-05, art. 83: aceptación expresa). Opcional para no migrar.
+  terminosAceptados?: { version: string; fecha: FechaISO };
+  // Decisión D88: consentimiento de los datos de uso (Ley 172-13, arts. 5.4 y 80). La analítica
+  // solo sale con `analiticaActiva` y una decisión tomada: un "Sí" o un toque al interruptor de
+  // Ajustes. `analiticaPreguntas` guarda la fecha de cada "No, gracias", para volver a preguntar
+  // hasta 3 veces en total. Opcionales para no migrar: sin ellos, aún no respondió.
+  analiticaDecidida?: FechaISO;
+  analiticaPreguntas?: FechaISO[];
 }
 
 export type TemaApp = 'automatico' | 'claro' | 'oscuro';

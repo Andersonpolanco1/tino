@@ -5,7 +5,7 @@ import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
 import { useAlmacen } from '@/estado';
 import { registrarOnboardingCompletado } from '@/analitica';
 
-// Onboarding, último paso: el permiso de avisos se pide al final, explicando para qué sirve
+// Onboarding, penúltimo paso: el permiso de avisos se pide al final, explicando para qué sirve
 // (sección 13.1 de la especificación y 6 técnica).
 export default function AvisosOnboarding() {
   const { t } = useTranslation();
@@ -13,10 +13,11 @@ export default function AvisosOnboarding() {
   const { pedir } = usePermisoAvisos();
   const tarjetas = useAlmacen(s => s.tarjetas.length);
   const hayIngresos = useAlmacen(s => s.ingresos.length > 0);
-  // Al terminar se ve la tarjeta de hoy por primera vez: ahí se completa el onboarding (17.4).
+  // Aquí termina el registro (17.4). Queda la pregunta de los datos de uso (D88): el evento espera
+  // en memoria esa respuesta y solo sale si el usuario dice que sí.
   const terminar = () => {
     registrarOnboardingCompletado({ tarjetas, hayIngresos });
-    router.replace('/inicio');
+    router.push('/onboarding/datos-de-uso');
   };
   return (
     <Pantalla

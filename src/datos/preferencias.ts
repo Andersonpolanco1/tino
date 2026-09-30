@@ -9,7 +9,8 @@ export function preferenciasIniciales(pais: CodigoPais, idioma: string): Prefere
     pagoBalanceUsd: null,
     diferencialCambiarioPct: 6,
     umbralCorteCercanoDias: 3,
-    analiticaActiva: true,
+    // Decisión D88: apagada hasta que el usuario responda a "¿Nos ayudas a mejorar Tino?".
+    analiticaActiva: false,
     plan: 'gratis',
   };
 }

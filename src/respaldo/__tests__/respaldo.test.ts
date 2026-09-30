@@ -29,7 +29,7 @@ const tarjeta: Tarjeta = {
 const cobro: FuenteIngreso = { id: 'cobro-1', nombre: 'Nómina', frecuencia: { tipo: 'quincenal_dias_fijos', dias: [15, 30] }, ajusteDiaNoHabil: 'adelantar' };
 const contenido = contenidoDe(
   {
-    preferencias: { ...preferenciasIniciales('DO', 'es-DO'), plan: 'pro', tema: 'oscuro' },
+    preferencias: { ...preferenciasIniciales('DO', 'es-DO'), plan: 'pro', tema: 'oscuro', analiticaActiva: true },
     tarjetas: [tarjeta],
     ingresos: [cobro],
     sugerencias: { activa: null, descartes: { cobros: { veces: 2, ultimo: '2026-09-12' } } },

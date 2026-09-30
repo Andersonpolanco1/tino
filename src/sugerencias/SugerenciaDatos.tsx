@@ -1,8 +1,8 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { BotonCircular, BotonPastilla, Icono, Superficie, Texto, useTema } from '../diseno';
+import { Boton, BotonCircular, BotonPastilla, Icono, Superficie, Texto, useTema } from '../diseno';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
 import { useTarjetasEnPlan } from '../suscripciones/useSuscripcion';
@@ -13,11 +13,13 @@ import { numeroDe } from '../motor/fechas';
 import { descartarSugerencia, elegirSugerencia, type TipoSugerencia } from './elegir';
 import { useConsejosNuevos } from '../consejos';
 import { registrarSugerenciaAceptada, registrarSugerenciaDescartada, registrarSugerenciaMostrada } from '../analitica';
+import { responderAnalitica, tocaPreguntarAnalitica } from '../privacidad/consentimiento';
+import { HojaQueSeComparte } from '../privacidad/QueSeComparte';
 
 // Días antes de una fecha límite en que tiene sentido sugerir los cobros (sección 2.2:
 // "al acercarse una fecha límite").
 const DIAS_PAGO_CERCANO = 7;
-const ICONO_ACCION = { cobros: 'mas', fechas: 'derecha', valorPunto: 'check', respaldo: 'descargar' } as const;
+const ICONO_ACCION = { cobros: 'mas', fechas: 'derecha', valorPunto: 'check', respaldo: 'descargar', analitica: 'check' } as const;
 // Decisión D81: pasados 3 meses usando Tino sin un respaldo manual, se recuerda crearlo.
 export const DIAS_SIN_RESPALDO = 90;
 
@@ -33,7 +35,10 @@ export function SugerenciaDatos() {
   const ingresos = useAlmacen(s => s.ingresos);
   const estado = useAlmacen(s => s.sugerencias);
   const guardar = useAlmacen(s => s.guardarSugerencias);
-  const ultimoRespaldo = useAlmacen(s => s.preferencias?.ultimoRespaldoManual);
+  const preferencias = useAlmacen(s => s.preferencias);
+  const guardarPreferencias = useAlmacen(s => s.guardarPreferencias);
+  const ultimoRespaldo = preferencias?.ultimoRespaldoManual;
+  const [detalle, setDetalle] = useState(false);
 
   const activas = tarjetas.filter(x => !x.enPausa);
   const sinConfirmar = activas.find(valorPuntoPorConfirmar);
@@ -41,6 +46,9 @@ export function SugerenciaDatos() {
   // Decisión D68: solo mientras haya consejos nuevos; los vistos quedan en Tarjetas.
   const { nuevos: consejosNuevos } = useConsejosNuevos();
   const candidatas: TipoSugerencia[] = [];
+  // D88: cuando toca volver a preguntar por los datos de uso, va primero; si ya hay otra
+  // sugerencia esta semana, espera a la siguiente.
+  if (tocaPreguntarAnalitica(preferencias, hoy)) candidatas.push('analitica');
   if (!ingresos.length && pagoCercano) candidatas.push('cobros');
   if (consejosNuevos.length) candidatas.push('fechas');
   if (sinConfirmar) candidatas.push('valorPunto');
@@ -59,6 +67,42 @@ export function SugerenciaDatos() {
     if (tipo) registrarSugerenciaMostrada(tipo);
   }, [tipo]);
   if (!tipo) return null;
+  const descartar = () => {
+    registrarSugerenciaDescartada(tipo);
+    guardar(descartarSugerencia(estado, tipo, hoy)).catch(() => {});
+  };
+  if (tipo === 'analitica') {
+    // "No, gracias" y cerrar cuentan como un intento; "Sí, compartir" decide para siempre.
+    const responder = (si: boolean) => {
+      if (!preferencias) return;
+      if (si) registrarSugerenciaAceptada(tipo);
+      else descartar();
+      guardarPreferencias(responderAnalitica(preferencias, si, hoy)).catch(() => {});
+    };
+    return (
+      <Superficie radio={tema.radio.lista} style={{ padding: tema.espacio.l, gap: tema.espacio.m }}>
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: tema.espacio.m }}>
+          <View style={{ width: 36, height: 36, borderRadius: 11, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
+            <Icono nombre="grafica" color="primario" tamano={20} />
+          </View>
+          <Texto variante="apoyo" style={{ flex: 1 }}>
+            {t('datosDeUso.textoInicio')}
+          </Texto>
+          <View style={{ marginTop: -tema.espacio.s, marginRight: -tema.espacio.s }}>
+            <BotonCircular icono="cerrar" plano etiqueta={t('sugerencias.descartar')} onPress={() => responder(false)} />
+          </View>
+        </View>
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: tema.espacio.s }}>
+          <BotonPastilla icono={ICONO_ACCION.analitica} titulo={t('datosDeUso.si')} onPress={() => responder(true)} />
+          <Boton titulo={t('datosDeUso.no')} variante="texto" onPress={() => responder(false)} />
+        </View>
+        <View style={{ alignItems: 'flex-start' }}>
+          <Boton titulo={t('datosDeUso.verQue')} variante="texto" onPress={() => setDetalle(true)} />
+        </View>
+        <HojaQueSeComparte visible={detalle} onCerrar={() => setDetalle(false)} />
+      </Superficie>
+    );
+  }
   const texto = tipo === 'valorPunto' ? t('sugerencias.valorPunto', { alias: sinConfirmar?.alias ?? '' }) : t(`sugerencias.${tipo}`);
   const accion = () => {
     registrarSugerenciaAceptada(tipo);
@@ -77,10 +121,7 @@ export function SugerenciaDatos() {
           {texto}
         </Texto>
         <View style={{ marginTop: -tema.espacio.s, marginRight: -tema.espacio.s }}>
-          <BotonCircular icono="cerrar" plano etiqueta={t('sugerencias.descartar')} onPress={() => {
-              registrarSugerenciaDescartada(tipo);
-              guardar(descartarSugerencia(estado, tipo, hoy)).catch(() => {});
-            }} />
+          <BotonCircular icono="cerrar" plano etiqueta={t('sugerencias.descartar')} onPress={descartar} />
         </View>
       </View>
       <View style={{ alignItems: 'flex-start' }}>

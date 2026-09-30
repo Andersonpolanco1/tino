@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { Linking } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { ReactNode } from 'react';
 import { ProveedorPais, usarEleccionDePais, type RegionDispositivo } from '@/paises';
@@ -23,6 +24,11 @@ jest.mock('expo-router', () => ({ Stack: { Screen: () => null }, useRouter: () =
 // Ajustes importa la base para "Borrar todo"; en estas pruebas no se abre.
 jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '' }));
 jest.mock('expo-sharing', () => ({ shareAsync: jest.fn() }));
+// Las direcciones de los documentos salen de variables de entorno; aquí, unas de prueba (D88).
+jest.mock('@/privacidad/terminos', () => ({
+  ...jest.requireActual('@/privacidad/terminos'),
+  DOCUMENTOS: { terminos: 'https://prueba.do/terminos', privacidad: 'https://prueba.do/privacidad', soporte: 'https://prueba.do/soporte' },
+}));
 
 const medidas = {
   frame: { x: 0, y: 0, width: 390, height: 844 },
@@ -213,13 +219,37 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
     expect(screen.getByText(/^(5 de 6 encendidos|Apagados: Tino necesita tu permiso)$/)).toBeOnTheScreen();
   });
 
-  test('Privacidad: el interruptor de datos de uso anónimos lo guarda', async () => {
+  test('Privacidad: el interruptor de datos de uso anónimos lo guarda como decisión (D88)', async () => {
     const almacen = await almacenCon('DO');
-    const antes = almacen.getState().preferencias!.analiticaActiva;
     await render(conPais([rd], almacen, <Privacidad />));
+    expect(screen.getByText('Números de tarjeta, ni siquiera los últimos 4')).toBeOnTheScreen();
     await fireEvent.press(screen.getByLabelText('Datos de uso anónimos'));
     await act(async () => {});
-    expect(almacen.getState().preferencias?.analiticaActiva).toBe(!antes);
+    expect(almacen.getState().preferencias?.analiticaActiva).toBe(true);
+    expect(almacen.getState().preferencias?.analiticaDecidida).toBeTruthy();
+  });
+
+  test('Ajustes enlaza soporte, términos y política (D88)', async () => {
+    const abrir = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    await render(conPais([rd], await almacenCon('DO'), <Ajustes />));
+    await fireEvent.press(screen.getByText('Política de privacidad'));
+    await fireEvent.press(screen.getByText('Términos de uso'));
+    await fireEvent.press(screen.getByText('Ayuda y soporte'));
+    expect(abrir.mock.calls.map(c => c[0])).toEqual(['https://prueba.do/privacidad', 'https://prueba.do/terminos', 'https://prueba.do/soporte']);
+    abrir.mockRestore();
+  });
+});
+
+describe('aceptación de los términos (D88)', () => {
+  test('la bienvenida la explica y "Empezar" la guarda', async () => {
+    const almacen = await almacenCon('DO');
+    await render(conPais([rd], almacen, <Bienvenida />));
+    await act(async () => {});
+    expect(screen.getByText('Al continuar, aceptas los Términos de uso y la Política de privacidad.')).toBeOnTheScreen();
+    expect(almacen.getState().preferencias?.terminosAceptados).toBeUndefined();
+    await act(async () => fireEvent.press(screen.getByText('Empezar')));
+    expect(almacen.getState().preferencias?.terminosAceptados?.version).toBe('2026-09-29');
+    expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/tarjetas');
   });
 });
 

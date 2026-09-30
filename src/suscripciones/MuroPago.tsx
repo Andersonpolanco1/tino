@@ -6,12 +6,9 @@ import { registrarMuroPagoVisto } from '../analitica';
 import { DIAS_ANTES_FIN_PRUEBA } from '../notificaciones/planificar';
 import { useComprasPro } from './useSuscripcion';
 import { ahorroAnual, type OfertaPro } from './servicio';
+import { DOCUMENTOS } from '../privacidad/terminos';
 
 export type MotivoMuro = 'tercera_tarjeta' | 'funcion_avanzada' | 'voluntario';
-
-// Documentos legales publicados junto con la política de privacidad; sin dirección, no se muestran.
-const URL_TERMINOS = process.env.EXPO_PUBLIC_URL_TERMINOS ?? '';
-const URL_PRIVACIDAD = process.env.EXPO_PUBLIC_URL_PRIVACIDAD ?? '';
 
 interface Props {
   motivo: MotivoMuro;
@@ -170,10 +167,10 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
           {oferta.prueba ? t('pro.condicionesPrueba', { tienda }) : t('pro.condiciones', { tienda })}
         </Texto>
       ) : null}
-      {URL_TERMINOS || URL_PRIVACIDAD ? (
+      {DOCUMENTOS.terminos || DOCUMENTOS.privacidad ? (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: tema.espacio.m }}>
-          {URL_TERMINOS ? <Boton titulo={t('pro.terminos')} variante="texto" onPress={() => Linking.openURL(URL_TERMINOS)} /> : null}
-          {URL_PRIVACIDAD ? <Boton titulo={t('pro.privacidad')} variante="texto" onPress={() => Linking.openURL(URL_PRIVACIDAD)} /> : null}
+          {DOCUMENTOS.terminos ? <Boton titulo={t('pro.terminos')} variante="texto" onPress={() => Linking.openURL(DOCUMENTOS.terminos)} /> : null}
+          {DOCUMENTOS.privacidad ? <Boton titulo={t('pro.privacidad')} variante="texto" onPress={() => Linking.openURL(DOCUMENTOS.privacidad)} /> : null}
         </View>
       ) : null}
     </Pantalla>

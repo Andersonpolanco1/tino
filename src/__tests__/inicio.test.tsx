@@ -2,7 +2,8 @@ import type { ReactNode } from 'react';
 import * as ReactNative from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import type { Recompensa, Tarjeta } from '@/tipos/tipos';
+import type { Preferencias, Recompensa, Tarjeta } from '@/tipos/tipos';
+import { estadoAnalitica } from '@/privacidad/consentimiento';
 import { ProveedorPais } from '@/paises';
 import { migrar } from '@/datos/migraciones';
 import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, repositorioTarjetas } from '@/datos/repositorios';
@@ -45,7 +46,7 @@ async function almacenCon(tarjetas: Tarjeta[], plan: 'gratis' | 'pro' = tarjetas
   await migrar(db);
   const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
   await almacen.getState().cargar();
-  await almacen.getState().guardarPreferencias({ ...preferenciasIniciales('DO', 'es-DO'), plan });
+  await almacen.getState().guardarPreferencias({ ...preferenciasIniciales('DO', 'es-DO'), plan, analiticaDecidida: '2026-09-01' });
   for (const t of tarjetas) await almacen.getState().guardarTarjeta(t);
   return almacen;
 }
@@ -174,6 +175,41 @@ test('sugerencia de datos: agregar los cobros cuando un pago está cerca, y se p
   await act(async () => {});
   expect(screen.queryByText(/Agrega tus fechas de cobro/)).toBeNull();
   expect(almacen.getState().sugerencias.descartes.cobros?.veces).toBe(1);
+});
+
+describe('volver a pedir los datos de uso desde Inicio (D88)', () => {
+  const PREGUNTA = '¿Nos ayudas a mejorar Tino con datos anónimos de uso? Nunca montos, números ni nombres de tus tarjetas.';
+  async function conRespuestas(cambios: Partial<Preferencias>) {
+    const almacen = await almacenCon([A, B, C]);
+    const { analiticaDecidida: _sinDecidir, ...preferencias } = almacen.getState().preferencias!;
+    await almacen.getState().guardarPreferencias({ ...preferencias, ...cambios });
+    return almacen;
+  }
+
+  test('sin respuesta (por ejemplo, tras restaurar un respaldo), pregunta antes que otras sugerencias; "Sí" la activa', async () => {
+    const almacen = await conRespuestas({});
+    await render(envolver(almacen, <Inicio />));
+    expect(screen.getByText(PREGUNTA)).toBeOnTheScreen();
+    expect(screen.queryByText('Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.')).toBeNull();
+    await act(async () => fireEvent.press(screen.getByText('Sí, compartir')));
+    expect(estadoAnalitica(almacen.getState().preferencias)).toBe('activa');
+    expect(screen.queryByText(PREGUNTA)).toBeNull();
+  });
+
+  test('14 días después del primer "No" vuelve; otro "No" cuenta el segundo intento', async () => {
+    const almacen = await conRespuestas({ analiticaPreguntas: ['2026-09-20'] });
+    await render(envolver(almacen, <Inicio />));
+    await act(async () => fireEvent.press(screen.getByText('No, gracias')));
+    expect(almacen.getState().preferencias?.analiticaPreguntas).toEqual(['2026-09-20', '2026-10-06']);
+    expect(estadoAnalitica(almacen.getState().preferencias)).toBe('apagada');
+    expect(screen.queryByText(PREGUNTA)).toBeNull();
+  });
+
+  test('antes de los 14 días no pregunta y deja pasar las demás sugerencias', async () => {
+    await render(envolver(await conRespuestas({ analiticaPreguntas: ['2026-09-30'] }), <Inicio />));
+    expect(screen.queryByText(PREGUNTA)).toBeNull();
+    expect(screen.getByText('Agrega tus días de cobro y te avisamos si un pago vence antes de que cobres.')).toBeOnTheScreen();
+  });
 });
 
 test('"Por pagar" solo muestra lo que vence pronto, y "Ya pagué" lo quita (decisiones D44 y D45)', async () => {

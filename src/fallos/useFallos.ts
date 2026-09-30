@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { useAlmacen } from '../estado';
+import { estadoAnalitica } from '../privacidad/consentimiento';
 import { configurarFallos, usarServicioFallos } from './cliente';
 
 // DSN del proyecto de Sentry, desde un secreto de EAS. Vacío, nada sale del teléfono.
@@ -12,9 +13,10 @@ async function cargarServicio() {
   usarServicioFallos(crearServicioSentry(DSN));
 }
 
-// Mantiene el reporte de fallos al día con el interruptor de Ajustes; no dibuja nada.
+// Mantiene el reporte de fallos al día con el consentimiento (D88) y el interruptor de Ajustes;
+// no dibuja nada. Sin respuesta todavía, Sentry no arranca.
 export function useFallos() {
-  const activo = useAlmacen(s => s.preferencias?.analiticaActiva ?? false);
+  const activo = useAlmacen(s => estadoAnalitica(s.preferencias) === 'activa');
 
   useEffect(() => {
     configurarFallos(activo);

@@ -12,6 +12,8 @@ import TarjetasOnboarding from '../../app/onboarding/tarjetas';
 import EnfoqueOnboarding from '../../app/onboarding/enfoque';
 import CobrosOnboarding from '../../app/onboarding/cobros';
 import AvisosOnboarding from '../../app/onboarding/avisos';
+import DatosDeUsoOnboarding from '../../app/onboarding/datos-de-uso';
+import { estadoAnalitica } from '@/privacidad/consentimiento';
 
 const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
 jest.mock('expo-router', () => ({ useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
@@ -84,10 +86,38 @@ test('los cobros son opcionales: "Omitir" sigue a los avisos (sección 13.1)', a
   expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/avisos');
 });
 
-test('el permiso de avisos se pide al final y "Ahora no" lleva a inicio', async () => {
+test('el permiso de avisos se pide al final y "Ahora no" sigue a la pregunta de los datos de uso', async () => {
   const almacen = await preparar();
   await render(envolver(almacen, <AvisosOnboarding />));
   expect(screen.getByText('¿Te avisamos?')).toBeOnTheScreen();
   await fireEvent.press(screen.getByText('Ahora no'));
-  expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
+  expect(mockRouter.push).toHaveBeenCalledWith('/onboarding/datos-de-uso');
+});
+
+describe('pregunta de los datos de uso al final (D88)', () => {
+  test('"Sí, compartir" la activa y lleva a inicio', async () => {
+    const almacen = await preparar();
+    expect(estadoAnalitica(almacen.getState().preferencias)).toBe('pendiente');
+    await render(envolver(almacen, <DatosDeUsoOnboarding />));
+    await act(async () => fireEvent.press(screen.getByText('Sí, compartir')));
+    expect(estadoAnalitica(almacen.getState().preferencias)).toBe('activa');
+    expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
+  });
+
+  test('"No, gracias" la deja apagada, cuenta el intento y lleva a inicio', async () => {
+    const almacen = await preparar();
+    await render(envolver(almacen, <DatosDeUsoOnboarding />));
+    await act(async () => fireEvent.press(screen.getByText('No, gracias')));
+    expect(estadoAnalitica(almacen.getState().preferencias)).toBe('apagada');
+    expect(almacen.getState().preferencias?.analiticaPreguntas).toHaveLength(1);
+    expect(mockRouter.replace).toHaveBeenCalledWith('/inicio');
+  });
+
+  test('"Ver qué se comparte" abre la lista completa', async () => {
+    const almacen = await preparar();
+    await render(envolver(almacen, <DatosDeUsoOnboarding />));
+    await act(async () => fireEvent.press(screen.getByText('Ver qué se comparte')));
+    expect(screen.getByText('Nunca se envía')).toBeOnTheScreen();
+    expect(screen.getByText('Montos, balances ni límites')).toBeOnTheScreen();
+  });
 });

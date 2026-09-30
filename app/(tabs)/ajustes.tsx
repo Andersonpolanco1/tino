@@ -16,6 +16,8 @@ import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 import { useComprasPro } from '@/suscripciones';
 import { useEstadoRespaldoAutomatico } from '@/respaldo/automatico';
 import { detalleRespaldoAutomatico } from '@/respaldo/detalle';
+import { estadoAnalitica } from '@/privacidad/consentimiento';
+import { DOCUMENTOS } from '@/privacidad/terminos';
 
 // Anillo de 84: con 100% el número necesita aire dentro del trazo.
 const LADO_ANILLO = 84;
@@ -193,7 +195,7 @@ export default function Ajustes() {
           <FilaLista
             icono="grafica"
             titulo={t('ajustes.privacidadTitulo')}
-            detalle={t(preferencias.analiticaActiva ? 'ajustes.privacidadResumenSi' : 'ajustes.privacidadResumenNo')}
+            detalle={t(estadoAnalitica(preferencias) === 'activa' ? 'ajustes.privacidadResumenSi' : 'ajustes.privacidadResumenNo')}
             flecha
             onPress={() => router.push('/ajustes/privacidad')}
           />
@@ -204,6 +206,15 @@ export default function Ajustes() {
             flecha
             onPress={() => router.push('/ajustes/datos')}
           />
+        </ListaAgrupada>
+      ) : null}
+
+      {/* D88: los documentos siempre a mano (Google Play pide la política dentro de la app). */}
+      {DOCUMENTOS.terminos || DOCUMENTOS.privacidad || DOCUMENTOS.soporte ? (
+        <ListaAgrupada sangria={16}>
+          {DOCUMENTOS.soporte ? <FilaLista titulo={t('ajustes.docSoporte')} flecha onPress={() => Linking.openURL(DOCUMENTOS.soporte)} /> : null}
+          {DOCUMENTOS.terminos ? <FilaLista titulo={t('ajustes.docTerminos')} flecha onPress={() => Linking.openURL(DOCUMENTOS.terminos)} /> : null}
+          {DOCUMENTOS.privacidad ? <FilaLista titulo={t('ajustes.docPrivacidad')} flecha onPress={() => Linking.openURL(DOCUMENTOS.privacidad)} /> : null}
         </ListaAgrupada>
       ) : null}
 

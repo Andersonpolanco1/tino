@@ -122,10 +122,10 @@ Los tres en el mismo grupo de suscripción, "Tino Pro". La reseña de Apple nece
 
 | Categoría > tipo | Recopilado | Compartido | Opcional | Para qué |
 | --- | --- | --- | --- | --- |
-| Actividad en la app > Interacciones con la app | Sí | No | Sí (se apaga en Ajustes) | Estadísticas |
-| Información y rendimiento de la app > Registros de fallos | Sí | No | Sí (mismo interruptor) | Estadísticas y funcionalidad |
-| Información y rendimiento de la app > Diagnóstico | Sí | No | Sí (mismo interruptor) | Estadísticas |
-| Identificadores de dispositivo u otros (identificador anónimo) | Sí | No | Sí (mismo interruptor) | Estadísticas |
+| Actividad en la app > Interacciones con la app | Sí | No | Sí (solo si el usuario acepta, D88; se cambia en Ajustes) | Estadísticas |
+| Información y rendimiento de la app > Registros de fallos | Sí | No | Sí (misma aceptación) | Estadísticas y funcionalidad |
+| Información y rendimiento de la app > Diagnóstico | Sí | No | Sí (misma aceptación) | Estadísticas |
+| Identificadores de dispositivo u otros (identificador anónimo) | Sí | No | Sí (misma aceptación) | Estadísticas |
 | Información financiera > Historial de compras | Sí | No | No | Funcionalidad de la app (estado de Tino Pro) |
 
 Los datos de tarjetas y cobros no se declaran: nunca salen del teléfono. Los proveedores que procesan datos por encargo de Tino (PostHog, Sentry y RevenueCat) no cuentan como "compartir" según Google.

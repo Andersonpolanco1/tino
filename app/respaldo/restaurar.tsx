@@ -11,6 +11,7 @@ import { elegirRespaldo } from '@/respaldo/archivo';
 import { formatearFecha } from '@/i18n/formato';
 import { usePais } from '@/paises';
 import { useVolver } from '@/utilidades/useVolver';
+import { conservarAceptacion } from '@/privacidad/terminos';
 
 // Restaurar un respaldo (decisión D62), gratis: elegir el archivo, poner la contraseña, ver qué
 // trae y confirmar. Reemplaza todo en una sola transacción; si algo falla, no cambia nada.
@@ -23,6 +24,7 @@ export default function RestaurarRespaldo() {
   const datos = useEstadoDatos();
   const cargar = useAlmacen(s => s.cargar);
   const actuales = useAlmacen(s => s.tarjetas.length);
+  const preferenciasActuales = useAlmacen(s => s.preferencias);
   const [archivo, setArchivo] = useState<{ nombre: string; texto: string } | null>(null);
   const [contrasena, setContrasena] = useState('');
   const [contenido, setContenido] = useState<ContenidoRespaldo | null>(null);
@@ -58,7 +60,9 @@ export default function RestaurarRespaldo() {
     if (!contenido || datos.estado !== 'lista') return;
     setOcupado(true);
     try {
-      await reemplazarDatos(datos.base.transaccion, contenido, new Date().toISOString());
+      // La aceptación de los términos que vale es la de este teléfono (D88).
+      const restaurado = contenido.preferencias ? { ...contenido, preferencias: conservarAceptacion(contenido.preferencias, preferenciasActuales) } : contenido;
+      await reemplazarDatos(datos.base.transaccion, restaurado, new Date().toISOString());
       await cargar();
       Alert.alert(t('respaldo.restaurado'));
       router.replace('/inicio');

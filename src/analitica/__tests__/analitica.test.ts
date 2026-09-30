@@ -155,6 +155,42 @@ describe('interruptor de privacidad (17.5)', () => {
   });
 });
 
+describe('consentimiento de los datos de uso (D88)', () => {
+  it('sin respuesta, los eventos esperan en memoria y salen con el "Sí"', () => {
+    configurarAnalitica({ activa: false, retener: true, pais: 'DO' });
+    expect(transporte.apagado).toBe(true);
+    eventos.registrarTarjetaRegistrada(tarjeta);
+    eventos.registrarOnboardingCompletado({ tarjetas: 1, hayIngresos: false });
+    expect(transporte.enviados).toHaveLength(0);
+
+    configurarAnalitica({ activa: true, pais: 'DO' });
+    expect(transporte.apagado).toBe(false);
+    expect(transporte.enviados.map(e => e.evento)).toEqual(['tarjeta_registrada', 'onboarding_completado']);
+  });
+
+  it('con el "No", lo que esperaba se borra y nada sale después', () => {
+    configurarAnalitica({ activa: false, retener: true, pais: 'DO' });
+    eventos.registrarTarjetaRegistrada(tarjeta);
+    configurarAnalitica({ activa: false, pais: 'DO' });
+    configurarAnalitica({ activa: true, pais: 'DO' });
+    expect(transporte.enviados).toHaveLength(0);
+  });
+
+  it('lo que espera la respuesta no se pierde si el servicio termina de cargar antes', () => {
+    usarTransporte(null);
+    configurarAnalitica({ activa: false, retener: true, pais: 'DO' });
+    esperarTransporte();
+    eventos.registrarTarjetaRegistrada(tarjeta);
+    const nuevo = transporteFalso();
+    usarTransporte(nuevo);
+    expect(nuevo.apagado).toBe(true);
+    expect(nuevo.enviados).toHaveLength(0);
+
+    configurarAnalitica({ activa: true, pais: 'DO' });
+    expect(nuevo.enviados.map(e => e.evento)).toEqual(['tarjeta_registrada']);
+  });
+});
+
 // Sección 10: `src/analitica/` es el único lugar que puede enviar eventos.
 it('solo src/analitica importa el servicio de analítica', () => {
   const raiz = join(__dirname, '../../..');

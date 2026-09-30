@@ -307,7 +307,6 @@
     "privacidadTitulo": "Privacidad",
     "analitica": "Datos de uso anónimos",
     "analiticaDetalle": "Nos ayudan a saber qué mejorar y a corregir fallos. Apagados, no se envía nada.",
-    "privacidadInfo": "Solo enviamos qué partes de Tino usas, en categorías: por ejemplo, tu banco o cuántas tarjetas tienes (1, 2, 3 a 4). Nunca montos, números, nombres de tus tarjetas ni tus días de cobro.",
     "reiniciarId": "Reiniciar identificador anónimo",
     "reiniciarIdTitulo": "¿Reiniciar el identificador?",
     "reiniciarIdAviso": "Tino usará un identificador anónimo nuevo. Lo que se envíe desde ahora no se podrá unir con lo anterior.",
@@ -397,7 +396,10 @@
     "respaldoApagarTitulo": "¿Apagar el respaldo automático?",
     "respaldoApagarTexto": "Se borra la copia de este teléfono. Si cambias de teléfono, tus datos no volverán solos.",
     "respaldoApagar": "Apagar",
-    "entendido": "Entendido"
+    "entendido": "Entendido",
+    "docTerminos": "Términos de uso",
+    "docPrivacidad": "Política de privacidad",
+    "docSoporte": "Ayuda y soporte"
   },
   "paises": {
     "DO": "República Dominicana",
@@ -410,7 +412,10 @@
   "onboarding": {
     "bienvenidaTitulo": "Te decimos qué tarjeta usar hoy",
     "bienvenidaTexto": "Registra tus tarjetas de crédito con sus fechas de corte y pago. Cada día te mostramos cuál te da más días para pagar y más recompensas.",
-    "privacidad": "Tus datos se guardan cifrados solo en este teléfono. Nunca pedimos el número de tu tarjeta ni tus datos del banco. Enviamos datos de uso anónimos para mejorar Tino; puedes apagarlos en Ajustes.",
+    "privacidad": "Tus datos se guardan solo en este teléfono. Nunca pedimos el número de tu tarjeta ni tus datos del banco.",
+    "aceptas": "Al continuar, aceptas los Términos de uso y la Política de privacidad.",
+    "terminos": "Términos de uso",
+    "politica": "Política de privacidad",
     "empezar": "Empezar",
     "tarjetasTitulo": "Tus tarjetas",
     "tarjetasTexto": "Agrega las tarjetas que usas. Con dos o más te decimos cuál conviene cada día.",
@@ -807,7 +812,9 @@
     "sugerencia": {
       "cobros": "agregar tus días de cobro",
       "fechas": "mejorar las fechas de tus tarjetas",
-      "valorPunto": "confirmar el valor del punto"
+      "valorPunto": "confirmar el valor del punto",
+      "respaldo": "crear un respaldo",
+      "analitica": "compartir los datos de uso"
     },
     "sugerenciaActiva": "Sugerencia de esta semana: {{tipo}}, desde el {{fecha}}",
     "sugerenciaActivaDescartada": "Sugerencia de esta semana: {{tipo}}, desde el {{fecha}} (la descartaste)",
@@ -816,7 +823,11 @@
     "identificador": "Tu identificador anónimo: {{id}}. Con él puedes pedir que se borren tus datos de uso.",
     "pie": "La compra de Tino Pro vive en tu cuenta de la tienda, no en Tino.",
     "respaldoAutomatico": "Respaldo automático: {{valor}}",
-    "ultimoRespaldoManual": "Último respaldo manual: {{fecha}}"
+    "ultimoRespaldoManual": "Último respaldo manual: {{fecha}}",
+    "terminosAceptados": "Aceptaste los términos y la política del {{version}} el {{fecha}}",
+    "analiticaDecidida": "Decidiste sobre los datos de uso el {{fecha}}",
+    "analiticaPreguntas_one": "Respondiste \"No, gracias\" 1 vez a compartir los datos de uso",
+    "analiticaPreguntas_other": "Respondiste \"No, gracias\" {{count}} veces a compartir los datos de uso"
   },
   "comoRespaldo": {
     "titulo": "Cómo funciona tu respaldo",
@@ -885,5 +896,29 @@
     "nombre": "Tino",
     "descripcion": "La tarjeta que te conviene usar hoy",
     "sinDatos": "Abre Tino para ver qué tarjeta usar hoy."
+  },
+  "datosDeUso": {
+    "titulo": "¿Nos ayudas a mejorar Tino?",
+    "texto": "Comparte datos anónimos de uso, como qué funciones usas. Nunca montos, números ni nombres de tus tarjetas.",
+    "textoInicio": "¿Nos ayudas a mejorar Tino con datos anónimos de uso? Nunca montos, números ni nombres de tus tarjetas.",
+    "si": "Sí, compartir",
+    "no": "No, gracias",
+    "verQue": "Ver qué se comparte",
+    "hojaTitulo": "Qué se comparte",
+    "seEnvia": "Si aceptas, se envía",
+    "envia": {
+      "funciones": "Qué funciones usas; por ejemplo, \"se registró una tarjeta\"",
+      "catalogo": "El banco y el tipo de tarjeta que elegiste del catálogo, y cuántas tarjetas tienes (1, 2, 3 a 4, 5 o más)",
+      "version": "La versión de Tino y del sistema de tu teléfono",
+      "fallos": "Si la app falla, un reporte técnico del error"
+    },
+    "nuncaSeEnvia": "Nunca se envía",
+    "nunca": {
+      "montos": "Montos, balances ni límites",
+      "numeros": "Números de tarjeta, ni siquiera los últimos 4",
+      "nombres": "Los nombres de tus tarjetas ni tus fechas de cobro",
+      "persona": "Tu nombre, correo, teléfono ni ubicación"
+    },
+    "donde": "Se guardan en servicios de la Unión Europea, sin datos que te identifiquen. Puedes cambiar tu respuesta cuando quieras en Ajustes, Privacidad."
   }
 }

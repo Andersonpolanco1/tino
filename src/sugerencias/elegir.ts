@@ -6,7 +6,8 @@ import { numeroDe } from '../motor/fechas';
 
 // 'fechas': un consejo de fechas para pedirle al banco (decisión D65).
 // 'respaldo': 3 meses sin respaldo manual (decisión D81).
-export type TipoSugerencia = 'cobros' | 'fechas' | 'valorPunto' | 'respaldo';
+// 'analitica': el segundo y el tercer intento de pedir los datos de uso (decisión D88).
+export type TipoSugerencia = 'cobros' | 'fechas' | 'valorPunto' | 'respaldo' | 'analitica';
 
 export const DIAS_ENTRE_SUGERENCIAS = 7;
 export const DIAS_TRAS_DOS_DESCARTES = 60;

@@ -50,7 +50,7 @@ async function almacenCon(tarjetas: Tarjeta[]) {
   await migrar(db);
   const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
   await almacen.getState().cargar();
-  await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
+  await almacen.getState().guardarPreferencias({ ...preferenciasIniciales('DO', 'es-DO'), analiticaDecidida: '2026-09-01' });
   for (const t of tarjetas) await almacen.getState().guardarTarjeta(t);
   return almacen;
 }
