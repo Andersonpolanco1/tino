@@ -58,11 +58,23 @@ export default function CrearRespaldo() {
       pie={
         Platform.OS === 'android' ? (
           <>
+            {ocupado ? (
+              <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
+                {t('respaldo.puedeTardar')}
+              </Texto>
+            ) : null}
             <Boton titulo={ocupado ? t('respaldo.cifrando') : t('respaldo.guardarTelefono')} icono="descargar" onPress={() => crear('telefono')} deshabilitado={ocupado} />
             <Boton titulo={t('respaldo.enviarOtraApp')} variante="texto" onPress={() => crear('compartir')} deshabilitado={ocupado} />
           </>
         ) : (
-          <Boton titulo={ocupado ? t('respaldo.cifrando') : t('respaldo.crearBoton')} icono="descargar" onPress={() => crear('compartir')} deshabilitado={ocupado} />
+          <>
+            {ocupado ? (
+              <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
+                {t('respaldo.puedeTardar')}
+              </Texto>
+            ) : null}
+            <Boton titulo={ocupado ? t('respaldo.cifrando') : t('respaldo.crearBoton')} icono="descargar" onPress={() => crear('compartir')} deshabilitado={ocupado} />
+          </>
         )
       }
     >

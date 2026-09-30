@@ -75,7 +75,14 @@ export default function RestaurarRespaldo() {
   const pie = contenido ? (
     <Boton titulo={t('respaldo.restaurarBoton')} onPress={restaurar} deshabilitado={ocupado} />
   ) : archivo ? (
-    <Boton titulo={ocupado ? t('respaldo.abriendo') : t('respaldo.abrir')} onPress={abrir} deshabilitado={ocupado || !contrasena} />
+    <>
+      {ocupado ? (
+        <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
+          {t('respaldo.puedeTardar')}
+        </Texto>
+      ) : null}
+      <Boton titulo={ocupado ? t('respaldo.abriendo') : t('respaldo.abrir')} onPress={abrir} deshabilitado={ocupado || !contrasena} />
+    </>
   ) : (
     <Boton titulo={t('respaldo.elegirArchivo')} onPress={elegir} />
   );
