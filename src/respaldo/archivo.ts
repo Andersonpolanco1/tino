@@ -1,11 +1,28 @@
-import { File, Paths } from 'expo-file-system';
+import { Directory, File, Paths } from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as DocumentPicker from 'expo-document-picker';
 
-// El respaldo se guarda donde el usuario quiera (Drive, Archivos, correo): Tino no lo sube a
+// El respaldo se guarda donde el usuario quiera (su teléfono, Drive, correo): Tino no lo sube a
 // ningún servidor. Va cifrado, así que no importa por dónde viaje.
+const nombreRespaldo = (fecha: string) => `tino-respaldo-${fecha}.tino`;
+
+// Android (decisión D93): la hoja de compartir no ofrece guardar en el teléfono, así que se elige
+// una carpeta con el selector del sistema, que no pide permisos. false si el usuario cancela.
+export async function guardarRespaldoEnCarpeta(texto: string, fecha: string): Promise<boolean> {
+  let carpeta: Directory;
+  try {
+    carpeta = await Directory.pickDirectoryAsync();
+  } catch {
+    return false;
+  }
+  if (!carpeta) return false;
+  const archivo = carpeta.createFile(nombreRespaldo(fecha), 'application/octet-stream');
+  archivo.write(texto);
+  return true;
+}
+
 export async function compartirRespaldo(texto: string, fecha: string, tituloDialogo: string): Promise<void> {
-  const archivo = new File(Paths.cache, `tino-respaldo-${fecha}.tino`);
+  const archivo = new File(Paths.cache, nombreRespaldo(fecha));
   if (archivo.exists) archivo.delete();
   archivo.create();
   archivo.write(texto);

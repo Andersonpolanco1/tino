@@ -849,7 +849,7 @@
   "respaldo": {
     "crearTitulo": "Crear respaldo",
     "crearEncabezado": "Protege tu respaldo",
-    "crearTexto": "Tino guarda tus tarjetas, días de cobro y preferencias en un archivo cifrado con esta contraseña. Guárdalo donde quieras (Drive, Archivos, tu correo): sin la contraseña nadie puede leerlo.",
+    "crearTexto": "Tino guarda todo lo que registraste en un archivo cifrado con esta contraseña. Guárdalo en tu teléfono o envíalo a otra app (Drive, tu correo): sin la contraseña nadie puede leerlo.",
     "contrasena": "Contraseña del respaldo",
     "contrasenaAyuda": "Al menos {{count}} caracteres. Una frase que recuerdes es mejor que una palabra.",
     "repetir": "Repite la contraseña",
@@ -858,6 +858,9 @@
     "errorCorta_other": "Usa al menos {{count}} caracteres.",
     "errorNoCoinciden": "Las contraseñas no coinciden.",
     "crearBoton": "Crear y guardar respaldo",
+    "guardarTelefono": "Guardar en el teléfono",
+    "enviarOtraApp": "Enviar a otra app",
+    "guardado": "Listo: tu respaldo quedó guardado en la carpeta que elegiste.",
     "cifrando": "Cifrando…",
     "errorCrear": "No se pudo crear el respaldo. Inténtalo de nuevo.",
     "restaurarTitulo": "Restaurar respaldo",

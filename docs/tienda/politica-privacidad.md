@@ -75,7 +75,7 @@ Tino puede descargar de nuestro servidor la lista pública de bancos, tarjetas y
 
 ## 4. Respaldos
 
-- **Respaldo con contraseña.** En Ajustes > Tus datos puedes crear un archivo de respaldo cifrado con una contraseña que eliges tú. Tú decides dónde guardarlo (correo, nube, computadora). Sin esa contraseña nadie puede leerlo, ni nosotros: si la olvidas, no la podemos recuperar.
+- **Respaldo con contraseña.** En Ajustes > Tus datos puedes crear un archivo de respaldo cifrado con una contraseña que eliges tú. Tú decides dónde guardarlo (tu teléfono, la nube, tu correo o tu computadora). Sin esa contraseña nadie puede leerlo, ni nosotros: si la olvidas, no la podemos recuperar.
 - **Respaldo automático (Tino Pro).** Si lo enciendes, Tino guarda una copia de tus datos en su carpeta dentro del teléfono, y esa copia viaja con el respaldo de tu teléfono (Google en Android, iCloud en iPhone) según la configuración de tu cuenta. Esa copia no lleva una contraseña de Tino: en el teléfono queda en la carpeta privada de Tino, que otras apps no pueden leer, y en la nube la protege el respaldo de Google o de Apple, bajo sus propias políticas de privacidad. Viene apagado; al apagarlo, o con "Borrar todo", se borra la copia del teléfono.
 - **Ver mis datos.** En Ajustes > Tus datos, "Ver mis datos" arma un texto legible con todo lo que Tino tiene guardado, incluido el identificador anónimo de los datos de uso, y te deja compartirlo donde quieras. Ese texto no va cifrado.
 
