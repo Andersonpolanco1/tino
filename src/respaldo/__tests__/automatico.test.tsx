@@ -25,7 +25,8 @@ import ComoFuncionaRespaldo from '../../../app/ajustes/respaldo';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
 
 // Decisión D81: respaldo automático sin contraseña, que viaja con el respaldo del teléfono.
-const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true };
+const mockRouter = { push: jest.fn(), replace: jest.fn(), back: jest.fn(), canGoBack: () => true, canDismiss: () => true, dismissAll: jest.fn() };
+const mockReabrir = jest.fn();
 jest.mock('expo-router', () => ({ Stack: { Screen: () => null }, useRouter: () => mockRouter, useFocusEffect: (efecto: () => void) => require('react').useEffect(efecto, []) }));
 jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '' }));
 jest.mock('expo-sharing', () => ({ shareAsync: jest.fn() }));
@@ -33,6 +34,8 @@ jest.mock('expo-sharing', () => ({ shareAsync: jest.fn() }));
 let mockBase: ReturnType<typeof basePrueba> | null = null;
 jest.mock('@/datos', () => ({
   ...jest.requireActual('@/datos'),
+  borrarBase: jest.fn(async () => {}),
+  useReabrirDatos: () => mockReabrir,
   useEstadoDatos: () =>
     mockBase ? { estado: 'lista', base: { db: mockBase, transaccion: (tarea: never) => mockBase!.withExclusiveTransactionAsync(tarea) } } : { estado: 'cargando' },
 }));
@@ -216,6 +219,22 @@ describe('restaurar en un teléfono nuevo', () => {
 });
 
 describe('Ajustes > Tus datos', () => {
+  test('"Borrar todo" lleva a la bienvenida antes de abrir la base nueva', async () => {
+    const { almacen, db } = await almacenCon();
+    mockBase = db;
+    const alerta = jest.spyOn(Alert, 'alert').mockImplementation((_titulo, _texto, botones) => {
+      botones?.find(b => b.style === 'destructive')?.onPress?.();
+    });
+    await render(envolver(almacen, <Datos />));
+    await act(async () => fireEvent.press(screen.getByText('Borrar todo')));
+    expect(mockRouter.dismissAll).toHaveBeenCalled();
+    expect(mockRouter.replace).toHaveBeenCalledWith('/onboarding');
+    expect(mockReabrir).toHaveBeenCalled();
+    expect(mockRouter.replace.mock.invocationCallOrder[0]).toBeLessThan(mockReabrir.mock.invocationCallOrder[0]);
+    alerta.mockRestore();
+    mockBase = null;
+  });
+
   test('sin Pro, la fila lleva al muro de pago', async () => {
     const { almacen } = await almacenCon();
     await render(envolver(almacen, <Datos />));
