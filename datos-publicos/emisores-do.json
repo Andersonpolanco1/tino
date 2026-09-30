@@ -1,7 +1,7 @@
 {
   "pais": "DO",
-  "version": "2026.09.5",
-  "generadoEn": "2026-09-26",
+  "version": "2026.09.6",
+  "generadoEn": "2026-09-30",
   "fuente": "Emisores: listado de entidades autorizadas de la Superintendencia de Bancos (corte de junio de 2026) y participación de mercado por activos publicada por la misma entidad. Productos: verificados el 2026-09-25 en los sitios oficiales y documentos de cada emisor; detalle y enlaces en verificacion-emisores-do.md. Logos: icono publicado en el sitio oficial de cada emisor (descargado el 2026-09-26), solo para identificarlo.",
   "nota": "Productos del grupo 1: nombre, marca y, solo cuando el emisor la declara, moneda de facturación; sin ella, el registro se la pregunta al usuario. Marca \"otra\" = el emisor no publica la marca. Sin recompensas precargadas (decisión D14).",
   "emisores": [
@@ -92,12 +92,14 @@
         {
           "id": "banco-popular-visa-clasica",
           "nombre": "Visa Clásica",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-clasica",
           "nombre": "Mastercard Clásica",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-visa-gold",
@@ -124,32 +126,38 @@
         {
           "id": "banco-popular-mastercard-titanium",
           "nombre": "Mastercard Titanium",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "banco-popular-mastercard-black",
           "nombre": "Mastercard Black",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "banco-popular-visa-prestige",
           "nombre": "Visa Prestige",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "banco-popular-visa-isi",
           "nombre": "Visa ISI",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-infinia",
           "nombre": "Mastercard Infinia",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-gnial",
           "nombre": "Mastercard gnial",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-jetblue",
@@ -160,27 +168,32 @@
         {
           "id": "banco-popular-mastercard-mileageplus",
           "nombre": "Mastercard MileagePlus",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "banco-popular-visa-ikea-family",
           "nombre": "Visa IKEA Family",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-plus-ccn",
           "nombre": "Mastercard Plus CCN",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-caminantes-por-la-vida",
           "nombre": "Mastercard Caminantes por la Vida",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-almacenes-iberia",
           "nombre": "Mastercard Almacenes Iberia",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "banco-popular-mastercard-seguros-universal",
@@ -449,27 +462,32 @@
         {
           "id": "scotiabank-american-express-membership-rewards",
           "nombre": "American Express Membership Rewards",
-          "marca": "amex"
+          "marca": "amex",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-american-express-gold-membership-rewards",
           "nombre": "American Express Gold Membership Rewards",
-          "marca": "amex"
+          "marca": "amex",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-the-platinum-card-american-express",
           "nombre": "The Platinum Card American Express",
-          "marca": "amex"
+          "marca": "amex",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-casa-de-campo-american-express-platinum",
           "nombre": "Casa de Campo American Express Platinum",
-          "marca": "amex"
+          "marca": "amex",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-suma-ccn-american-express",
           "nombre": "Suma CCN American Express",
-          "marca": "amex"
+          "marca": "amex",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-carrefour-american-express",
@@ -521,22 +539,26 @@
         {
           "id": "scotiabank-scotiabank-visa",
           "nombre": "Scotiabank Visa",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "scotiabank-scotiabank-mastercard",
           "nombre": "Scotiabank Mastercard",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "solo_principal"
         },
         {
           "id": "scotiabank-scotiabank-gold-visa",
           "nombre": "Scotiabank Gold Visa",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-scotiabank-gold-mastercard",
           "nombre": "Scotiabank Gold Mastercard",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-scotiabank-platinum-visa",
@@ -546,12 +568,14 @@
         {
           "id": "scotiabank-scotiabank-platinum-mastercard",
           "nombre": "Scotiabank Platinum Mastercard",
-          "marca": "mastercard"
+          "marca": "mastercard",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-scotiabank-visa-infinite",
           "nombre": "Scotiabank Visa Infinite",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-scotiabank-visa-infinite-banca-premium",
@@ -581,7 +605,8 @@
         {
           "id": "scotiabank-scotiabank-bravo-visa",
           "nombre": "Scotiabank Bravo Visa",
-          "marca": "visa"
+          "marca": "visa",
+          "monedaFacturacion": "doble_balance"
         },
         {
           "id": "scotiabank-scotiabank-gold-mastercard-orange",

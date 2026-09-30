@@ -176,7 +176,7 @@ Criterios de la especificación:
 - [ ] Vimenca: confirmar qué tarjetas del portafolio anterior siguen vigentes (hoy solo Clásica, Gold e Infinite)
 - [ ] Banco Caribe: confirmar Visa Elite Infinite (solo aparece en una nota de prensa)
 - [ ] Confirmar la marca de los productos con marca `otra`: Preserva (Banreservas) y Clásica Internacional, Gold, ConfiaMás, Confía en Ti y Confiador (La Nacional)
-- [ ] Confirmar la moneda de facturación de los productos que no la declaran; hoy la tienen los que el emisor publica como doble saldo, solo pesos o local
+- [ ] Confirmar la moneda de facturación de los productos que no la declaran. Catálogo 2026.09.6: 60 de 172 la tienen. BHD 20 de 20, Popular 17 de 19 (según su tarifario) y Scotiabank 14 de 28 (según sus fichas). Las Clásica, Gold y Platinum de Banreservas y la Gold de Popular se venden de las dos formas y seguirán preguntando. Faltan los emisores del grupo 1 con menos participación (Santa Cruz, APAP, Promerica, Caribe…)
 - [ ] Revisar el catálogo cada trimestre y con cada listado nuevo de la Superintendencia de Bancos
 - [ ] Verificar los emisores que siguen "por verificar": Alaver, Banfondesa, Motor Crédito, Adopem y Citibank en el grupo 1, y los del grupo 2
 - [ ] Búsqueda de marcas de "Tino" (1.1 de la especificación)

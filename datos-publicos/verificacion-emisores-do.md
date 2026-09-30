@@ -15,6 +15,7 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 - Fuente: [banreservas.com/personal/tarjetas](https://www.banreservas.com/personal/tarjetas/).
 - Clásica/Standard, Gold y Platinum se venden en dos modalidades: multimoneda (en pesos) o doble saldo. Por eso no llevan moneda fija; el usuario la elige.
+- Visa Platinum Universe, Mastercard Black y Visa Infinite: sus fichas no mencionan la moneda (revisado el 2026-09-30) → sin moneda.
 - Visa SER y Mastercard Standard Táctil: solo multimoneda → `solo_principal`.
 - Preserva: el sitio la lista como tarjeta de crédito, pero no publica la marca → `otra`.
 - Fuera: Visa Flotilla Personal (flotilla), Credimás (línea de cuotas), Visa Negocios (pyme).
@@ -24,6 +25,7 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 - El sitio bloquea las descargas automáticas; se verificó con las fichas indexadas en popularenlinea.com y con documentos oficiales: guías de beneficios de JetBlue e IKEA Family (2025), requisitos de Plus CCN, Almacenes Iberia y gnial, y resumen de tarjetas (abril de 2023, solo como referencia).
 - Doble saldo declarado: Visa y Mastercard Platinum Doble Saldo, Mastercard JetBlue.
+- Moneda de facturación (2026-09-30), según el [tarifario vigente desde el 1 de noviembre de 2025](https://popularenlinea.com/Personas/Documents/Tarifas/Tarifas-de-productos-y-servicios-vigente-desde-1-noviembre-2025.pdf): las tarjetas sin balance en dólares tienen "N/A" en la mora y el sobregiro en US$. Sin balance en dólares → `solo_principal`: Clásica (Visa y Mastercard), Mastercard Infinia, Mastercard gnial, Visa ISI, Plus CCN, Almacenes Iberia, IKEA Family y Caminantes por la Vida. Con mora, sobregiro e interés en US$ → `doble_balance`: Titanium Doble Saldo, Visa Infinite Prestige y Mastercard Black Doble Saldo. United MileagePlus → `doble_balance` por su [guía de beneficios 2025](https://popularenlinea.com/SiteCollectionDocuments/tarjetas/2025/tarjetas-guia-mileage.pdf): "tarjeta de crédito de doble saldo … con facturación en pesos y dólares".
 - Seguros Universal: "facturación en pesos" → `solo_principal`.
 - Gold se vende en pesos o en doble saldo → sin moneda fija.
 - Fuera: Excelsa (gastos de ejecutivos de empresas), Visa Impulsa (pyme), DP World (empresarial), Orbit (su dirección ahora lleva a gnial), Pola Sirena (solo en el resumen de 2023), Teen y Avanza (sin fuente oficial), Platinum Internacional de Popular Bank (marca sin confirmar).
@@ -52,6 +54,7 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 - Fuente: [tarifario de tarjetas de crédito personales, vigente desde el 1 de mayo de 2026](https://do.scotiabank.com/banca-personal/tarifas/tarifas-tarjetas-credito.html). Los nombres siguen ese tarifario.
 - Visa Local y Mastercard Local → `solo_local`.
+- Moneda de facturación (2026-09-30), según la ficha de cada tarjeta en do.scotiabank.com/banca-personal/tarjetas-de-credito: "Doble Saldo. Límite independiente en pesos dominicanos y en dólares americanos." → `doble_balance` en American Express, American Express Gold, The Platinum Card, Casa de Campo American Express Platinum, Suma CCN American Express, Scotiabank Gold Visa (también existe en solo dólares para un grupo selecto de clientes), Scotiabank Gold Mastercard, Scotiabank Platinum Mastercard, Scotiabank Visa Infinite y Scotiabank Bravo Visa. "Límite de crédito en pesos dominicanos." → `solo_principal` en Scotiabank Visa (Visa Clásica) y Scotiabank Mastercard (Mastercard Standard). AAdvantage Platinum Visa dice "pesos dominicanos o dólares americanos" → sin moneda fija. Las tarjetas "Internacional", Platinum Plus, Platinum Visa, las otras AAdvantage y Carrefour no tienen ficha propia → sin moneda.
 - El tarifario lista a la vez las tarjetas "Internacional" y las "Scotiabank …"; se conservan ambas porque el banco cobra tarifas a las dos.
 - Recompensas: Membership Rewards (American Express), AAdvantage y Scotia Puntos.
 
