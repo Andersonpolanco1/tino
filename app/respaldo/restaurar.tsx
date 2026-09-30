@@ -39,7 +39,7 @@ export default function RestaurarRespaldo() {
       setContenido(null);
       setError(undefined);
     } catch {
-      Alert.alert(t('respaldo.error.formato'));
+      Alert.alert(t('respaldo.archivoNoValido'), t('respaldo.error.formato'));
     }
   }
 
@@ -64,10 +64,10 @@ export default function RestaurarRespaldo() {
       const restaurado = contenido.preferencias ? { ...contenido, preferencias: conservarAceptacion(contenido.preferencias, preferenciasActuales) } : contenido;
       await reemplazarDatos(datos.base.transaccion, restaurado, new Date().toISOString());
       await cargar();
-      Alert.alert(t('respaldo.restaurado'));
+      Alert.alert(t('respaldo.restaurado'), t('respaldo.restauradoTexto'));
       router.replace('/inicio');
     } catch {
-      Alert.alert(t('respaldo.errorRestaurar'));
+      Alert.alert(t('respaldo.errorRestaurar'), t('respaldo.errorRestaurarTexto'));
       setOcupado(false);
     }
   }

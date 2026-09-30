@@ -58,7 +58,7 @@ export default function Bienvenida() {
       await cargar();
       router.replace('/inicio');
     } catch {
-      Alert.alert(t('onboarding.copiaError'));
+      Alert.alert(t('onboarding.copiaError'), t('comun.intentaDeNuevo'));
       setOcupado(false);
     }
   }

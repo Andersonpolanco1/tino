@@ -95,7 +95,7 @@ export function FormularioIngreso({ ingreso, onListo, onCerrar, onBorrado }: Pro
       await guardarIngreso(r.ingreso);
       onListo(r.ingreso);
     } catch {
-      Alert.alert(t('cobros.errorGuardar'));
+      Alert.alert(t('cobros.errorGuardar'), t('comun.intentaDeNuevo'));
     }
   }
 

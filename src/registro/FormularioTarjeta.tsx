@@ -114,7 +114,7 @@ export function FormularioTarjeta({ tarjeta, seccionInicial, onListo, onBorrada,
       }
       onListo(r.tarjeta, tieneDolares(r.tarjeta) && pagoBalanceUsd === null);
     } catch {
-      Alert.alert(t('registro.errorGuardar'));
+      Alert.alert(t('registro.errorGuardar'), t('comun.intentaDeNuevo'));
     } finally {
       setGuardando(false);
     }

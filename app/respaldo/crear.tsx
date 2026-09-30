@@ -38,7 +38,7 @@ export default function CrearRespaldo() {
       const texto = await cifrarRespaldo(contenido, contrasena, n => Crypto.getRandomBytes(n));
       if (destino === 'telefono') {
         if (!(await guardarRespaldoEnCarpeta(texto, hoyLocal()))) return;
-        Alert.alert(t('respaldo.guardado'));
+        Alert.alert(t('respaldo.guardado'), t('respaldo.guardadoTexto'));
       } else {
         await compartirRespaldo(texto, hoyLocal(), t('respaldo.crearTitulo'));
       }
@@ -46,7 +46,7 @@ export default function CrearRespaldo() {
       if (preferencias) await guardarPreferencias({ ...preferencias, ultimoRespaldoManual: hoyLocal() }).catch(() => {});
       volver();
     } catch {
-      Alert.alert(t('respaldo.errorCrear'));
+      Alert.alert(t('respaldo.errorCrear'), t('comun.intentaDeNuevo'));
     } finally {
       setOcupado(false);
     }

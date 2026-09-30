@@ -54,7 +54,7 @@ describe('crear respaldo en Android (D93)', () => {
     await escribirContrasena();
     await act(async () => fireEvent.press(screen.getByText('Guardar en el teléfono')));
     expect(guardarRespaldoEnCarpeta).toHaveBeenCalledWith('cifrado', expect.any(String));
-    expect(alerta).toHaveBeenCalledWith('Listo: tu respaldo quedó guardado en la carpeta que elegiste.');
+    expect(alerta).toHaveBeenCalledWith('Respaldo guardado', 'Quedó en la carpeta que elegiste.');
     expect(almacen.getState().preferencias?.ultimoRespaldoManual).toBeTruthy();
     alerta.mockRestore();
   });

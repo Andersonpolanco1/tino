@@ -136,7 +136,7 @@
     "borrarDetalle": "Se borran sus datos de este teléfono.",
     "cancelar": "Cancelar",
     "pagoBalanceUsdAyuda": "Lo usamos para saber si te conviene más una tarjeta con dólares en tus compras en dólares. Puedes cambiarlo en Ajustes.",
-    "errorGuardar": "No pudimos guardar la tarjeta. Inténtalo de nuevo.",
+    "errorGuardar": "No pudimos guardar la tarjeta",
     "errores": {
       "aliasVacio": "Ponle un nombre a la tarjeta.",
       "bancoVacio": "Elige o escribe tu banco.",
@@ -242,7 +242,7 @@
     "sinServicio": "Las compras no están disponibles en este momento. Inténtalo más tarde.",
     "error": "No pudimos cargar los planes. Revisa tu conexión.",
     "reintentar": "Reintentar",
-    "errorCompra": "No se pudo completar. Inténtalo de nuevo.",
+    "errorCompra": "No se pudo completar la compra",
     "alMes": "al mes",
     "alAnio": "al año",
     "duracion": {
@@ -377,7 +377,7 @@
     "misDatosTitulo": "Ver mis datos",
     "misDatosAviso": "Vas a compartir un texto con todo lo que Tino guarda sobre ti. No va cifrado: compártelo solo donde confíes. Para cambiar de teléfono usa \"Crear respaldo\".",
     "misDatosConfirmar": "Compartir",
-    "errorMisDatos": "No se pudieron preparar tus datos. Inténtalo de nuevo.",
+    "errorMisDatos": "No se pudieron preparar tus datos",
     "respaldoAutomatico": "Respaldo automático",
     "respaldoAutomaticoDetalle": "Una copia de tus datos viaja con el respaldo de tu teléfono.",
     "respaldoSoloPro": "Con Tino Pro, una copia de tus datos viaja con el respaldo de tu teléfono.",
@@ -436,7 +436,7 @@
     "copiaTexto_other": "Tu respaldo automático tiene {{count}} tarjetas y se guardó el {{fecha}}.",
     "copiaRestaurar": "Restaurar mis datos",
     "copiaEmpezar": "Empezar de cero",
-    "copiaError": "No pudimos restaurar tus datos. Inténtalo otra vez."
+    "copiaError": "No pudimos restaurar tus datos"
   },
   "enfoqueDescripcion": {
     "liquidez": "Más días para pagar sin intereses.",
@@ -453,7 +453,8 @@
     "porcentaje": "{{valor}}%",
     "menos": "Restar uno a {{etiqueta}}",
     "mas": "Sumar uno a {{etiqueta}}",
-    "fechaMesCorto": "{{dia}} {{mes}}."
+    "fechaMesCorto": "{{dia}} {{mes}}.",
+    "intentaDeNuevo": "Inténtalo de nuevo."
   },
   "compra": {
     "titulo": "Tengo una compra",
@@ -586,7 +587,7 @@
     "proximos": "Tus próximos cobros: {{fechas}}",
     "borrar": "Borrar este cobro",
     "borrarConfirmar": "¿Borrar este cobro?",
-    "errorGuardar": "No se pudo guardar. Intenta de nuevo.",
+    "errorGuardar": "No se pudo guardar el cobro",
     "resumenSemanal": "Cada {{dia}}",
     "resumenQuincenal": "Días {{a}} y {{b}}",
     "resumenCadaDos": "Cada 2 semanas, los {{dia}}",
@@ -860,9 +861,9 @@
     "crearBoton": "Crear y guardar respaldo",
     "guardarTelefono": "Guardar en el teléfono",
     "enviarOtraApp": "Enviar a otra app",
-    "guardado": "Listo: tu respaldo quedó guardado en la carpeta que elegiste.",
+    "guardado": "Respaldo guardado",
     "cifrando": "Cifrando…",
-    "errorCrear": "No se pudo crear el respaldo. Inténtalo de nuevo.",
+    "errorCrear": "No se pudo crear el respaldo",
     "restaurarTitulo": "Restaurar respaldo",
     "restaurarEncabezado": "Recupera tus datos",
     "restaurarTexto": "Elige el archivo de respaldo de Tino (termina en .tino) y escribe la contraseña con la que lo creaste.",
@@ -879,13 +880,17 @@
     "reemplaza_other": "Esto reemplaza lo que tienes ahora en este teléfono ({{count}} tarjetas). No se puede deshacer.",
     "reemplazaVacio": "Tus datos quedarán como estaban cuando creaste el respaldo.",
     "restaurarBoton": "Restaurar mis datos",
-    "restaurado": "Listo: tus datos están de vuelta. Si tenías Tino Pro, usa \"Restaurar compras\" en Ajustes.",
-    "errorRestaurar": "No se pudo restaurar. Tus datos no cambiaron.",
+    "restaurado": "Tus datos están de vuelta",
+    "errorRestaurar": "No se pudo restaurar",
     "error": {
       "contrasena": "La contraseña no es correcta.",
       "formato": "Este archivo no es un respaldo de Tino.",
       "version": "Este respaldo es de una versión más nueva de Tino. Actualiza la app e inténtalo otra vez."
-    }
+    },
+    "guardadoTexto": "Quedó en la carpeta que elegiste.",
+    "archivoNoValido": "Archivo no válido",
+    "restauradoTexto": "Si tenías Tino Pro, usa \"Restaurar compras\" en Ajustes.",
+    "errorRestaurarTexto": "Tus datos no cambiaron."
   },
   "widget": {
     "titulo": "Hoy te conviene usar",

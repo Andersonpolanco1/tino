@@ -54,7 +54,7 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
       if (resultado === 'pro') setListo({ tipo: oferta.prueba ? 'prueba' : 'compra', oferta });
       else if (resultado === 'pendiente') Alert.alert(t('pro.pendienteTitulo'), t('pro.pendiente', { tienda }));
     } catch {
-      Alert.alert(t('pro.errorCompra'));
+      Alert.alert(t('pro.errorCompra'), t('comun.intentaDeNuevo'));
     } finally {
       setOcupado(false);
     }
@@ -66,7 +66,7 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
       if (await restaurar()) setListo({ tipo: 'restaurada' });
       else Alert.alert(t('pro.nadaQueRestaurar', { tienda }));
     } catch {
-      Alert.alert(t('pro.errorCompra'));
+      Alert.alert(t('pro.errorCompra'), t('comun.intentaDeNuevo'));
     } finally {
       setOcupado(false);
     }
