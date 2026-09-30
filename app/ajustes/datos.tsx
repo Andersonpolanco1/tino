@@ -50,7 +50,7 @@ export default function Datos() {
             });
             await Share.share({ message: texto, title: t('misDatos.titulo') });
           } catch {
-            Alert.alert(t('ajustes.errorMisDatos'));
+            Alert.alert(t('ajustes.errorMisDatos'), t('comun.intentaDeNuevo'));
           }
         },
       },

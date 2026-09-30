@@ -18,9 +18,20 @@ export interface BaseLocal {
 // Formato crudo (x'…'): evita pagar la derivación de clave al abrir.
 const sentenciaClave = (clave: string) => `PRAGMA key = "x'${clave}'"`;
 
+// Apertura en curso: las llamadas simultáneas comparten una sola. En desarrollo React monta dos
+// veces el proveedor; sin esto, sin clave todavía (instalación nueva o tras "Borrar todo"), cada
+// apertura creaba su propia clave, la segunda pisaba a la primera y la base quedaba ilegible
+// ("file is not a database"), además de dejar una conexión abierta sin dueño.
+let enCurso: Promise<BaseLocal> | null = null;
+
 // Abre la base local cifrada con SQLCipher y la deja en la última versión del esquema.
 // Nunca abre ni crea una base sin cifrar.
-export async function abrirBase(): Promise<BaseLocal> {
+export function abrirBase(): Promise<BaseLocal> {
+  if (!enCurso) enCurso = abrirSinCompartir().finally(() => (enCurso = null));
+  return enCurso;
+}
+
+async function abrirSinCompartir(): Promise<BaseLocal> {
   const { clave, nueva } = await claveBase();
   if (!FORMATO_CLAVE.test(clave)) throw new ErrorBaseCifrada('Clave con formato inválido');
   // Decisión D81: el respaldo del teléfono (iCloud) puede traer la base a un teléfono nuevo, pero
@@ -85,11 +96,29 @@ async function abrirCon(clave: string): Promise<BaseLocal> {
   }
 }
 
-// "Borrar todo": cierra la base, la borra junto con sus archivos del registro WAL y borra la
-// clave de cifrado. La próxima apertura crea una base y una clave nuevas.
+// Espera como máximo `ms` a que termine la promesa; si no, sigue sin ella.
+async function conLimite(promesa: Promise<unknown>, ms: number): Promise<void> {
+  let espera: ReturnType<typeof setTimeout> | undefined;
+  await Promise.race([promesa.catch(() => {}), new Promise<void>(listo => (espera = setTimeout(listo, ms)))]);
+  clearTimeout(espera);
+}
+
+const ESPERA_CIERRE_MS = 2000;
+
+// "Borrar todo": cierra la base, borra sus archivos (con los del registro WAL) y la clave de
+// cifrado. La próxima apertura crea una base y una clave nuevas. Sin `wal_checkpoint(TRUNCATE)`:
+// esperaba a que no quedara ninguna lectura abierta y dejaba "Borrar todo" colgado; los archivos
+// del registro se borran igual. Cerrar tampoco espera más de 2 segundos: sin la clave, lo que
+// quede no se puede leer.
 export async function borrarBase(base: BaseLocal): Promise<void> {
-  await base.db.execAsync('PRAGMA wal_checkpoint(TRUNCATE)').catch(() => {});
-  await base.db.closeAsync();
-  await eliminarArchivosBase();
+  await conLimite(base.db.closeAsync(), ESPERA_CIERRE_MS);
+  for (const sufijo of ['', '-wal', '-shm']) {
+    try {
+      const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);
+      if (archivo.exists) archivo.delete();
+    } catch {
+      // Sigue con los demás: la clave borrada deja ilegible lo que quede.
+    }
+  }
   await borrarClaveBase();
 }

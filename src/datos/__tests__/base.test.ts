@@ -109,6 +109,24 @@ describe('abrirBase', () => {
     }
   });
 
+  test('dos aperturas a la vez comparten una sola conexión y una sola clave', async () => {
+    secure.getItemAsync.mockResolvedValue(null);
+    crypto.getRandomBytesAsync.mockResolvedValue(new Uint8Array(32).fill(0xab));
+    baseSimulada('4.6.1 community');
+    const [primera, segunda] = await Promise.all([abrirBase(), abrirBase()]);
+    expect(primera).toBe(segunda);
+    expect(sqlite.openDatabaseAsync).toHaveBeenCalledTimes(1);
+    expect(secure.setItemAsync).toHaveBeenCalledTimes(1);
+  });
+
+  test('pasada la apertura, reabrir abre una conexión nueva', async () => {
+    baseSimulada('4.6.1 community');
+    baseSimulada('4.6.1 community');
+    const primera = await abrirBase();
+    const segunda = await abrirBase();
+    expect(primera).not.toBe(segunda);
+  });
+
   test('se niega a usar la base si SQLCipher no está activo', async () => {
     const db = baseSimulada(null);
     await expect(abrirBase()).rejects.toThrow(ErrorBaseCifrada);
