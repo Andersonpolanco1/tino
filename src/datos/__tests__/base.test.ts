@@ -2,12 +2,14 @@ import * as SecureStore from 'expo-secure-store';
 import * as Crypto from 'expo-crypto';
 import * as SQLite from 'expo-sqlite';
 import { obtenerClaveBase } from '../clave';
-import { abrirBase, ErrorBaseCifrada } from '../base';
+import * as FileSystem from 'expo-file-system';
+import { abrirBase, borrarBase, ErrorBaseCifrada } from '../base';
 
 jest.mock('expo-secure-store', () => ({
   AFTER_FIRST_UNLOCK_THIS_DEVICE_ONLY: 'despues-del-primer-desbloqueo',
   getItemAsync: jest.fn(),
   setItemAsync: jest.fn(),
+  deleteItemAsync: jest.fn(),
 }));
 jest.mock('expo-crypto', () => ({ getRandomBytesAsync: jest.fn() }));
 jest.mock('expo-sqlite', () => ({ openDatabaseAsync: jest.fn(), deleteDatabaseAsync: jest.fn(), defaultDatabaseDirectory: '/bases' }));
@@ -181,5 +183,32 @@ describe('abrirBase', () => {
       await expect(abrirBase()).rejects.toThrow(ErrorBaseCifrada);
       expect(sqlite.deleteDatabaseAsync).not.toHaveBeenCalled();
     });
+  });
+});
+
+describe('borrarBase ("Borrar todo")', () => {
+  beforeEach(() => {
+    secure.getItemAsync.mockResolvedValue(CLAVE);
+    mockExisteBase = false;
+    sqlite.openDatabaseAsync.mockReset();
+  });
+
+  test('cierra, borra los archivos con su URI file:// y después la clave', async () => {
+    baseSimulada('4.6.1 community');
+    const base = await abrirBase();
+    await borrarBase(base);
+    expect(sqlite.deleteDatabaseAsync).toHaveBeenCalledWith('tino.db');
+    const rutas = jest.mocked(FileSystem.File).mock.calls.map(c => c.join('/'));
+    expect(rutas).toEqual(expect.arrayContaining(['file:///bases/tino.db', 'file:///bases/tino.db-wal', 'file:///bases/tino.db-shm']));
+    expect(secure.deleteItemAsync).toHaveBeenCalled();
+    await expect(base.transaccion(async () => {})).rejects.toThrow('La base está cerrada');
+  });
+
+  test('si el archivo sigue ahí, no borra la clave: la base se puede volver a abrir', async () => {
+    baseSimulada('4.6.1 community');
+    const base = await abrirBase();
+    mockExisteBase = true;
+    await expect(borrarBase(base)).rejects.toThrow('No se pudo borrar el archivo de la base');
+    expect(secure.deleteItemAsync).not.toHaveBeenCalled();
   });
 });

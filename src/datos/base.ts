@@ -51,19 +51,32 @@ async function abrirSinCompartir(): Promise<BaseLocal> {
   }
 }
 
-function existeBase(): boolean {
+// expo-sqlite da la carpeta como ruta ("/data/…/SQLite") y expo-file-system espera una URI
+// ("file:///data/…"): con la ruta sola, `exists` daba falso y "Borrar todo" no borraba nada.
+const archivoBase = (sufijo = '') => new File(`file://${defaultDatabaseDirectory}`, `${NOMBRE_BASE}${sufijo}`);
+
+export function existeBase(): boolean {
   try {
-    return new File(defaultDatabaseDirectory, NOMBRE_BASE).exists;
+    return archivoBase().exists;
   } catch {
     return false;
   }
 }
 
+// Borra la base y los archivos de su registro (WAL). La base tiene que estar cerrada.
 async function eliminarArchivosBase(): Promise<void> {
-  await deleteDatabaseAsync(NOMBRE_BASE);
-  for (const sufijo of ['-wal', '-shm']) {
-    const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);
-    if (archivo.exists) archivo.delete();
+  try {
+    await deleteDatabaseAsync(NOMBRE_BASE);
+  } catch {
+    // Si expo-sqlite no la borra, se borra como archivo.
+  }
+  for (const sufijo of ['', '-wal', '-shm']) {
+    try {
+      const archivo = archivoBase(sufijo);
+      if (archivo.exists) archivo.delete();
+    } catch {
+      // Sigue con los demás; al final se comprueba que la base ya no esté.
+    }
   }
 }
 
@@ -117,18 +130,12 @@ const ESPERA_CIERRE_MS = 2000;
 
 // "Borrar todo": cierra la base, borra sus archivos (con los del registro WAL) y la clave de
 // cifrado. La próxima apertura crea una base y una clave nuevas. Sin `wal_checkpoint(TRUNCATE)`:
-// esperaba a que no quedara ninguna lectura abierta y dejaba "Borrar todo" colgado; los archivos
-// del registro se borran igual. Cerrar tampoco espera más de 2 segundos: sin la clave, lo que
-// quede no se puede leer.
+// esperaba a que no quedara ninguna lectura abierta y dejaba "Borrar todo" colgado. Cerrar no
+// espera más de 2 segundos. La clave se borra solo si la base ya no está: con la base y sin su
+// clave, la próxima apertura no la podría leer.
 export async function borrarBase(base: BaseLocal): Promise<void> {
   await conLimite(base.cerrar(), ESPERA_CIERRE_MS);
-  for (const sufijo of ['', '-wal', '-shm']) {
-    try {
-      const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);
-      if (archivo.exists) archivo.delete();
-    } catch {
-      // Sigue con los demás: la clave borrada deja ilegible lo que quede.
-    }
-  }
+  await eliminarArchivosBase();
+  if (existeBase()) throw new Error('No se pudo borrar el archivo de la base');
   await borrarClaveBase();
 }

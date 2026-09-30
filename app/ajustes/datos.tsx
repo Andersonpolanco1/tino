@@ -65,7 +65,14 @@ export default function Datos() {
         text: t('ajustes.borrarConfirmar'),
         style: 'destructive',
         onPress: async () => {
-          await borrarBase(datos.base);
+          try {
+            await borrarBase(datos.base);
+          } catch {
+            // La base quedó cerrada: se reabre con su clave, que no se borró.
+            Alert.alert(t('ajustes.errorBorrar'), t('comun.intentaDeNuevo'));
+            reabrir();
+            return;
+          }
           await borrarRespaldoAutomatico();
           await reiniciarIdentificadorAnalitica().catch(() => {});
           // Primero a la bienvenida y después la base nueva: al reabrir, el enrutador conserva la

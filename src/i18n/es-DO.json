@@ -396,7 +396,8 @@
     "docTerminos": "Términos de uso",
     "docPrivacidad": "Política de privacidad",
     "docSoporte": "Ayuda y soporte",
-    "analiticaExplicacion": "Son datos anónimos sobre cómo usas la app. Nunca incluyen datos sensibles, como montos, ni nada que te identifique."
+    "analiticaExplicacion": "Son datos anónimos sobre cómo usas la app. Nunca incluyen datos sensibles, como montos, ni nada que te identifique.",
+    "errorBorrar": "No se pudieron borrar tus datos"
   },
   "paises": {
     "DO": "República Dominicana",
