@@ -100,8 +100,14 @@ class TinoWidgetProvider : AppWidgetProvider() {
       manager.updateAppWidget(id, vistas)
     }
 
+    // Como en el mensaje de construir: se pide todo explícitamente, porque el launcher reutiliza
+    // las vistas que ya estaban.
     private fun sinResumen(contexto: Context): RemoteViews =
       RemoteViews(contexto.packageName, R.layout.tino_widget).apply {
+        setViewVisibility(R.id.widget_mensaje, View.VISIBLE)
+        setViewVisibility(R.id.widget_contenido, View.GONE)
+        setTextViewText(R.id.widget_mensaje, contexto.getString(R.string.tino_widget_sin_datos))
+        setContentDescription(R.id.widget_raiz, contexto.getString(R.string.tino_widget_sin_datos))
         setOnClickPendingIntent(R.id.widget_raiz, abrirApp(contexto, null))
       }
 
@@ -121,6 +127,10 @@ class TinoWidgetProvider : AppWidgetProvider() {
       val dia = if (resumen.getString("estado") == "tarjetas") diaDeHoy(resumen) else null
       if (dia == null) {
         val mensaje = if (resumen.getString("estado") == "tarjetas") textos.getString("abrir") else textos.getString("mensaje")
+        // El launcher reutiliza las vistas si el diseño es el mismo y solo aplica lo que se pide
+        // aquí: sin esto quedaba a la vista la tarjeta anterior (por ejemplo, tras "Borrar todo").
+        vistas.setViewVisibility(R.id.widget_mensaje, View.VISIBLE)
+        vistas.setViewVisibility(R.id.widget_contenido, View.GONE)
         vistas.setTextViewText(R.id.widget_mensaje, mensaje)
         vistas.setContentDescription(R.id.widget_raiz, mensaje)
         return vistas
