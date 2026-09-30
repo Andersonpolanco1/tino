@@ -33,7 +33,7 @@ Estos datos los escribes tú y se guardan **solo en tu teléfono**, en una base 
 | Tus tarjetas: el nombre que les pones, el banco y el tipo de tarjeta, los últimos 4 dígitos (opcional), el día de corte, la fecha límite de pago, la moneda en que factura y sus recompensas (puntos o cashback) | Calcular cuántos días tienes para pagar y qué tarjeta te conviene hoy |
 | Si una tarjeta está en pausa y si marcaste un pago como hecho | Sacarla del ranking y dejar de recordarte ese pago |
 | Tus días de cobro: el nombre que les pones (por ejemplo, "Nómina") y cada cuánto cobras. **Nunca montos** | Avisarte si una tarjeta vence antes de que cobres |
-| Tus preferencias: el enfoque (días, puntos, cashback o equilibrado), cómo pagas tu balance en dólares, los avisos que quieres recibir, tu plan y si los datos de uso están encendidos | Que Tino funcione como lo configuraste |
+| Tus preferencias: el enfoque (días, puntos, cashback o equilibrado), cómo pagas tu balance en dólares, los avisos que quieres recibir, tu plan, tu respuesta sobre los datos de uso (y cuándo la diste) y cuándo aceptaste estos términos y esta política | Que Tino funcione como lo configuraste y recordar tus decisiones |
 | Las sugerencias y consejos que ya viste o descartaste | No repetirte lo mismo |
 | Una copia del catálogo público de bancos y tarjetas | Que puedas elegir tu banco sin conexión |
 
@@ -51,8 +51,9 @@ Cada evento puede llevar:
 
 - el país configurado en Tino;
 - categorías, nunca valores exactos: por ejemplo, el banco y el tipo de tarjeta del catálogo (o "otro"), la moneda en que factura, el tipo de recompensa, el enfoque elegido o cuántas tarjetas tienes en rangos (1, 2, 3 a 4, 5 o más);
-- la versión de Tino y la del sistema operativo de tu teléfono;
-- un identificador aleatorio creado por Tino en tu teléfono, que no está ligado a tu nombre, a tu cuenta de la tienda ni al teléfono. Si usas "Borrar todo", se crea uno nuevo.
+- la versión de Tino y la del sistema operativo de tu teléfono, y el tamaño de su pantalla;
+- la versión de la herramienta que envía los eventos y un identificador de la sesión de uso, que cambia cada vez que vuelves a Tino después de un rato;
+- un identificador aleatorio creado por Tino en tu teléfono, que no está ligado a tu nombre, a tu cuenta de la tienda ni al teléfono. Puedes cambiarlo por uno nuevo en Ajustes > Privacidad, y también se crea uno nuevo si usas "Borrar todo".
 
 **Nunca se envían** montos, balances, límites, números de tarjeta (ni los últimos 4 dígitos), los nombres que les pones a tus tarjetas o cobros, ni tus fechas de cobro. Como en cualquier conexión a internet, el servicio que recibe los eventos ve la dirección IP de tu teléfono: lo tenemos configurado para no guardarla ni usarla para ubicarte.
 
@@ -60,7 +61,7 @@ Estos eventos los recibe PostHog, en servidores de la Unión Europea.
 
 ### 3.2 Reportes de fallos
 
-Solo si aceptaste compartir los datos de uso, si Tino se cierra o tiene un error, envía un reporte técnico para que podamos corregirlo: qué parte del código falló, la versión de la app, el modelo y sistema del teléfono, y si la sesión terminó sin fallos. Antes de enviarlo, Tino le quita los datos de pantalla y el historial de acciones, y reemplaza cualquier secuencia larga de números por "[filtrado]". Los reportes no incluyen capturas de pantalla.
+Solo si aceptaste compartir los datos de uso, si Tino se cierra o tiene un error, envía un reporte técnico para que podamos corregirlo: qué parte del código falló, la versión de la app, datos técnicos del teléfono (modelo, sistema, memoria y espacio libres, tamaño de pantalla, idioma y zona horaria) y si la sesión terminó sin fallos. Puede incluir un identificador técnico aleatorio que Sentry crea para contar cuántas instalaciones tuvieron un fallo, sin relación con tu nombre ni con el identificador de los datos de uso. Antes de enviarlo, Tino le quita los datos de pantalla y el historial de acciones, y reemplaza cualquier secuencia larga de números por "[filtrado]". Los reportes no incluyen capturas de pantalla.
 
 Estos reportes los recibe Sentry, en servidores de la Unión Europea, configurado para no guardar la dirección IP. Sin tu aceptación, o con la opción apagada, no se envía ningún reporte.
 
@@ -75,12 +76,14 @@ Tino puede descargar de nuestro servidor la lista pública de bancos, tarjetas y
 ## 4. Respaldos
 
 - **Respaldo con contraseña.** En Ajustes > Tus datos puedes crear un archivo de respaldo cifrado con una contraseña que eliges tú. Tú decides dónde guardarlo (correo, nube, computadora). Sin esa contraseña nadie puede leerlo, ni nosotros: si la olvidas, no la podemos recuperar.
-- **Respaldo automático (Tino Pro).** Si lo enciendes, Tino guarda una copia de tus datos en su carpeta dentro del teléfono, y esa copia viaja con el respaldo de tu teléfono (Google en Android, iCloud en iPhone) según la configuración de tu cuenta. Esa copia no lleva una contraseña de Tino: la protege el respaldo de Google o de Apple, bajo sus propias políticas de privacidad. Viene apagado y lo puedes apagar cuando quieras.
+- **Respaldo automático (Tino Pro).** Si lo enciendes, Tino guarda una copia de tus datos en su carpeta dentro del teléfono, y esa copia viaja con el respaldo de tu teléfono (Google en Android, iCloud en iPhone) según la configuración de tu cuenta. Esa copia no lleva una contraseña de Tino: en el teléfono queda en la carpeta privada de Tino, que otras apps no pueden leer, y en la nube la protege el respaldo de Google o de Apple, bajo sus propias políticas de privacidad. Viene apagado; al apagarlo, o con "Borrar todo", se borra la copia del teléfono.
 - **Ver mis datos.** En Ajustes > Tus datos, "Ver mis datos" arma un texto legible con todo lo que Tino tiene guardado, incluido el identificador anónimo de los datos de uso, y te deja compartirlo donde quieras. Ese texto no va cifrado.
 
 ## 5. Avisos y widget
 
-Los avisos se programan dentro de tu teléfono; no pasan por ningún servidor. Pueden mostrar el nombre que le pusiste a una tarjeta en la pantalla bloqueada, pero nunca montos. Lo mismo el widget de la pantalla de inicio de Android: muestra la tarjeta que te conviene hoy. Puedes apagar cada aviso en Ajustes > Avisos y quitar el widget cuando quieras.
+Los avisos se programan dentro de tu teléfono; no pasan por ningún servidor. Pueden mostrar en la pantalla bloqueada el nombre que le pusiste a una tarjeta y tus fechas de pago y de cobro, pero nunca montos. Puedes apagar cada aviso en Ajustes > Avisos.
+
+En Android, el widget de la pantalla de inicio muestra la tarjeta que te conviene hoy. Para que funcione aunque no abras la app, Tino guarda en su almacenamiento privado un resumen de los próximos 60 días (los nombres de tus tarjetas, sus días para pagar y sus fechas, nunca montos) y los logos de tus bancos. Ese resumen no va cifrado, porque el widget no puede abrir la base cifrada; otras apps no pueden leerlo, y se borra al desinstalar Tino.
 
 ## 6. Con quién compartimos datos
 
@@ -122,7 +125,7 @@ Si quieres saber qué datos de uso anónimos se enviaron, o que los borremos, es
 
 ## 9. Seguridad
 
-Tus datos se guardan en una base cifrada completa en tu teléfono. Todo lo que Tino envía a sus proveedores viaja cifrado. Tino rechaza cualquier campo que parezca un número de tarjeta completo, para que no se guarde por error. Aun así, ningún sistema es perfecto: protege tu teléfono con bloqueo de pantalla.
+Tus datos se guardan en una base cifrada completa en tu teléfono. Fuera de ella solo quedan, en la carpeta privada de Tino, el resumen del widget de Android y, si la encendiste, la copia del respaldo automático (secciones 4 y 5). Todo lo que Tino envía a sus proveedores viaja cifrado. Tino rechaza cualquier campo que parezca un número de tarjeta completo, para que no se guarde por error. Aun así, ningún sistema es perfecto: protege tu teléfono con bloqueo de pantalla.
 
 ## 10. Menores de edad
 

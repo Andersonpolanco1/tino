@@ -909,8 +909,8 @@
     "envia": {
       "funciones": "Qué funciones usas; por ejemplo, \"se registró una tarjeta\"",
       "catalogo": "El banco y el tipo de tarjeta que elegiste del catálogo, y cuántas tarjetas tienes (1, 2, 3 a 4, 5 o más)",
-      "version": "La versión de Tino y del sistema de tu teléfono",
-      "fallos": "Si la app falla, un reporte técnico del error"
+      "version": "La versión de Tino y del sistema de tu teléfono, y el tamaño de su pantalla",
+      "fallos": "Si la app falla, un reporte técnico del error con datos del teléfono, como su modelo, memoria libre e idioma"
     },
     "nuncaSeEnvia": "Nunca se envía",
     "nunca": {
