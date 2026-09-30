@@ -25,6 +25,17 @@ const config: ExpoConfig = {
       backgroundImage: './assets/iconos/android-fondo.png',
       monochromeImage: './assets/iconos/android-monocromo.png',
     },
+    // Decisión D89: la política dice que el único permiso es el de notificaciones. Estos los
+    // agregan la plantilla de Expo y algunas librerías, Tino no los usa, y Google Play los mostraría
+    // en la ficha: el respaldo se elige con el selector del sistema (sin permiso de almacenamiento)
+    // y el almacén seguro no pide huella.
+    blockedPermissions: [
+      'android.permission.READ_EXTERNAL_STORAGE',
+      'android.permission.WRITE_EXTERNAL_STORAGE',
+      'android.permission.SYSTEM_ALERT_WINDOW',
+      'android.permission.USE_BIOMETRIC',
+      'android.permission.USE_FINGERPRINT',
+    ],
   },
   plugins: [
     'expo-router',
