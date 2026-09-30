@@ -209,12 +209,10 @@ export default function Ajustes() {
         </ListaAgrupada>
       ) : null}
 
-      {/* D88: los documentos siempre a mano (Google Play pide la política dentro de la app). */}
-      {DOCUMENTOS.terminos || DOCUMENTOS.privacidad || DOCUMENTOS.soporte ? (
+      {/* D92: ayuda aquí; la política y los términos viven en Privacidad. */}
+      {DOCUMENTOS.soporte ? (
         <ListaAgrupada sangria={16}>
-          {DOCUMENTOS.soporte ? <FilaLista titulo={t('ajustes.docSoporte')} flecha onPress={() => Linking.openURL(DOCUMENTOS.soporte)} /> : null}
-          {DOCUMENTOS.terminos ? <FilaLista titulo={t('ajustes.docTerminos')} flecha onPress={() => Linking.openURL(DOCUMENTOS.terminos)} /> : null}
-          {DOCUMENTOS.privacidad ? <FilaLista titulo={t('ajustes.docPrivacidad')} flecha onPress={() => Linking.openURL(DOCUMENTOS.privacidad)} /> : null}
+          <FilaLista titulo={t('ajustes.docSoporte')} flecha onPress={() => Linking.openURL(DOCUMENTOS.soporte)} />
         </ListaAgrupada>
       ) : null}
 

@@ -229,13 +229,16 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
     expect(almacen.getState().preferencias?.analiticaDecidida).toBeTruthy();
   });
 
-  test('Ajustes enlaza soporte, términos y política (D88)', async () => {
+  test('Ajustes enlaza la ayuda, y Privacidad la política y los términos (D92)', async () => {
     const abrir = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
     await render(conPais([rd], await almacenCon('DO'), <Ajustes />));
+    expect(screen.queryByText('Política de privacidad')).toBeNull();
+    await fireEvent.press(screen.getByText('Ayuda y soporte'));
+    screen.unmount();
+    await render(conPais([rd], await almacenCon('DO'), <Privacidad />));
     await fireEvent.press(screen.getByText('Política de privacidad'));
     await fireEvent.press(screen.getByText('Términos de uso'));
-    await fireEvent.press(screen.getByText('Ayuda y soporte'));
-    expect(abrir.mock.calls.map(c => c[0])).toEqual(['https://prueba.do/privacidad', 'https://prueba.do/terminos', 'https://prueba.do/soporte']);
+    expect(abrir.mock.calls.map(c => c[0])).toEqual(['https://prueba.do/soporte', 'https://prueba.do/privacidad', 'https://prueba.do/terminos']);
     abrir.mockRestore();
   });
 });
