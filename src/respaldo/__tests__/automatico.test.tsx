@@ -227,7 +227,6 @@ describe('Ajustes > Tus datos', () => {
     });
     await render(envolver(almacen, <Datos />));
     await act(async () => fireEvent.press(screen.getByText('Borrar todo')));
-    expect(mockRouter.dismissAll).toHaveBeenCalled();
     expect(mockRouter.replace).toHaveBeenCalledWith('/onboarding');
     expect(mockReabrir).toHaveBeenCalled();
     expect(mockRouter.replace.mock.invocationCallOrder[0]).toBeLessThan(mockReabrir.mock.invocationCallOrder[0]);

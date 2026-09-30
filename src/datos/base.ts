@@ -13,6 +13,9 @@ export interface BaseLocal {
   // Toda transacción exclusiva debe pasar por aquí: expo-sqlite la corre en una
   // conexión nueva, y esa conexión necesita la clave antes de leer la base.
   transaccion: (tarea: (tx: SQLiteDatabase) => Promise<void>) => Promise<void>;
+  // Cierra la conexión. Después, toda transacción se rechaza: cada una abre su propia conexión
+  // por la ruta del archivo, y tras "Borrar todo" volvería a crear la base con la clave vieja.
+  cerrar: () => Promise<void>;
 }
 
 // Formato crudo (x'…'): evita pagar la derivación de clave al abrir.
@@ -77,11 +80,18 @@ async function abrirCon(clave: string): Promise<BaseLocal> {
     await db.execAsync('PRAGMA journal_mode = WAL; PRAGMA foreign_keys = ON;');
 
     // BEGIN no lee el archivo, así que la clave todavía se puede aplicar dentro de la transacción.
+    let cerrada = false;
     const transaccion: BaseLocal['transaccion'] = tarea =>
-      db.withExclusiveTransactionAsync(async tx => {
-        await tx.execAsync(sentenciaClave(clave));
-        await tarea(tx);
-      });
+      cerrada
+        ? Promise.reject(new Error('La base está cerrada'))
+        : db.withExclusiveTransactionAsync(async tx => {
+            await tx.execAsync(sentenciaClave(clave));
+            await tarea(tx);
+          });
+    const cerrar = () => {
+      cerrada = true;
+      return db.closeAsync();
+    };
 
     const conexion: ConexionSql = {
       execAsync: sql => db.execAsync(sql),
@@ -89,7 +99,7 @@ async function abrirCon(clave: string): Promise<BaseLocal> {
       withExclusiveTransactionAsync: transaccion,
     };
     await migrar(conexion);
-    return { db, transaccion };
+    return { db, transaccion, cerrar };
   } catch (error) {
     await db.closeAsync();
     throw error;
@@ -111,7 +121,7 @@ const ESPERA_CIERRE_MS = 2000;
 // del registro se borran igual. Cerrar tampoco espera más de 2 segundos: sin la clave, lo que
 // quede no se puede leer.
 export async function borrarBase(base: BaseLocal): Promise<void> {
-  await conLimite(base.db.closeAsync(), ESPERA_CIERRE_MS);
+  await conLimite(base.cerrar(), ESPERA_CIERRE_MS);
   for (const sufijo of ['', '-wal', '-shm']) {
     try {
       const archivo = new File(defaultDatabaseDirectory, `${NOMBRE_BASE}${sufijo}`);

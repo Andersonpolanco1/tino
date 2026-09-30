@@ -127,6 +127,16 @@ describe('abrirBase', () => {
     expect(primera).not.toBe(segunda);
   });
 
+  test('cerrada, rechaza toda transacción para no volver a crear el archivo con la clave vieja', async () => {
+    const db = baseSimulada('4.6.1 community');
+    const base = await abrirBase();
+    const antes = db.withExclusiveTransactionAsync.mock.calls.length;
+    await base.cerrar();
+    expect(db.closeAsync).toHaveBeenCalled();
+    await expect(base.transaccion(async () => {})).rejects.toThrow('La base está cerrada');
+    expect(db.withExclusiveTransactionAsync.mock.calls.length).toBe(antes);
+  });
+
   test('se niega a usar la base si SQLCipher no está activo', async () => {
     const db = baseSimulada(null);
     await expect(abrirBase()).rejects.toThrow(ErrorBaseCifrada);

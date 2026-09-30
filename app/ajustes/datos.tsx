@@ -70,7 +70,6 @@ export default function Datos() {
           await reiniciarIdentificadorAnalitica().catch(() => {});
           // Primero a la bienvenida y después la base nueva: al reabrir, el enrutador conserva la
           // pantalla en la que estaba, y sin esto se quedaba en Tus datos con todo borrado.
-          if (router.canDismiss()) router.dismissAll();
           router.replace('/onboarding');
           reabrir();
         },
