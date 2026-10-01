@@ -187,7 +187,7 @@ Criterios de la especificación:
 - [ ] Variantes oscura y tintada del icono de iOS
 - [x] Cuentas de Apple Developer y Google Play Console
 - [x] Proyecto en Expo (EAS) vinculado (2026-10-01): proyecto `tino` de la cuenta personal `andersonpolanco`, `projectId` y `owner` en `app.config.ts`; cada perfil de `eas.json` usa su ambiente de variables de EAS. En `preview` y `production` ya están `EXPO_PUBLIC_POSTHOG_KEY`, `EXPO_PUBLIC_SENTRY_DSN`, las tres direcciones legales, `SENTRY_ORG` y `SENTRY_PROJECT`
-- [ ] Compilar Android en local con `herramientas/compilar/build-android.cmd` (WSL Ubuntu, igual que Tanty, D97): compila lo que está en GitHub, así que antes hay que hacer push. Necesita `EXPO_TOKEN` en `.env.local` (copiado del de Tanty, misma cuenta)
+- [x] Compilar Android en local con `herramientas/compilar/build-android.cmd` (WSL Ubuntu, igual que Tanty, D97): compila lo que está en GitHub, así que antes hay que hacer push. Necesita `EXPO_TOKEN` en `.env.local` (copiado del de Tanty, misma cuenta). Primera AAB de producción el 2026-10-01 (`Tino-production-v1.aab`), revisada: lleva las claves de producción de RevenueCat, PostHog y Sentry y ninguna clave de la Test Store
 - [ ] Google Play, cuenta personal creada después de noviembre de 2023: prueba cerrada con al menos 12 personas durante 14 días seguidos antes de pedir acceso a producción. Empezarla cuanto antes, con la primera AAB subida a mano (la API no permite la primera subida)
 - [ ] Quitar `SENTRY_DISABLE_AUTO_UPLOAD` de EAS cuando esté `SENTRY_AUTH_TOKEN` (secreto), para que las compilaciones suban los mapas de código
 - [ ] Cuentas en RevenueCat, PostHog (región UE) y Sentry (región UE); sus claves como secretos de EAS (`EXPO_PUBLIC_POSTHOG_KEY` ya la lee la app)
