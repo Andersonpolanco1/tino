@@ -85,11 +85,11 @@ async function consultar() {
 
 test('la consulta abre con hoy y solo habilita hasta el mismo día del mes siguiente', async () => {
   await consultar();
-  expect(screen.getByText('Hoy')).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Día de la compra: Hoy' })).toBeOnTheScreen();
   expect(screen.getByText('Usa esta tarjeta')).toBeOnTheScreen();
   expect(screen.getByText('22 días')).toBeOnTheScreen();
 
-  await fireEvent.press(screen.getByText('¿Cuándo vas a comprar?'));
+  await fireEvent.press(screen.getByRole('button', { name: /^Día de la compra/ }));
   const { minimumDate, maximumDate } = mockSelector.props as { minimumDate: Date; maximumDate: Date };
   expect(minimumDate.toDateString()).toBe(new Date(2026, 9, 6).toDateString());
   expect(maximumDate.toDateString()).toBe(new Date(2026, 10, 6).toDateString());
@@ -97,12 +97,12 @@ test('la consulta abre con hoy y solo habilita hasta el mismo día del mes sigui
 
 test('elegir otro día recalcula la tarjeta para ese día', async () => {
   await consultar();
-  await fireEvent.press(screen.getByText('¿Cuándo vas a comprar?'));
+  await fireEvent.press(screen.getByRole('button', { name: /^Día de la compra/ }));
   const onChange = mockSelector.props!.onChange as (evento: unknown, fecha?: Date) => void;
   await act(async () => onChange({ type: 'set' }, new Date(2026, 9, 9)));
 
   expect(screen.getByText('Úsala el viernes 9')).toBeOnTheScreen();
-  expect(screen.getByText('Viernes 9 de octubre')).toBeOnTheScreen();
+  expect(screen.getByRole('button', { name: 'Día de la compra: Viernes 9 de octubre' })).toBeOnTheScreen();
   expect(screen.getByText('50 días')).toBeOnTheScreen();
   expect(screen.queryByText(/^Si esperas al/)).toBeNull();
 
@@ -138,12 +138,12 @@ test('con otro día, el corte cercano se dice con su fecha y no contando desde h
   await act(async () => fireEvent.changeText(screen.getByLabelText('¿Cuánto vas a gastar?'), '5000'));
   expect(screen.getByText('Corta en 3 días')).toBeOnTheScreen();
 
-  await fireEvent.press(screen.getByText('¿Cuándo vas a comprar?'));
+  await fireEvent.press(screen.getByRole('button', { name: /^Día de la compra/ }));
   await act(async () => (mockSelector.props!.onChange as (e: unknown, f?: Date) => void)({ type: 'set' }, new Date(2026, 9, 9)));
   expect(screen.getByText('Corta ese día')).toBeOnTheScreen();
   expect(screen.queryByText('Corta hoy')).toBeNull();
 
-  await fireEvent.press(screen.getByText('¿Cuándo vas a comprar?'));
+  await fireEvent.press(screen.getByRole('button', { name: /^Día de la compra/ }));
   await act(async () => (mockSelector.props!.onChange as (e: unknown, f?: Date) => void)({ type: 'set' }, new Date(2026, 9, 7)));
   expect(screen.getByText('Corta el viernes 9')).toBeOnTheScreen();
 });

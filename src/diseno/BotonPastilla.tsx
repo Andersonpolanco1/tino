@@ -9,12 +9,16 @@ interface Props {
   onPress: () => void;
   // "primario": en jade, para la acción que se quiere destacar ("Tengo una compra").
   primario?: boolean;
+  // "neutra": en gris suave y sin sombra, para ir dentro de una tarjeta (el día de la compra).
+  neutra?: boolean;
+  // Con flecha hacia abajo: abre una lista o un selector.
+  desplegable?: boolean;
   // Cuando el texto solo no basta (por ejemplo, "Ya pagué" en una lista de tarjetas).
   etiquetaAccesible?: string;
 }
 
 // Botón compacto con ícono y texto, en forma de pastilla: "Editar", "Tengo una compra".
-export function BotonPastilla({ icono, titulo, onPress, primario = false, etiquetaAccesible }: Props) {
+export function BotonPastilla({ icono, titulo, onPress, primario = false, neutra = false, desplegable = false, etiquetaAccesible }: Props) {
   const tema = useTema();
   const texto = primario ? 'sobrePrimario' : 'texto';
   return (
@@ -29,8 +33,8 @@ export function BotonPastilla({ icono, titulo, onPress, primario = false, etique
         minHeight: tema.toqueMinimo,
         paddingHorizontal: tema.espacio.l,
         borderRadius: tema.radio.circular,
-        backgroundColor: primario ? tema.color.primario : tema.color.superficie,
-        boxShadow: primario ? tema.sombra.destacada : tema.sombra.boton,
+        backgroundColor: primario ? tema.color.primario : neutra ? tema.color.neutroFondo : tema.color.superficie,
+        boxShadow: primario ? tema.sombra.destacada : neutra ? undefined : tema.sombra.boton,
         opacity: pressed ? 0.8 : 1,
       })}
     >
@@ -38,6 +42,7 @@ export function BotonPastilla({ icono, titulo, onPress, primario = false, etique
       <Texto variante="controlFuerte" color={texto}>
         {titulo}
       </Texto>
+      {desplegable ? <Icono nombre="abajo" color={texto} tamano={16} grosor={2.2} /> : null}
     </Pressable>
   );
 }

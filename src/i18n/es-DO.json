@@ -483,6 +483,7 @@
     "usaEstaEl": "Úsala el {{dia}}",
     "cuando": "¿Cuándo vas a comprar?",
     "hoy": "Hoy",
+    "diaDeLaCompra": "Día de la compra: {{dia}}",
     "verEseDia": "Ver la compra ese día",
     "paraPagarla": "para pagarla",
     "diasN": "{{dias}} días",

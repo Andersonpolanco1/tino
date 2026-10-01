@@ -3,7 +3,7 @@ import { Pressable, TextInput, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import type { CodigoMoneda, FechaISO } from '@/tipos/tipos';
-import { BarraSuperior, ControlSegmentado, FilaLista, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import { BarraSuperior, BotonPastilla, ControlSegmentado, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
@@ -38,6 +38,7 @@ export default function Compra() {
   const fecha = fechaCompraValida(elegida, hoy);
   const otroDia = fecha !== hoy;
   const dia = diaConSemana(fecha, idioma, t as unknown as Traducir);
+  const fechaVisible = otroDia ? t('comun.fechaLarga', partesFechaLarga(fecha, idioma)) : t('compra.hoy');
 
   const monto = Number(texto.replace(/,/g, ''));
   const compra = useMemo(() => (Number.isFinite(monto) && monto > 0 ? { monto, moneda } : undefined), [monto, moneda]);
@@ -74,8 +75,17 @@ export default function Compra() {
   return (
     <Pantalla arriba={<BarraSuperior titulo={t('compra.titulo')} cerrar={volver} />}>
       <Stack.Screen options={{ headerShown: false }} />
-      {/* El monto en una tarjeta, con la moneda debajo: es lo único que hay que escribir. */}
+      {/* Los datos de la compra en una tarjeta: el día (casi siempre hoy, por eso discreto), el
+          monto, que es lo único que hay que escribir, y la moneda. */}
       <Superficie radio={tema.radio.destacada} style={{ alignItems: 'center', gap: 14, paddingVertical: 26, paddingHorizontal: 22 }}>
+        <BotonPastilla
+          icono="calendario"
+          titulo={fechaVisible}
+          etiquetaAccesible={t('compra.diaDeLaCompra', { dia: fechaVisible })}
+          onPress={() => setEligiendo(true)}
+          neutra
+          desplegable
+        />
         <Texto color="textoSecundario">{t('compra.monto')}</Texto>
         <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
           <Texto variante="cifra" color="textoSecundario">
@@ -107,15 +117,6 @@ export default function Compra() {
         ) : null}
       </Superficie>
 
-      <ListaAgrupada>
-        <FilaLista
-          icono="calendario"
-          titulo={t('compra.cuando')}
-          detalle={otroDia ? t('comun.fechaLarga', partesFechaLarga(fecha, idioma)) : t('compra.hoy')}
-          flecha
-          onPress={() => setEligiendo(true)}
-        />
-      </ListaAgrupada>
       <SelectorFechaCompra visible={eligiendo} hoy={hoy} valor={fecha} onCambio={setElegida} onCerrar={() => setEligiendo(false)} />
 
       {/* Sin monto todavía: qué va a aparecer aquí, en vez de un espacio vacío. */}
