@@ -139,10 +139,10 @@ Con el código en el texto, se marca la casilla "proporcionan acceso completo…
 | Actividad en la app > Interacciones con la app | Sí | No | Sí | Estadísticas |
 | Información y rendimiento de la app > Registros de fallos | Sí | No | Sí | Estadísticas, funcionalidad de la app |
 | Información y rendimiento de la app > Diagnóstico | Sí | No | Sí | Estadísticas |
-| Identificadores de dispositivo u otros | Sí | No | Sí | Estadísticas |
-| Información financiera > Historial de compras | Sí | No | No | Funcionalidad de la app |
+| Identificadores de dispositivo u otros | Sí | No | No (el identificador anónimo de RevenueCat se envía siempre; el de PostHog, solo si el usuario acepta) | Funciones de la app, estadísticas |
+| Información financiera > Historial de compras | Sí | No | No | Funciones de la app |
 
-Ninguno se marca como "procesado de forma efímera". Los datos de tarjetas y cobros no se declaran: nunca salen del teléfono. PostHog, Sentry y RevenueCat procesan datos por encargo de Tino, y Google no los cuenta como "compartir".
+Ninguno se marca como "procesado de forma efímera". La columna "¿Opcional?" es la pregunta "obligatorio u opcional" de la consola. Los datos de tarjetas y cobros no se declaran: nunca salen del teléfono. PostHog, Sentry y RevenueCat procesan datos por encargo de Tino, y Google no los cuenta como "compartir".
 
 **URL para pedir el borrado de datos (si la consola la pide)**
 
