@@ -96,7 +96,17 @@ Menú: Supervisar y mejorar > Política y programas > Contenido de la app.
 https://polancolabs.com/apps/tino/privacidad
 ```
 
-**Acceso a la app:** "Todas las funciones están disponibles sin restricciones de acceso". Tino no tiene inicio de sesión.
+**Detalles de acceso** (antes "Acceso a la app"): "Sí, alguna parte está restringida", porque Google cuenta las suscripciones como acceso restringido. Usuario y contraseña vacíos. Antes de pedir acceso a producción, agregar al final un código promocional de Tino Pro, porque los revisores no pueden comprar.
+
+**Instrucciones**
+
+```text
+Tino no requiere cuenta ni inicio de sesión: todo funciona al abrir la app, y los datos se guardan solo en el teléfono.
+
+Plan gratis: todas las funciones con hasta 2 tarjetas. Para ver el ranking, registre dos tarjetas de ejemplo eligiendo "Mi banco no está en la lista", con cualquier nombre, día de corte y día de pago.
+
+Contenido de pago (Tino Pro, suscripción): permite más de 2 tarjetas activas y activa el respaldo automático. Para ver la oferta, intente registrar una tercera tarjeta desde la pestaña Tarjetas, o toque Tino Pro en Ajustes. Todas las demás funciones están disponibles sin pagar.
+```
 
 **Anuncios:** No, la app no contiene anuncios.
 
