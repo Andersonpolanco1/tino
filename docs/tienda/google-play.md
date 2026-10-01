@@ -64,7 +64,7 @@ Tino es una herramienta informativa y no está afiliada a ningún banco. Confirm
 | Recurso | Archivo |
 | --- | --- |
 | Icono (512 × 512) | `assets/iconos/play-store-512.png` |
-| Imagen destacada (1024 × 500) | Pendiente |
+| Imagen destacada (1024 × 500) | `assets/tienda/google-play-destacada.png` (la genera `python herramientas/iconos/generar_imagen_destacada.py`) |
 | Capturas de teléfono (2 a 8) | Pendientes; plan en [fichas.md](fichas.md) |
 
 ## 3. Categoría y contacto
