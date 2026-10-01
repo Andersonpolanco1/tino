@@ -158,6 +158,8 @@ En la pista de prueba cerrada (y luego en producción) > Países o regiones: sol
 
 Menú: Monetizar con Play > Productos > Suscripciones. Se habilita después de subir la primera AAB. Una sola suscripción con tres planes base, sin ofertas ni prueba gratis (D58 y D60). Los ID no se pueden cambiar ni reutilizar.
 
+Icono del producto (opcional): `assets/tienda/tino-pro-512.png` (512 × 512, PNG de 32 bits).
+
 **ID del producto**
 
 ```text

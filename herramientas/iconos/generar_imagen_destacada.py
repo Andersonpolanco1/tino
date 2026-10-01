@@ -3,13 +3,14 @@
 #
 # Uso, desde la raíz del repositorio: python herramientas/iconos/generar_imagen_destacada.py
 # (requiere Pillow y node_modules instalado, de donde salen las fuentes de la app).
-# Escribe assets/tienda/google-play-destacada.png.
+# Escribe assets/tienda/google-play-destacada.png y assets/tienda/tino-pro-512.png (icono de la
+# suscripción en Google Play: el del icono de la app, en PNG de 32 bits como pide la consola).
 import os
 import sys
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.dirname(__file__))
-from generar_iconos import JADE_ABAJO, JADE_ARRIBA, JADE_VIVO, ORO, PAPEL, rgba, tarjetas
+from generar_iconos import JADE_ABAJO, JADE_ARRIBA, JADE_VIVO, ORO, PAPEL, icono_con_fondo, rgba, tarjetas
 
 ANCHO, ALTO = 1024, 500
 DESTINO = 'assets/tienda/google-play-destacada.png'
@@ -47,6 +48,9 @@ def main():
     os.makedirs(os.path.dirname(DESTINO), exist_ok=True)
     imagen.convert('RGB').save(DESTINO, optimize=True)
     print('Imagen destacada en', DESTINO)
+
+    icono_con_fondo(512).convert('RGBA').save('assets/tienda/tino-pro-512.png', optimize=True)
+    print('Icono de la suscripción en assets/tienda/tino-pro-512.png')
 
 
 if __name__ == '__main__':
