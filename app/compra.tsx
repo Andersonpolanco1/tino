@@ -2,11 +2,14 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, TextInput, View } from 'react-native';
 import { Stack, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import type { CodigoMoneda } from '@/tipos/tipos';
-import { BarraSuperior, ControlSegmentado, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import type { CodigoMoneda, FechaISO } from '@/tipos/tipos';
+import { BarraSuperior, ControlSegmentado, FilaLista, Icono, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
 import { usePais } from '@/paises';
 import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
+import { useHoy } from '@/inicio/useHoy';
+import { fechaCompraValida } from '@/compra/fechaCompra';
+import { SelectorFechaCompra } from '@/compra/SelectorFechaCompra';
 import { diaConSemana, valorRecompensaCompra, type Traducir } from '@/inicio/vista';
 import { calcularRanking } from '@/motor';
 import { DIAS_MINIMOS_AL_ESPERAR } from '@/notificaciones/planificar';
@@ -16,7 +19,8 @@ import { registrarConsultaCompra } from '@/analitica';
 import { useVolver } from '@/utilidades/useVolver';
 
 // "Tengo una compra" (sección 7.5) con el rediseño: el monto en grande y el resultado al
-// instante. La categoría llega en v2 (decisión D27).
+// instante. La categoría llega en v2 (decisión D27). El día de la compra es hoy salvo que el
+// usuario elija otro dentro del mes siguiente (decisión D96); no se guarda.
 export default function Compra() {
   const { t } = useTranslation();
   const tema = useTema();
@@ -26,10 +30,17 @@ export default function Compra() {
   const tarjetas = useAlmacen(s => s.tarjetas);
   const [texto, setTexto] = useState('');
   const [moneda, setMoneda] = useState<CodigoMoneda>(config.monedaPrincipal);
+  const hoy = useHoy();
+  const [elegida, setElegida] = useState<FechaISO | null>(null);
+  const [eligiendo, setEligiendo] = useState(false);
+  // Si pasa la medianoche y la fecha elegida queda atrás, vuelve a hoy.
+  const fecha = fechaCompraValida(elegida, hoy);
+  const otroDia = fecha !== hoy;
+  const dia = diaConSemana(fecha, idioma, t as unknown as Traducir);
 
   const monto = Number(texto.replace(/,/g, ''));
   const compra = useMemo(() => (Number.isFinite(monto) && monto > 0 ? { monto, moneda } : undefined), [monto, moneda]);
-  const vistas = useVistas({ compra });
+  const vistas = useVistas({ compra, fecha });
 
   // Una consulta por visita, al escribir el primer monto válido; solo la moneda sale del teléfono.
   const consultada = useRef(false);
@@ -53,7 +64,9 @@ export default function Compra() {
 
   const monedas = [config.monedaPrincipal, ...(config.monedaSecundaria ? [config.monedaSecundaria] : [])];
   const simbolo = new Intl.NumberFormat(idioma, { style: 'currency', currency: moneda }).formatToParts(0).find(p => p.type === 'currency')?.value ?? moneda;
-  const abrir = (v: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: { id: v.tarjeta.id } });
+  // El detalle muestra la tarjeta para el mismo día que la consulta.
+  const abrir = (v: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: otroDia ? { id: v.tarjeta.id, fecha } : { id: v.tarjeta.id } });
+  const esperarElegible = !!esperar && fechaCompraValida(esperar.fecha, hoy) === esperar.fecha;
   const aliasDe = (id: string) => tarjetas.find(x => x.id === id)?.alias ?? '';
   const ganancia = mejor && compra ? valorRecompensaCompra(mejor.tarjeta, mejor.resultado, { t: t as unknown as Traducir, pais: config, idioma }, compra) : null;
 
@@ -93,6 +106,17 @@ export default function Compra() {
         ) : null}
       </Superficie>
 
+      <ListaAgrupada>
+        <FilaLista
+          icono="calendario"
+          titulo={t('compra.cuando')}
+          valor={otroDia ? dia : t('compra.hoy')}
+          flecha
+          onPress={() => setEligiendo(true)}
+        />
+      </ListaAgrupada>
+      <SelectorFechaCompra visible={eligiendo} hoy={hoy} valor={fecha} onCambio={setElegida} onCerrar={() => setEligiendo(false)} />
+
       {/* Sin monto todavía: qué va a aparecer aquí, en vez de un espacio vacío. */}
       {!compra ? (
         <View
@@ -122,7 +146,7 @@ export default function Compra() {
       {mejor ? (
         <View style={{ gap: 10 }}>
           <Texto variante="etiquetaMayus" color="primario">
-            {t('compra.usaEsta')}
+            {otroDia ? t('compra.usaEstaEl', { dia }) : t('compra.usaEsta')}
           </Texto>
           <Pressable
             accessibilityRole="button"
@@ -158,14 +182,27 @@ export default function Compra() {
             </View>
           </Pressable>
           {esperar ? (
-            <Texto variante="apoyo">
-              {t(esperar.tarjetaId === mejor.tarjeta.id ? 'compra.esperar' : 'compra.esperarOtra', {
-                dia: diaConSemana(esperar.fecha, idioma, t as unknown as Traducir),
-                despues: esperar.dias,
-                antes: mejor.resultado.diasGracia,
-                alias: aliasDe(esperar.tarjetaId),
-              })}
-            </Texto>
+            // Tocarlo calcula la compra para ese día, si cae dentro del mes (decisión D96).
+            <Pressable
+              accessibilityRole={esperarElegible ? 'button' : undefined}
+              disabled={!esperarElegible}
+              onPress={() => setElegida(esperar.fecha)}
+              style={{ minHeight: tema.toqueMinimo, justifyContent: 'center' }}
+            >
+              <Texto variante="apoyo">
+                {t(esperar.tarjetaId === mejor.tarjeta.id ? 'compra.esperar' : 'compra.esperarOtra', {
+                  dia: diaConSemana(esperar.fecha, idioma, t as unknown as Traducir),
+                  despues: esperar.dias,
+                  antes: mejor.resultado.diasGracia,
+                  alias: aliasDe(esperar.tarjetaId),
+                })}
+              </Texto>
+              {esperarElegible ? (
+                <Texto variante="apoyoFuerte" color="primario">
+                  {t('compra.verEseDia')}
+                </Texto>
+              ) : null}
+            </Pressable>
           ) : null}
           {conConversion ? (
             <Texto variante="apoyo" color="alertaTexto">

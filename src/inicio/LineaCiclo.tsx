@@ -9,6 +9,8 @@ import { fechaMesCorto, OPACIDAD_PISTA, type Traducir } from './vista';
 interface Props {
   anterior: FechaISO;
   hoy: FechaISO;
+  // Rótulo del punto de hoy; el detalle abierto desde una compra de otro día dice "Compra".
+  etiquetaHoy?: string;
   corte: FechaISO;
   pago: FechaISO;
   sobreDestacado?: boolean;
@@ -19,7 +21,7 @@ interface Props {
 // Línea del ciclo compartida por la tarjeta de hoy y el detalle: Cortó, Hoy, Corta y Pagas.
 // Cada punto va encima de su etiqueta (4 columnas iguales) y la línea se llena hasta Hoy;
 // el orden siempre es Cortó ≤ Hoy ≤ Corta < Pagas (decisión D35).
-export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false, sinCorteAnterior = false }: Props) {
+export function LineaCiclo({ anterior, hoy, etiquetaHoy, corte, pago, sobreDestacado = false, sinCorteAnterior = false }: Props) {
   const tema = useTema();
   const { t } = useTranslation();
   const { idioma } = usePais();
@@ -70,7 +72,7 @@ export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false,
       </View>
       <View style={{ flexDirection: 'row' }}>
         {sinCorteAnterior ? <View style={{ flex: 1 }} /> : hito(t('detalle.hitoCorto'), anterior, 'left')}
-        {hito(t('detalle.hitoHoy'), hoy, 'center')}
+        {hito(etiquetaHoy ?? t('detalle.hitoHoy'), hoy, 'center')}
         {hito(t('detalle.hitoCorta'), corte, 'center')}
         {hito(t('detalle.hitoPagas'), pago, 'right')}
       </View>

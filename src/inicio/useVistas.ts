@@ -79,7 +79,7 @@ export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c:
   };
 }
 
-export function useVistas(opciones: { orden?: OrdenVista; compra?: EntradaMotor['compra'] } = {}): (Vistas & { excluidas: ResultadoMotor['excluidas'] }) | null {
+export function useVistas(opciones: { orden?: OrdenVista; compra?: EntradaMotor['compra']; fecha?: FechaISO } = {}): (Vistas & { excluidas: ResultadoMotor['excluidas'] }) | null {
   const ranking = useRanking(opciones);
   const catalogo = useCatalogo();
   const { config, idioma } = usePais();
@@ -97,8 +97,9 @@ export function useVistas(opciones: { orden?: OrdenVista; compra?: EntradaMotor[
 }
 
 // Vista de una tarjeta para su detalle, aunque esté en pausa (se calcula como si estuviera activa).
-export function useVistaTarjeta(id: string): VistaTarjeta | null {
-  const ranking = useRanking();
+// Con fecha, para una compra de otro día elegida en "Tengo una compra" (decisión D96).
+export function useVistaTarjeta(id: string, fecha?: FechaISO): VistaTarjeta | null {
+  const ranking = useRanking({ fecha });
   const catalogo = useCatalogo();
   const { config, idioma } = usePais();
   const { t } = useTranslation();

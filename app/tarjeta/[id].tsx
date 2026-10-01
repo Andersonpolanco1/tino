@@ -12,7 +12,8 @@ import { BloqueDias } from '@/inicio/BloqueDias';
 import { proximosPagos } from '@/pagos/pendientes';
 import { FilaPago } from '@/pagos/FilaPago';
 import { LineaCiclo } from '@/inicio/LineaCiclo';
-import { avisoCobro, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
+import { avisoCobro, diaConSemana, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
+import { fechaCompraValida } from '@/compra/fechaCompra';
 import { ConfirmarValorPunto, valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
 import { useTarjetasEnPlan } from '@/suscripciones';
 import { useVolver } from '@/utilidades/useVolver';
@@ -25,9 +26,13 @@ export default function DetalleTarjeta() {
   const router = useRouter();
   const volver = useVolver();
   const hoy = useHoy();
-  const { id } = useLocalSearchParams<{ id: string }>();
+  const { id, fecha: fechaParam } = useLocalSearchParams<{ id: string; fecha?: string }>();
   const { config, idioma } = usePais();
-  const vista = useVistaTarjeta(id);
+  // Desde "Tengo una compra" con otro día, la tarjeta se calcula para ese día (decisión D96).
+  // El pago pendiente sigue siendo el de hoy: es un hecho, no una simulación.
+  const fecha = fechaCompraValida(fechaParam, hoy);
+  const otroDia = fecha !== hoy;
+  const vista = useVistaTarjeta(id, otroDia ? fecha : undefined);
   const alternarPausa = useAlmacen(s => s.alternarPausa);
   const ingresos = useAlmacen(s => s.ingresos);
   const hayIngresos = ingresos.length > 0;
@@ -39,7 +44,8 @@ export default function DetalleTarjeta() {
   const editarRecompensa = () => router.push({ pathname: '/tarjeta/editar/[id]', params: { id: tarjeta.id, seccion: 'recompensa' } });
   const puntoPorConfirmar = valorPuntoPorConfirmar(tarjeta);
   // Sección 5.3: si una compra de hoy vence antes del próximo cobro, se dice cuándo se cobra.
-  const aviso = avisoCobro(resultado.fechaPago, hoy, ingresos, config);
+  const aviso = avisoCobro(resultado.fechaPago, fecha, ingresos, config);
+  const dia = diaConSemana(fecha, idioma, t as unknown as Traducir);
   // El pago pendiente de esta tarjeta, con "Ya pagué" (decisión D45).
   // Guardada fuera del plan gratis (15.2): igual que en pausa, sin pago pendiente ni avisos.
   const fuera = !enPlan.some(x => x.id === tarjeta.id);
@@ -93,17 +99,26 @@ export default function DetalleTarjeta() {
       <Superficie radio={tema.radio.destacada} style={{ padding: 20, gap: tema.espacio.m }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: tema.espacio.s }}>
           <Texto variante="etiquetaLigera" color="textoSecundario" style={{ flexShrink: 1 }}>
-            {t('detalle.siUsasHoy')}
+            {otroDia ? t('detalle.siUsasEl', { dia }) : t('detalle.siUsasHoy')}
           </Texto>
           <PildoraSemaforo luz={resultado.semaforo} />
         </View>
         <BloqueDias dias={resultado.diasGracia} fechaPago={vista.fechaPago} />
-        <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} />
+        <LineaCiclo
+          anterior={vista.ciclo.anterior}
+          hoy={fecha}
+          etiquetaHoy={otroDia ? t('detalle.hitoCompra') : undefined}
+          corte={resultado.proximoCorte}
+          pago={resultado.fechaPago}
+        />
         {/* Solo el consejo de esperar: en amarillo el mensaje repetía los días de arriba (decisión D52). */}
         {resultado.semaforo === 'rojo' ? <Texto variante="apoyo">{vista.mensajeSemaforo}</Texto> : null}
         {aviso ? (
           <Texto variante="apoyo" color="alertaTexto">
-            {t(aviso.tipo === 'antes' ? 'detalle.avisoHoyAntesDelCobro' : 'inicio.avisoCobroEstimado', { cobro: textoFecha(aviso.cobro, idioma) })}
+            {t(aviso.tipo === 'antes' ? (otroDia ? 'detalle.avisoDiaAntesDelCobro' : 'detalle.avisoHoyAntesDelCobro') : 'inicio.avisoCobroEstimado', {
+              cobro: textoFecha(aviso.cobro, idioma),
+              dia,
+            })}
           </Texto>
         ) : null}
       </Superficie>
