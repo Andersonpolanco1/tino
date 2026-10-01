@@ -137,7 +137,8 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
 - [x] Widget de Android (D71 y D72): solo la tarjeta de hoy, igual que en Inicio (logo, días, línea del ciclo y recompensa), calculada 60 días por adelantado (`src/widget/`) y dibujados en Kotlin (`modules/widget-android/`); se reescribe con cada cambio de datos, enfoque, plan o día. Verificado en el emulador: se agrega desde el selector, muestra lo mismo que Inicio y al tocarlo abre Inicio. Falta verlo en modo oscuro, al cambiar de día y en un teléfono real
 - [ ] Fichas de las tiendas, capturas y política de privacidad (Ley 172-13)
   - [x] Borradores en `docs/tienda/`: política de privacidad, términos de uso y fichas de App Store y Google Play (textos, compras, etiqueta de privacidad de Apple, seguridad de los datos de Google, clasificación y plan de capturas). Responsable: Polanco Labs, polancolabsrd@gmail.com
-  - [ ] Capturas con bancos de ejemplo (plan en `docs/tienda/fichas.md`, sección 4)
+  - [ ] Capturas con bancos de ejemplo (plan en `docs/tienda/fichas.md`, sección Capturas)
+  - [x] Textos listos para copiar en cada consola: `docs/tienda/google-play.md` y `docs/tienda/app-store.md` (la descripción ya menciona elegir el día en "Tengo una compra", D96)
   - [ ] Publicar los documentos y llenar las fichas en las consolas (pendientes abajo)
 - [ ] Pruebas de flujos completos con Maestro: se dejan para cuando las pantallas estén estables; mientras tanto los flujos se prueban a mano. Lo aprendido en un primer intento (Maestro 2.10 en Windows, con el Java de Android Studio):
   - Las etiquetas accesibles de campos y botones sirven de selector; no hacen falta `testID`.
