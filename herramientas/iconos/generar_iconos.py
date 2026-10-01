@@ -26,6 +26,9 @@ RADIO = 22
 CHIP = (164, 270, 42, 32, 7)    # x, y, ancho, alto, radio
 PIVOTE = (168, 352)
 ATRAS = [(-20, 0.45), (-10, 0.8)]  # grados y opacidad, de la más lejana a la más cercana
+# En los iconos con fondo, el abanico se agranda un 20% sobre la geometría de 512 para que llene el
+# icono como los de otras apps (a escala 1 se veía pequeño en el teléfono).
+AUMENTO_TIENDAS = 1.2
 
 
 def esquinas(angulo):
@@ -49,11 +52,11 @@ def rgba(h, a=1.0):
 
 # ---------- SVG ----------
 
-def svg_tarjetas(frente, atras, chip, sombra):
-    """Las tres tarjetas centradas en el lienzo de 512."""
+def svg_tarjetas(frente, atras, chip, sombra, aumento=1.0):
+    """Las tres tarjetas centradas en el lienzo de 512, agrandadas `aumento` veces."""
     x, y, w, h = TARJETA
     cx, cy, cw, ch, cr = CHIP
-    mover = f'translate({256 - CENTRO[0]:.1f} {256 - CENTRO[1]:.1f})'
+    mover = f'translate(256 256) scale({aumento}) translate({-CENTRO[0]:.1f} {-CENTRO[1]:.1f})'
     filas = [f'<g transform="{mover}">']
     for angulo, opacidad in ATRAS:
         filas.append(f'  <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{RADIO}" fill="{atras}" fill-opacity="{opacidad}" transform="rotate({angulo} {PIVOTE[0]} {PIVOTE[1]})"/>')
@@ -77,7 +80,7 @@ def escribir_svg():
     with open(f'{DESTINO}/fuente-icono.svg', 'w', encoding='utf-8') as f:
         f.write(cabeza + '  <!-- Icono de Tino (D94). Lo genera herramientas/iconos/generar_iconos.py: no editar a mano. -->\n'
                 f'  <defs>\n{fondo}{sombra}  </defs>\n  <rect width="512" height="512" fill="url(#fondo)"/>\n'
-                + svg_tarjetas(PAPEL, JADE_VIVO, ORO, True) + '\n</svg>\n')
+                + svg_tarjetas(PAPEL, JADE_VIVO, ORO, True, AUMENTO_TIENDAS) + '\n</svg>\n')
     with open(f'{DESTINO}/tino-tarjetas.svg', 'w', encoding='utf-8') as f:
         f.write(cabeza + '  <!-- Tarjetas de Tino sin fondo (D94). Generado: no editar a mano. -->\n'
                 f'  <defs>\n{sombra}  </defs>\n' + svg_tarjetas(PAPEL, JADE_VIVO, ORO, True) + '\n</svg>\n')
@@ -134,7 +137,7 @@ def degradado(lado):
 
 
 def icono_con_fondo(lado):
-    return Image.alpha_composite(degradado(lado), tarjetas(lado, lado, PAPEL, JADE_VIVO, ORO, True)).convert('RGB')
+    return Image.alpha_composite(degradado(lado), tarjetas(lado, lado * AUMENTO_TIENDAS, PAPEL, JADE_VIVO, ORO, True)).convert('RGB')
 
 
 def escribir_png():
@@ -142,19 +145,18 @@ def escribir_png():
     icono_con_fondo(512).save(f'{DESTINO}/play-store-512.png', optimize=True)
     tarjetas(1024, 1024, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/tino-tarjetas.png', optimize=True)
 
-    # Icono adaptativo de Android: lienzo de 108 dp (432 px a 4x) del que se ven 72 dp; el icono de
-    # 512 se ajusta a esos 72 dp, así el abanico queda dentro de la zona segura de 66 dp.
-    visible = 432 * 72 / 108
+    # Icono adaptativo de Android: lienzo de 108 dp (432 px a 4x); cualquier forma del launcher
+    # deja ver al menos el círculo de 66 dp del centro. El abanico se agranda hasta que su diagonal
+    # mida 64 dp: llena el icono sin que ninguna forma lo recorte.
+    diagonal = math.hypot(CAJA[2] - CAJA[0], CAJA[3] - CAJA[1])
+    visible = 432 * 64 / 108 / diagonal * 512
     degradado(432).save(f'{DESTINO}/android-fondo.png', optimize=True)
     tarjetas(432, visible, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/android-primer-plano.png', optimize=True)
     tarjetas(432, visible, '#FFFFFF', '#FFFFFF', None, False).save(f'{DESTINO}/android-monocromo.png', optimize=True)
 
     # Splash (Android 12+): recorta en un círculo de 2/3 del lienzo; el abanico tiene que caber con aire.
-    lado_caja = max(CAJA[2] - CAJA[0], CAJA[3] - CAJA[1])
-    diagonal = math.hypot(CAJA[2] - CAJA[0], CAJA[3] - CAJA[1])
     escala = 1024 * (2 / 3) * 0.9 / diagonal * 512
     tarjetas(1024, escala, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/splash.png', optimize=True)
-    assert lado_caja  # la caja nunca es vacía
 
 
 if __name__ == '__main__':
