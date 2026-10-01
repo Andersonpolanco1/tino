@@ -13,6 +13,8 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 ### Banreservas (12)
 
+- Listado revisado el 2026-10-01: coincide con los 12 productos.
+
 - Fuente: [banreservas.com/personal/tarjetas](https://www.banreservas.com/personal/tarjetas/).
 - Clásica/Standard, Gold y Platinum se venden en dos modalidades: multimoneda (en pesos) o doble saldo. Por eso no llevan moneda fija; el usuario la elige.
 - Visa Platinum Universe, Mastercard Black y Visa Infinite: sus fichas no mencionan la moneda (revisado el 2026-09-30) → sin moneda.
@@ -21,17 +23,20 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 - Fuera: Visa Flotilla Personal (flotilla), Credimás (línea de cuotas), Visa Negocios (pyme).
 - Recompensas: Puntos Banreservas.
 
-### Banco Popular (19)
+### Banco Popular (21)
 
 - El sitio bloquea las descargas automáticas; se verificó con las fichas indexadas en popularenlinea.com y con documentos oficiales: guías de beneficios de JetBlue e IKEA Family (2025), requisitos de Plus CCN, Almacenes Iberia y gnial, y resumen de tarjetas (abril de 2023, solo como referencia).
 - Doble saldo declarado: Visa y Mastercard Platinum Doble Saldo, Mastercard JetBlue.
 - Moneda de facturación (2026-09-30), según el [tarifario vigente desde el 1 de noviembre de 2025](https://popularenlinea.com/Personas/Documents/Tarifas/Tarifas-de-productos-y-servicios-vigente-desde-1-noviembre-2025.pdf): las tarjetas sin balance en dólares tienen "N/A" en la mora y el sobregiro en US$. Sin balance en dólares → `solo_principal`: Clásica (Visa y Mastercard), Mastercard Infinia, Mastercard gnial, Visa ISI, Plus CCN, Almacenes Iberia, IKEA Family y Caminantes por la Vida. Con mora, sobregiro e interés en US$ → `doble_balance`: Titanium Doble Saldo, Visa Infinite Prestige y Mastercard Black Doble Saldo. United MileagePlus → `doble_balance` por su [guía de beneficios 2025](https://popularenlinea.com/SiteCollectionDocuments/tarjetas/2025/tarjetas-guia-mileage.pdf): "tarjeta de crédito de doble saldo … con facturación en pesos y dólares".
 - Seguros Universal: "facturación en pesos" → `solo_principal`.
 - Gold se vende en pesos o en doble saldo → sin moneda fija.
+- Mastercard Black Diamond y Mastercard Círculo de Accionistas (2026-10-01): están en el tarifario vigente sin ficha propia; la primera parece por invitación y la segunda es solo para accionistas. Se incluyen para que quien la tiene no la registre como "Otro". Black Diamond tiene mora, sobregiro e interés en US$ → `doble_balance`; Círculo de Accionistas tiene "N/A" en US$ → `solo_principal`. Visa Pola Sirena sigue fuera: el tarifario la marca como descontinuada.
 - Fuera: Excelsa (gastos de ejecutivos de empresas), Visa Impulsa (pyme), DP World (empresarial), Orbit (su dirección ahora lleva a gnial), Pola Sirena (solo en el resumen de 2023), Teen y Avanza (sin fuente oficial), Platinum Internacional de Popular Bank (marca sin confirmar).
 - Recompensas: Millas Popular; ISI da 5% en supermercados y gasolineras, 2% en compras internacionales en línea y 1% en lo demás.
 
 ### BHD (20)
+
+- Listado revisado el 2026-10-01: coincide con los 20 productos (Visa Business es empresarial).
 
 - Fuente: [bhd.com.do/homepage-personal/tarjetas/tarjeta-filter](https://bhd.com.do/homepage-personal/tarjetas/tarjeta-filter) y fichas de cada tarjeta.
 - Las que dicen "Facturación en pesos (RD$) y dólares (US$)" → `doble_balance`. Las versiones "Pesos" y Billet facturan solo en RD$ → `solo_principal`.
