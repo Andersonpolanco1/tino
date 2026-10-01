@@ -38,13 +38,16 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 - Fuera: Emprendedor (negocios), Visa Distribución, Visa Business. No aparecen hoy: Oro, UNIQUE, Edesur, La Cadena.
 - Recompensas: Estrellas BHD, 1 por cada RD$100 (1 Estrella = RD$1) en la Visa Clásica.
 
-### Banco Santa Cruz (8)
+### Banco Santa Cruz (7)
 
 - Fuente: [bsc.com.do/productos/tarjetas/tarjetas-de-credito](https://bsc.com.do/productos/tarjetas/tarjetas-de-credito). Todas son Visa.
-- PriceSmart Santa Cruz: la ficha no declara doble saldo → sin moneda fija.
+- Moneda (revisado el 2026-10-01): Gold, Platinum, Joven y Bravo declaran "Doble saldo: límites independientes en pesos y dólares" → `doble_balance`. Clásica, Infinite y PriceSmart no lo declaran → sin moneda fija.
+- Fuera: Visa Cecomsa, que ya no aparece en el listado y cuya dirección lleva a la portada.
 - Fuera: Full Car (flotilla), PriceSmart Negocios y Visa Empresarial.
 
 ### APAP (10)
+
+- Moneda (revisado el 2026-10-01): Visa Joven, "Transacciones internacionales se registran en pesos" → `solo_principal`. Las demás fichas no declaran la moneda.
 
 - Fuente: [apap.com.do/productos/?categoria=tarjetas](https://apap.com.do/productos/?categoria=tarjetas) y fichas. Clásica, Familiar y Premium Gold son Visa.
 - Fuera: Tarjeta PYME; Click To Pay (no queda claro que sea una tarjeta aparte).
@@ -62,20 +65,24 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 - Fuente: [cibao.com.do/banca-personal/tarjetas-de-credito](https://cibao.com.do/banca-personal/tarjetas-de-credito/visa-clasica-cibao/). Todas son Visa.
 - Visa Clásica: "Dos límites independientes: pesos … y dólares" → `doble_balance`.
+- Moneda (revisado el 2026-10-01): Gold ("dos balances, uno en pesos … y otro en dólares"), Ci+, Platinum e Infinite ("dos límites independientes") → `doble_balance`. El Encanto no lo declara → sin moneda.
+- Fuera: Ultracrédito, línea en cuotas sin marca Visa ni Mastercard.
 - Fuera: Visa empresarial, Ultracrédito (financiamiento).
 
 ### Promerica (12)
+
+- Moneda (revisado el 2026-10-01): las 12 fichas dicen "Límite de crédito se asigna en pesos dominicanos (RD$) y puede ser utilizado su equivalente en dólares … Los saldos se visualizan y deben pagarse de forma independiente para cada moneda" → `doble_balance`.
 
 - Fuente: [promerica.com.do/banca-personal/tarjetas-de-credito](https://www.promerica.com.do/banca-personal/tarjetas-de-credito/). Todas son Visa.
 - "Visa Lama Plazos" es el nombre real (tarjeta de Plaza Lama).
 - Fuera: Visa Flotilla Promerica (corporativa).
 - Recompensas: Puntos Promerica, 1 por cada RD$100 o US$3 en la Clásica.
 
-### Banco Caribe (6)
+### Banco Caribe (7)
 
 - El sitio bloquea las descargas automáticas; se verificó con las fichas indexadas en bancocaribe.com.do e [insignia.bancocaribe.com.do](https://insignia.bancocaribe.com.do/).
 - Visa Clásica Local → `solo_local`. Insignia es Visa (nivel Platinum).
-- Pendiente: Visa Elite Infinite (solo aparece en una nota de prensa, sin ficha de producto).
+- Visa Infinite Elite: confirmada en la [sala de prensa del banco](https://www.bancocaribe.com.do/nosotros/saladeprensa/banco-caribe-presenta-nuevos-beneficios-tarjeta-visa-elite-infinite) (2025) y en su campaña [semaselite.bancocaribe.com.do](https://semaselite.bancocaribe.com.do/) → agregada, sin moneda.
 - Recompensas: Pesos Caribe, RD$1.25 por cada RD$100.
 
 ### Asociación La Nacional (8)
@@ -84,14 +91,16 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 - Unase Local → `solo_local`. Clásica Internacional, Gold, ConfiaMás, Confía en Ti y Confiador no publican la marca → `otra`.
 - Fuera: CompraMás (línea diferida).
 
-### Banesco (11)
+### Banesco (12)
 
 - Fuente: [banesco.com.do/tarjetas](https://www.banesco.com.do/tarjetas/).
-- El banco describe un "límite de crédito consolidado en pesos o su equivalente en dólares"; no queda claro cómo factura, así que no se fija moneda.
-- Fuera: "Miles" (aparece en el listado sin datos suficientes para identificarla).
+- Moneda (revisado el 2026-10-01): las fichas completan la frase: "límite de crédito consolidado en pesos o su equivalente en dólares, con saldos reflejados en la moneda del consumo realizado en RD$ y/o US$". Una compra en dólares queda como saldo en dólares → `doble_balance` en Visa Clásica Internacional, Gold, Platinum, Infinite, Platinum ConnectMiles, Infinite ConnectMiles y Mastercard Standard, Gold, Platinum y Black. Visa SuperCashBack es "unimoneda" → `solo_principal`. Black Air Europa comparte página con la Black sin frase propia → sin moneda.
+- "Miles" del listado es la familia ConnectMiles (Copa): Visa Platinum ConnectMiles (antes "Visa Platinum Connect") y Visa Infinite ConnectMiles ([ficha](https://www.banesco.com.do/tarjetas/visa-infinite-connectmiles/)), agregada.
 - Recompensas: Puntos Verdes, 1 por cada RD$100 o US$2.
 
 ### BDI (8)
+
+- Moneda (revisado el 2026-10-01): todas las fichas declaran doble saldo ("Tarjeta con doble saldo independientes: RD$ y USD$" o "Límite independiente en pesos dominicanos y dólares estadounidenses") → `doble_balance`. Anthony's se ofrece en Clásica, Gold y Platinum. Crediplan sigue fuera.
 
 - Fuente: fichas de [bdi.com.do/tarjetas-de-credito](https://www.bdi.com.do/tarjetas-de-credito/tarjeta-de-credito-visa-clasica-bdi/) y [programa Soles](https://www.bdi.com.do/servicios/programa-soles-del-bdi/).
 - Anthony's (Clásica, Gold, Platinum): "doble saldo independientes: RD$ y USD$" → `doble_balance`.
@@ -106,6 +115,8 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 ### Banco Ademi (5)
 
+- Moneda (revisado el 2026-10-01): Visa Clásica Internacional y Visa Gold Internacional tienen límite disponible en pesos y en dólares → `doble_balance`. Visa Olé, como la Multimoneda, compra "en dólares (US $) con su disponible en pesos" → `solo_principal`. Visa Flexible no lo declara. Visa Olé sigue vigente ([ficha](https://bancoademi.com.do/productos/tarjeta-de-credito-visa-ademi-hipermercados-ole/)) aunque no salga en el listado.
+
 - Fuente: fichas de [bancoademi.com.do/productos](https://bancoademi.com.do/productos/tarjetas-de-credito-visa-clasica-multimoneda/). Todas son Visa.
 - Visa Clásica Multimoneda: compras "con su disponible en pesos" → `solo_principal`.
 - No aparece hoy: Visa Clásica Local. Fuera: Visa Empresarial Multimoneda.
@@ -118,13 +129,24 @@ Registro de dónde sale cada producto de `emisores-do.json` (versión 2026.09.3)
 
 ### Lafise (6)
 
+- (revisado el 2026-10-01): las fichas no declaran la moneda. La Visa Infinite sigue vigente aunque no salga en el listado.
+
 - Fuente: [lafise.com/blrd/personas/tarjetas/tarjetas-de-credito](https://www.lafise.com/blrd/personas/tarjetas/tarjetas-de-credito/).
 - Recompensas: Puntos LAFISE, 1 por cada RD$100 o US$3.
 
-### Qik (1)
+### Qik (2)
 
 - Fuente: [qik.do/tarjetadecredito](https://qik.do/tarjetadecredito/). Mastercard Gold, 1% de cashback en todas las compras.
+- Qik Pro (revisado el 2026-10-01): Mastercard Platinum con "Un solo límite, con doble saldo: balance en pesos y dólares" → `doble_balance` ([qik.do/pro](https://qik.do/pro/)).
+
+### Alaver (3)
+
+- Fuente (revisado el 2026-10-01): fichas de [alaver.com.do](https://alaver.com.do/tarjeta-de-credito-clasica-internacional/). Visa Clásica Internacional ("con doble saldo" → `doble_balance`), Visa Gold Internacional y Visa Platinum Internacional (sin moneda: el sitio limitó las consultas). Fuera: Tarjeta Real Juvenil y Cuenta Real (sin confirmar que sean de crédito), Alaver Cuotas (cuotas) y la empresarial.
+
+### Motor Crédito (2)
+
+- Fuente (revisado el 2026-10-01): [Visa Gold](https://motorcredito.com.do/tarjetas-de-credito/mc-gold/) y [Visa Platinum](https://motorcredito.com.do/tarjetas-de-credito/mc-platinum/) de motorcredito.com.do; no declaran la moneda.
 
 ### Sin productos
 
-Alaver, Banfondesa, Motor Crédito, Banco Adopem y Citibank siguen "por verificar": no se encontró una tarjeta de crédito para personas vigente publicada por ellos. El grupo 2 no se ha revisado.
+Banfondesa, Banco Adopem y Citibank siguen "por verificar" (revisado el 2026-10-01): solo se encontraron tarjetas de débito (Banfondesa, Adopem) o banca corporativa (Citibank). El grupo 2 no se ha revisado. López de Haro y La Nacional no respondieron en esta revisión; López de Haro se comparó con el índice del buscador y coincide.

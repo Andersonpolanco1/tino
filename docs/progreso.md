@@ -173,12 +173,13 @@ Criterios de la especificación:
 
 - [ ] Feriados de RD de 2027 en `src/paises/do.json`
 - [x] Productos del grupo 1 verificados en los sitios oficiales: 172 productos de 17 emisores (catálogo 2026.09.3, fuentes en `datos-publicos/verificacion-emisores-do.md`)
+- [x] Revisión del catálogo contra lo publicado el 2026-10-01: 179 productos de 19 emisores (catálogo 2026.10.1). Sale Visa Cecomsa (Santa Cruz); entran Visa Infinite Elite (Caribe), Visa Infinite ConnectMiles (Banesco), Qik Pro, 3 de Alaver y 2 de Motor Crédito; "Visa Platinum Connect" de Banesco pasa a su nombre oficial, Visa Platinum ConnectMiles. Moneda de facturación en 102 productos
 - [ ] Vimenca: confirmar qué tarjetas del portafolio anterior siguen vigentes (hoy solo Clásica, Gold e Infinite)
-- [ ] Banco Caribe: confirmar Visa Elite Infinite (solo aparece en una nota de prensa)
+- [x] Banco Caribe: Visa Infinite Elite confirmada en la sala de prensa del banco y su campaña; agregada (catálogo 2026.10.1)
 - [ ] Confirmar la marca de los productos con marca `otra`: Preserva (Banreservas) y Clásica Internacional, Gold, ConfiaMás, Confía en Ti y Confiador (La Nacional)
-- [ ] Confirmar la moneda de facturación de los productos que no la declaran. Catálogo 2026.09.6: 60 de 172 la tienen. BHD 20 de 20, Popular 17 de 19 (según su tarifario) y Scotiabank 14 de 28 (según sus fichas). Las Clásica, Gold y Platinum de Banreservas y la Gold de Popular se venden de las dos formas y seguirán preguntando. Faltan los emisores del grupo 1 con menos participación (Santa Cruz, APAP, Promerica, Caribe…)
+- [ ] Confirmar la moneda de facturación de los productos que no la declaran. Catálogo 2026.10.1: 102 de 179 la tienen; los demás no la publican o se venden de las dos formas (Clásica, Gold y Platinum de Banreservas, Gold de Popular) y seguirán preguntando. Quedan por revisar López de Haro y La Nacional (sus sitios no respondieron el 2026-10-01), Banco Caribe (bloquea las fichas) y la Gold y Platinum de Alaver (el sitio limitó las consultas)
 - [ ] Revisar el catálogo cada trimestre y con cada listado nuevo de la Superintendencia de Bancos
-- [ ] Verificar los emisores que siguen "por verificar": Alaver, Banfondesa, Motor Crédito, Adopem y Citibank en el grupo 1, y los del grupo 2
+- [ ] Verificar los emisores que siguen "por verificar": Banfondesa, Adopem y Citibank en el grupo 1 (solo débito o banca corporativa el 2026-10-01), y los del grupo 2. Alaver (3 tarjetas) y Motor Crédito (2) quedaron confirmados
 - [ ] Búsqueda de marcas de "Tino" (1.1 de la especificación)
 - [ ] Variantes oscura y tintada del icono de iOS
 - [x] Cuentas de Apple Developer y Google Play Console
