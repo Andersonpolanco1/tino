@@ -7,6 +7,7 @@ const { base, claro } = tokens.color;
 const config: ExpoConfig = {
   name: 'Tino',
   slug: 'tino',
+  owner: 'andersonpolanco',
   scheme: 'tino',
   version: '1.0.0',
   orientation: 'portrait',
@@ -74,6 +75,8 @@ const config: ExpoConfig = {
     ],
   ],
   experiments: { typedRoutes: true },
+  // Proyecto de Tino en EAS (compilación, firma y envío a las tiendas, sección 12 técnica).
+  extra: { eas: { projectId: 'b24acc28-d144-4acd-82f6-4285a3cab172' } },
 };
 
 export default config;
