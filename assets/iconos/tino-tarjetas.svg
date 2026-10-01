@@ -1,15 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Icono de Tino (D94). Lo genera herramientas/iconos/generar_iconos.py: no editar a mano. -->
+  <!-- Tarjetas de Tino sin fondo (D94). Generado: no editar a mano. -->
   <defs>
-    <linearGradient id="fondo" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#12916A"/>
-      <stop offset="1" stop-color="#0B6B4E"/>
-    </linearGradient>
     <filter id="sombra" x="-30%" y="-30%" width="160%" height="170%">
       <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0D1B16" flood-opacity="0.32"/>
     </filter>
   </defs>
-  <rect width="512" height="512" fill="url(#fondo)"/>
   <g transform="translate(23.0 -4.4)">
     <rect x="138" y="212" width="236" height="149" rx="22" fill="#2BD49A" fill-opacity="0.45" transform="rotate(-20 168 352)"/>
     <rect x="138" y="212" width="236" height="149" rx="22" fill="#2BD49A" fill-opacity="0.8" transform="rotate(-10 168 352)"/>

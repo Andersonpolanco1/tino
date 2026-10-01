@@ -325,9 +325,14 @@ Las [maquetas de la pantalla de inicio](https://claude.ai/artifact/D4pi5Mkn44k2A
 | `assets/iconos/app-store-1024.png` | Icono de App Store y de iOS | 1024×1024, sin transparencia, sin esquinas redondeadas |
 | `assets/iconos/play-store-512.png` | Ficha de Google Play | 512×512 |
 | `assets/iconos/android-fondo.png` | Icono adaptativo: capa de fondo | 432×432 (108 dp a 4x) |
-| `assets/iconos/android-primer-plano.png` | Icono adaptativo: tarjetas y sello, dentro de la zona segura de 66 dp | 432×432 con transparencia |
+| `assets/iconos/android-primer-plano.png` | Icono adaptativo: las tarjetas en abanico, dentro de la zona segura de 66 dp | 432×432 con transparencia |
 | `assets/iconos/android-monocromo.png` | Iconos temáticos de Android 13 en adelante | 432×432 con transparencia |
-| `assets/iconos/fuente-icono.svg` | Fuente vectorial para futuras exportaciones | SVG |
+| `assets/iconos/fuente-icono.svg` | Icono con su fondo, en vectores | SVG |
+| `assets/iconos/tino-tarjetas.svg` y `tino-tarjetas.png` | Logo sin fondo, con el mismo estilo del icono (tarjeta del frente blanca con sombra); se lee en fondos claros y oscuros | SVG y 1024×1024 con transparencia |
+| `assets/iconos/tino-tarjetas-monocromo.svg` | Logo en una sola tinta | SVG |
+| `assets/iconos/splash.png` | Pantalla de arranque: las tarjetas sobre el jade, dentro del círculo de Android 12+ | 1024×1024 con transparencia |
+
+Todos salen de una sola geometría, tres tarjetas en abanico en proporción real (decisión D94 de `docs/progreso.md`), con `python herramientas/iconos/generar_iconos.py`; no se editan a mano. `LogoTino` dibuja la misma figura con los colores del tema.
 
 En `app.json`: `icon` apunta al PNG de 1024; `android.adaptiveIcon` usa `foregroundImage`, `backgroundImage` y `monochromeImage` con los archivos de Android. Las variantes oscura y tintada de iOS se agregan antes del lanzamiento a partir del SVG fuente.
 
