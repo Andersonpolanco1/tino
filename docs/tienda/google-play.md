@@ -96,16 +96,18 @@ Menú: Supervisar y mejorar > Política y programas > Contenido de la app.
 https://polancolabs.com/apps/tino/privacidad
 ```
 
-**Detalles de acceso** (antes "Acceso a la app"): "Sí, alguna parte está restringida", porque Google cuenta las suscripciones como acceso restringido. Usuario y contraseña vacíos. Antes de pedir acceso a producción, agregar al final un código promocional de Tino Pro, porque los revisores no pueden comprar.
+**Detalles de acceso** (antes "Acceso a la app"): "Sí, alguna parte está restringida", porque Google cuenta las suscripciones como acceso restringido. Se escribe en inglés. Usuario y contraseña, vacíos. La casilla "proporcionan acceso completo… incluido el premium" queda sin marcar hasta agregar un código promocional de Tino Pro, antes de pedir acceso a producción.
 
-**Instrucciones**
+**Nombre** (21 / 60)
 
 ```text
-Tino no requiere cuenta ni inicio de sesión: todo funciona al abrir la app, y los datos se guardan solo en el teléfono.
+No login, free access
+```
 
-Plan gratis: todas las funciones con hasta 2 tarjetas. Para ver el ranking, registre dos tarjetas de ejemplo eligiendo "Mi banco no está en la lista", con cualquier nombre, día de corte y día de pago.
+**Cualquier otra información necesaria para acceder** (426 / 500)
 
-Contenido de pago (Tino Pro, suscripción): permite más de 2 tarjetas activas y activa el respaldo automático. Para ver la oferta, intente registrar una tercera tarjeta desde la pestaña Tarjetas, o toque Tino Pro en Ajustes. Todas las demás funciones están disponibles sin pagar.
+```text
+No account or login: the app works on first open and stores data only on the device. Free plan: all features with up to 2 cards. To see the ranking, add two sample cards choosing "Mi banco no está en la lista" (my bank is not listed), any name and any dates. Paid content (Tino Pro subscription): more than 2 active cards and automatic backup. To see the offer, add a third card in the Tarjetas tab or tap Tino Pro in Ajustes.
 ```
 
 **Anuncios:** No, la app no contiene anuncios.
