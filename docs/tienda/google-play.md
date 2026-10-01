@@ -124,7 +124,7 @@ Con el código en el texto, se marca la casilla "proporcionan acceso completo…
 
 **Público objetivo:** 18 años o más. La app no está dirigida a niños.
 
-**Funciones financieras:** Tino no ofrece préstamos, pagos, inversiones, criptomonedas ni banca. Elige "Mi app no ofrece ninguna de estas funciones" o la de gestión de finanzas personales, según lo que muestre la consola.
+**Funciones financieras:** "Mi app no ofrece ninguna función financiera". La declaración pregunta qué servicios financieros presta la app (préstamos, pagos, inversión, seguros, crédito, criptomonedas), y Tino no presta ninguno. No marcar "Recompensas, puntos…" (es para apps que dan puntos), "Asesoramiento financiero" (asesores con licencia: pediría documentación) ni "Otro".
 
 **Apps gubernamentales, de salud y de noticias:** No.
 
