@@ -96,7 +96,7 @@ Menú: Supervisar y mejorar > Política y programas > Contenido de la app.
 https://polancolabs.com/apps/tino/privacidad
 ```
 
-**Detalles de acceso** (antes "Acceso a la app"): "Sí, alguna parte está restringida", porque Google cuenta las suscripciones como acceso restringido. Se escribe en inglés. Usuario y contraseña, vacíos. La casilla "proporcionan acceso completo… incluido el premium" queda sin marcar hasta agregar un código promocional de Tino Pro, antes de pedir acceso a producción.
+**Detalles de acceso** (antes "Acceso a la app"): "Sí, alguna parte está restringida", porque Google cuenta las suscripciones como acceso restringido. Se escribe en inglés. Google exige marcar que los detalles dan acceso completo, incluido lo pagado, así que primero hay que subir la AAB como borrador, crear la suscripción y un código promocional personalizado de Tino Pro (Monetiza con Play > Promociones), y reemplazar `CODIGO` en el texto. Usuario y contraseña, vacíos.
 
 **Nombre** (21 / 60)
 
@@ -104,11 +104,13 @@ https://polancolabs.com/apps/tino/privacidad
 No login, free access
 ```
 
-**Cualquier otra información necesaria para acceder** (426 / 500)
+**Cualquier otra información necesaria para acceder** (427 / 500 con un código de 12 caracteres)
 
 ```text
-No account or login: the app works on first open and stores data only on the device. Free plan: all features with up to 2 cards. To see the ranking, add two sample cards choosing "Mi banco no está en la lista" (my bank is not listed), any name and any dates. Paid content (Tino Pro subscription): more than 2 active cards and automatic backup. To see the offer, add a third card in the Tarjetas tab or tap Tino Pro in Ajustes.
+No account or login: the app works on first open; data stays on the device. Free plan: all features with up to 2 cards. Add sample cards choosing "Mi banco no está en la lista", any name and dates. Tino Pro (subscription) unlocks more than 2 cards and automatic backup. To unlock it, redeem promo code CODIGO in Play Store > Payments & subscriptions > Redeem code, then open Tino > Ajustes > Tino Pro > Restaurar compras.
 ```
+
+Con el código en el texto, se marca la casilla "proporcionan acceso completo… incluido el premium o pagado".
 
 **Anuncios:** No, la app no contiene anuncios.
 
