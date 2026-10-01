@@ -173,6 +173,7 @@ Criterios de la especificación:
 ## Pendientes fuera del código
 
 - [ ] Feriados de RD de 2027 en `src/paises/do.json`
+- [ ] (Después del lanzamiento) Modelo de negocio gratis y Pro: análisis del 2026-10-01 en https://claude.ai/code/artifact/8b4f14c4-fba7-4164-bab6-fd733c52a053. Propone, sin decidir aún: 1.1 con registro sin límite y 2 tarjetas activas, muro de pago con las cifras del usuario y resumen mensual de lo ganado; 1.2 con calendario de 30 días, puntos por vencer y "¿vale la pena esta tarjeta?" en Pro; y una prueba de 30 días de Pro para usuarios nuevos si la conversión es menor a 2% a los 3 meses
 - [x] Productos del grupo 1 verificados en los sitios oficiales: 172 productos de 17 emisores (catálogo 2026.09.3, fuentes en `datos-publicos/verificacion-emisores-do.md`)
 - [x] Revisión del catálogo contra lo publicado el 2026-10-01: 179 productos de 19 emisores (catálogo 2026.10.1). Sale Visa Cecomsa (Santa Cruz); entran Visa Infinite Elite (Caribe), Visa Infinite ConnectMiles (Banesco), Qik Pro, 3 de Alaver y 2 de Motor Crédito; "Visa Platinum Connect" de Banesco pasa a su nombre oficial, Visa Platinum ConnectMiles. Moneda de facturación en 102 productos. Después (2026.10.2): BHD y Banreservas coinciden con sus listados, y entran la Mastercard Black Diamond y la Círculo de Accionistas de Popular (vigentes en su tarifario, sin ficha)
 - [ ] Vimenca: confirmar qué tarjetas del portafolio anterior siguen vigentes (hoy solo Clásica, Gold e Infinite)
