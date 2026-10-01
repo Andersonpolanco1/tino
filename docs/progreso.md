@@ -139,6 +139,7 @@ Listo cuando: la versión 1.0.0 está aprobada en App Store y Google Play.
   - [x] Borradores en `docs/tienda/`: política de privacidad, términos de uso y fichas de App Store y Google Play (textos, compras, etiqueta de privacidad de Apple, seguridad de los datos de Google, clasificación y plan de capturas). Responsable: Polanco Labs, polancolabsrd@gmail.com
   - [ ] Capturas con bancos de ejemplo (plan en `docs/tienda/fichas.md`, sección Capturas)
   - [x] Textos listos para copiar en cada consola: `docs/tienda/google-play.md` y `docs/tienda/app-store.md` (la descripción ya menciona elegir el día en "Tengo una compra", D96)
+  - [x] Google Play (2026-10-01): app creada, ficha con textos, icono e imagen destacada, contenido de la app completo (detalles de acceso con código promocional, anuncios, clasificación 3+, público 18+, seguridad de los datos, gobierno, funciones financieras, salud, ID de publicidad: no, la AAB no trae `AD_ID`), suscripción `tino_pro` con sus tres planes activos y la AAB 2 (1.0.0) como borrador en la prueba cerrada. Faltan las capturas y la lista de verificadores para enviar a revisión
   - [ ] Publicar los documentos y llenar las fichas en las consolas (pendientes abajo)
 - [ ] Pruebas de flujos completos con Maestro: se dejan para cuando las pantallas estén estables; mientras tanto los flujos se prueban a mano. Lo aprendido en un primer intento (Maestro 2.10 en Windows, con el Java de Android Studio):
   - Las etiquetas accesibles de campos y botones sirven de selector; no hacen falta `testID`.
