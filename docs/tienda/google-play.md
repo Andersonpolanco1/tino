@@ -216,13 +216,19 @@ Activa los tres planes base: en borrador, RevenueCat no los ve. Revisa que el pr
 1.0.0
 ```
 
-**Notas de la versión**
+**Notas de la versión** (434 / 500, sin contar las etiquetas)
 
 ```text
 <es-419>
-Primera versión de Tino. ¡Gracias por probarla!
+Primera versión de Tino:
+• Tu tarjeta de hoy: cuál te da más días para pagar, puntos o cashback.
+• Semáforo del ciclo: cuándo usar cada tarjeta y cuándo esperar.
+• "Tengo una compra": elige monto, día y moneda, y te dice qué tarjeta usar.
+• Avisos antes de cada fecha límite y si vence antes de tu cobro.
+• Tarjetas con balance en pesos y en dólares.
+• Widget con la tarjeta de hoy.
+• Datos cifrados solo en tu teléfono, con respaldo.
 </es-419>
 ```
 
-La consola pide las notas dentro de la etiqueta del idioma, como arriba.
-
+La consola pide las notas dentro de la etiqueta del idioma, como arriba: se borra todo el campo (también el texto gris de ejemplo) y se pega el bloque. La primera versión presenta lo que trae la app; las siguientes, solo lo nuevo.
