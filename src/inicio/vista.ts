@@ -58,11 +58,22 @@ export function valorRecompensaCompra(tarjeta: Tarjeta, resultado: ResultadoTarj
   return { valor: t('compra.puntosCorto', { puntos }), texto: t('compra.enPuntos') };
 }
 
-export function etiquetasDe(tarjeta: Tarjeta, resultado: ResultadoTarjeta, { t }: Contexto): EtiquetaVista[] {
+// Con otroDia (una compra de otro día en "Tengo una compra", decisión D96) el corte se dice con
+// su fecha: "Corta hoy" o "en 2 días" se leerían contando desde hoy y no desde la compra.
+export function etiquetasDe(tarjeta: Tarjeta, resultado: ResultadoTarjeta, { t, idioma }: Contexto, otroDia = false): EtiquetaVista[] {
   const etiquetas: EtiquetaVista[] = [];
   if (resultado.etiquetas.includes('corta_pronto')) {
     const dias = resultado.diasParaCorte;
-    etiquetas.push({ tipo: 'alerta', texto: dias === 0 ? t('etiqueta.cortaHoy') : dias === 1 ? t('etiqueta.cortaManana') : t('etiqueta.cortaPronto', { dias }) });
+    const texto = otroDia
+      ? dias === 0
+        ? t('etiqueta.cortaEseDia')
+        : t('etiqueta.cortaEl', { dia: diaConSemana(resultado.proximoCorte, idioma, t) })
+      : dias === 0
+        ? t('etiqueta.cortaHoy')
+        : dias === 1
+          ? t('etiqueta.cortaManana')
+          : t('etiqueta.cortaPronto', { dias });
+    etiquetas.push({ tipo: 'alerta', texto });
   }
   if (resultado.etiquetas.includes('vence_antes_del_cobro')) etiquetas.push({ tipo: 'alerta', texto: t('etiqueta.venceAntesDelCobro') });
   if (tarjeta.monedaFacturacion === 'doble_balance') etiquetas.push({ tipo: 'neutra', texto: t('etiqueta.pesosYDolares') });

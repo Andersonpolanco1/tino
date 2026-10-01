@@ -102,7 +102,7 @@ test('elegir otro día recalcula la tarjeta para ese día', async () => {
   await act(async () => onChange({ type: 'set' }, new Date(2026, 9, 9)));
 
   expect(screen.getByText('Úsala el viernes 9')).toBeOnTheScreen();
-  expect(screen.getAllByText('viernes 9').length).toBeGreaterThan(0);
+  expect(screen.getByText('Viernes 9 de octubre')).toBeOnTheScreen();
   expect(screen.getByText('50 días')).toBeOnTheScreen();
   expect(screen.queryByText(/^Si esperas al/)).toBeNull();
 
@@ -130,4 +130,20 @@ test('el detalle ignora una fecha fuera del mes y muestra hoy', async () => {
   mockParams = { id: 'P', fecha: '2026-12-01' };
   await render(envolver(await almacenCon([tarjeta('P')]), <DetalleTarjeta />));
   expect(screen.getByText('Si la usas hoy')).toBeOnTheScreen();
+});
+
+test('con otro día, el corte cercano se dice con su fecha y no contando desde hoy', async () => {
+  // Q corta el 9: elegido el 9 diría "Corta hoy"; elegido el 7, "Corta en 2 días".
+  await render(envolver(await almacenCon([tarjeta('P', { diaCorte: 20 }), tarjeta('Q', { diaCorte: 9, compraEnDiaDeCorte: 'entra_en_corte_actual' })]), <Compra />));
+  await act(async () => fireEvent.changeText(screen.getByLabelText('¿Cuánto vas a gastar?'), '5000'));
+  expect(screen.getByText('Corta en 3 días')).toBeOnTheScreen();
+
+  await fireEvent.press(screen.getByText('¿Cuándo vas a comprar?'));
+  await act(async () => (mockSelector.props!.onChange as (e: unknown, f?: Date) => void)({ type: 'set' }, new Date(2026, 9, 9)));
+  expect(screen.getByText('Corta ese día')).toBeOnTheScreen();
+  expect(screen.queryByText('Corta hoy')).toBeNull();
+
+  await fireEvent.press(screen.getByText('¿Cuándo vas a comprar?'));
+  await act(async () => (mockSelector.props!.onChange as (e: unknown, f?: Date) => void)({ type: 'set' }, new Date(2026, 9, 7)));
+  expect(screen.getByText('Corta el viernes 9')).toBeOnTheScreen();
 });

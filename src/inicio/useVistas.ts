@@ -51,6 +51,8 @@ interface ContextoVista {
   t: Traducir;
   pais: ConfigPais;
   idioma: string;
+  // La entrada es de otro día elegido en "Tengo una compra" (decisión D96).
+  otroDia?: boolean;
 }
 
 export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c: ContextoVista): VistaTarjeta {
@@ -69,7 +71,7 @@ export function construirVista(tarjeta: Tarjeta, resultado: ResultadoTarjeta, c:
     fechaPagoCorta: fechaCorta(resultado.fechaPago, c.idioma, c.t),
     recompensa: textoRecompensa(tarjeta, resultado, contexto, c.entrada.compra),
     recompensaCorta: textoRecompensa(tarjeta, resultado, contexto, c.entrada.compra, true),
-    etiquetas: etiquetasDe(tarjeta, resultado, contexto),
+    etiquetas: etiquetasDe(tarjeta, resultado, contexto, c.otroDia),
     mensajeSemaforo: mensajeSemaforo(tarjeta, resultado, c.entrada, c.t, c.idioma),
     ciclo: {
       ...ciclo,
@@ -87,13 +89,13 @@ export function useVistas(opciones: { orden?: OrdenVista; compra?: EntradaMotor[
 
   return useMemo(() => {
     if (!ranking) return null;
-    const c = { entrada: ranking.entrada, catalogo, t: t as unknown as Traducir, pais: config, idioma };
+    const c = { entrada: ranking.entrada, catalogo, t: t as unknown as Traducir, pais: config, idioma, otroDia: !!opciones.fecha };
     return {
       entrada: ranking.entrada,
       excluidas: ranking.resultado.excluidas,
       tarjetas: ranking.resultado.ranking.map(resultado => construirVista(ranking.tarjetaDe(resultado.tarjetaId), resultado, c)),
     };
-  }, [ranking, catalogo, config, idioma, t]);
+  }, [ranking, catalogo, config, idioma, t, opciones.fecha]);
 }
 
 // Vista de una tarjeta para su detalle, aunque esté en pausa (se calcula como si estuviera activa).
@@ -109,6 +111,6 @@ export function useVistaTarjeta(id: string, fecha?: FechaISO): VistaTarjeta | nu
     if (!ranking || !tarjeta) return null;
     const entrada = { ...ranking.entrada, tarjetas: [{ ...tarjeta, enPausa: false }] };
     const [resultado] = calcularRanking(entrada).ranking;
-    return construirVista(tarjeta, resultado, { entrada, catalogo, t: t as unknown as Traducir, pais: config, idioma });
-  }, [ranking, tarjeta, catalogo, config, idioma, t]);
+    return construirVista(tarjeta, resultado, { entrada, catalogo, t: t as unknown as Traducir, pais: config, idioma, otroDia: !!fecha });
+  }, [ranking, tarjeta, catalogo, config, idioma, t, fecha]);
 }

@@ -11,6 +11,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { fechaCompraValida } from '@/compra/fechaCompra';
 import { SelectorFechaCompra } from '@/compra/SelectorFechaCompra';
 import { diaConSemana, valorRecompensaCompra, type Traducir } from '@/inicio/vista';
+import { partesFechaLarga } from '@/i18n/formato';
 import { calcularRanking } from '@/motor';
 import { DIAS_MINIMOS_AL_ESPERAR } from '@/notificaciones/planificar';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
@@ -40,7 +41,7 @@ export default function Compra() {
 
   const monto = Number(texto.replace(/,/g, ''));
   const compra = useMemo(() => (Number.isFinite(monto) && monto > 0 ? { monto, moneda } : undefined), [monto, moneda]);
-  const vistas = useVistas({ compra, fecha });
+  const vistas = useVistas({ compra, fecha: otroDia ? fecha : undefined });
 
   // Una consulta por visita, al escribir el primer monto válido; solo la moneda sale del teléfono.
   const consultada = useRef(false);
@@ -110,7 +111,7 @@ export default function Compra() {
         <FilaLista
           icono="calendario"
           titulo={t('compra.cuando')}
-          valor={otroDia ? dia : t('compra.hoy')}
+          detalle={otroDia ? t('comun.fechaLarga', partesFechaLarga(fecha, idioma)) : t('compra.hoy')}
           flecha
           onPress={() => setEligiendo(true)}
         />
