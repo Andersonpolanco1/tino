@@ -26,9 +26,10 @@ RADIO = 22
 CHIP = (164, 270, 42, 32, 7)    # x, y, ancho, alto, radio
 PIVOTE = (168, 352)
 ATRAS = [(-20, 0.45), (-10, 0.8)]  # grados y opacidad, de la más lejana a la más cercana
-# En los iconos con fondo, el abanico se agranda un 20% sobre la geometría de 512 para que llene el
-# icono como los de otras apps (a escala 1 se veía pequeño en el teléfono).
-AUMENTO_TIENDAS = 1.2
+# En los iconos con fondo (App Store, Google Play), el abanico se agranda sobre la geometría de 512
+# hasta ocupar cerca del 80% del ancho, con un 10% de margen a cada lado: las tiendas muestran el
+# cuadro completo, solo con las esquinas suavizadas.
+AUMENTO_TIENDAS = 1.42
 
 
 def esquinas(angulo):
@@ -44,6 +45,22 @@ def esquinas(angulo):
 _puntos = [p for angulo in [0] + [a for a, _ in ATRAS] for p in esquinas(angulo)]
 CAJA = (min(p[0] for p in _puntos), min(p[1] for p in _puntos), max(p[0] for p in _puntos), max(p[1] for p in _puntos))
 CENTRO = ((CAJA[0] + CAJA[2]) / 2, (CAJA[1] + CAJA[3]) / 2)
+
+
+def contorno(angulo, pasos=24):
+    """Puntos del borde de una tarjeta, con sus esquinas redondeadas, girada `angulo` grados."""
+    x, y, w, h = TARJETA
+    a = math.radians(angulo)
+    px, py = PIVOTE
+    for cx, cy, desde in ((x + w - RADIO, y + RADIO, -90), (x + w - RADIO, y + h - RADIO, 0), (x + RADIO, y + h - RADIO, 90), (x + RADIO, y + RADIO, 180)):
+        for i in range(pasos + 1):
+            t = math.radians(desde + 90 * i / pasos)
+            dx, dy = cx + RADIO * math.cos(t) - px, cy + RADIO * math.sin(t) - py
+            yield px + dx * math.cos(a) - dy * math.sin(a), py + dx * math.sin(a) + dy * math.cos(a)
+
+
+# Distancia del centro al punto más lejano de las tarjetas: lo que tiene que caber en un círculo.
+RADIO_ABANICO = max(math.hypot(px - CENTRO[0], py - CENTRO[1]) for angulo in [0] + [a for a, _ in ATRAS] for px, py in contorno(angulo))
 
 
 def rgba(h, a=1.0):
@@ -146,16 +163,15 @@ def escribir_png():
     tarjetas(1024, 1024, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/tino-tarjetas.png', optimize=True)
 
     # Icono adaptativo de Android: lienzo de 108 dp (432 px a 4x); cualquier forma del launcher
-    # deja ver al menos el círculo de 66 dp del centro. El abanico se agranda hasta que su diagonal
-    # mida 64 dp: llena el icono sin que ninguna forma lo recorte.
-    diagonal = math.hypot(CAJA[2] - CAJA[0], CAJA[3] - CAJA[1])
-    visible = 432 * 64 / 108 / diagonal * 512
+    # deja ver al menos el círculo de 66 dp del centro. El abanico se agranda hasta que su punto más
+    # lejano quede a 32.5 dp del centro: llena el icono sin que ninguna forma lo recorte.
+    visible = 32.5 * 4 / RADIO_ABANICO * 512
     degradado(432).save(f'{DESTINO}/android-fondo.png', optimize=True)
     tarjetas(432, visible, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/android-primer-plano.png', optimize=True)
     tarjetas(432, visible, '#FFFFFF', '#FFFFFF', None, False).save(f'{DESTINO}/android-monocromo.png', optimize=True)
 
     # Splash (Android 12+): recorta en un círculo de 2/3 del lienzo; el abanico tiene que caber con aire.
-    escala = 1024 * (2 / 3) * 0.9 / diagonal * 512
+    escala = 1024 * (1 / 3) * 0.9 / RADIO_ABANICO * 512
     tarjetas(1024, escala, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/splash.png', optimize=True)
 
 
