@@ -7,8 +7,16 @@ interface Props extends TextProps {
   color?: RolColor;
 }
 
-// Texto base: tipografía y color desde los tokens; escala con el tamaño de texto del sistema.
-export function Texto({ variante = 'cuerpo', color = 'texto', style, ...resto }: Props) {
+// Texto base: tipografía y color desde los tokens; escala con el tamaño de texto del sistema. Las
+// cifras y los títulos grandes crecen hasta su tope (crecimientoMaximo); el resto, sin límite.
+export function Texto({ variante = 'cuerpo', color = 'texto', style, maxFontSizeMultiplier, ...resto }: Props) {
   const tema = useTema();
-  return <Text {...resto} allowFontScaling style={[tema.texto[variante], { color: tema.color[color] }, style]} />;
+  return (
+    <Text
+      {...resto}
+      allowFontScaling
+      maxFontSizeMultiplier={maxFontSizeMultiplier ?? tema.crecimientoTexto[variante]}
+      style={[tema.texto[variante], { color: tema.color[color] }, style]}
+    />
+  );
 }

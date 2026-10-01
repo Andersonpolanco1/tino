@@ -12,6 +12,9 @@ export interface Tema {
   modo: ModoTema;
   color: Record<RolColor, string>;
   texto: Record<VarianteTexto, TextStyle>;
+  // Cuánto puede crecer cada variante con el tamaño de texto del sistema; 0 = sin tope.
+  crecimientoTexto: Record<VarianteTexto, number>;
+  crecimientoBarras: number;
   espacio: typeof tokens.espacio;
   radio: typeof tokens.radio;
   opacidad: typeof tokens.opacidad;
@@ -37,26 +40,52 @@ function sombras(modo: ModoTema, color: Record<RolColor, string>): Record<NivelS
   return resultado;
 }
 
+interface DefinicionTexto {
+  familia: string;
+  tamano: number;
+  peso: number;
+  altoLinea: number;
+  espaciado?: number;
+  mayusculas?: boolean;
+  crecimientoMaximo?: number;
+  cifrasFijas?: boolean;
+}
+
+const escala = tokens.tipografia.escala as Record<VarianteTexto, DefinicionTexto>;
+
 function estilosTexto(): Record<VarianteTexto, TextStyle> {
-  const escala = tokens.tipografia.escala;
   const estilos = {} as Record<VarianteTexto, TextStyle>;
   for (const variante of Object.keys(escala) as VarianteTexto[]) {
-    const { familia, tamano, peso, altoLinea } = escala[variante];
+    const { familia, tamano, peso, altoLinea, espaciado, mayusculas, cifrasFijas } = escala[variante];
     estilos[variante] = {
       fontFamily: nombreFuente(familia as 'titulos' | 'texto', peso),
       fontSize: tamano,
       lineHeight: Math.round(tamano * altoLinea),
+      // Android suma espacio de la fuente arriba y abajo (en Bricolage, 1.56 em frente a 1.2 en iOS),
+      // y las cifras quedaban corridas hacia abajo. En iOS no tiene efecto.
+      includeFontPadding: false,
+      ...(espaciado ? { letterSpacing: espaciado } : {}),
+      ...(mayusculas ? { textTransform: 'uppercase' as const } : {}),
+      // Cifras de ancho fijo: los números no se mueven de lado al cambiar.
+      ...(cifrasFijas ? { fontVariant: ['tabular-nums' as const] } : {}),
     };
   }
   return estilos;
 }
 
+function crecimientos(): Record<VarianteTexto, number> {
+  const resultado = {} as Record<VarianteTexto, number>;
+  for (const variante of Object.keys(escala) as VarianteTexto[]) resultado[variante] = escala[variante].crecimientoMaximo ?? 0;
+  return resultado;
+}
+
 const texto = estilosTexto();
+const crecimientoTexto = crecimientos();
 
 // Las pantallas solo usan los roles semánticos del modo, nunca los colores base.
 const crear = (modo: ModoTema): Tema => {
   const color = tokens.color[modo] as Record<RolColor, string>;
-  return { modo, color, texto, espacio: tokens.espacio, radio: tokens.radio, opacidad: tokens.opacidad, desenfoque: tokens.desenfoque, sombra: sombras(modo, color), toqueMinimo: tokens.toque.minimo };
+  return { modo, color, texto, crecimientoTexto, crecimientoBarras: tokens.tipografia.crecimientoBarras, espacio: tokens.espacio, radio: tokens.radio, opacidad: tokens.opacidad, desenfoque: tokens.desenfoque, sombra: sombras(modo, color), toqueMinimo: tokens.toque.minimo };
 };
 
 export const temas: Record<ModoTema, Tema> = { claro: crear('claro'), oscuro: crear('oscuro') };

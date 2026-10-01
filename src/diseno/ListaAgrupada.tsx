@@ -14,7 +14,7 @@ export function ListaAgrupada({ children, titulo, sangria = 64 }: { children: Re
   return (
     <View style={{ gap: tema.espacio.s }}>
       {titulo ? (
-        <Texto variante="apoyo" color="textoSecundario" style={{ paddingLeft: tema.espacio.xs, fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+        <Texto variante="apoyoFuerte" color="textoSecundario" style={{ paddingLeft: tema.espacio.xs }}>
           {titulo}
         </Texto>
       ) : null}
@@ -87,7 +87,7 @@ export function FilaLista({
           lado={28}
           respaldo={
             <View accessibilityElementsHidden importantForAccessibility="no-hide-descendants" style={{ width: 42, height: 42, borderRadius: 21, backgroundColor: tema.color.neutroFondo, alignItems: 'center', justifyContent: 'center' }}>
-              <Texto variante="etiqueta" color="primario" style={{ fontSize: 13 }}>
+              <Texto variante="etiqueta" color="primario">
                 {iniciales}
               </Texto>
             </View>
@@ -99,11 +99,11 @@ export function FilaLista({
         </View>
       ) : null}
       <View style={{ flex: 1, gap: 2, minWidth: 0 }}>
-        <Texto variante="cuerpoFuerte" color={destructiva ? 'alertaTexto' : 'texto'} style={{ fontSize: iniciales ? 16 : 15 }}>
+        <Texto variante={iniciales ? 'cuerpoFuerte' : 'controlFuerte'} color={destructiva ? 'alertaTexto' : 'texto'}>
           {titulo}
         </Texto>
         {detalle ? (
-          <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+          <Texto variante="apoyoPequeno" color="textoSecundario">
             {detalle}
           </Texto>
         ) : null}

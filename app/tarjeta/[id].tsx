@@ -76,7 +76,7 @@ export default function DetalleTarjeta() {
       <Stack.Screen options={{ headerShown: false }} />
       {/* Sin el recuadro de iniciales: el nombre ya dice el banco (decisión D52). */}
       <View style={{ gap: 2 }}>
-        <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 26, lineHeight: 31, letterSpacing: -0.4 }}>
+        <Texto variante="titulo" accessibilityRole="header">
           {tarjeta.alias}
         </Texto>
         {detalle ? (
@@ -92,7 +92,7 @@ export default function DetalleTarjeta() {
       {/* Mismas piezas que la tarjeta de hoy, en blanco: el verde queda para la recomendada. */}
       <Superficie radio={tema.radio.destacada} style={{ padding: 20, gap: tema.espacio.m }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: tema.espacio.s }}>
-          <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily, flexShrink: 1 }}>
+          <Texto variante="etiquetaLigera" color="textoSecundario" style={{ flexShrink: 1 }}>
             {t('detalle.siUsasHoy')}
           </Texto>
           <PildoraSemaforo luz={resultado.semaforo} />
@@ -148,14 +148,14 @@ export default function DetalleTarjeta() {
       <Superficie radio={20} style={{ padding: tema.espacio.l, gap: 10 }}>
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline' }}>
           <Texto variante="cuerpoFuerte">{t('detalle.precisionTitulo')}</Texto>
-          <Texto variante="cifra" color="primario" style={{ fontSize: 22 }}>
+          <Texto variante="cifraPequena" color="primario">
             {t('comun.porcentaje', { valor: precision })}
           </Texto>
         </View>
         <View style={{ height: 8, borderRadius: 4, backgroundColor: tema.color.neutroFondo, overflow: 'hidden' }}>
           <View style={{ width: `${precision}%`, height: 8, borderRadius: 4, backgroundColor: tema.color.primario }} />
         </View>
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+        <Texto variante="apoyoPequeno" color="textoSecundario">
           {t(`detalle.precisionPista.${pista}`)}
         </Texto>
       </Superficie>

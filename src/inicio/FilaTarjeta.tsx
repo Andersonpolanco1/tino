@@ -1,12 +1,11 @@
 import { View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Etiqueta, FilaLista, Texto, useTema } from '../diseno';
+import { Etiqueta, FilaLista, Texto } from '../diseno';
 import type { VistaTarjeta } from './useVistas';
 
 // Cada tarjeta del ranking dentro de la lista agrupada (rediseño): iniciales del banco,
 // nombre, banco y fecha de pago, etiquetas y los días a la derecha.
 export function FilaTarjeta({ vista, onPress, recompensa }: { vista: VistaTarjeta; onPress: () => void; recompensa?: string | null }) {
-  const tema = useTema();
   const { t } = useTranslation();
   const { tarjeta, resultado } = vista;
   const textoRecompensa = recompensa === undefined ? vista.recompensa : recompensa;
@@ -32,10 +31,10 @@ export function FilaTarjeta({ vista, onPress, recompensa }: { vista: VistaTarjet
       }
       derecha={
         <View style={{ alignItems: 'flex-end' }}>
-          <Texto variante="cifra" style={{ fontSize: 28, lineHeight: 30 }}>
+          <Texto variante="cifra">
             {resultado.diasGracia}
           </Texto>
-          <Texto variante="etiqueta" color="textoSecundario" style={{ fontFamily: tema.texto.apoyo.fontFamily }}>
+          <Texto variante="etiquetaLigera" color="textoSecundario">
             {t('inicio.dias')}
           </Texto>
         </View>

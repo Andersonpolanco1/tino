@@ -85,7 +85,7 @@ export default function Bienvenida() {
         )
       }
     >
-      <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>
+      <Texto variante="tituloPantalla" accessibilityRole="header">
         {t('onboarding.bienvenidaTitulo')}
       </Texto>
       {copia ? (

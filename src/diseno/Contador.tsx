@@ -43,7 +43,7 @@ export function Contador({ etiqueta, valor, min, max, onCambio }: Props) {
       </Texto>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14 }}>
         {boton('menos', valor - 1, t('comun.menos', { etiqueta }))}
-        <Texto variante="cifra" accessibilityLiveRegion="polite" style={{ minWidth: 36, textAlign: 'center', fontSize: 28 }}>
+        <Texto variante="cifra" accessibilityLiveRegion="polite" style={{ minWidth: 36, textAlign: 'center' }}>
           {valor}
         </Texto>
         {boton('mas', valor + 1, t('comun.mas', { etiqueta }))}

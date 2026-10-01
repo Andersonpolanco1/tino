@@ -39,7 +39,7 @@ export function LineaCiclo({ anterior, hoy, corte, pago, sobreDestacado = false,
 
   const hito = (etiqueta: string, fecha: FechaISO, alineacion: 'left' | 'center' | 'right') => (
     <View style={{ flex: 1 }}>
-      <Texto variante="etiqueta" color={secundario} style={{ fontFamily: tema.texto.apoyo.fontFamily, textAlign: alineacion }}>
+      <Texto variante="etiquetaLigera" color={secundario} style={{ textAlign: alineacion }}>
         {etiqueta}
       </Texto>
       <Texto variante="etiqueta" color={principal} style={{ textAlign: alineacion }}>

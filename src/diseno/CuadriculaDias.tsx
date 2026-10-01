@@ -29,7 +29,7 @@ export function CuadriculaDias({ etiqueta, valor, valores, onCambio }: { etiquet
                   backgroundColor: activo ? tema.color.primario : 'transparent',
                 }}
               >
-                <Texto variante={activo ? 'cuerpoFuerte' : 'cuerpo'} color={activo ? 'sobrePrimario' : 'texto'} style={{ fontSize: 15 }}>
+                <Texto variante={activo ? 'controlFuerte' : 'control'} color={activo ? 'sobrePrimario' : 'texto'}>
                   {dia}
                 </Texto>
               </Pressable>

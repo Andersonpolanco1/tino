@@ -101,7 +101,7 @@ export function BarraPestanas({ pestanas, activa, onElegir, etiqueta, objetivoDe
                 />
               ) : null}
             </View>
-            <Texto variante={elegida ? 'cuerpoFuerte' : 'apoyo'} color={elegida ? 'sobrePrimario' : 'textoSecundario'} numberOfLines={1} style={{ fontSize: 14 }}>
+            <Texto variante={elegida ? 'apoyoFuerte' : 'apoyo'} color={elegida ? 'sobrePrimario' : 'textoSecundario'} numberOfLines={1} maxFontSizeMultiplier={tema.crecimientoBarras}>
               {p.titulo}
             </Texto>
           </Pressable>

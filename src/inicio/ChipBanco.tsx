@@ -32,7 +32,7 @@ export function ChipBanco({
       {sobreDestacado ? (
         <View style={[StyleSheet.absoluteFill, { backgroundColor: tema.color.sobreDestacado, opacity: OPACIDAD_INICIALES[tema.modo] }]} />
       ) : null}
-      <Texto variante="etiqueta" color={sobreDestacado ? 'sobreDestacado' : 'sobrePrimario'} style={{ fontSize: grande ? 12 : 11, letterSpacing: 0.5 }}>
+      <Texto variante="etiquetaMayus" color={sobreDestacado ? 'sobreDestacado' : 'sobrePrimario'}>
         {iniciales}
       </Texto>
     </View>

@@ -102,11 +102,11 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
         <View style={{ gap: tema.espacio.s }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.s }}>
             <Icono nombre="estrella" color="sobreDestacado" tamano={16} grosor={2.2} />
-            <Texto variante="etiqueta" color="sobreDestacado" style={{ fontSize: 13, letterSpacing: 0.8, textTransform: 'uppercase' }}>
+            <Texto variante="etiquetaMayus" color="sobreDestacado">
               {t('pro.nombre')}
             </Texto>
           </View>
-          <Texto variante="titulo" color="sobreDestacado" accessibilityRole="header" style={{ fontSize: 28, lineHeight: 33, letterSpacing: -0.4 }}>
+          <Texto variante="tituloMedio" color="sobreDestacado" accessibilityRole="header">
             {t('pro.titulo')}
           </Texto>
           <Texto color="sobreDestacado">{motivo === 'tercera_tarjeta' ? t('pro.porLimite') : t('pro.voluntario')}</Texto>
@@ -121,14 +121,14 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
                 <Texto variante="cuerpoFuerte" color="sobreDestacado">
                   {titulo}
                 </Texto>
-                <Texto variante="apoyo" color="sobreDestacado" style={{ fontSize: 13 }}>
+                <Texto variante="apoyoPequeno" color="sobreDestacado">
                   {detalle}
                 </Texto>
               </View>
             </View>
           ))}
         </View>
-        <Texto variante="apoyo" color="sobreDestacado" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+        <Texto variante="apoyoFuerte" color="sobreDestacado">
           {t('pro.mensaje')}
         </Texto>
       </View>
@@ -163,7 +163,7 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
       ) : null}
 
       {estado === 'listo' && oferta ? (
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13, textAlign: 'center' }}>
+        <Texto variante="apoyoPequeno" color="textoSecundario" style={{ textAlign: 'center' }}>
           {oferta.prueba ? t('pro.condicionesPrueba', { tienda }) : t('pro.condiciones', { tienda })}
         </Texto>
       ) : null}
@@ -227,25 +227,25 @@ function OpcionPlan({ oferta: o, ofertas, elegida, onPress }: { oferta: OfertaPr
         {elegida ? <View style={{ width: 12, height: 12, borderRadius: 6, backgroundColor: tema.color.primario }} /> : null}
       </View>
       <View style={{ flex: 1, gap: 2, minWidth: 0 }}>
-        <Texto variante="cuerpoFuerte" style={{ fontSize: 17 }}>
+        <Texto variante="cuerpoDestacado">
           {nombre}
         </Texto>
         {detalle ? (
-          <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+          <Texto variante="apoyoPequeno" color="textoSecundario">
             {detalle}
           </Texto>
         ) : null}
         {extra ? (
-          <Texto variante="apoyo" color="primario" style={{ fontSize: 13, fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+          <Texto variante="apoyoPequenoFuerte" color="primario">
             {extra}
           </Texto>
         ) : null}
       </View>
       <View style={{ alignItems: 'flex-end' }}>
-        <Texto variante="cifra" style={{ fontSize: 20, lineHeight: 24 }}>
+        <Texto variante="cifraPequena">
           {o.precio}
         </Texto>
-        <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+        <Texto variante="apoyoPequeno" color="textoSecundario">
           {periodo(o)}
         </Texto>
       </View>
@@ -261,7 +261,7 @@ function OpcionPlan({ oferta: o, ofertas, elegida, onPress }: { oferta: OfertaPr
             backgroundColor: tema.color.primario,
           }}
         >
-          <Texto variante="etiqueta" color="sobrePrimario" style={{ fontSize: 12 }}>
+          <Texto variante="etiqueta" color="sobrePrimario">
             {t('pro.ahorra', { porcentaje: ahorro })}
           </Texto>
         </View>

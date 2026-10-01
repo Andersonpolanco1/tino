@@ -33,7 +33,7 @@ export function BarraSuperior({ izquierda, titulo, derecha, cerrar }: Props) {
         hueco
       )}
       {titulo ? (
-        <Texto variante="cuerpoFuerte" color="textoSecundario" style={{ flexShrink: 1, textAlign: 'center' }} numberOfLines={1}>
+        <Texto variante="cuerpoFuerte" color="textoSecundario" style={{ flexShrink: 1, textAlign: 'center' }} numberOfLines={1} maxFontSizeMultiplier={tema.crecimientoBarras}>
           {titulo}
         </Texto>
       ) : null}

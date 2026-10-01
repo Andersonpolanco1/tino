@@ -291,7 +291,7 @@ Elegidos el 26 de septiembre de 2026 (decisión D55 de `docs/progreso.md`), comp
 
 - **Base:** los 14 colores con nombre (jadeTino, oro, coralClaro, tinta…).
 - **Semántico por modo:** `claro` y `oscuro` con los mismos nombres de rol (fondo, superficie, texto, primario, destacado, recompensaTexto, alertaTexto, semaforoRojo…). Las pantallas solo usan estos roles, nunca los colores base.
-- **Tipografía, espacios, radios y área mínima de toque (44 puntos).**
+- **Tipografía, espacios, radios y área mínima de toque (44 puntos).** La escala tipográfica define, por variante, tamaño, peso, alto de línea, espaciado, mayúsculas, cifras de ancho fijo y el tope de crecimiento con el texto del sistema (decisión D95); ninguna pantalla escribe tamaños.
 
 El tema activo sigue la configuración del sistema; un hook `useTema()` devuelve los roles del modo actual.
 

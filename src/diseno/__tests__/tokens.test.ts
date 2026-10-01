@@ -1,6 +1,8 @@
+import { readdirSync, readFileSync, statSync } from 'fs';
+import { join } from 'path';
 import tokens from '../tokens.json';
 import { razonContraste } from '../contraste';
-import { temas, type RolColor } from '../tema';
+import { temas, type RolColor, type VarianteTexto } from '../tema';
 
 // Pares texto/fondo que usan las pantallas. Cada texto debe alcanzar 4.5:1 (sección 16.6).
 const paresDeTexto: [RolColor, RolColor][] = [
@@ -52,4 +54,48 @@ test('cada variante de texto tiene fuente, tamaño y alto de línea', () => {
 
 test('el área mínima de toque es de 44 puntos', () => {
   expect(temas.claro.toqueMinimo).toBe(44);
+});
+
+describe('escala tipográfica', () => {
+  const variantes = Object.keys(temas.claro.texto) as VarianteTexto[];
+
+  test('ningún texto baja de 13 pt (la x de Atkinson es más baja que la del sistema)', () => {
+    for (const variante of variantes) expect(temas.claro.texto[variante].fontSize).toBeGreaterThanOrEqual(13);
+  });
+
+  test('ninguna variante suma el relleno de la fuente en Android', () => {
+    for (const variante of variantes) expect(temas.claro.texto[variante].includeFontPadding).toBe(false);
+  });
+
+  test('las cifras tienen ancho fijo y un tope al crecer; el texto corrido crece sin tope', () => {
+    for (const variante of variantes.filter(v => v.startsWith('cifra'))) {
+      expect(temas.claro.texto[variante].fontVariant).toEqual(['tabular-nums']);
+      expect(temas.claro.crecimientoTexto[variante]).toBeGreaterThan(1);
+      expect(temas.claro.crecimientoTexto[variante]).toBeLessThanOrEqual(1.5);
+    }
+    for (const variante of ['cuerpo', 'cuerpoFuerte', 'apoyo', 'apoyoPequeno', 'etiqueta'] as VarianteTexto[]) {
+      expect(temas.claro.crecimientoTexto[variante]).toBe(0);
+    }
+  });
+});
+
+// Regla de diseño: ningún tamaño escrito en las pantallas; todo sale de la escala de tokens.json.
+test('ninguna pantalla escribe fontSize, lineHeight ni letterSpacing a mano', () => {
+  const raiz = join(__dirname, '../../..');
+  const archivos = (dir: string): string[] =>
+    readdirSync(dir).flatMap(nombre => {
+      const ruta = join(dir, nombre);
+      if (statSync(ruta).isDirectory()) return nombre === '__tests__' || nombre === 'node_modules' ? [] : archivos(ruta);
+      return /\.tsx?$/.test(nombre) ? [ruta] : [];
+    });
+  const encontrados = [...archivos(join(raiz, 'app')), ...archivos(join(raiz, 'src'))]
+    .filter(ruta => !ruta.endsWith(join('diseno', 'tema.ts')))
+    .flatMap(ruta =>
+      readFileSync(ruta, 'utf8')
+        .split('\n')
+        .map((linea, i) => ({ ruta, linea: i + 1, texto: linea }))
+        .filter(({ texto }) => /\b(fontSize|lineHeight|letterSpacing)\s*:/.test(texto)),
+    )
+    .map(({ ruta, linea }) => `${ruta.slice(raiz.length + 1)}:${linea}`);
+  expect(encontrados).toEqual([]);
 });

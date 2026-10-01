@@ -64,7 +64,7 @@ export default function Compra() {
       <Superficie radio={tema.radio.destacada} style={{ alignItems: 'center', gap: 14, paddingVertical: 26, paddingHorizontal: 22 }}>
         <Texto color="textoSecundario">{t('compra.monto')}</Texto>
         <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 6 }}>
-          <Texto variante="cifra" color="textoSecundario" style={{ fontSize: 28 }}>
+          <Texto variante="cifra" color="textoSecundario">
             {simbolo}
           </Texto>
           <TextInput
@@ -78,7 +78,7 @@ export default function Compra() {
             autoFocus
             cursorColor={tema.color.primario}
             selectionColor={tema.color.primario}
-            style={[tema.texto.cifraGrande, { fontSize: 60, lineHeight: 68, minWidth: 60, color: tema.color.texto, padding: 0, letterSpacing: -1.5 }]}
+            style={[tema.texto.cifraEntrada, { minWidth: 60, color: tema.color.texto, padding: 0 }]}
           />
         </View>
         {monedas.length > 1 ? (
@@ -112,7 +112,7 @@ export default function Compra() {
           </View>
           <View style={{ flex: 1, gap: 2 }}>
             <Texto variante="cuerpoFuerte">{t('compra.vacioTitulo')}</Texto>
-            <Texto variante="apoyo" color="textoSecundario" style={{ fontSize: 13 }}>
+            <Texto variante="apoyoPequeno" color="textoSecundario">
               {t('compra.vacioTexto')}
             </Texto>
           </View>
@@ -121,7 +121,7 @@ export default function Compra() {
 
       {mejor ? (
         <View style={{ gap: 10 }}>
-          <Texto variante="etiqueta" color="primario" style={{ fontSize: 13, letterSpacing: 0.6, textTransform: 'uppercase' }}>
+          <Texto variante="etiquetaMayus" color="primario">
             {t('compra.usaEsta')}
           </Texto>
           <Pressable
@@ -131,26 +131,26 @@ export default function Compra() {
           >
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
               {mejor.iniciales ? <ChipBanco iniciales={mejor.iniciales} logo={mejor.logo} sobreDestacado /> : null}
-              <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ flex: 1, fontSize: 17 }}>
+              <Texto variante="cuerpoDestacado" color="sobreDestacado" style={{ flex: 1 }}>
                 {mejor.tarjeta.alias}
               </Texto>
               <Icono nombre="check" color="sobreDestacado" tamano={22} grosor={2.5} />
             </View>
             <View style={{ flexDirection: 'row', gap: tema.espacio.m }}>
               <View style={{ flex: 1, gap: 2 }}>
-                <Texto variante="cifra" color="sobreDestacado" style={{ fontSize: 34, lineHeight: 36 }}>
+                <Texto variante="cifraDestacada" color="sobreDestacado">
                   {t('compra.diasN', { dias: mejor.resultado.diasGracia })}
                 </Texto>
-                <Texto variante="apoyo" color="sobreDestacado" style={{ fontSize: 13 }}>
+                <Texto variante="apoyoPequeno" color="sobreDestacado">
                   {t('compra.paraPagarla')}
                 </Texto>
               </View>
               {ganancia ? (
                 <View style={{ flex: 1, gap: 2 }}>
-                  <Texto variante="cifra" color="sobreDestacado" style={{ fontSize: 34, lineHeight: 36 }}>
+                  <Texto variante="cifraDestacada" color="sobreDestacado">
                     {ganancia.valor}
                   </Texto>
-                  <Texto variante="apoyo" color="sobreDestacado" style={{ fontSize: 13 }}>
+                  <Texto variante="apoyoPequeno" color="sobreDestacado">
                     {ganancia.texto}
                   </Texto>
                 </View>

@@ -42,7 +42,7 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
             onPress={() => marcarPagado(pago.tarjeta.id, null)}
             style={{ minHeight: tema.toqueMinimo, justifyContent: 'center', paddingLeft: tema.espacio.s }}
           >
-            <Texto variante="cuerpoFuerte" color="primario" style={{ fontSize: 14 }}>
+            <Texto variante="apoyoFuerte" color="primario">
               {t('pagos.deshacer')}
             </Texto>
           </Pressable>
@@ -61,7 +61,7 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
       debajo={
         <View style={{ gap: tema.espacio.s, alignItems: 'flex-start' }}>
           {aviso ? (
-            <Texto variante="apoyo" color="alertaTexto" style={{ fontSize: 13 }}>
+            <Texto variante="apoyoPequeno" color="alertaTexto">
               {aviso}
             </Texto>
           ) : null}

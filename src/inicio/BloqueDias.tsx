@@ -10,11 +10,11 @@ export function BloqueDias({ dias, fechaPago, sobreDestacado = false }: { dias: 
   const { t } = useTranslation();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
-      <Texto variante="cifraGrande" color={sobreDestacado ? 'sobreDestacado' : 'texto'} style={{ fontSize: 64, lineHeight: 66, letterSpacing: -1.5 }}>
+      <Texto variante="cifraGrande" color={sobreDestacado ? 'sobreDestacado' : 'texto'}>
         {dias}
       </Texto>
       <View style={{ flex: 1 }}>
-        <Texto variante="cuerpoFuerte" color={sobreDestacado ? 'sobreDestacado' : 'texto'} style={{ fontSize: 17 }}>
+        <Texto variante="cuerpoDestacado" color={sobreDestacado ? 'sobreDestacado' : 'texto'}>
           {t('inicio.diasParaPagar')}
         </Texto>
         {fechaPago ? (

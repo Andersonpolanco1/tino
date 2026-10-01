@@ -103,7 +103,7 @@ export default function Ajustes() {
 
   return (
     <Pantalla conPestanas>
-      <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>
+      <Texto variante="tituloPantalla" accessibilityRole="header">
         {t('ajustes.titulo')}
       </Texto>
 
@@ -126,7 +126,7 @@ export default function Ajustes() {
                 />
               </Svg>
               <View style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, alignItems: 'center', justifyContent: 'center' }}>
-                <Texto variante="cifra" style={{ fontSize: 17 }}>
+                <Texto variante="cifraMini">
                   {t('comun.porcentaje', { valor: precision })}
                 </Texto>
               </View>

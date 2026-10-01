@@ -35,7 +35,7 @@ export function BotonPastilla({ icono, titulo, onPress, primario = false, etique
       })}
     >
       <Icono nombre={icono} color={texto} tamano={18} grosor={2.2} />
-      <Texto variante="cuerpoFuerte" color={texto} style={{ fontSize: 15 }}>
+      <Texto variante="controlFuerte" color={texto}>
         {titulo}
       </Texto>
     </Pressable>

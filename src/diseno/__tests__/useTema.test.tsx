@@ -37,3 +37,14 @@ test('Texto toma el color del rol en el modo activo y escala con el sistema', as
   expect(texto).toHaveStyle({ color: tokens.color.oscuro.textoSecundario });
   expect(texto.props.allowFontScaling).toBe(true);
 });
+
+test('las cifras grandes crecen hasta su tope; el texto corrido, sin límite', async () => {
+  await render(
+    <>
+      <Texto variante="cifraGrande">45</Texto>
+      <Texto>Hola</Texto>
+    </>,
+  );
+  expect(screen.getByText('45').props.maxFontSizeMultiplier).toBe(1.5);
+  expect(screen.getByText('Hola').props.maxFontSizeMultiplier).toBe(0);
+});

@@ -34,7 +34,7 @@ export function PildoraSemaforo({ luz, sobreDestacado = false }: { luz: Luz; sob
       />
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: tema.espacio.m, paddingVertical: 7 }}>
         <Icono nombre={ICONO_SEMAFORO[luz]} color={color} tamano={14} grosor={3} />
-        <Texto variante="cuerpoFuerte" color={color} style={{ fontSize: 13 }}>
+        <Texto variante="apoyoPequenoFuerte" color={color}>
           {t(`semaforo.${luz}`)}
         </Texto>
       </View>

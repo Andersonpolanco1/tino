@@ -42,7 +42,7 @@ export function Boton({ titulo, onPress, variante = 'primario', icono, deshabili
     >
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.s }}>
         {icono ? <Icono nombre={icono} color={estilo.texto} tamano={18} /> : null}
-        <Texto variante="cuerpoFuerte" color={estilo.texto} style={variante === 'primario' ? { fontSize: 17 } : undefined}>
+        <Texto variante={variante === 'primario' ? 'cuerpoDestacado' : 'cuerpoFuerte'} color={estilo.texto}>
           {titulo}
         </Texto>
       </View>

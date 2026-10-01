@@ -57,7 +57,7 @@ export default function Tarjetas() {
         detalle={urgente ? undefined : estado}
         debajo={
           urgente ? (
-            <Texto variante="apoyo" color="alertaTexto" style={{ fontSize: 13 }}>
+            <Texto variante="apoyoPequeno" color="alertaTexto">
               {estado}
             </Texto>
           ) : undefined
@@ -71,7 +71,7 @@ export default function Tarjetas() {
   return (
     <Pantalla conPestanas>
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: tema.espacio.m }}>
-        <Texto variante="titulo" accessibilityRole="header" style={{ flexShrink: 1, fontSize: 34, lineHeight: 40, letterSpacing: -0.6 }}>
+        <Texto variante="tituloPantalla" accessibilityRole="header" style={{ flexShrink: 1 }}>
           {t('tarjetas.titulo')}
         </Texto>
         {consejos.length ? (

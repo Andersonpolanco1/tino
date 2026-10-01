@@ -50,11 +50,11 @@ export function TarjetaDestacada({
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.m }}>
         {vista.iniciales ? <ChipBanco iniciales={vista.iniciales} logo={vista.logo} sobreDestacado /> : null}
         <View style={{ flex: 1 }}>
-          <Texto variante="cuerpoFuerte" color="sobreDestacado" style={{ fontSize: 17 }} numberOfLines={2}>
+          <Texto variante="cuerpoDestacado" color="sobreDestacado" numberOfLines={2}>
             {tarjeta.alias}
           </Texto>
           {detalle ? (
-            <Texto variante="apoyo" color="sobreDestacado" style={{ fontSize: 13 }} numberOfLines={1}>
+            <Texto variante="apoyoPequeno" color="sobreDestacado" numberOfLines={1}>
               {detalle}
             </Texto>
           ) : null}
@@ -64,7 +64,7 @@ export function TarjetaDestacada({
       <BloqueDias dias={resultado.diasGracia} sobreDestacado />
       <LineaCiclo anterior={vista.ciclo.anterior} hoy={hoy} corte={resultado.proximoCorte} pago={resultado.fechaPago} sobreDestacado sinCorteAnterior />
       {unaSola && vista.esperar ? (
-        <Texto variante="apoyo" color="sobreDestacado" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+        <Texto variante="apoyoFuerte" color="sobreDestacado">
           {t('unaTarjeta.siEsperasDias', { dia: vista.esperar.dia, dias: vista.esperar.dias })}
         </Texto>
       ) : null}
@@ -73,7 +73,7 @@ export function TarjetaDestacada({
         {vista.recompensaCorta ? (
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: tema.color.recompensaPunto }} />
-            <Texto variante="apoyo" color="sobreDestacado" style={{ fontFamily: tema.texto.cuerpoFuerte.fontFamily }}>
+            <Texto variante="apoyoFuerte" color="sobreDestacado">
               {vista.recompensaCorta}
             </Texto>
           </View>

@@ -59,7 +59,7 @@ export default function Inicio() {
     </View>
   );
   const titulo = (
-    <Texto variante="titulo" accessibilityRole="header" style={{ fontSize: 30, lineHeight: 36, letterSpacing: -0.5 }}>
+    <Texto variante="tituloDestacado" accessibilityRole="header">
       {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
     </Texto>
   );
