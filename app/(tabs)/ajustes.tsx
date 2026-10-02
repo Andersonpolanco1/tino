@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Linking, View } from 'react-native';
+import { Linking, Platform, View } from 'react-native';
 import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
@@ -13,7 +13,7 @@ import { useAlmacen, useElegirPais } from '@/estado';
 import { pistaPrecision, precisionGeneral } from '@/inicio/precision';
 import { HojaEnfoque } from '@/inicio/SelectorEnfoque';
 import { valorPuntoPorConfirmar } from '@/inicio/ConfirmarValorPunto';
-import { useComprasPro } from '@/suscripciones';
+import { urlSuscripcionesTienda, useComprasPro } from '@/suscripciones';
 import { useEstadoRespaldoAutomatico } from '@/respaldo/automatico';
 import { detalleRespaldoAutomatico } from '@/respaldo/detalle';
 import { estadoAnalitica } from '@/privacidad/consentimiento';
@@ -93,8 +93,8 @@ export default function Ajustes() {
   // Pro se gestiona en la tienda (cancelar, cambiar de plan); Tino solo abre su página.
   async function abrirPlan() {
     if (preferencias?.plan !== 'pro') return router.push({ pathname: '/pro', params: { motivo: 'voluntario' } });
-    const url = await compras.urlGestion().catch(() => null);
-    if (url) Linking.openURL(url);
+    const url = (await compras.urlGestion().catch(() => null)) ?? urlSuscripcionesTienda(Platform.OS, Application.applicationId);
+    Linking.openURL(url).catch(() => undefined);
   }
 
   // Solo la versión visible (sección 12 técnica); el número de compilación no le dice nada al usuario y Sentry ya lo registra.
