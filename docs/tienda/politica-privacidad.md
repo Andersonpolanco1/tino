@@ -8,7 +8,7 @@ los reportes de fallos, el respaldo o las suscripciones, se actualiza aquí en e
 
 # Política de privacidad de Tino
 
-Última actualización: 29 de septiembre de 2026
+Última actualización: 1 de octubre de 2026
 
 Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso necesita algunos datos de tus tarjetas, y queremos que sepas exactamente cuáles, dónde se guardan y qué sale de tu teléfono. Lo resumimos así:
 
@@ -20,7 +20,7 @@ Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso neces
 
 ## 1. Quién es responsable de tus datos
 
-El responsable de Tino es Anderson Polanco, que opera bajo el nombre comercial Polanco Labs, con domicilio en Calle Principal #1, Brisa Oriental, Santo Domingo Este, República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a polancolabsrd@gmail.com.
+El responsable de Tino es Anderson Polanco, que opera bajo el nombre comercial Polanco Labs, con domicilio en Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a polancolabsrd@gmail.com.
 
 Esta política se rige por la Ley 172-13 sobre protección de datos de carácter personal de la República Dominicana.
 
@@ -139,4 +139,4 @@ Si cambiamos algo importante, lo avisaremos dentro de la app antes de que entre 
 
 Anderson Polanco (Polanco Labs)\
 polancolabsrd@gmail.com\
-Calle Principal #1, Brisa Oriental, Santo Domingo Este, República Dominicana
+Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana

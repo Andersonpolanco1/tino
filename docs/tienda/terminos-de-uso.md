@@ -6,7 +6,7 @@ Los precios y reglas de Tino Pro deben coincidir con las tiendas y RevenueCat (D
 
 # Términos de uso de Tino
 
-Última actualización: 29 de septiembre de 2026
+Última actualización: 1 de octubre de 2026
 
 Estos términos son el acuerdo entre tú y Anderson Polanco, que opera bajo el nombre comercial Polanco Labs ("nosotros"), para usar Tino. Los aceptas, junto con la [Política de privacidad](https://polancolabs.com/apps/tino/privacidad), al tocar "Empezar" en la bienvenida de Tino. Si no estás de acuerdo, no uses Tino.
 
@@ -78,6 +78,6 @@ Estos términos se rigen por las leyes de la República Dominicana. Si tienes un
 ## 12. Contacto
 
 Anderson Polanco (Polanco Labs)\
-Calle Principal #1, Brisa Oriental, Santo Domingo Este, República Dominicana\
+Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana\
 polancolabsrd@gmail.com\
 https://polancolabs.com/apps/tino/soporte
