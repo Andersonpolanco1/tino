@@ -1,5 +1,5 @@
 # Genera la imagen destacada de Google Play (1024 × 500): el jade del icono, el nombre y el
-# eslogan a la izquierda, y las tres tarjetas del icono (D94) a la derecha.
+# eslogan a la izquierda, y la pila de tarjetas del icono (D104) a la derecha.
 #
 # Uso, desde la raíz del repositorio: python herramientas/iconos/generar_imagen_destacada.py
 # (requiere Pillow y node_modules instalado, de donde salen las fuentes de la app).
@@ -10,7 +10,7 @@ import sys
 from PIL import Image, ImageDraw, ImageFont
 
 sys.path.insert(0, os.path.dirname(__file__))
-from generar_iconos import JADE_ABAJO, JADE_ARRIBA, JADE_VIVO, ORO, PAPEL, icono_con_fondo, rgba, tarjetas
+from generar_iconos import COLORES, JADE_ABAJO, JADE_ARRIBA, PAPEL, icono_con_fondo, pila, rgba
 
 ANCHO, ALTO = 1024, 500
 DESTINO = 'assets/tienda/google-play-destacada.png'
@@ -36,8 +36,8 @@ def fondo():
 def main():
     imagen = fondo()
     # Las tarjetas en un cuadro de 500 a la derecha, del tamaño del icono de tienda en ese cuadro.
-    abanico = tarjetas(ALTO, ALTO * 1.3, PAPEL, JADE_VIVO, ORO, True)
-    imagen.alpha_composite(abanico, (ANCHO - ALTO - 40, 0))
+    tarjetas = pila(ALTO, ALTO * 1.1, COLORES)
+    imagen.alpha_composite(tarjetas, (ANCHO - ALTO - 40, 0))
 
     d = ImageDraw.Draw(imagen)
     x = 84

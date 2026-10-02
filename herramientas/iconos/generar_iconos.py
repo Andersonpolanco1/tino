@@ -1,14 +1,16 @@
-# Genera todos los iconos de Tino desde una sola geometría (decisión D94): tres tarjetas en
-# abanico, en proporción real (85.6 × 54 mm); al frente la que Tino elige, con su chip. Un solo
-# estilo en todas partes: la del frente blanca con sombra, que se lee sobre el jade, sobre fondos
-# claros y sobre oscuros.
+# Genera todos los iconos de Tino desde una sola geometría (decisión D104): tres tarjetas apiladas
+# de frente, en proporción real (85.6 × 54 mm), que crecen hacia el frente como vistas desde
+# arriba. Atrás la jade, en medio la dorada y al frente la blanca, con su chip y la línea del
+# número recortados. Plano, sin sombras: entre las piezas hay un hueco recortado de verdad, así
+# que la figura se lee igual en color, en gris y en una sola tinta.
 #
 # Uso, desde la raíz del repositorio: python herramientas/iconos/generar_iconos.py (requiere Pillow).
 # Escribe en assets/iconos/: fuente-icono.svg, tino-tarjetas.svg, tino-tarjetas-monocromo.svg,
 # tino-tarjetas.png, app-store-1024.png, play-store-512.png, android-fondo.png,
-# android-primer-plano.png, android-monocromo.png y splash.png.
+# android-primer-plano.png, android-monocromo.png y splash.png. La página de Tino en
+# polancolabs.com usa una copia de fuente-icono.svg (public/apps/tino/icono.svg).
 import math
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 DESTINO = 'assets/iconos'
 
@@ -17,50 +19,37 @@ JADE_ARRIBA, JADE_ABAJO = '#12916A', '#0B6B4E'  # degradado del fondo
 JADE_VIVO = '#2BD49A'  # jadeVivo
 ORO = '#F2B33D'        # oro
 PAPEL = '#F5F7F4'      # papel
-TINTA = '#0D1B16'      # tinta
 
-# Geometría en un lienzo de 512: la tarjeta, su chip y el giro de las dos de atrás alrededor de
-# la esquina inferior izquierda, como cartas en la mano.
-TARJETA = (138, 212, 236, 149)  # x, y, ancho, alto (236 / 149 ≈ 85.6 / 54)
-RADIO = 22
-CHIP = (164, 270, 42, 32, 7)    # x, y, ancho, alto, radio
-PIVOTE = (168, 352)
-ATRAS = [(-20, 0.45), (-10, 0.8)]  # grados y opacidad, de la más lejana a la más cercana
-# En los iconos con fondo (App Store, Google Play), el abanico se agranda sobre la geometría de 512
-# hasta ocupar cerca del 80% del ancho, con un 10% de margen a cada lado: las tiendas muestran el
-# cuadro completo, solo con las esquinas suavizadas.
-AUMENTO_TIENDAS = 1.42
-
-
-def esquinas(angulo):
-    x, y, w, h = TARJETA
-    a = math.radians(angulo)
-    px, py = PIVOTE
-    for cx, cy in ((x, y), (x + w, y), (x, y + h), (x + w, y + h)):
-        dx, dy = cx - px, cy - py
-        yield px + dx * math.cos(a) - dy * math.sin(a), py + dx * math.sin(a) + dy * math.cos(a)
+# Geometría en un lienzo de 512: x, y, ancho, alto, radio. LogoTino repite estos números.
+ATRAS = (126, 102, 260, 164, 24)
+MEDIO = (111, 152, 290, 183, 26)
+FRENTE = (96, 210, 320, 202, 28)
+HUECOS_FRENTE = [(136, 268, 64, 48, 12), (136, 350, 170, 20, 10)]  # chip y línea del número
+SEPARACION = 12  # hueco entre una tarjeta y la de delante
+CAPAS = [(ATRAS, JADE_VIVO), (MEDIO, ORO), (FRENTE, PAPEL)]  # de atrás hacia adelante
+CENTRO = (256, (ATRAS[1] + FRENTE[1] + FRENTE[3]) / 2)
+# En los iconos con fondo (App Store, Google Play) la pila se agranda hasta ocupar el 75% del
+# ancho, con un 12.5% de margen a cada lado: las tiendas muestran el cuadro completo, solo con las
+# esquinas suavizadas.
+AUMENTO_TIENDAS = 1.2
 
 
-# Caja del abanico, para centrarlo en el lienzo.
-_puntos = [p for angulo in [0] + [a for a, _ in ATRAS] for p in esquinas(angulo)]
-CAJA = (min(p[0] for p in _puntos), min(p[1] for p in _puntos), max(p[0] for p in _puntos), max(p[1] for p in _puntos))
-CENTRO = ((CAJA[0] + CAJA[2]) / 2, (CAJA[1] + CAJA[3]) / 2)
-
-
-def contorno(angulo, pasos=24):
-    """Puntos del borde de una tarjeta, con sus esquinas redondeadas, girada `angulo` grados."""
-    x, y, w, h = TARJETA
-    a = math.radians(angulo)
-    px, py = PIVOTE
-    for cx, cy, desde in ((x + w - RADIO, y + RADIO, -90), (x + w - RADIO, y + h - RADIO, 0), (x + RADIO, y + h - RADIO, 90), (x + RADIO, y + RADIO, 180)):
+def contorno(r, pasos=24):
+    """Puntos del borde de un rectángulo redondeado."""
+    x, y, w, h, rr = r
+    for cx, cy, desde in ((x + w - rr, y + rr, -90), (x + w - rr, y + h - rr, 0), (x + rr, y + h - rr, 90), (x + rr, y + rr, 180)):
         for i in range(pasos + 1):
             t = math.radians(desde + 90 * i / pasos)
-            dx, dy = cx + RADIO * math.cos(t) - px, cy + RADIO * math.sin(t) - py
-            yield px + dx * math.cos(a) - dy * math.sin(a), py + dx * math.sin(a) + dy * math.cos(a)
+            yield cx + rr * math.cos(t), cy + rr * math.sin(t)
 
 
-# Distancia del centro al punto más lejano de las tarjetas: lo que tiene que caber en un círculo.
-RADIO_ABANICO = max(math.hypot(px - CENTRO[0], py - CENTRO[1]) for angulo in [0] + [a for a, _ in ATRAS] for px, py in contorno(angulo))
+# Distancia del centro al punto más lejano de la pila: lo que tiene que caber en un círculo.
+RADIO_PILA = max(math.hypot(px - CENTRO[0], py - CENTRO[1]) for r, _ in CAPAS for px, py in contorno(r))
+
+
+def agrandar(r, d):
+    x, y, w, h, rr = r
+    return (x - d, y - d, w + 2 * d, h + 2 * d, rr + d)
 
 
 def rgba(h, a=1.0):
@@ -69,41 +58,44 @@ def rgba(h, a=1.0):
 
 # ---------- SVG ----------
 
-def svg_tarjetas(frente, atras, chip, sombra, aumento=1.0):
-    """Las tres tarjetas centradas en el lienzo de 512, agrandadas `aumento` veces."""
-    x, y, w, h = TARJETA
-    cx, cy, cw, ch, cr = CHIP
-    mover = f'translate(256 256) scale({aumento}) translate({-CENTRO[0]:.1f} {-CENTRO[1]:.1f})'
-    filas = [f'<g transform="{mover}">']
-    for angulo, opacidad in ATRAS:
-        filas.append(f'  <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{RADIO}" fill="{atras}" fill-opacity="{opacidad}" transform="rotate({angulo} {PIVOTE[0]} {PIVOTE[1]})"/>')
-    filas.append(f'  <g{" filter=\"url(#sombra)\"" if sombra else ""}>')
-    filas.append(f'    <rect x="{x}" y="{y}" width="{w}" height="{h}" rx="{RADIO}" fill="{frente}"/>')
-    if chip:
-        filas.append(f'    <rect x="{cx}" y="{cy}" width="{cw}" height="{ch}" rx="{cr}" fill="{chip}"/>')
-    filas.append('  </g>')
-    filas.append('</g>')
-    return '\n'.join('  ' + f for f in filas)
+def atributos(r):
+    x, y, w, h, rr = r
+    return f'x="{x}" y="{y}" width="{w}" height="{h}" rx="{rr}"'
+
+
+def svg_pila(colores, aumento=1.0):
+    """Máscaras y piezas de la pila centrada en el lienzo de 512, agrandada `aumento` veces."""
+    caja = 'maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512"'
+    mascaras, piezas = [], []
+    for i, (r, _) in enumerate(CAPAS):
+        quitar = [agrandar(d, SEPARACION) for d, _ in CAPAS[i + 1:]] + (HUECOS_FRENTE if r is FRENTE else [])
+        nombre = f'hueco{i}'
+        mascaras.append(f'    <mask id="{nombre}" {caja}>\n      <rect width="512" height="512" fill="#fff"/>\n'
+                        + ''.join(f'      <rect {atributos(q)} fill="#000"/>\n' for q in quitar) + '    </mask>\n')
+        piezas.append(f'    <rect {atributos(r)} fill="{colores[i]}" mask="url(#{nombre})"/>')
+    mover = f'translate(256 256) scale({aumento}) translate({-CENTRO[0]} {-CENTRO[1]})'
+    return ''.join(mascaras), f'  <g transform="{mover}">\n' + '\n'.join(piezas) + '\n  </g>'
 
 
 def escribir_svg():
-    sombra = (f'    <filter id="sombra" x="-30%" y="-30%" width="160%" height="170%">\n'
-              f'      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="{TINTA}" flood-opacity="0.32"/>\n'
-              f'    </filter>\n')
     fondo = (f'    <linearGradient id="fondo" x1="0" y1="0" x2="0" y2="1">\n'
              f'      <stop offset="0" stop-color="{JADE_ARRIBA}"/>\n      <stop offset="1" stop-color="{JADE_ABAJO}"/>\n'
              f'    </linearGradient>\n')
     cabeza = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">\n'
+    color = [c for _, c in CAPAS]
+
+    mascaras, pila = svg_pila(color, AUMENTO_TIENDAS)
     with open(f'{DESTINO}/fuente-icono.svg', 'w', encoding='utf-8') as f:
-        f.write(cabeza + '  <!-- Icono de Tino (D94). Lo genera herramientas/iconos/generar_iconos.py: no editar a mano. -->\n'
-                f'  <defs>\n{fondo}{sombra}  </defs>\n  <rect width="512" height="512" fill="url(#fondo)"/>\n'
-                + svg_tarjetas(PAPEL, JADE_VIVO, ORO, True, AUMENTO_TIENDAS) + '\n</svg>\n')
+        f.write(cabeza + '  <!-- Icono de Tino (D104). Lo genera herramientas/iconos/generar_iconos.py: no editar a mano. -->\n'
+                f'  <defs>\n{fondo}{mascaras}  </defs>\n  <rect width="512" height="512" fill="url(#fondo)"/>\n' + pila + '\n</svg>\n')
+    mascaras, pila = svg_pila(color)
     with open(f'{DESTINO}/tino-tarjetas.svg', 'w', encoding='utf-8') as f:
-        f.write(cabeza + '  <!-- Tarjetas de Tino sin fondo (D94). Generado: no editar a mano. -->\n'
-                f'  <defs>\n{sombra}  </defs>\n' + svg_tarjetas(PAPEL, JADE_VIVO, ORO, True) + '\n</svg>\n')
+        f.write(cabeza + '  <!-- Tarjetas de Tino sin fondo (D104), para fondos oscuros o de color. Generado: no editar a mano. -->\n'
+                f'  <defs>\n{mascaras}  </defs>\n' + pila + '\n</svg>\n')
+    mascaras, pila = svg_pila(['#FFFFFF'] * 3)
     with open(f'{DESTINO}/tino-tarjetas-monocromo.svg', 'w', encoding='utf-8') as f:
-        f.write(cabeza + '  <!-- Tarjetas de Tino en una sola tinta (D94). Generado: no editar a mano. -->\n'
-                + svg_tarjetas('#FFFFFF', '#FFFFFF', None, False) + '\n</svg>\n')
+        f.write(cabeza + '  <!-- Tarjetas de Tino en una sola tinta (D104). Generado: no editar a mano. -->\n'
+                f'  <defs>\n{mascaras}  </defs>\n' + pila + '\n</svg>\n')
 
 
 # ---------- PNG ----------
@@ -111,35 +103,26 @@ def escribir_svg():
 S = 4  # sobremuestreo para bordes suaves
 
 
-def tarjetas(lado, escala, frente, atras, chip, sombra, centro=None):
-    """Capa RGBA de lado×lado con el abanico; `escala` es el ancho del icono de 512 en píxeles."""
+def pila(lado, escala, colores):
+    """Capa RGBA de lado×lado con la pila al centro; `escala` es el ancho del icono de 512 en píxeles."""
     N = lado * S
     k = escala * S / 512
-    ox = (centro[0] if centro else lado / 2) * S - CENTRO[0] * k
-    oy = (centro[1] if centro else lado / 2) * S - CENTRO[1] * k
-    x, y, w, h = TARJETA
+    ox, oy = N / 2 - CENTRO[0] * k, N / 2 - CENTRO[1] * k
 
-    def una(color, opacidad=1.0):
-        capa = Image.new('RGBA', (N, N), (0, 0, 0, 0))
-        ImageDraw.Draw(capa).rounded_rectangle([ox + x * k, oy + y * k, ox + (x + w) * k, oy + (y + h) * k], radius=RADIO * k, fill=rgba(color, opacidad))
-        return capa
+    def caja(r):
+        x, y, w, h, rr = r
+        return [ox + x * k, oy + y * k, ox + (x + w) * k, oy + (y + h) * k], rr * k
 
-    pivote = (ox + PIVOTE[0] * k, oy + PIVOTE[1] * k)
     final = Image.new('RGBA', (N, N), (0, 0, 0, 0))
-    for angulo, opacidad in ATRAS:
-        # rotate() de PIL gira en sentido contrario al SVG.
-        final = Image.alpha_composite(final, una(atras, opacidad).rotate(-angulo, center=pivote, resample=Image.BICUBIC))
-    frente_capa = una(frente)
-    if chip:
-        cx, cy, cw, ch, cr = CHIP
-        ImageDraw.Draw(frente_capa).rounded_rectangle([ox + cx * k, oy + cy * k, ox + (cx + cw) * k, oy + (cy + ch) * k], radius=cr * k, fill=rgba(chip))
-    if sombra:
-        alfa = frente_capa.split()[3].point(lambda a: int(a * 0.32))
-        sombra_capa = Image.new('RGBA', (N, N), rgba(TINTA, 0))
-        sombra_capa.putalpha(alfa)
-        sombra_capa = sombra_capa.transform((N, N), Image.AFFINE, (1, 0, 0, 0, 1, -8 * k)).filter(ImageFilter.GaussianBlur(10 * k))
-        final = Image.alpha_composite(final, sombra_capa)
-    final = Image.alpha_composite(final, frente_capa)
+    for i, (r, _) in enumerate(CAPAS):
+        alfa = Image.new('L', (N, N), 0)
+        d = ImageDraw.Draw(alfa)
+        d.rounded_rectangle(*caja(r), fill=255)
+        for q in [agrandar(t, SEPARACION) for t, _ in CAPAS[i + 1:]] + (HUECOS_FRENTE if r is FRENTE else []):
+            d.rounded_rectangle(*caja(q), fill=0)
+        capa = Image.new('RGBA', (N, N), rgba(colores[i]))
+        capa.putalpha(alfa)
+        final = Image.alpha_composite(final, capa)
     return final.resize((lado, lado), Image.LANCZOS)
 
 
@@ -153,26 +136,30 @@ def degradado(lado):
     return fondo
 
 
+COLORES = [c for _, c in CAPAS]
+BLANCO = ['#FFFFFF'] * 3
+
+
 def icono_con_fondo(lado):
-    return Image.alpha_composite(degradado(lado), tarjetas(lado, lado * AUMENTO_TIENDAS, PAPEL, JADE_VIVO, ORO, True)).convert('RGB')
+    return Image.alpha_composite(degradado(lado), pila(lado, lado * AUMENTO_TIENDAS, COLORES)).convert('RGB')
 
 
 def escribir_png():
     icono_con_fondo(1024).save(f'{DESTINO}/app-store-1024.png', optimize=True)  # sin transparencia ni esquinas
     icono_con_fondo(512).save(f'{DESTINO}/play-store-512.png', optimize=True)
-    tarjetas(1024, 1024, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/tino-tarjetas.png', optimize=True)
+    pila(1024, 1024 * 512 / (FRENTE[2] + 32), COLORES).save(f'{DESTINO}/tino-tarjetas.png', optimize=True)
 
     # Icono adaptativo de Android: lienzo de 108 dp (432 px a 4x); cualquier forma del launcher
-    # deja ver al menos el círculo de 66 dp del centro. El abanico se agranda hasta que su punto más
+    # deja ver al menos el círculo de 66 dp del centro. La pila se agranda hasta que su punto más
     # lejano quede a 32.5 dp del centro: llena el icono sin que ninguna forma lo recorte.
-    visible = 32.5 * 4 / RADIO_ABANICO * 512
+    visible = 32.5 * 4 / RADIO_PILA * 512
     degradado(432).save(f'{DESTINO}/android-fondo.png', optimize=True)
-    tarjetas(432, visible, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/android-primer-plano.png', optimize=True)
-    tarjetas(432, visible, '#FFFFFF', '#FFFFFF', None, False).save(f'{DESTINO}/android-monocromo.png', optimize=True)
+    pila(432, visible, COLORES).save(f'{DESTINO}/android-primer-plano.png', optimize=True)
+    pila(432, visible, BLANCO).save(f'{DESTINO}/android-monocromo.png', optimize=True)
 
-    # Splash (Android 12+): recorta en un círculo de 2/3 del lienzo; el abanico tiene que caber con aire.
-    escala = 1024 * (1 / 3) * 0.9 / RADIO_ABANICO * 512
-    tarjetas(1024, escala, PAPEL, JADE_VIVO, ORO, True).save(f'{DESTINO}/splash.png', optimize=True)
+    # Splash (Android 12+): recorta en un círculo de 2/3 del lienzo; la pila tiene que caber con aire.
+    escala = 1024 * (1 / 3) * 0.9 / RADIO_PILA * 512
+    pila(1024, escala, COLORES).save(f'{DESTINO}/splash.png', optimize=True)
 
 
 if __name__ == '__main__':

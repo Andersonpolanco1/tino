@@ -1,16 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Tarjetas de Tino sin fondo (D94). Generado: no editar a mano. -->
+  <!-- Tarjetas de Tino sin fondo (D104), para fondos oscuros o de color. Generado: no editar a mano. -->
   <defs>
-    <filter id="sombra" x="-30%" y="-30%" width="160%" height="170%">
-      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#0D1B16" flood-opacity="0.32"/>
-    </filter>
+    <mask id="hueco0" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <rect x="99" y="140" width="314" height="207" rx="38" fill="#000"/>
+      <rect x="84" y="198" width="344" height="226" rx="40" fill="#000"/>
+    </mask>
+    <mask id="hueco1" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <rect x="84" y="198" width="344" height="226" rx="40" fill="#000"/>
+    </mask>
+    <mask id="hueco2" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <rect x="136" y="268" width="64" height="48" rx="12" fill="#000"/>
+      <rect x="136" y="350" width="170" height="20" rx="10" fill="#000"/>
+    </mask>
   </defs>
-  <g transform="translate(256 256) scale(1.0) translate(-233.0 -260.4)">
-    <rect x="138" y="212" width="236" height="149" rx="22" fill="#2BD49A" fill-opacity="0.45" transform="rotate(-20 168 352)"/>
-    <rect x="138" y="212" width="236" height="149" rx="22" fill="#2BD49A" fill-opacity="0.8" transform="rotate(-10 168 352)"/>
-    <g filter="url(#sombra)">
-      <rect x="138" y="212" width="236" height="149" rx="22" fill="#F5F7F4"/>
-      <rect x="164" y="270" width="42" height="32" rx="7" fill="#F2B33D"/>
-    </g>
+  <g transform="translate(256 256) scale(1.0) translate(-256 -257.0)">
+    <rect x="126" y="102" width="260" height="164" rx="24" fill="#2BD49A" mask="url(#hueco0)"/>
+    <rect x="111" y="152" width="290" height="183" rx="26" fill="#F2B33D" mask="url(#hueco1)"/>
+    <rect x="96" y="210" width="320" height="202" rx="28" fill="#F5F7F4" mask="url(#hueco2)"/>
   </g>
 </svg>

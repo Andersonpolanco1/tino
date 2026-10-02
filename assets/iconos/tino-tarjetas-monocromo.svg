@@ -1,10 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Tarjetas de Tino en una sola tinta (D94). Generado: no editar a mano. -->
-  <g transform="translate(256 256) scale(1.0) translate(-233.0 -260.4)">
-    <rect x="138" y="212" width="236" height="149" rx="22" fill="#FFFFFF" fill-opacity="0.45" transform="rotate(-20 168 352)"/>
-    <rect x="138" y="212" width="236" height="149" rx="22" fill="#FFFFFF" fill-opacity="0.8" transform="rotate(-10 168 352)"/>
-    <g>
-      <rect x="138" y="212" width="236" height="149" rx="22" fill="#FFFFFF"/>
-    </g>
+  <!-- Tarjetas de Tino en una sola tinta (D104). Generado: no editar a mano. -->
+  <defs>
+    <mask id="hueco0" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <rect x="99" y="140" width="314" height="207" rx="38" fill="#000"/>
+      <rect x="84" y="198" width="344" height="226" rx="40" fill="#000"/>
+    </mask>
+    <mask id="hueco1" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <rect x="84" y="198" width="344" height="226" rx="40" fill="#000"/>
+    </mask>
+    <mask id="hueco2" maskUnits="userSpaceOnUse" x="0" y="0" width="512" height="512">
+      <rect width="512" height="512" fill="#fff"/>
+      <rect x="136" y="268" width="64" height="48" rx="12" fill="#000"/>
+      <rect x="136" y="350" width="170" height="20" rx="10" fill="#000"/>
+    </mask>
+  </defs>
+  <g transform="translate(256 256) scale(1.0) translate(-256 -257.0)">
+    <rect x="126" y="102" width="260" height="164" rx="24" fill="#FFFFFF" mask="url(#hueco0)"/>
+    <rect x="111" y="152" width="290" height="183" rx="26" fill="#FFFFFF" mask="url(#hueco1)"/>
+    <rect x="96" y="210" width="320" height="202" rx="28" fill="#FFFFFF" mask="url(#hueco2)"/>
   </g>
 </svg>
