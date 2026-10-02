@@ -4,7 +4,7 @@ import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { FilaLista, Hoja, LogoTino, ListaAgrupada, Pantalla, Superficie, Texto, useTema } from '@/diseno';
+import { FilaLista, Hoja, LogoTino, ListaAgrupada, Pantalla, Superficie, Texto, useTema, TEMA_PREDETERMINADO } from '@/diseno';
 import type { TemaApp } from '@/tipos/tipos';
 import { AVISOS_PREDETERMINADOS } from '@/notificaciones/planificar';
 import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
@@ -173,7 +173,7 @@ export default function Ajustes() {
           <FilaLista icono="ajustes" titulo={t('ajustes.enfoque')} valor={t(`enfoque.${preferencias.enfoque.modo}`)} flecha onPress={() => setHojaEnfoque(true)} />
         ) : null}
         {preferencias ? (
-          <FilaLista icono="luna" titulo={t('ajustes.apariencia')} valor={t(`ajustes.temas.${preferencias.tema ?? 'automatico'}`)} flecha onPress={() => setHojaApariencia(true)} />
+          <FilaLista icono="luna" titulo={t('ajustes.apariencia')} valor={t(`ajustes.temas.${preferencias.tema ?? TEMA_PREDETERMINADO}`)} flecha onPress={() => setHojaApariencia(true)} />
         ) : null}
         {/* Las monedas salen del país y no se eligen: van como detalle, sin fila propia. */}
         {/* D84: con un solo país disponible no hay nada que elegir. */}
@@ -254,7 +254,7 @@ export default function Ajustes() {
               key={tema}
               titulo={t(`ajustes.temas.${tema}`)}
               detalle={tema === 'automatico' ? t('ajustes.temaAutomaticoDetalle') : undefined}
-              seleccionada={(preferencias?.tema ?? 'automatico') === tema}
+              seleccionada={(preferencias?.tema ?? TEMA_PREDETERMINADO) === tema}
               onPress={() => {
                 setHojaApariencia(false);
                 if (preferencias) guardarPreferencias({ ...preferencias, tema });

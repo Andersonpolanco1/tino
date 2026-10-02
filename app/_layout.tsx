@@ -6,7 +6,7 @@ import * as SystemUI from 'expo-system-ui';
 import { StatusBar } from 'expo-status-bar';
 import { useFonts } from 'expo-font';
 import { useTranslation } from 'react-i18next';
-import { archivosFuente, Pantalla, Texto, useTema, type Tema } from '@/diseno';
+import { archivosFuente, Pantalla, TEMA_PREDETERMINADO, Texto, useTema, type Tema } from '@/diseno';
 import { PAIS_PREDETERMINADO, paisPermitido, ProveedorPais, usePais } from '@/paises';
 import { ProveedorDatos, useEstadoDatos } from '@/datos';
 import { ProveedorAlmacen, useAlmacen, useElegirPais } from '@/estado';
@@ -169,7 +169,7 @@ function PlanSincronizado() {
 // del sistema (decisión D51).
 const ESQUEMA = { automatico: 'unspecified', claro: 'light', oscuro: 'dark' } as const;
 function AparienciaGuardada() {
-  const tema = useAlmacen(s => s.preferencias?.tema ?? 'automatico');
+  const tema = useAlmacen(s => s.preferencias?.tema ?? TEMA_PREDETERMINADO);
   useEffect(() => {
     Appearance.setColorScheme(ESQUEMA[tema]);
   }, [tema]);

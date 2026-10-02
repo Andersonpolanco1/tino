@@ -1,6 +1,10 @@
 import type { TextStyle } from 'react-native';
 import tokens from './tokens.json';
 import { nombreFuente } from './fuentes';
+import type { TemaApp } from '../tipos/tipos';
+
+// Apariencia mientras el usuario no elija otra en Ajustes (decisión D98): claro, no la del sistema.
+export const TEMA_PREDETERMINADO: TemaApp = 'claro';
 
 export type ModoTema = 'claro' | 'oscuro';
 export type RolColor = keyof typeof tokens.color.claro;

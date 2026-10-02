@@ -4,6 +4,7 @@ import { formatearMoneda } from '../i18n/formato';
 import { buscarEmisor, buscarProducto } from '../registro/borrador';
 import { resumenFrecuencia } from '../ingresos/borrador';
 import { nombrePais } from '../paises/nombre';
+import { TEMA_PREDETERMINADO } from '../diseno/tema';
 import type { ContenidoRespaldo } from './contenido';
 
 // "Ver mis datos" (decisión D62): todo lo que Tino guarda del usuario, en palabras, para cumplir
@@ -112,7 +113,7 @@ const CAMPOS_PREFERENCIAS: Campos<Preferencias> = {
     c.t('misDatos.avisos', {
       avisos: AVISOS.map(a => `${c.t(`misDatos.aviso.${a}`)}: ${siNo(x.avisos?.[a] ?? true, c)}`).join(', '),
     }),
-  tema: (x, c) => c.t('misDatos.tema', { tema: c.t(`ajustes.temas.${x.tema ?? 'automatico'}`) }),
+  tema: (x, c) => c.t('misDatos.tema', { tema: c.t(`ajustes.temas.${x.tema ?? TEMA_PREDETERMINADO}`) }),
   consejosVistos: (x, c) => (x.consejosVistos?.length ? c.t('misDatos.consejosVistos', { count: x.consejosVistos.length }) : null),
   respaldoAutomatico: (x, c) => c.t('misDatos.respaldoAutomatico', { valor: siNo(x.respaldoAutomatico ?? false, c) }),
   ultimoRespaldoManual: (x, c) => (x.ultimoRespaldoManual ? c.t('misDatos.ultimoRespaldoManual', { fecha: fecha(x.ultimoRespaldoManual, c) }) : null),

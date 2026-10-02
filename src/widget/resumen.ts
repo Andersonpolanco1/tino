@@ -4,6 +4,7 @@ import { aFecha, numeroDe } from '../motor/fechas';
 import { fechaMesCorto, inicialesBanco, OPACIDAD_INICIALES, OPACIDAD_PISTA, textoRecompensa, type Traducir } from '../inicio/vista';
 import { buscarEmisor } from '../registro/borrador';
 import tokens from '../diseno/tokens.json';
+import { TEMA_PREDETERMINADO } from '../diseno/tema';
 
 // Resumen que lee el widget de Android (sección 16.3 de la especificación): solo la tarjeta
 // recomendada de cada día, como la tarjeta de hoy de Inicio (decisión D72). Se calcula por
@@ -140,7 +141,7 @@ export function planificarWidget(e: EntradaWidget): ResumenWidget {
   return {
     version: VERSION_RESUMEN,
     estado,
-    tema: e.preferencias.tema ?? 'automatico',
+    tema: e.preferencias.tema ?? TEMA_PREDETERMINADO,
     enlace: e.enlace ?? null,
     colores: { claro: colores('claro'), oscuro: colores('oscuro') },
     textos: {

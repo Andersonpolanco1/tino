@@ -22,5 +22,6 @@ export { Icono, type NombreIcono } from './Icono';
 export { Etiqueta, type TipoEtiqueta } from './Etiqueta';
 export { Hoja } from './Hoja';
 export type { Tema, ModoTema, RolColor, VarianteTexto } from './tema';
+export { TEMA_PREDETERMINADO } from './tema';
 export { CuadriculaDias } from './CuadriculaDias';
 export { Contador } from './Contador';
