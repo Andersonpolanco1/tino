@@ -9,8 +9,9 @@ import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
 import { fechaCompraValida } from '@/compra/fechaCompra';
+import { riesgoIntereses } from '@/pagos/pendientes';
 import { SelectorFechaCompra } from '@/compra/SelectorFechaCompra';
-import { diaConSemana, valorRecompensaCompra, type Traducir } from '@/inicio/vista';
+import { diaConSemana, textoFecha, valorRecompensaCompra, type Traducir } from '@/inicio/vista';
 import { partesFechaLarga, simboloMoneda } from '@/i18n/formato';
 import { calcularRanking } from '@/motor';
 import { DIAS_MINIMOS_AL_ESPERAR } from '@/notificaciones/planificar';
@@ -69,6 +70,7 @@ export default function Compra() {
   // El detalle muestra la tarjeta para el mismo día que la consulta.
   const abrir = (v: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: otroDia ? { id: v.tarjeta.id, fecha } : { id: v.tarjeta.id } });
   const esperarElegible = !!esperar && fechaCompraValida(esperar.fecha, hoy) === esperar.fecha;
+  const riesgo = mejor ? riesgoIntereses(mejor.tarjeta, fecha, hoy, config) : null;
   const aliasDe = (id: string) => tarjetas.find(x => x.id === id)?.alias ?? '';
   const ganancia = mejor && compra ? valorRecompensaCompra(mejor.tarjeta, mejor.resultado, { t: t as unknown as Traducir, pais: config, idioma }, compra) : null;
 
@@ -205,6 +207,9 @@ export default function Compra() {
                 </Texto>
               ) : null}
             </Pressable>
+          ) : null}
+          {riesgo ? (
+            <Texto variante="apoyo">{t(riesgo.ya ? 'pagos.interesesYa' : 'pagos.interesesVencera', { fecha: textoFecha(riesgo.pago, idioma) })}</Texto>
           ) : null}
           {conConversion ? (
             <Texto variante="apoyo" color="alertaTexto">

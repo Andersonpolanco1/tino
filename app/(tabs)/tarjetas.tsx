@@ -11,7 +11,7 @@ import { inicialesBanco, textoFecha } from '@/inicio/vista';
 import { useHoy } from '@/inicio/useHoy';
 import { usePais } from '@/paises';
 import { proximosPagos } from '@/pagos/pendientes';
-import { textoVence } from '@/pagos/FilaPago';
+import { pagoUrgente, textoVence } from '@/pagos/FilaPago';
 import { useTarjetasEnPlan } from '@/suscripciones';
 
 // Lista de tarjetas registradas (rediseño): lista agrupada; tocar una abre su detalle.
@@ -29,6 +29,7 @@ export default function Tarjetas() {
   // cuentan (15.2). Mezcladas con las activas parecía que las 3 funcionaban.
   const guardadas = tarjetas.filter(x => !enPlan.includes(x));
   const pagos = proximosPagos(enPlan, hoy, ingresos, config);
+  const usaYaPague = enPlan.some(x => !!x.pagoHecho);
   // Decisión D74: los consejos de fechas viven detrás del bombillo del encabezado, con un punto
   // mientras haya alguno sin ver; se marcan vistos al abrir su pantalla.
   const { consejos, nuevos } = useConsejosNuevos();
@@ -40,7 +41,7 @@ export default function Tarjetas() {
     // configurados siguen en el detalle. En pausa no hay pago que mostrar.
     const pago = pagos.find(p => p.tarjeta.id === tarjeta.id);
     const fecha = pago ? textoFecha(pago.fecha, idioma) : '';
-    const urgente = !!pago && !pago.pagado && (pago.dias <= 3 || pago.aviso?.tipo === 'antes');
+    const urgente = !!pago && pagoUrgente(pago, usaYaPague);
     const estado = !enPlan.includes(tarjeta)
       ? t('plan.etiquetaFuera')
       : !pago

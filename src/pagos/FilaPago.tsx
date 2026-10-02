@@ -6,11 +6,22 @@ import { useAlmacen } from '../estado';
 import { textoFecha } from '../inicio/vista';
 import type { PagoPendiente } from './pendientes';
 
-// "Vence hoy", "Vence mañana, 30 de septiembre", "Vence el 30 de septiembre · en 4 días".
+// "Vence hoy", "Vence mañana, 30 de septiembre", "Vence el 30 de septiembre · en 4 días". Vencido,
+// una pregunta y no una alarma, porque Tino no sabe si se pagó por otra vía (decisión D99).
 export function textoVence(dias: number, fecha: string, t: (k: string, o?: Record<string, unknown>) => string) {
-  if (dias <= 0) return t('inicio.venceHoy');
+  if (dias < 0) return t('pagos.preguntaVencido', { fecha });
+  if (dias === 0) return t('inicio.venceHoy');
   if (dias === 1) return t('inicio.venceManana', { fecha });
   return t('inicio.venceEnDias', { fecha, dias });
+}
+
+// En color de alerta: vence en 3 días o menos, o antes del cobro. Vencido, solo si el usuario ya usa
+// "Ya pagué" en alguna tarjeta: a quien paga por débito automático y no marca nada, Tino no le
+// pinta una alarma cada mes (decisión D99).
+export function pagoUrgente(pago: PagoPendiente, usaYaPague: boolean): boolean {
+  if (pago.pagado) return false;
+  if (pago.vencido) return usaYaPague;
+  return pago.dias <= 3 || pago.aviso?.tipo === 'antes';
 }
 
 // Un pago pendiente con su "Ya pagué" (decisión D45). Marcado, dice "Pagada" y deja deshacerlo.
@@ -19,8 +30,9 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
   const { t } = useTranslation();
   const { idioma } = usePais();
   const marcarPagado = useAlmacen(s => s.marcarPagado);
+  const usaYaPague = useAlmacen(s => s.tarjetas.some(x => !!x.pagoHecho));
   const fecha = textoFecha(pago.fecha, idioma);
-  const urgente = !pago.pagado && (pago.dias <= 3 || pago.aviso?.tipo === 'antes');
+  const urgente = pagoUrgente(pago, usaYaPague);
   const vence = textoVence(pago.dias, fecha, t as never);
   const aviso =
     !pago.pagado && pago.aviso

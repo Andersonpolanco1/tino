@@ -9,7 +9,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { pistaPrecision, precisionTarjeta } from '@/inicio/precision';
 import { PildoraSemaforo } from '@/inicio/Semaforo';
 import { BloqueDias } from '@/inicio/BloqueDias';
-import { proximosPagos } from '@/pagos/pendientes';
+import { proximosPagos, riesgoIntereses } from '@/pagos/pendientes';
 import { FilaPago } from '@/pagos/FilaPago';
 import { LineaCiclo } from '@/inicio/LineaCiclo';
 import { avisoCobro, diaConSemana, subtituloTarjeta, textoFecha, type Traducir } from '@/inicio/vista';
@@ -46,6 +46,7 @@ export default function DetalleTarjeta() {
   // Sección 5.3: si una compra de hoy vence antes del próximo cobro, se dice cuándo se cobra.
   const aviso = avisoCobro(resultado.fechaPago, fecha, ingresos, config);
   const dia = diaConSemana(fecha, idioma, t as unknown as Traducir);
+  const riesgo = riesgoIntereses(tarjeta, fecha, hoy, config);
   // El pago pendiente de esta tarjeta, con "Ya pagué" (decisión D45).
   // Guardada fuera del plan gratis (15.2): igual que en pausa, sin pago pendiente ni avisos.
   const fuera = !enPlan.some(x => x.id === tarjeta.id);
@@ -121,6 +122,8 @@ export default function DetalleTarjeta() {
             })}
           </Texto>
         ) : null}
+        {/* Decisión D99: los días sin intereses dependen de pagar el total del estado anterior. */}
+        {riesgo ? <Texto variante="apoyo">{t(riesgo.ya ? 'pagos.interesesYa' : 'pagos.interesesVencera', { fecha: textoFecha(riesgo.pago, idioma) })}</Texto> : null}
       </Superficie>
 
       {pendiente ? (

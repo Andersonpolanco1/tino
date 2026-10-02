@@ -6,7 +6,7 @@ import { repositorioIngresos, repositorioPreferencias, repositorioSugerencias, r
 import { preferenciasIniciales } from '@/datos/preferencias';
 import { basePrueba } from '@/pruebas/sqlitePrueba';
 import { crearAlmacen, ProveedorAlmacenDePrueba } from '@/estado';
-import { FilaPago } from '../FilaPago';
+import { FilaPago, pagoUrgente } from '../FilaPago';
 
 const tarjeta: Tarjeta = {
   id: 'B',
@@ -32,7 +32,7 @@ test('pagado: "Pagado", la fecha y "Deshacer", sin repetir (decisión D52)', asy
   await almacen.getState().cargar();
   await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
   await almacen.getState().guardarTarjeta(tarjeta);
-  const pago = { tarjeta, fecha: '2026-09-30', dias: 4, pagado: true, aviso: null };
+  const pago = { tarjeta, fecha: '2026-09-30', dias: 4, pagado: true, vencido: false, aviso: null };
   await render(
     <ProveedorPais regiones={[{ regionCode: 'DO', currencyCode: 'DOP', languageTag: 'es-DO' }]}>
       <ProveedorAlmacenDePrueba almacen={almacen}>
@@ -46,4 +46,34 @@ test('pagado: "Pagado", la fecha y "Deshacer", sin repetir (decisión D52)', asy
   await fireEvent.press(screen.getByLabelText('Deshacer el pago de Visa Banreservas'));
   await act(async () => {});
   expect(almacen.getState().tarjetas[0].pagoHecho).toBeUndefined();
+});
+
+// Decisión D99: vencido, una pregunta con "Ya pagué" a mano, no una alarma.
+test('vencido: pregunta si pagó el total y deja marcarlo', async () => {
+  const db = basePrueba();
+  await migrar(db);
+  const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
+  await almacen.getState().cargar();
+  await almacen.getState().guardarPreferencias(preferenciasIniciales('DO', 'es-DO'));
+  const { pagoHecho: _, ...sinMarcar } = tarjeta;
+  await almacen.getState().guardarTarjeta(sinMarcar);
+  const pago = { tarjeta: sinMarcar, fecha: '2026-10-30', dias: -3, pagado: false, vencido: true, aviso: null };
+  await render(
+    <ProveedorPais regiones={[{ regionCode: 'DO', currencyCode: 'DOP', languageTag: 'es-DO' }]}>
+      <ProveedorAlmacenDePrueba almacen={almacen}>
+        <FilaPago pago={pago} />
+      </ProveedorAlmacenDePrueba>
+    </ProveedorPais>,
+  );
+  expect(screen.getByText('¿Pagaste el total? Vencía el 30 de octubre')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByLabelText('Ya pagué Visa Banreservas'));
+  await act(async () => {});
+  expect(almacen.getState().tarjetas[0].pagoHecho).toBe('2026-10-30');
+});
+
+test('pagoUrgente: el vencido solo se pinta de alerta si el usuario ya usa "Ya pagué"', () => {
+  const vencido = { tarjeta, fecha: '2026-10-30', dias: -3, pagado: false, vencido: true, aviso: null };
+  expect(pagoUrgente(vencido, false)).toBe(false);
+  expect(pagoUrgente(vencido, true)).toBe(true);
+  expect(pagoUrgente({ ...vencido, dias: 2, vencido: false }, false)).toBe(true);
 });

@@ -1,5 +1,5 @@
 import type { ConfigPais, FuenteIngreso, Tarjeta } from '../../tipos/tipos';
-import { pagosParaInicio, proximosPagos } from '../pendientes';
+import { pagoPendiente, pagosParaInicio, proximosPagos, riesgoIntereses } from '../pendientes';
 
 const pais: ConfigPais = {
   codigo: 'DO',
@@ -63,4 +63,39 @@ test('"Ya pagué" lo saca de Inicio; con el siguiente estado vuelve solo (decisi
   // El 11 de octubre el pendiente es el del 10 de noviembre, que no está pagado.
   const despues = proximosPagos([pagada], '2026-11-04', [], pais);
   expect(despues[0]).toMatchObject({ fecha: '2026-11-10', pagado: false });
+});
+
+// Decisión D99: el escenario del usuario. Corta el 8 y paga el 30.
+describe('pago vencido sin marcar', () => {
+  const T = tarjeta('T', 8, 30);
+
+  test('se queda como pendiente hasta el siguiente corte, en vez de saltar al estado nuevo', () => {
+    expect(pagoPendiente(T, '2026-10-29', pais)).toBe('2026-10-30');
+    expect(pagoPendiente(T, '2026-10-31', pais)).toBe('2026-10-30');
+    expect(pagoPendiente(T, '2026-11-07', pais)).toBe('2026-10-30');
+    // Con el corte del 8 de noviembre, ese saldo ya va en el estado nuevo.
+    expect(pagoPendiente(T, '2026-11-09', pais)).toBe('2026-11-30');
+  });
+
+  test('marcarlo, o marcar un pago posterior, lo resuelve', () => {
+    expect(pagoPendiente({ ...T, pagoHecho: '2026-10-30' }, '2026-10-31', pais)).toBe('2026-11-30');
+    expect(pagoPendiente({ ...T, pagoHecho: '2026-11-30' }, '2026-10-31', pais)).toBe('2026-11-30');
+  });
+
+  test('aparece en Por pagar como vencido, sin aviso de cobro, para poder marcarlo', () => {
+    const [pago] = proximosPagos([T], '2026-11-02', nomina, pais);
+    expect(pago).toMatchObject({ fecha: '2026-10-30', dias: -3, pagado: false, vencido: true, aviso: null });
+    expect(pagosParaInicio([pago])).toHaveLength(1);
+  });
+
+  test('riesgo de intereses: ya vencido, por vencer antes de la compra, o ninguno', () => {
+    // Compra planeada el 14 de octubre: el pago del 30 todavía no vence.
+    expect(riesgoIntereses(T, '2026-10-14', '2026-10-10', pais)).toBeNull();
+    // Compra planeada el 2 de noviembre, mirada el 14 de octubre: vencerá antes.
+    expect(riesgoIntereses(T, '2026-11-02', '2026-10-14', pais)).toEqual({ pago: '2026-10-30', ya: false });
+    // Hoy 2 de noviembre sin marcar: ya venció.
+    expect(riesgoIntereses(T, '2026-11-02', '2026-11-02', pais)).toEqual({ pago: '2026-10-30', ya: true });
+    // Marcado como pagado: sin riesgo.
+    expect(riesgoIntereses({ ...T, pagoHecho: '2026-10-30' }, '2026-11-02', '2026-11-02', pais)).toBeNull();
+  });
 });

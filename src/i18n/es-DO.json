@@ -712,7 +712,10 @@
     "pagadoLinea": "Pagado · vence el {{fecha}}",
     "estadoDeCuenta": "Estado de cuenta",
     "pagado": "Pagado",
-    "venceEl": "Vence el {{fecha}}"
+    "venceEl": "Vence el {{fecha}}",
+    "preguntaVencido": "¿Pagaste el total? Vencía el {{fecha}}",
+    "interesesYa": "Si no pagaste el total de tu estado del {{fecha}}, esta compra podría generar intereses desde el primer día.",
+    "interesesVencera": "Para ese día ya habrá vencido tu pago del {{fecha}}: págalo completo a tiempo para no perder tus días sin intereses."
   },
   "enfoquePriorizando": {
     "equilibrado": "Buscando un equilibrio",
