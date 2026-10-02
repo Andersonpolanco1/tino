@@ -11,6 +11,16 @@ export function formatearMoneda(monto: number, moneda: CodigoMoneda, idioma: str
   }).format(monto);
 }
 
+// Símbolo de la moneda ("RD$", "US$") para escribirlo junto al monto. En iOS, Hermes usa el Intl
+// de Apple, que no tiene NumberFormat.formatToParts: ahí se formatea un 0 y se quitan los dígitos.
+export function simboloMoneda(moneda: CodigoMoneda, idioma: string): string {
+  const formato = new Intl.NumberFormat(idioma, { style: 'currency', currency: moneda });
+  if (typeof formato.formatToParts === 'function') {
+    return formato.formatToParts(0).find(p => p.type === 'currency')?.value ?? moneda;
+  }
+  return formato.format(0).replace(/[\d\s.,\u00a0\u202f\u2212-]/g, '') || moneda;
+}
+
 // "25 de septiembre". La fecha es un día de calendario, así que se formatea en UTC.
 export function formatearFecha(fecha: FechaISO, idioma: string): string {
   return new Intl.DateTimeFormat(idioma, { day: 'numeric', month: 'long', timeZone: 'UTC' }).format(

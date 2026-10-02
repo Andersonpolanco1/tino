@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import esDO from '../es-DO.json';
 import { elegirIdioma, iniciarI18n } from '../i18n';
-import { formatearFecha, formatearMoneda } from '../formato';
+import { formatearFecha, formatearMoneda, simboloMoneda } from '../formato';
 
 describe('elegirIdioma', () => {
   test('usa el idioma exacto si tiene textos', () => {
@@ -32,6 +32,20 @@ describe('formato', () => {
   test('fechas con día y mes, sin desfase por zona horaria', () => {
     expect(formatearFecha('2026-09-25', 'es-DO')).toBe('25 de septiembre');
     expect(formatearFecha('2027-01-01', 'es-DO')).toBe('1 de enero');
+  });
+
+  test('símbolo de la moneda, también sin NumberFormat.formatToParts (Intl de iOS en Hermes)', () => {
+    expect(simboloMoneda('DOP', 'es-DO')).toBe('RD$');
+    expect(simboloMoneda('USD', 'es-DO')).toBe('US$');
+    const original = Intl.NumberFormat.prototype.formatToParts;
+    // @ts-expect-error: se quita a propósito para simular el iPhone
+    delete Intl.NumberFormat.prototype.formatToParts;
+    try {
+      expect(simboloMoneda('DOP', 'es-DO')).toBe('RD$');
+      expect(simboloMoneda('USD', 'es-DO')).toBe('US$');
+    } finally {
+      Intl.NumberFormat.prototype.formatToParts = original;
+    }
   });
 });
 

@@ -11,7 +11,7 @@ import { useHoy } from '@/inicio/useHoy';
 import { fechaCompraValida } from '@/compra/fechaCompra';
 import { SelectorFechaCompra } from '@/compra/SelectorFechaCompra';
 import { diaConSemana, valorRecompensaCompra, type Traducir } from '@/inicio/vista';
-import { partesFechaLarga } from '@/i18n/formato';
+import { partesFechaLarga, simboloMoneda } from '@/i18n/formato';
 import { calcularRanking } from '@/motor';
 import { DIAS_MINIMOS_AL_ESPERAR } from '@/notificaciones/planificar';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
@@ -65,7 +65,7 @@ export default function Compra() {
   const conConversion = !!mejor && !!preferencias && moneda !== config.monedaPrincipal && mejor.tarjeta.monedaFacturacion === 'solo_principal';
 
   const monedas = [config.monedaPrincipal, ...(config.monedaSecundaria ? [config.monedaSecundaria] : [])];
-  const simbolo = new Intl.NumberFormat(idioma, { style: 'currency', currency: moneda }).formatToParts(0).find(p => p.type === 'currency')?.value ?? moneda;
+  const simbolo = simboloMoneda(moneda, idioma);
   // El detalle muestra la tarjeta para el mismo día que la consulta.
   const abrir = (v: VistaTarjeta) => router.push({ pathname: '/tarjeta/[id]', params: otroDia ? { id: v.tarjeta.id, fecha } : { id: v.tarjeta.id } });
   const esperarElegible = !!esperar && fechaCompraValida(esperar.fecha, hoy) === esperar.fecha;
