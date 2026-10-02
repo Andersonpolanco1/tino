@@ -25,11 +25,14 @@ const cubierto = (tarjeta: Tarjeta, fecha: FechaISO) => !!tarjeta.pagoHecho && t
 // Decisión D99: el pago que falta. Como proximoPago, pero si la fecha límite del último estado
 // ya pasó y no se marcó "Ya pagué", sigue siendo ese hasta el siguiente corte (entonces ese saldo
 // ya va en el estado nuevo). Antes saltaba al estado siguiente y el vencido no se podía marcar.
+// Solo cuenta si la fecha límite es del día en que se registró la tarjeta o después: la de un
+// estado anterior no se pudo marcar y lo normal es que ya esté pagada.
 export function pagoPendiente(tarjeta: Tarjeta, hoy: FechaISO, pais: ConfigPais): FechaISO {
   const n = numeroDe(hoy);
   const anterior = corteAnterior(proximoCorte(n, tarjeta), tarjeta.diaCorte);
   const pagoAnterior = aFecha(fechaLimite(anterior, tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, new Set(pais.feriados)));
-  return numeroDe(pagoAnterior) < n && !cubierto(tarjeta, pagoAnterior) ? pagoAnterior : proximoPago(tarjeta, hoy, pais);
+  const vencido = numeroDe(pagoAnterior) < n && pagoAnterior >= tarjeta.creadaEn && !cubierto(tarjeta, pagoAnterior);
+  return vencido ? pagoAnterior : proximoPago(tarjeta, hoy, pais);
 }
 
 // Decisión D99: una compra en `fecha` puede generar intereses desde el primer día si para

@@ -99,3 +99,14 @@ describe('pago vencido sin marcar', () => {
     expect(riesgoIntereses({ ...T, pagoHecho: '2026-10-30' }, '2026-11-02', '2026-11-02', pais)).toBeNull();
   });
 });
+
+test('el pago de un estado que venció antes de registrar la tarjeta no cuenta como vencido', () => {
+  // Registrada el 1 de octubre; su último estado venció el 28 de septiembre.
+  const nueva = tarjeta('N', 8, 28, { creadaEn: '2026-10-01' });
+  expect(pagoPendiente(nueva, '2026-10-01', pais)).toBe('2026-10-28');
+  expect(riesgoIntereses(nueva, '2026-10-01', '2026-10-01', pais)).toBeNull();
+  const [pago] = proximosPagos([nueva], '2026-10-01', [], pais);
+  expect(pago.vencido).toBe(false);
+  // El siguiente sí: se registró antes de su fecha límite.
+  expect(pagoPendiente(nueva, '2026-10-30', pais)).toBe('2026-10-28');
+});
