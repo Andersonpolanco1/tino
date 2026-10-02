@@ -77,6 +77,11 @@ const config: ExpoConfig = {
   experiments: { typedRoutes: true },
   // Proyecto de Tino en EAS (compilación, firma y envío a las tiendas, sección 12 técnica).
   extra: { eas: { projectId: 'b24acc28-d144-4acd-82f6-4285a3cab172' } },
+  // Actualizaciones directas con EAS Update (sección 12 técnica, decisión D100). La versión de
+  // ejecución sale de la huella del código nativo: una actualización solo llega a las
+  // compilaciones con el mismo código nativo, nunca a una que no la pueda correr.
+  runtimeVersion: { policy: 'fingerprint' },
+  updates: { url: 'https://u.expo.dev/b24acc28-d144-4acd-82f6-4285a3cab172' },
 };
 
 export default config;
