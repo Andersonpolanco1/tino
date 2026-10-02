@@ -77,7 +77,7 @@ Menú: Hacer crecer usuarios > Presencia en Play Store > Configuración de la fi
 **Correo electrónico**
 
 ```text
-polancolabsrd@gmail.com
+contacto@polancolabs.com
 ```
 
 **Sitio web**

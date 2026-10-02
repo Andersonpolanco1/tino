@@ -145,7 +145,7 @@ https://polancolabs.com/apps/tino
 **Correo de contacto**
 
 ```text
-polancolabsrd@gmail.com
+contacto@polancolabs.com
 ```
 
 **Notas** (509 / 4000)

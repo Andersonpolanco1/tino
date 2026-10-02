@@ -38,7 +38,7 @@ Nunca escribas en Tino el número completo de una tarjeta, su fecha de vencimien
 - **Tino Pro:** suscripción que permite registrar tarjetas ilimitadas y activar el respaldo automático, entre otras funciones que podamos agregar. Los precios vigentes se muestran en la app antes de comprar. Los fija y los cobra la tienda, en la moneda de tu cuenta y con los impuestos que correspondan.
 - **Cobro y renovación:** el cobro lo hace Apple (App Store) o Google (Google Play) en tu cuenta de la tienda al confirmar la compra. La suscripción se renueva automáticamente al final de cada período, mensual o anual, por el mismo precio, salvo que la canceles al menos 24 horas antes de que termine el período actual.
 - **Cancelar:** se cancela desde la configuración de suscripciones de tu cuenta de Apple o Google. Borrar la app no cancela la suscripción. Al cancelar, sigues teniendo Pro hasta el final del período ya pagado.
-- **Reembolsos:** si Tino Pro no te convence, puedes pedir el reembolso dentro de los 7 días hábiles siguientes a la compra (Ley 358-05, artículo 62). Si compraste en Google Play, escríbenos a polancolabsrd@gmail.com y lo reembolsamos desde la tienda. Si compraste en la App Store, solo Apple puede reembolsar: pídelo en reportaproblem.apple.com y, si hace falta, te ayudamos con la solicitud. Pasado ese plazo, aplican las reglas de reembolso de cada tienda.
+- **Reembolsos:** si Tino Pro no te convence, puedes pedir el reembolso dentro de los 7 días hábiles siguientes a la compra (Ley 358-05, artículo 62). Si compraste en Google Play, escríbenos a contacto@polancolabs.com y lo reembolsamos desde la tienda. Si compraste en la App Store, solo Apple puede reembolsar: pídelo en reportaproblem.apple.com y, si hace falta, te ayudamos con la solicitud. Pasado ese plazo, aplican las reglas de reembolso de cada tienda.
 - **Precio de lanzamiento:** si compraste Tino Pro anual a precio de lanzamiento, se renueva a ese mismo precio mientras no la canceles.
 - **Pruebas gratis:** si alguna vez ofrecemos una prueba gratis, la app te dirá cuándo termina y cuánto se cobrará después; si no cancelas antes de que termine, empieza la suscripción pagada.
 - **Si Pro termina:** no se borra ninguno de tus datos. Eliges qué 2 tarjetas siguen activas y las demás quedan guardadas hasta que vuelvas a Pro.
@@ -79,5 +79,5 @@ Estos términos se rigen por las leyes de la República Dominicana. Si tienes un
 
 Anderson Polanco (Polanco Labs)\
 Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana\
-polancolabsrd@gmail.com\
+contacto@polancolabs.com\
 https://polancolabs.com/apps/tino/soporte

@@ -20,7 +20,7 @@ Tino te dice qué tarjeta de crédito te conviene usar cada día. Para eso neces
 
 ## 1. Quién es responsable de tus datos
 
-El responsable de Tino es Anderson Polanco, que opera bajo el nombre comercial Polanco Labs, con domicilio en Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a polancolabsrd@gmail.com.
+El responsable de Tino es Anderson Polanco, que opera bajo el nombre comercial Polanco Labs, con domicilio en Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana. Para cualquier pregunta sobre esta política o sobre tus datos, escríbenos a contacto@polancolabs.com.
 
 Esta política se rige por la Ley 172-13 sobre protección de datos de carácter personal de la República Dominicana.
 
@@ -121,7 +121,7 @@ La Ley 172-13 te da derecho a acceder a tus datos, corregirlos, pedir que se bor
 - **Borrar:** Ajustes > Tus datos > Borrar todo elimina todos tus datos del teléfono, incluida la clave de cifrado, y crea un identificador anónimo nuevo. Desinstalar Tino también borra los datos del teléfono (el respaldo automático, si lo encendiste, queda en el respaldo de tu teléfono hasta que lo borres ahí).
 - **Oponerte o retirar tu consentimiento:** apaga "Compartir datos de uso" en Ajustes > Privacidad.
 
-Si quieres saber qué datos de uso anónimos se enviaron, o que los borremos, escríbenos a polancolabsrd@gmail.com con el identificador que aparece en "Ver mis datos". Te respondemos en un máximo de 5 días hábiles si pides acceso a esos datos, y de 10 días hábiles si pides corregirlos o borrarlos (artículos 8 y 10 de la Ley 172-13). Si no estás conforme con la respuesta, puedes acudir a los tribunales mediante la acción de hábeas data.
+Si quieres saber qué datos de uso anónimos se enviaron, o que los borremos, escríbenos a contacto@polancolabs.com con el identificador que aparece en "Ver mis datos". Te respondemos en un máximo de 5 días hábiles si pides acceso a esos datos, y de 10 días hábiles si pides corregirlos o borrarlos (artículos 8 y 10 de la Ley 172-13). Si no estás conforme con la respuesta, puedes acudir a los tribunales mediante la acción de hábeas data.
 
 ## 9. Seguridad
 
@@ -138,5 +138,5 @@ Si cambiamos algo importante, lo avisaremos dentro de la app antes de que entre 
 ## 12. Contacto
 
 Anderson Polanco (Polanco Labs)\
-polancolabsrd@gmail.com\
+contacto@polancolabs.com\
 Calle Prolongación Principal #3, Residencial Fernández I, Santo Domingo Este 10211, República Dominicana
