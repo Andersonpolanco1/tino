@@ -56,6 +56,7 @@ interface PropsFila {
   onPress?: () => void;
   etiquetaAccesible?: string;
   seleccionada?: boolean;
+  deshabilitado?: boolean;
 }
 
 export function FilaLista({
@@ -73,6 +74,7 @@ export function FilaLista({
   onPress,
   etiquetaAccesible,
   seleccionada,
+  deshabilitado = false,
 }: PropsFila) {
   const tema = useTema();
   const colores = TONOS[destructiva ? 'alerta' : tono];
@@ -131,10 +133,11 @@ export function FilaLista({
   return (
     <Pressable
       accessibilityRole={seleccionada !== undefined ? 'radio' : 'button'}
-      accessibilityState={seleccionada !== undefined ? { selected: seleccionada } : undefined}
+      accessibilityState={seleccionada !== undefined ? { selected: seleccionada, disabled: deshabilitado } : { disabled: deshabilitado }}
       accessibilityLabel={etiquetaAccesible}
       onPress={onPress}
-      style={({ pressed }) => [estilo, { opacity: pressed ? 0.6 : 1 }]}
+      disabled={deshabilitado}
+      style={({ pressed }) => [estilo, { opacity: deshabilitado ? 0.5 : pressed ? 0.6 : 1 }]}
     >
       {contenido}
     </Pressable>

@@ -32,6 +32,7 @@ export default function RestaurarRespaldo() {
   const [ocupado, setOcupado] = useState(false);
 
   async function elegir() {
+    if (ocupado) return;
     try {
       const elegido = await elegirRespaldo();
       if (!elegido) return;
@@ -44,7 +45,7 @@ export default function RestaurarRespaldo() {
   }
 
   async function abrir() {
-    if (!archivo || !contrasena) return;
+    if (!archivo || !contrasena || ocupado) return;
     setOcupado(true);
     try {
       setContenido(validarContenido(await descifrarRespaldo(archivo.texto, contrasena)));
@@ -57,7 +58,7 @@ export default function RestaurarRespaldo() {
   }
 
   async function restaurar() {
-    if (!contenido || datos.estado !== 'lista') return;
+    if (!contenido || datos.estado !== 'lista' || ocupado) return;
     setOcupado(true);
     try {
       // La aceptación de los términos que vale es la de este teléfono (D88).
@@ -99,7 +100,7 @@ export default function RestaurarRespaldo() {
 
       {archivo ? (
         <ListaAgrupada sangria={16}>
-          <FilaLista icono="descargar" titulo={archivo.nombre} detalle={t('respaldo.otroArchivo')} onPress={elegir} />
+          <FilaLista icono="descargar" titulo={archivo.nombre} detalle={t('respaldo.otroArchivo')} onPress={elegir} deshabilitado={ocupado} />
         </ListaAgrupada>
       ) : null}
 
@@ -112,6 +113,7 @@ export default function RestaurarRespaldo() {
             setContrasena(texto);
             setError(undefined);
           }}
+          editable={!ocupado}
           secureTextEntry
           autoCapitalize="none"
           autoCorrect={false}

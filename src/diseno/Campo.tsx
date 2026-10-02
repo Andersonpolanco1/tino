@@ -20,6 +20,7 @@ export function Campo({ etiqueta, ayuda, info, error, ...entrada }: Props) {
         {...entrada}
         accessibilityLabel={etiqueta}
         accessibilityHint={error ?? ayuda}
+        accessibilityState={{ disabled: entrada.editable === false }}
         allowFontScaling
         placeholderTextColor={tema.color.textoSecundario}
         style={[
@@ -34,6 +35,7 @@ export function Campo({ etiqueta, ayuda, info, error, ...entrada }: Props) {
             minHeight: 52,
             paddingHorizontal: tema.espacio.l,
             paddingVertical: tema.espacio.m,
+            opacity: entrada.editable === false ? 0.5 : 1,
           },
         ]}
       />
