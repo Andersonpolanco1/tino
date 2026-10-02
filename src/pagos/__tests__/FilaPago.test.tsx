@@ -71,7 +71,7 @@ test('vencido: pregunta si pagó el balance al corte y deja marcarlo', async () 
   expect(screen.getByText('¿Pagaste el balance al corte? Vencía el 30 de octubre')).toBeOnTheScreen();
   await fireEvent.press(screen.getByLabelText('Ya pagué Visa Banreservas'));
   expect(screen.getByText('¿Cuánto pagaste de tu estado del 30 de octubre?')).toBeOnTheScreen();
-  await fireEvent.press(screen.getByText('Menos'));
+  await fireEvent.press(screen.getByText('Menos del balance al corte'));
   await act(async () => {});
   expect(almacen.getState().tarjetas[0]).toMatchObject({ pagoHecho: '2026-10-30', pagoParcial: true });
 });

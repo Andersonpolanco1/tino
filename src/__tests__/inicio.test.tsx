@@ -220,7 +220,7 @@ test('"Por pagar" solo muestra lo que vence pronto, y "Ya pagué" lo quita (deci
   expect(screen.queryByLabelText('Ya pagué Tarjeta A')).toBeNull();
   await fireEvent.press(screen.getByLabelText('Ya pagué Tarjeta B'));
   // Decisión D101: pregunta si fue el balance al corte o menos.
-  await fireEvent.press(screen.getByText('El pago total (balance al corte)'));
+  await fireEvent.press(screen.getByText('El balance al corte o el total'));
   await act(async () => {});
   expect(almacen.getState().tarjetas.find(x => x.id === 'B')?.pagoHecho).toBe('2026-10-10');
   expect(almacen.getState().tarjetas.find(x => x.id === 'B')?.pagoParcial).toBeUndefined();
