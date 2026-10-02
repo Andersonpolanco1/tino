@@ -1,7 +1,8 @@
 import type { Catalogo, ConfigPais, FechaISO, FuenteIngreso, Preferencias, Tarjeta } from '../tipos/tipos';
 import { calcularRanking } from '../motor';
 import { aFecha, numeroDe } from '../motor/fechas';
-import { fechaMesCorto, inicialesBanco, OPACIDAD_INICIALES, OPACIDAD_PISTA, textoRecompensa, type Traducir } from '../inicio/vista';
+import { diaConSemana, fechaMesCorto, inicialesBanco, OPACIDAD_INICIALES, OPACIDAD_PISTA, textoRecompensa, type Traducir } from '../inicio/vista';
+import { consejoEsperar } from '../inicio/esperar';
 import { buscarEmisor } from '../registro/borrador';
 import tokens from '../diseno/tokens.json';
 import { TEMA_PREDETERMINADO } from '../diseno/tema';
@@ -15,7 +16,7 @@ import { TEMA_PREDETERMINADO } from '../diseno/tema';
 
 // Sube cuando cambian los campos; el widget ignora un resumen de otra versión y pide abrir la
 // app (VERSION_RESUMEN en TinoWidgetProvider.kt, que una prueba compara).
-export const VERSION_RESUMEN = 4;
+export const VERSION_RESUMEN = 5;
 // Días calculados hacia adelante, como los avisos. Pasado el horizonte sin abrir la app, el
 // widget pide abrirla. Cada día es un ranking completo: con 10 tarjetas y cobros, 60 días
 // tardan unos 100 ms en una PC.
@@ -51,6 +52,8 @@ export interface DiaWidget {
   pagas: string;
   // "10 pts por RD$1,000", sobre el monto de referencia del país; nunca un monto del usuario.
   recompensa: string | null;
+  // Decisión D103: con todas las tarjetas por cortar, el consejo de esperar en lugar de la tarjeta.
+  esperar: { dia: string; detalle: string } | null;
   accesible: string;
 }
 
@@ -61,7 +64,7 @@ export interface ResumenWidget {
   // Dirección que abre Inicio al tocar el widget; sin ella se abre la app.
   enlace: string | null;
   colores: { claro: ColoresWidget; oscuro: ColoresWidget };
-  textos: { titulo: string; diasParaPagar: string; mensaje: string; abrir: string; hitoHoy: string; hitoCorta: string; hitoPagas: string };
+  textos: { titulo: string; diasParaPagar: string; mensaje: string; abrir: string; hitoHoy: string; hitoCorta: string; hitoPagas: string; esperarTitulo: string };
   dias: DiaWidget[];
 }
 
@@ -121,9 +124,14 @@ export function planificarWidget(e: EntradaWidget): ResumenWidget {
   if (estado === 'tarjetas') {
     for (let d = 0; d < (e.horizonte ?? HORIZONTE_WIDGET); d++) {
       const fecha = aFecha(hoy + d);
-      const [mejor] = calcularRanking({ hoy: fecha, tarjetas: activas, ingresos: e.ingresos, preferencias: e.preferencias, pais: e.pais }).ranking;
+      const entrada = { hoy: fecha, tarjetas: activas, ingresos: e.ingresos, preferencias: e.preferencias, pais: e.pais };
+      const { ranking } = calcularRanking(entrada);
+      const [mejor] = ranking;
       if (!mejor) continue;
       const tarjeta = porId.get(mejor.tarjetaId)!;
+      const consejo = consejoEsperar(entrada, ranking);
+      const despues = consejo ? porId.get(consejo.tarjetaId)! : null;
+      const diaConsejo = consejo ? diaConSemana(consejo.fecha, e.idioma, t) : '';
       dias.push({
         fecha,
         alias: tarjeta.alias,
@@ -133,7 +141,14 @@ export function planificarWidget(e: EntradaWidget): ResumenWidget {
         corta: corto(mejor.proximoCorte),
         pagas: corto(mejor.fechaPago),
         recompensa: textoRecompensa(tarjeta, mejor, { t, pais: e.pais, idioma: e.idioma }, undefined, true),
-        accesible: t('widget.accesible', { alias: tarjeta.alias, dias: mejor.diasGracia }),
+        esperar:
+          consejo && despues
+            ? { dia: t('inicio.esperarDia', { dia: diaConsejo }), detalle: t('widget.esperarDetalle', { alias: despues.alias, dias: consejo.dias }) }
+            : null,
+        accesible:
+          consejo && despues
+            ? t('widget.esperarAccesible', { dia: diaConsejo, alias: despues.alias, dias: consejo.dias })
+            : t('widget.accesible', { alias: tarjeta.alias, dias: mejor.diasGracia }),
       });
     }
   }
@@ -152,6 +167,7 @@ export function planificarWidget(e: EntradaWidget): ResumenWidget {
       hitoHoy: t('detalle.hitoHoy'),
       hitoCorta: t('detalle.hitoCorta'),
       hitoPagas: t('detalle.hitoPagas'),
+      esperarTitulo: t('widget.esperarTitulo'),
     },
     dias,
   };

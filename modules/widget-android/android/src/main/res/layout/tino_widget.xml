@@ -386,5 +386,44 @@
           android:textStyle="bold" />
       </LinearLayout>
     </LinearLayout>
+
+    <!-- Decisión D103: todas las tarjetas por cortar. En vez de una tarjeta, cuándo esperar
+         y con cuál; bajo, solo el título y el día. -->
+    <LinearLayout
+      android:id="@+id/widget_esperar"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center_vertical"
+      android:orientation="vertical"
+      android:paddingHorizontal="18dp"
+      android:paddingVertical="14dp"
+      android:visibility="gone">
+
+      <TextView
+        android:id="@+id/widget_esperar_titulo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="12sp" />
+
+      <TextView
+        android:id="@+id/widget_esperar_dia"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="22sp"
+        android:textStyle="bold" />
+
+      <TextView
+        android:id="@+id/widget_esperar_detalle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textSize="14sp" />
+    </LinearLayout>
   </FrameLayout>
 </FrameLayout>

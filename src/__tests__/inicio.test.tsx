@@ -245,3 +245,17 @@ test('funciona en modo oscuro', async () => {
   expect(destacada()).toHaveStyle({ backgroundColor: '#2BD49A' });
   jest.restoreAllMocks();
 });
+
+// Decisión D103: con todas por cortar, no se destaca una tarjeta para usar.
+test('todas por cortar: aconseja esperar y deja las tarjetas en "Si tienes que comprar hoy"', async () => {
+  const X = tarjeta('X', 8, 28, { tipo: 'ninguna' });
+  const Y = tarjeta('Y', 7, 27, { tipo: 'ninguna' });
+  await render(envolver(await almacenCon([X, Y]), <Inicio />));
+  expect(screen.getByText('Mejor espera unos días')).toBeOnTheScreen();
+  expect(screen.getByText('Espera al jueves 8')).toBeOnTheScreen();
+  expect(screen.getByText('Con Tarjeta X tendrás 51 días para pagar, en vez de 22 si compras hoy.')).toBeOnTheScreen();
+  expect(screen.getByText('Si tienes que comprar hoy')).toBeOnTheScreen();
+  expect(screen.queryByText('Hoy te conviene usar')).toBeNull();
+  await fireEvent.press(screen.getByLabelText(/^Espera al jueves 8/));
+  expect(mockRouter.push).toHaveBeenCalledWith({ pathname: '/tarjeta/[id]', params: { id: 'X', fecha: '2026-10-08' } });
+});

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { Pressable, View } from 'react-native';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +9,9 @@ import { useAlmacen } from '@/estado';
 import { useVistas, type VistaTarjeta } from '@/inicio/useVistas';
 import { useHoy } from '@/inicio/useHoy';
 import { TarjetaDestacada } from '@/inicio/TarjetaDestacada';
+import { TarjetaEsperar } from '@/inicio/TarjetaEsperar';
+import { consejoEsperar } from '@/inicio/esperar';
+import { diaConSemana, type Traducir } from '@/inicio/vista';
 import { FilaTarjeta } from '@/inicio/FilaTarjeta';
 import { SelectorEnfoque } from '@/inicio/SelectorEnfoque';
 import { SugerenciaDatos } from '@/sugerencias/SugerenciaDatos';
@@ -29,6 +32,8 @@ export default function Inicio() {
   const vistas = useVistas();
   const lista = vistas?.tarjetas ?? [];
   const unaSola = lista.length === 1;
+  // Decisión D103: con todas las tarjetas por cortar, se recomienda esperar.
+  const consejo = useMemo(() => (vistas && vistas.tarjetas.length > 1 ? consejoEsperar(vistas.entrada, vistas.tarjetas.map(v => v.resultado)) : null), [vistas]);
   const modo = useAlmacen(s => s.preferencias?.enfoque.modo);
   const cuantas = useAlmacen(s => s.tarjetas.length);
   const todas = useAlmacen(s => s.tarjetas);
@@ -60,7 +65,7 @@ export default function Inicio() {
   );
   const titulo = (
     <Texto variante="tituloDestacado" accessibilityRole="header">
-      {unaSola ? t('inicio.semaforoTitulo') : t('inicio.titulo')}
+      {unaSola ? t('inicio.semaforoTitulo') : consejo ? t('inicio.tituloEsperar') : t('inicio.titulo')}
     </Texto>
   );
   const encabezado = (
@@ -159,14 +164,25 @@ export default function Inicio() {
           {titulo}
           <SelectorEnfoque />
         </View>
-        <TarjetaDestacada vista={primera} mostrarUltimos4={lista.some(v => v !== primera && v.banco === primera.banco)} onPress={() => abrir(primera)} />
+        {consejo ? (
+          // Abre el detalle de esa tarjeta calculado para el día del consejo.
+          <TarjetaEsperar
+            dia={diaConSemana(consejo.fecha, idioma, t as unknown as Traducir)}
+            alias={lista.find(v => v.tarjeta.id === consejo.tarjetaId)?.tarjeta.alias ?? ''}
+            dias={consejo.dias}
+            diasHoy={consejo.diasHoy}
+            onPress={() => router.push({ pathname: '/tarjeta/[id]', params: { id: consejo.tarjetaId, fecha: consejo.fecha } })}
+          />
+        ) : (
+          <TarjetaDestacada vista={primera} mostrarUltimos4={lista.some(v => v !== primera && v.banco === primera.banco)} onPress={() => abrir(primera)} />
+        )}
       </View>
       <View style={{ gap: tema.espacio.m }}>
         <Texto variante="subtitulo" accessibilityRole="header">
-          {t('inicio.otrasOpciones')}
+          {consejo ? t('inicio.siCompras') : t('inicio.otrasOpciones')}
         </Texto>
         <ListaAgrupada sangria={70}>
-          {resto.map(v => (
+          {(consejo ? lista : resto).map(v => (
             <FilaTarjeta key={v.tarjeta.id} vista={v} onPress={() => abrir(v)} />
           ))}
         </ListaAgrupada>

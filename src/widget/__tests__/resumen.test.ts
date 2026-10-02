@@ -92,7 +92,7 @@ test('sin tarjetas o con todas en pausa, el widget muestra un mensaje en vez de 
 test('solo la tarjeta recomendada: nada de otras tarjetas ni de sus pagos (D72)', () => {
   // El 19 de octubre B corta mañana y vence el pago de C: nada de eso sale en el widget.
   const d = dia('2026-10-19');
-  expect(Object.keys(d).sort()).toEqual(['accesible', 'alias', 'banco', 'corta', 'dias', 'fecha', 'hoy', 'pagas', 'recompensa']);
+  expect(Object.keys(d).sort()).toEqual(['accesible', 'alias', 'banco', 'corta', 'dias', 'esperar', 'fecha', 'hoy', 'pagas', 'recompensa']);
   expect(d.accesible).toBe(`Hoy te conviene usar ${d.alias}: ${d.dias} días para pagar.`);
   const otras = planificarWidget(entrada()).dias.filter(x => x.alias !== 'Tarjeta B').map(x => JSON.stringify(x));
   for (const x of otras) expect(x).not.toContain('Tarjeta B');
@@ -121,6 +121,7 @@ test('colores de los tokens, tema de Ajustes y enlace', () => {
     hitoHoy: 'Hoy',
     hitoCorta: 'Corta',
     hitoPagas: 'Pagas',
+    esperarTitulo: 'Mejor espera',
   });
 });
 
@@ -201,4 +202,15 @@ describe('recursos nativos del widget', () => {
       tino_widget_sin_datos: textos.widget.sinDatos,
     });
   });
+});
+
+// Decisión D103: con todas las tarjetas por cortar, el widget aconseja esperar.
+test('todas por cortar: el consejo de esperar en lugar de la tarjeta', () => {
+  const X = tarjeta('X', 8, 28, { tipo: 'ninguna' });
+  const Y = tarjeta('Y', 7, 27, { tipo: 'ninguna' });
+  const d = dia('2026-10-06', entrada({ tarjetas: [X, Y], ingresos: [] }));
+  expect(d.esperar).toEqual({ dia: 'Espera al jueves 8', detalle: 'Tarjeta X: 51 días para pagar' });
+  expect(d.accesible).toBe('Mejor espera al jueves 8: con Tarjeta X tendrás 51 días para pagar.');
+  // Con una tarjeta que no está por cortar, se recomienda esa, sin consejo.
+  expect(dia('2026-10-06').esperar).toBeNull();
 });

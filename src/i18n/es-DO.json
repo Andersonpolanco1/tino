@@ -1,6 +1,10 @@
 {
   "inicio": {
     "titulo": "Hoy te conviene usar",
+    "tituloEsperar": "Mejor espera unos días",
+    "esperarDia": "Espera al {{dia}}",
+    "esperarDetalle": "Con {{alias}} tendrás {{dias}} días para pagar, en vez de {{hoy}} si compras hoy.",
+    "siCompras": "Si tienes que comprar hoy",
     "diasParaPagar": "días para pagar",
     "sePagaEl": "Se paga el {{fecha}}",
     "porCadaMil": "{{valor}} por {{moneda}}1,000",
@@ -928,6 +932,9 @@
     "enPausa": "Tus tarjetas están en pausa. Actívalas en Tino.",
     "abrir": "Abre Tino para actualizar.",
     "accesible": "Hoy te conviene usar {{alias}}: {{dias}} días para pagar.",
+    "esperarTitulo": "Mejor espera",
+    "esperarDetalle": "{{alias}}: {{dias}} días para pagar",
+    "esperarAccesible": "Mejor espera al {{dia}}: con {{alias}} tendrás {{dias}} días para pagar.",
     "nombre": "Tino",
     "descripcion": "La tarjeta que te conviene usar hoy",
     "sinDatos": "Abre Tino para ver qué tarjeta usar hoy."

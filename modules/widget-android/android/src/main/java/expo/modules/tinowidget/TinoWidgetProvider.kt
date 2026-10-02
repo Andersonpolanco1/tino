@@ -47,7 +47,7 @@ class TinoWidgetProvider : AppWidgetProvider() {
     private const val CLAVE = "resumen"
     private const val ACCION_MEDIANOCHE = "expo.modules.tinowidget.MEDIANOCHE"
     // Igual a VERSION_RESUMEN en src/widget/resumen.ts; cambia cuando cambian los campos.
-    private const val VERSION_RESUMEN = 4
+    private const val VERSION_RESUMEN = 5
     // Altos (dp) desde los que cabe la tarjeta de hoy completa, con la línea del ciclo, y además
     // la recompensa. El 4 × 2 de un Pixel mide unos 230 dp y cabe todo.
     private const val ALTURA_TARJETA_COMPLETA = 170
@@ -140,12 +140,36 @@ class TinoWidgetProvider : AppWidgetProvider() {
       vistas.setViewVisibility(R.id.widget_contenido, View.VISIBLE)
       vistas.setContentDescription(R.id.widget_raiz, dia.getString("accesible"))
 
+      // Decisión D103: todas por cortar, el consejo de esperar en lugar de una tarjeta.
+      val esperar = dia.optJSONObject("esperar")
+      if (esperar != null) {
+        consejoEsperar(vistas, colores, textos, esperar, conDetalle = alto >= ALTURA_TARJETA_COMPLETA)
+        return vistas
+      }
+      vistas.setViewVisibility(R.id.widget_esperar, View.GONE)
+
       if (alto >= ALTURA_TARJETA_COMPLETA) {
         tarjetaCompleta(contexto, vistas, colores, textos, dia, conRecompensa = alto >= ALTURA_RECOMPENSA)
       } else {
         tarjetaCompacta(vistas, colores, textos, dia)
       }
       return vistas
+    }
+
+    private fun consejoEsperar(vistas: RemoteViews, colores: Colores, textos: JSONObject, esperar: JSONObject, conDetalle: Boolean) {
+      vistas.setViewVisibility(R.id.widget_compacto, View.GONE)
+      vistas.setViewVisibility(R.id.widget_completo, View.GONE)
+      vistas.setViewVisibility(R.id.widget_esperar, View.VISIBLE)
+      vistas.setViewVisibility(R.id.widget_esperar_detalle, if (conDetalle) View.VISIBLE else View.GONE)
+      val textosDelConsejo = mapOf(
+        R.id.widget_esperar_titulo to textos.getString("esperarTitulo"),
+        R.id.widget_esperar_dia to esperar.getString("dia"),
+        R.id.widget_esperar_detalle to esperar.getString("detalle"),
+      )
+      for ((id, texto) in textosDelConsejo) {
+        vistas.setTextViewText(id, texto)
+        colores.aplicar(vistas, id, "setTextColor", "sobreDestacado")
+      }
     }
 
     private fun tarjetaCompacta(vistas: RemoteViews, colores: Colores, textos: JSONObject, dia: JSONObject) {
