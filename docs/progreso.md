@@ -188,7 +188,7 @@ Criterios de la especificación:
 - [ ] Variantes oscura y tintada del icono de iOS
 - [ ] Icono nuevo (D104) en Google Play Console: subir otra vez el icono (`assets/iconos/play-store-512.png`), la imagen destacada (`assets/tienda/google-play-destacada.png`) y el icono de la suscripción `tino_pro` (`assets/tienda/tino-pro-512.png`)
 - [ ] Ver el icono nuevo (D104) en el emulador tras una compilación nativa: icono adaptativo en varias formas, monocromo de Android 13, splash y el logo de Ajustes en claro y oscuro
-- [ ] Publicar `polancolabs-web` con el icono nuevo de Tino
+- [x] Publicar `polancolabs-web` con el icono nuevo de Tino (2026-10-02, verificado en polancolabs.com)
 - [x] Cuentas de Apple Developer y Google Play Console
 - [x] Proyecto en Expo (EAS) vinculado (2026-10-01): proyecto `tino` de la cuenta personal `andersonpolanco`, `projectId` y `owner` en `app.config.ts`; cada perfil de `eas.json` usa su ambiente de variables de EAS. En `preview` y `production` ya están `EXPO_PUBLIC_POSTHOG_KEY`, `EXPO_PUBLIC_SENTRY_DSN`, las tres direcciones legales, `SENTRY_ORG` y `SENTRY_PROJECT`
 - [x] Compilar Android en local con `herramientas/compilar/build-android.cmd` (WSL Ubuntu, igual que Tanty, D97): compila lo que está en GitHub, así que antes hay que hacer push. Necesita `EXPO_TOKEN` en `.env.local` (copiado del de Tanty, misma cuenta). Primera AAB de producción el 2026-10-01 (`Tino-production-v1.aab`), revisada: lleva las claves de producción de RevenueCat, PostHog y Sentry y ninguna clave de la Test Store
