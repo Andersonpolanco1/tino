@@ -28,14 +28,26 @@ export function formatearFecha(fecha: FechaISO, idioma: string): string {
   );
 }
 
-// Partes de una fecha larga ("viernes", "25", "septiembre") para armarla con una plantilla de i18n.
+// Una parte de una fecha de calendario, pedida sola ({ weekday: 'long' }, { month: 'short' }...).
+// No se usa formatToParts: en iOS, Hermes usa el Intl de Apple, que no tiene el de números y en
+// el de fechas devuelve las partes con otros tipos, y las fechas salían como "22, 20,".
+function parteFecha(fecha: FechaISO, idioma: string, opciones: Intl.DateTimeFormatOptions): string {
+  return new Intl.DateTimeFormat(idioma, { ...opciones, timeZone: 'UTC' }).format(new Date(`${fecha}T00:00:00Z`));
+}
+
+// Partes de una fecha larga ("Viernes", "25", "septiembre") para armarla con una plantilla de i18n.
 export function partesFechaLarga(fecha: FechaISO, idioma: string): { diaSemana: string; dia: string; mes: string } {
-  const partes = new Intl.DateTimeFormat(idioma, { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' }).formatToParts(
-    new Date(`${fecha}T00:00:00Z`),
-  );
-  const parte = (tipo: string) => partes.find(p => p.type === tipo)?.value ?? '';
-  const diaSemana = parte('weekday');
-  return { diaSemana: diaSemana.charAt(0).toLocaleUpperCase(idioma) + diaSemana.slice(1), dia: parte('day'), mes: parte('month') };
+  const diaSemana = parteFecha(fecha, idioma, { weekday: 'long' });
+  return {
+    diaSemana: diaSemana.charAt(0).toLocaleUpperCase(idioma) + diaSemana.slice(1),
+    dia: String(Number(fecha.slice(8, 10))),
+    mes: parteFecha(fecha, idioma, { month: 'long' }).toLocaleLowerCase(idioma),
+  };
+}
+
+// Mes abreviado sin el punto final ("sept"), para la línea del ciclo.
+export function mesCorto(fecha: FechaISO, idioma: string): string {
+  return parteFecha(fecha, idioma, { month: 'short' }).toLocaleLowerCase(idioma).replace(/\.$/, '');
 }
 
 // Día y hora locales de un instante (ISO), por ejemplo "28 de septiembre, 3:40 p. m.": la última

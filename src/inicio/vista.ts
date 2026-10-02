@@ -2,7 +2,7 @@ import type { ConfigPais, EntradaMotor, FechaISO, FuenteIngreso, ResultadoTarjet
 import { calcularRanking } from '../motor';
 import { aFecha, corteAnterior, fechaLimite, numeroDe, proximoCorte } from '../motor/fechas';
 import { proximoCobro } from '../motor/ingresos';
-import { formatearFecha, formatearMoneda, partesFechaLarga } from '../i18n/formato';
+import { formatearFecha, formatearMoneda, mesCorto, partesFechaLarga } from '../i18n/formato';
 
 export type Traducir = (clave: string, opciones?: Record<string, unknown>) => string;
 
@@ -102,9 +102,7 @@ export function subtituloTarjeta(alias: string, banco: string, ultimos4: string 
 
 // "8 sept." para la línea del ciclo, donde el mes completo partía las fechas en dos líneas.
 export function fechaMesCorto(fecha: FechaISO, idioma: string, t: Traducir): string {
-  const partes = new Intl.DateTimeFormat(idioma, { day: 'numeric', month: 'short', timeZone: 'UTC' }).formatToParts(new Date(`${fecha}T00:00:00Z`));
-  const parte = (tipo: string) => partes.find(p => p.type === tipo)?.value ?? '';
-  return t('comun.fechaMesCorto', { dia: parte('day'), mes: parte('month').replace(/\.$/, '') });
+  return t('comun.fechaMesCorto', { dia: String(Number(fecha.slice(8, 10))), mes: mesCorto(fecha, idioma) });
 }
 
 // Opacidad de la pista de la línea del ciclo sobre la tarjeta verde, por modo; la comparten

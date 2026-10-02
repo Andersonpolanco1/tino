@@ -2,7 +2,7 @@ import { readdirSync, readFileSync, statSync } from 'fs';
 import { join } from 'path';
 import esDO from '../es-DO.json';
 import { elegirIdioma, iniciarI18n } from '../i18n';
-import { formatearFecha, formatearMoneda, simboloMoneda } from '../formato';
+import { formatearFecha, formatearMoneda, mesCorto, partesFechaLarga, simboloMoneda } from '../formato';
 
 describe('elegirIdioma', () => {
   test('usa el idioma exacto si tiene textos', () => {
@@ -32,6 +32,19 @@ describe('formato', () => {
   test('fechas con día y mes, sin desfase por zona horaria', () => {
     expect(formatearFecha('2026-09-25', 'es-DO')).toBe('25 de septiembre');
     expect(formatearFecha('2027-01-01', 'es-DO')).toBe('1 de enero');
+  });
+
+  test('partes de fechas sin DateTimeFormat.formatToParts (Intl de iOS en Hermes)', () => {
+    const original = Intl.DateTimeFormat.prototype.formatToParts;
+    // @ts-expect-error: se quita a propósito para simular el iPhone
+    delete Intl.DateTimeFormat.prototype.formatToParts;
+    try {
+      expect(partesFechaLarga('2026-10-22', 'es-DO')).toEqual({ diaSemana: 'Jueves', dia: '22', mes: 'octubre' });
+      expect(partesFechaLarga('2026-11-05', 'es-DO')).toEqual({ diaSemana: 'Jueves', dia: '5', mes: 'noviembre' });
+      expect(mesCorto('2026-09-08', 'es-DO')).toBe('sept');
+    } finally {
+      Intl.DateTimeFormat.prototype.formatToParts = original;
+    }
   });
 
   test('símbolo de la moneda, también sin NumberFormat.formatToParts (Intl de iOS en Hermes)', () => {
