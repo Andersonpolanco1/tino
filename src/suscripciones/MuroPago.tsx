@@ -97,37 +97,19 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
         </>
       }
     >
-      {/* Encabezado de marca: el mismo verde de la tarjeta de hoy. */}
-      <View style={{ backgroundColor: tema.color.destacado, borderRadius: tema.radio.destacada, padding: 22, gap: 18, boxShadow: tema.sombra.destacada }}>
-        <View style={{ gap: tema.espacio.s }}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.s }}>
-            <Icono nombre="estrella" color="sobreDestacado" tamano={16} grosor={2.2} />
-            <Texto variante="etiquetaMayus" color="sobreDestacado">
-              {t('pro.nombre')}
-            </Texto>
-          </View>
-          <Texto variante="tituloMedio" color="sobreDestacado" accessibilityRole="header">
-            {t('pro.titulo')}
+      {/* Encabezado de marca, corto para que los planes se vean sin bajar (D105): qué es Pro y
+          por qué vale la pena. El detalle de los beneficios va después de los planes. */}
+      <View style={{ backgroundColor: tema.color.destacado, borderRadius: tema.radio.destacada, padding: 22, gap: tema.espacio.s, boxShadow: tema.sombra.destacada }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: tema.espacio.s }}>
+          <Icono nombre="estrella" color="sobreDestacado" tamano={16} grosor={2.2} />
+          <Texto variante="etiquetaMayus" color="sobreDestacado">
+            {t('pro.nombre')}
           </Texto>
-          <Texto color="sobreDestacado">{motivo === 'tercera_tarjeta' ? t('pro.porLimite') : t('pro.voluntario')}</Texto>
         </View>
-        <View style={{ gap: 14 }}>
-          {beneficios.map(([icono, titulo, detalle]) => (
-            <View key={titulo} style={{ flexDirection: 'row', gap: tema.espacio.m, alignItems: 'flex-start' }}>
-              <View style={{ width: 32, height: 32, borderRadius: 16, borderWidth: 1.5, borderColor: tema.color.sobreDestacado, alignItems: 'center', justifyContent: 'center' }}>
-                <Icono nombre={icono} color="sobreDestacado" tamano={16} />
-              </View>
-              <View style={{ flex: 1, gap: 2 }}>
-                <Texto variante="cuerpoFuerte" color="sobreDestacado">
-                  {titulo}
-                </Texto>
-                <Texto variante="apoyoPequeno" color="sobreDestacado">
-                  {detalle}
-                </Texto>
-              </View>
-            </View>
-          ))}
-        </View>
+        <Texto variante="tituloMedio" color="sobreDestacado" accessibilityRole="header">
+          {t('pro.titulo')}
+        </Texto>
+        {motivo === 'tercera_tarjeta' ? <Texto color="sobreDestacado">{t('pro.porLimite')}</Texto> : null}
         <Texto variante="apoyoFuerte" color="sobreDestacado">
           {t('pro.mensaje')}
         </Texto>
@@ -167,6 +149,18 @@ export function MuroPago({ motivo, onCerrar, onPro }: Props) {
           {oferta.prueba ? t('pro.condicionesPrueba', { tienda }) : t('pro.condiciones', { tienda })}
         </Texto>
       ) : null}
+
+      <View style={{ gap: tema.espacio.s, paddingTop: tema.espacio.s }}>
+        <Texto variante="subtitulo" accessibilityRole="header">
+          {t('pro.incluye')}
+        </Texto>
+        <ListaAgrupada sangria={16}>
+          {beneficios.map(([icono, titulo, detalle]) => (
+            <FilaLista key={titulo} icono={icono} titulo={titulo} detalle={detalle} />
+          ))}
+        </ListaAgrupada>
+      </View>
+
       {DOCUMENTOS.terminos || DOCUMENTOS.privacidad ? (
         <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', gap: tema.espacio.m }}>
           {DOCUMENTOS.terminos ? <Boton titulo={t('pro.terminos')} variante="texto" onPress={() => Linking.openURL(DOCUMENTOS.terminos)} /> : null}
