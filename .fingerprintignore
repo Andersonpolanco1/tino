@@ -1,0 +1,13 @@
+# Lo que la huella de expo-updates (runtimeVersion con policy fingerprint, D100) no debe contar.
+# Sin esto, la huella de esta PC y la de EAS no coinciden y la compilación de EAS falla.
+
+# Carpetas nativas generadas por prebuild: no se suben al repositorio y EAS las crea al compilar.
+android
+android/**/*
+ios
+ios/**/*
+
+# Lo que cambian las compilaciones locales de Android dentro de los paquetes: Gradle reescribe el
+# AndroidManifest.xml de algunas librerías (masked-view, 2026-10-02) y EAS instala limpio. Los
+# cambios reales de una librería ya cuentan por su versión en package.json.
+node_modules/**/android/src/main/AndroidManifest.xml
