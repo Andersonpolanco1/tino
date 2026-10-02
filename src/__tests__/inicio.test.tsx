@@ -120,8 +120,8 @@ test('el ícono de información explica el enfoque', async () => {
 
 test('con una sola tarjeta muestra el semáforo y oculta la barra y el selector (criterio 14.1)', async () => {
   await render(envolver(await almacenCon([A]), <Inicio />));
-  expect(screen.getByText('¿Es buen momento?')).toBeOnTheScreen();
-  expect(screen.getByLabelText('Buen momento')).toBeOnTheScreen();
+  expect(screen.getByText('¿Conviene usar tu tarjeta hoy?')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Sí, úsala ahora')).toBeOnTheScreen();
   expect(screen.queryByLabelText(/^Enfoque:/)).toBeNull();
   expect(screen.getByText('¿Tienes otra tarjeta?')).toBeOnTheScreen();
 });
@@ -136,7 +136,7 @@ test('con una sola tarjeta usa la misma tarjeta de hoy, con recompensa y línea 
 
 test('con una sola tarjeta en rojo dice cuántos días daría esperar', async () => {
   await render(envolver(await almacenCon([tarjeta('R', 8, 28, { tipo: 'ninguna' })]), <Inicio />));
-  expect(screen.getByLabelText('Espera')).toBeOnTheScreen();
+  expect(screen.getByLabelText('Mejor espera')).toBeOnTheScreen();
   expect(screen.getByText(/^Si esperas al viernes 9: \d+ días para pagar$/)).toBeOnTheScreen();
 });
 

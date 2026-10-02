@@ -21,7 +21,7 @@
     "sinTarjetasTitulo": "Agrega tu primera tarjeta",
     "agregarTarjeta": "Agregar tarjeta",
     "todasEnPausa": "Todas tus tarjetas están en pausa. Actívalas en Tarjetas para ver cuál usar hoy.",
-    "semaforoTitulo": "¿Es buen momento?",
+    "semaforoTitulo": "¿Conviene usar tu tarjeta hoy?",
     "fechaHoy": "{{diaSemana}} {{dia}} de {{mes}}",
     "verTarjeta": "Ver {{alias}}",
     "detalleLista": "{{banco}} · se paga el {{fecha}}",
@@ -55,6 +55,11 @@
     "mensajeAmarillo": "Una compra de hoy se paga en {{dias}} días",
     "mensajeRojo": "Si esperas al {{dia}}, tendrás {{despues}} días para pagar en vez de {{antes}}.",
     "mensajeRojoDoble": "Si esperas al {{dia}}, tendrás más del doble de días para pagar."
+  },
+  "semaforoRespuesta": {
+    "verde": "Sí, úsala ahora",
+    "amarillo": "Sí, puedes usarla",
+    "rojo": "Mejor espera"
   },
   "etiqueta": {
     "cortaPronto": "Corta en {{dias}} días",

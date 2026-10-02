@@ -31,7 +31,7 @@ export function TarjetaDestacada({
   const hoy = useHoy();
   const { tarjeta, resultado } = vista;
   const detalle = subtituloTarjeta(tarjeta.alias, vista.banco, mostrarUltimos4 ? tarjeta.ultimos4 : undefined, t as unknown as Traducir);
-  const extra = [tarjeta.ultimos4 ? t('inicio.termina', { ultimos4: tarjeta.ultimos4 }) : null, t(`semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
+  const extra = [tarjeta.ultimos4 ? t('inicio.termina', { ultimos4: tarjeta.ultimos4 }) : null, t(unaSola ? `semaforoRespuesta.${resultado.semaforo}` : `semaforo.${resultado.semaforo}`), vista.recompensa, ...vista.etiquetas.map(e => e.texto)].filter(Boolean).join('. ');
 
   return (
     <Pressable
@@ -82,7 +82,7 @@ export function TarjetaDestacada({
         )}
         {/* Con varias tarjetas el semáforo solo aparece cuando advierte algo; en verde lo dice el lector
             de pantalla. Con una sola es la respuesta a "¿Es buen momento?" y se ve siempre. */}
-        {unaSola || resultado.semaforo !== 'verde' ? <PildoraSemaforo luz={resultado.semaforo} sobreDestacado /> : null}
+        {unaSola || resultado.semaforo !== 'verde' ? <PildoraSemaforo luz={resultado.semaforo} sobreDestacado respuesta={unaSola} /> : null}
       </View>
     </Pressable>
   );

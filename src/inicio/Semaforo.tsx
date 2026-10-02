@@ -16,14 +16,16 @@ const TONO: Record<Luz, { fondo: RolColor; texto: RolColor }> = {
 
 // Sección 3.4: ícono más texto, para que el estado nunca dependa solo del color.
 // "sobreDestacado": la píldora translúcida dentro de la tarjeta de hoy.
-export function PildoraSemaforo({ luz, sobreDestacado = false }: { luz: Luz; sobreDestacado?: boolean }) {
+// "respuesta": con una sola tarjeta, contesta el título "¿Conviene usar tu tarjeta hoy?" (decisión D102).
+export function PildoraSemaforo({ luz, sobreDestacado = false, respuesta = false }: { luz: Luz; sobreDestacado?: boolean; respuesta?: boolean }) {
   const tema = useTema();
   const { t } = useTranslation();
+  const texto = t(respuesta ? `semaforoRespuesta.${luz}` : `semaforo.${luz}`);
   const color: RolColor = sobreDestacado ? 'sobreDestacado' : TONO[luz].texto;
   return (
     <View
       accessible
-      accessibilityLabel={t(`semaforo.${luz}`)}
+      accessibilityLabel={texto}
       style={{ alignSelf: 'flex-start', borderRadius: tema.radio.circular, overflow: 'hidden' }}
     >
       <View
@@ -35,7 +37,7 @@ export function PildoraSemaforo({ luz, sobreDestacado = false }: { luz: Luz; sob
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: tema.espacio.m, paddingVertical: 7 }}>
         <Icono nombre={ICONO_SEMAFORO[luz]} color={color} tamano={14} grosor={3} />
         <Texto variante="apoyoPequenoFuerte" color={color}>
-          {t(`semaforo.${luz}`)}
+          {texto}
         </Texto>
       </View>
     </View>
