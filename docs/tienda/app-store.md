@@ -75,12 +75,12 @@ Menú: la app > iOS > 1.0 Preparar para el envío.
 Abre Tino y ve qué tarjeta de crédito te conviene hoy: más días para pagar, más puntos o más cashback. Tus datos se quedan cifrados en tu teléfono.
 ```
 
-**Descripción** (1774 / 4000)
+**Descripción** (1828 / 4000)
 
 ```text
 ¿Tienes dos o más tarjetas de crédito y nunca sabes cuál usar? Tino te lo dice cada día.
 
-Registra tus tarjetas con su día de corte y su fecha límite de pago, y Tino calcula cuál te da más días para pagar sin intereses, cuál te da más puntos o más cashback. Al abrir la app ves la tarjeta que te conviene hoy, sin escribir nada.
+Agrega tus tarjetas con un nombre que reconozcas, su día de corte y su fecha límite de pago (sin el número de la tarjeta), y Tino calcula cuál te da más días para pagar sin intereses, cuál te da más puntos o más cashback. Al abrir la app ves la tarjeta que te conviene hoy, sin escribir nada.
 
 TU TARJETA DE HOY
 • Cuántos días tienes para pagar lo que compres hoy y en qué fecha se paga.

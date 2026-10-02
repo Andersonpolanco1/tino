@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-import { Appearance } from 'react-native';
+import { Appearance, AppState } from 'react-native';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider, type Theme } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import * as SystemUI from 'expo-system-ui';
@@ -171,7 +171,20 @@ const ESQUEMA = { automatico: 'unspecified', claro: 'light', oscuro: 'dark' } as
 function AparienciaGuardada() {
   const tema = useAlmacen(s => s.preferencias?.tema ?? TEMA_PREDETERMINADO);
   useEffect(() => {
-    Appearance.setColorScheme(ESQUEMA[tema]);
+    const aplicar = () => Appearance.setColorScheme(ESQUEMA[tema]);
+    aplicar();
+    // En iOS, una ventana del sistema encima de la app (la compra de Tino Pro, por ejemplo) o
+    // volver de otra app puede devolver el modo del teléfono y pisar la elección: se reaplica.
+    const alVolver = AppState.addEventListener('change', estado => {
+      if (estado === 'active') aplicar();
+    });
+    const alCambiar = Appearance.addChangeListener(({ colorScheme }) => {
+      if (tema !== 'automatico' && colorScheme !== ESQUEMA[tema]) aplicar();
+    });
+    return () => {
+      alVolver.remove();
+      alCambiar.remove();
+    };
   }, [tema]);
   return null;
 }
