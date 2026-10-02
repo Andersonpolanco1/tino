@@ -242,6 +242,14 @@ describe('Ajustes: avisos, privacidad y tus datos en pantallas aparte (decisión
     expect(abrir.mock.calls.map(c => c[0])).toEqual(['https://prueba.do/soporte', 'https://prueba.do/privacidad', 'https://prueba.do/terminos']);
     abrir.mockRestore();
   });
+
+  test('la firma de Polanco Labs al pie de Ajustes es un enlace a su sitio', async () => {
+    const abrir = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+    await render(conPais([rd], await almacenCon('DO'), <Ajustes />));
+    await fireEvent.press(screen.getByRole('link', { name: 'Hecha por Polanco Labs' }));
+    expect(abrir).toHaveBeenCalledWith('https://polancolabs.com');
+    abrir.mockRestore();
+  });
 });
 
 describe('aceptación de los términos (D88)', () => {

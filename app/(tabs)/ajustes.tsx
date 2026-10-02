@@ -4,7 +4,7 @@ import * as Application from 'expo-application';
 import Svg, { Circle } from 'react-native-svg';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { FilaLista, Hoja, LogoTino, ListaAgrupada, Pantalla, Superficie, Texto, useTema, TEMA_PREDETERMINADO } from '@/diseno';
+import { FilaLista, FirmaPolanco, Hoja, LogoTino, ListaAgrupada, Pantalla, Superficie, Texto, useTema, TEMA_PREDETERMINADO } from '@/diseno';
 import type { TemaApp } from '@/tipos/tipos';
 import { AVISOS_PREDETERMINADOS } from '@/notificaciones/planificar';
 import { usePermisoAvisos } from '@/notificaciones/usePermisoAvisos';
@@ -216,14 +216,18 @@ export default function Ajustes() {
         </ListaAgrupada>
       ) : null}
 
-      {/* Acerca de Tino: al final, discreto. */}
-      <View style={{ alignItems: 'center', gap: tema.espacio.xs, paddingTop: tema.espacio.l }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version, derechos].join('. ')}>
-        <LogoTino tamano={64} />
-        <Texto variante="cuerpoFuerte">{t('ajustes.acercaNombre')}</Texto>
-        <Texto variante="apoyo" color="textoSecundario">
-          {version}
-        </Texto>
-        <Texto variante="apoyo" color="textoSecundario" style={{ textAlign: 'center' }}>
+      {/* Acerca de Tino: al final, discreto. Debajo, la firma de Polanco Labs, que abre su sitio. */}
+      <View style={{ alignItems: 'center', paddingTop: tema.espacio.l, paddingBottom: tema.espacio.xl }}>
+        <View style={{ alignItems: 'center', gap: tema.espacio.xs }} accessible accessibilityLabel={[t('ajustes.acercaNombre'), version].join('. ')}>
+          <LogoTino tamano={64} />
+          <Texto variante="cuerpoFuerte">{t('ajustes.acercaNombre')}</Texto>
+          <Texto variante="apoyo" color="textoSecundario">
+            {version}
+          </Texto>
+        </View>
+        <View style={{ height: tema.espacio.m }} />
+        <FirmaPolanco />
+        <Texto variante="apoyoPequeno" color="textoSecundario" style={{ textAlign: 'center' }}>
           {derechos}
         </Texto>
       </View>
