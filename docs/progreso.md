@@ -253,7 +253,7 @@ Criterios de la especificación:
 - [ ] (v2) Widgets avanzados para Tino Pro: próximos pagos de todas las tarjetas, "Tengo una compra" a un toque, más tamaños. La tarjeta de hoy sigue gratis (15.2); decidir con los datos de `widget_visto`
 - [ ] (v2) Consejo de cortes juntos: nombrar qué tarjeta mover solo cuando haya una razón (por ejemplo, mover la otra dejaría su pago lejos del cobro) y decirla (D80)
 - [ ] Limitar la disponibilidad de Tino a República Dominicana en App Store Connect y Google Play Console mientras `elegirPais` esté apagado (D84). App Store listo (2026-10-02): solo RD
-- [ ] Cambiar el correo a `contacto@polancolabs.com` (D108) en Google Play Console (ficha de Play Store > Correo electrónico) y en App Store Connect (Revisión de apps > contacto), y probar que llega un correo enviado desde fuera. App Store listo (2026-10-02)
+- [x] Cambiar el correo a `contacto@polancolabs.com` (D108) en Google Play Console (ficha de Play Store > Correo electrónico) y en App Store Connect (Revisión de apps > contacto), y probar que llega un correo enviado desde fuera. Listo en las dos consolas el 2026-10-02; en Play también el correo público y el sitio web de la cuenta de desarrollador, y su página pública con la cabecera de `polancolabs-web/marca-externa/` y el texto promocional
 - [ ] Actualizar en claude.ai la especificación (sección 18) y la documentación técnica (sección 9): lanzamiento solo en RD sin elegir país (D84), y reexportarlas a `docs/`
 - [ ] (v2) Copia automática en el espacio de Tino en iCloud Drive (iPhone) y Google Drive (Android), que suba en minutos y también con datos móviles (D85)
 - [x] Configurar lint (`npm run lint`, con `eslint-config-expo` en `eslint.config.js`); sin errores ni avisos
