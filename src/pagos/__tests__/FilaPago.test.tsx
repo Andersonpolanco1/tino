@@ -49,7 +49,7 @@ test('pagado: "Pagado", la fecha y "Deshacer", sin repetir (decisión D52)', asy
 });
 
 // Decisión D99: vencido, una pregunta con "Ya pagué" a mano, no una alarma.
-test('vencido: pregunta si pagó el total y deja marcarlo', async () => {
+test('vencido: pregunta si pagó el balance al corte y deja marcarlo', async () => {
   const db = basePrueba();
   await migrar(db);
   const almacen = crearAlmacen({ tarjetas: repositorioTarjetas(db), ingresos: repositorioIngresos(db), preferencias: repositorioPreferencias(db), sugerencias: repositorioSugerencias(db) });
@@ -65,7 +65,7 @@ test('vencido: pregunta si pagó el total y deja marcarlo', async () => {
       </ProveedorAlmacenDePrueba>
     </ProveedorPais>,
   );
-  expect(screen.getByText('¿Pagaste el total? Vencía el 30 de octubre')).toBeOnTheScreen();
+  expect(screen.getByText('¿Pagaste el balance al corte? Vencía el 30 de octubre')).toBeOnTheScreen();
   await fireEvent.press(screen.getByLabelText('Ya pagué Visa Banreservas'));
   await act(async () => {});
   expect(almacen.getState().tarjetas[0].pagoHecho).toBe('2026-10-30');

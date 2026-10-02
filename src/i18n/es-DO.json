@@ -530,7 +530,7 @@
     "queEsFechaLimite": "¿Qué es la fecha límite?",
     "queEsFechaLimiteInfo": "El último día para pagar sin cargos. Si pagas tarde, te cobran mora e intereses y puede afectar tu historial de crédito. Paga uno o dos días antes, sobre todo desde otro banco.",
     "totalOMinimo": "¿Pago el total o el mínimo?",
-    "totalOMinimoInfo": "Si pagas el total antes de la fecha límite, no pagas intereses. Con el mínimo, te cobran intereses sobre lo que queda y la deuda crece. Paga el total siempre que puedas.",
+    "totalOMinimoInfo": "Si pagas el balance al corte (lo que debías el día del corte, no lo que compraste después) antes de la fecha límite, no pagas intereses. Con el mínimo, te cobran intereses sobre lo que queda y la deuda crece. Paga el total siempre que puedas.",
     "precisionPista": {
       "punto": "Confirma el valor del punto para subirla.",
       "cobros": "Sube cuando registres tus fechas de cobro.",
@@ -713,9 +713,9 @@
     "estadoDeCuenta": "Estado de cuenta",
     "pagado": "Pagado",
     "venceEl": "Vence el {{fecha}}",
-    "preguntaVencido": "¿Pagaste el total? Vencía el {{fecha}}",
-    "interesesYa": "Si no pagaste el total de tu estado del {{fecha}}, esta compra podría generar intereses desde el primer día.",
-    "interesesVencera": "Para ese día ya habrá vencido tu pago del {{fecha}}: págalo completo a tiempo para no perder tus días sin intereses."
+    "preguntaVencido": "¿Pagaste el balance al corte? Vencía el {{fecha}}",
+    "interesesYa": "Si no pagaste el balance al corte de tu estado del {{fecha}}, esta compra podría generar intereses desde el primer día.",
+    "interesesVencera": "Para ese día ya habrá vencido tu pago del {{fecha}}: paga el balance al corte a tiempo para no perder tus días sin intereses."
   },
   "enfoquePriorizando": {
     "equilibrado": "Buscando un equilibrio",

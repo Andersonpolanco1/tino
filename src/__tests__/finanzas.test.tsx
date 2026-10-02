@@ -88,7 +88,7 @@ test('el detalle explica el corte con el día de la tarjeta, la fecha límite y 
   await act(async () => fireEvent.press(screen.getByLabelText('Más información sobre ¿Qué es el corte?')));
   expect(screen.getByText(/Tu Tarjeta P corta el 5 de cada mes\.$/)).toBeOnTheScreen();
   await act(async () => fireEvent.press(screen.getByLabelText('Más información sobre ¿Pago el total o el mínimo?')));
-  expect(screen.getByText(/^Si pagas el total antes de la fecha límite/)).toBeOnTheScreen();
+  expect(screen.getByText(/^Si pagas el balance al corte/)).toBeOnTheScreen();
 });
 
 // Decisión D73: dos tarjetas que cortan casi el mismo día.

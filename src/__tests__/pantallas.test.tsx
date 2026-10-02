@@ -124,7 +124,7 @@ test('Tarjetas: cada fila dice el estado de su pago, sin una lista aparte (decis
   await almacen.getState().guardarTarjeta({ ...pagada, pagoHecho: proximoPago(pagada, hoyLocal(), paisDO as never) });
   await render(conPais([rd], almacen, <Tarjetas />));
   // Según el día en que corra, el estado anterior puede estar vencido (decisión D99).
-  expect(screen.getByText(/^(Vence hoy|Vence mañana|Vence el .* · en \d+ días|¿Pagaste el total\? Vencía el )/)).toBeOnTheScreen();
+  expect(screen.getByText(/^(Vence hoy|Vence mañana|Vence el .* · en \d+ días|¿Pagaste el balance al corte\? Vencía el )/)).toBeOnTheScreen();
   expect(screen.getByText(/^Pagado · vence el /)).toBeOnTheScreen();
   expect(screen.queryByText('Próximos pagos')).toBeNull();
 });
