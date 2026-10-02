@@ -13,32 +13,40 @@ interface Props {
   neutra?: boolean;
   // Con flecha hacia abajo: abre una lista o un selector.
   desplegable?: boolean;
+  // "secundaria": solo contorno, sin fondo ni sombra, y más baja a la vista (34) con el área de
+  // toque completa (44). Para una acción que está a mano sin llamar la atención ("Ya pagué").
+  secundaria?: boolean;
   // Cuando el texto solo no basta (por ejemplo, "Ya pagué" en una lista de tarjetas).
   etiquetaAccesible?: string;
 }
 
 // Botón compacto con ícono y texto, en forma de pastilla: "Editar", "Tengo una compra".
-export function BotonPastilla({ icono, titulo, onPress, primario = false, neutra = false, desplegable = false, etiquetaAccesible }: Props) {
+export function BotonPastilla({ icono, titulo, onPress, primario = false, neutra = false, desplegable = false, secundaria = false, etiquetaAccesible }: Props) {
   const tema = useTema();
-  const texto = primario ? 'sobrePrimario' : 'texto';
+  const texto = primario ? 'sobrePrimario' : secundaria ? 'primario' : 'texto';
+  const altoVisible = secundaria ? 34 : tema.toqueMinimo;
+  const margenToque = (tema.toqueMinimo - altoVisible) / 2;
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={etiquetaAccesible}
       onPress={onPress}
+      hitSlop={margenToque > 0 ? { top: margenToque, bottom: margenToque } : undefined}
       style={({ pressed }) => ({
         flexDirection: 'row',
         alignItems: 'center',
         gap: tema.espacio.s,
-        minHeight: tema.toqueMinimo,
-        paddingHorizontal: tema.espacio.l,
+        minHeight: altoVisible,
+        paddingHorizontal: secundaria ? tema.espacio.m : tema.espacio.l,
         borderRadius: tema.radio.circular,
-        backgroundColor: primario ? tema.color.primario : neutra ? tema.color.neutroFondo : tema.color.superficie,
-        boxShadow: primario ? tema.sombra.destacada : neutra ? undefined : tema.sombra.boton,
+        backgroundColor: primario ? tema.color.primario : neutra ? tema.color.neutroFondo : secundaria ? 'transparent' : tema.color.superficie,
+        borderWidth: secundaria ? 1 : 0,
+        borderColor: tema.color.primario,
+        boxShadow: primario ? tema.sombra.destacada : neutra || secundaria ? undefined : tema.sombra.boton,
         opacity: pressed ? 0.8 : 1,
       })}
     >
-      <Icono nombre={icono} color={texto} tamano={18} grosor={2.2} />
+      <Icono nombre={icono} color={texto} tamano={secundaria ? 16 : 18} grosor={2.2} />
       <Texto variante="controlFuerte" color={texto}>
         {titulo}
       </Texto>

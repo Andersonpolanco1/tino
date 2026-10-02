@@ -82,7 +82,8 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
             </Texto>
           ) : null}
           <View style={{ marginTop: tema.espacio.xs }}>
-            <BotonPastilla icono="check" titulo={t('pagos.yaPague')} etiquetaAccesible={t('pagos.yaPagueDe', { alias: pago.tarjeta.alias })} onPress={() => setPreguntando(true)} />
+            {/* Un solo estilo, discreto: la urgencia la dicen el ícono, el color y el texto de la fila. */}
+            <BotonPastilla icono="check" titulo={t('pagos.yaPague')} etiquetaAccesible={t('pagos.yaPagueDe', { alias: pago.tarjeta.alias })} onPress={() => setPreguntando(true)} secundaria />
           </View>
           <Hoja visible={preguntando} titulo={t('pagos.preguntaCuanto', { fecha })} onCerrar={() => setPreguntando(false)} cerrarEtiqueta={t('comun.cerrar')}>
             <ListaAgrupada sangria={16}>
