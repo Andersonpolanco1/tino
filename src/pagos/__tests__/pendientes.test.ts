@@ -92,9 +92,9 @@ describe('pago vencido sin marcar', () => {
     // Compra planeada el 14 de octubre: el pago del 30 todavía no vence.
     expect(riesgoIntereses(T, '2026-10-14', '2026-10-10', pais)).toBeNull();
     // Compra planeada el 2 de noviembre, mirada el 14 de octubre: vencerá antes.
-    expect(riesgoIntereses(T, '2026-11-02', '2026-10-14', pais)).toEqual({ pago: '2026-10-30', ya: false });
+    expect(riesgoIntereses(T, '2026-11-02', '2026-10-14', pais)).toEqual({ pago: '2026-10-30', ya: false, parcial: false });
     // Hoy 2 de noviembre sin marcar: ya venció.
-    expect(riesgoIntereses(T, '2026-11-02', '2026-11-02', pais)).toEqual({ pago: '2026-10-30', ya: true });
+    expect(riesgoIntereses(T, '2026-11-02', '2026-11-02', pais)).toEqual({ pago: '2026-10-30', ya: true, parcial: false });
     // Marcado como pagado: sin riesgo.
     expect(riesgoIntereses({ ...T, pagoHecho: '2026-10-30' }, '2026-11-02', '2026-11-02', pais)).toBeNull();
   });
@@ -109,4 +109,17 @@ test('el pago de un estado que venció antes de registrar la tarjeta no cuenta c
   expect(pago.vencido).toBe(false);
   // El siguiente sí: se registró antes de su fecha límite.
   expect(pagoPendiente(nueva, '2026-10-30', pais)).toBe('2026-10-28');
+});
+
+// Decisión D101: pagó menos del balance al corte.
+test('pago parcial: resuelve el pago, pero avisa del riesgo de intereses hasta el siguiente corte', () => {
+  const T = tarjeta('T', 8, 30, { pagoHecho: '2026-10-30', pagoParcial: true });
+  const [pago] = proximosPagos([T], '2026-10-20', [], pais);
+  expect(pago).toMatchObject({ fecha: '2026-10-30', pagado: true, vencido: false });
+  expect(riesgoIntereses(T, '2026-10-20', '2026-10-20', pais)).toEqual({ pago: '2026-10-30', ya: false, parcial: true });
+  expect(riesgoIntereses(T, '2026-11-05', '2026-10-20', pais)).toEqual({ pago: '2026-10-30', ya: false, parcial: true });
+  // Con el siguiente corte, el aviso es del estado nuevo, que todavía no se ha pagado.
+  expect(riesgoIntereses(T, '2026-11-10', '2026-10-20', pais)).toBeNull();
+  // Pagado completo: sin aviso.
+  expect(riesgoIntereses({ ...T, pagoParcial: undefined }, '2026-10-20', '2026-10-20', pais)).toBeNull();
 });

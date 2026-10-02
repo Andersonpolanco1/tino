@@ -123,7 +123,7 @@ export default function DetalleTarjeta() {
           </Texto>
         ) : null}
         {/* Decisión D99: los días sin intereses dependen de pagar el total del estado anterior. */}
-        {riesgo ? <Texto variante="apoyo">{t(riesgo.ya ? 'pagos.interesesYa' : 'pagos.interesesVencera', { fecha: textoFecha(riesgo.pago, idioma) })}</Texto> : null}
+        {riesgo ? <Texto variante="apoyo">{t(riesgo.parcial ? 'pagos.interesesParcial' : riesgo.ya ? 'pagos.interesesYa' : 'pagos.interesesVencera', { fecha: textoFecha(riesgo.pago, idioma) })}</Texto> : null}
       </Superficie>
 
       {pendiente ? (

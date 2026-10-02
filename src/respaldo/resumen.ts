@@ -77,6 +77,7 @@ const CAMPOS_TARJETA: Campos<Tarjeta> = {
   enPausa: (x, c) => c.t('misDatos.enPausa', { valor: siNo(x.enPausa, c) }),
   creadaEn: (x, c) => c.t('misDatos.registrada', { fecha: fecha(x.creadaEn, c) }),
   pagoHecho: (x, c) => (x.pagoHecho ? c.t('misDatos.pagoHecho', { fecha: fecha(x.pagoHecho, c) }) : null),
+  pagoParcial: (x, c) => (x.pagoParcial ? c.t('misDatos.pagoParcial') : null),
 };
 
 const CAMPOS_COBRO: Campos<FuenteIngreso> = {

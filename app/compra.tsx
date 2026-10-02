@@ -209,7 +209,7 @@ export default function Compra() {
             </Pressable>
           ) : null}
           {riesgo ? (
-            <Texto variante="apoyo">{t(riesgo.ya ? 'pagos.interesesYa' : 'pagos.interesesVencera', { fecha: textoFecha(riesgo.pago, idioma) })}</Texto>
+            <Texto variante="apoyo">{t(riesgo.parcial ? 'pagos.interesesParcial' : riesgo.ya ? 'pagos.interesesYa' : 'pagos.interesesVencera', { fecha: textoFecha(riesgo.pago, idioma) })}</Texto>
           ) : null}
           {conConversion ? (
             <Texto variante="apoyo" color="alertaTexto">

@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import { Pressable, View } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { BotonPastilla, FilaLista, Texto, useTema } from '../diseno';
+import { BotonPastilla, FilaLista, Hoja, ListaAgrupada, Texto, useTema } from '../diseno';
 import { usePais } from '../paises';
 import { useAlmacen } from '../estado';
 import { textoFecha } from '../inicio/vista';
@@ -31,6 +32,9 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
   const { idioma } = usePais();
   const marcarPagado = useAlmacen(s => s.marcarPagado);
   const usaYaPague = useAlmacen(s => s.tarjetas.some(x => !!x.pagoHecho));
+  const parcial = !!pago.tarjeta.pagoParcial;
+  // Decisión D101: al marcar, si fue el balance al corte o menos; sin montos.
+  const [preguntando, setPreguntando] = useState(false);
   const fecha = textoFecha(pago.fecha, idioma);
   const urgente = pagoUrgente(pago, usaYaPague);
   const vence = textoVence(pago.dias, fecha, t as never);
@@ -41,11 +45,11 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
 
   // Pagado: una sola línea, con "Deshacer" como enlace pequeño a la derecha (decisión D52).
   if (pago.pagado) {
-    const linea = t('pagos.pagadoLinea', { fecha });
+    const linea = t(parcial ? 'pagos.pagadoParcialLinea' : 'pagos.pagadoLinea', { fecha });
     return (
       <FilaLista
         icono="check"
-        titulo={conNombre ? pago.tarjeta.alias : t('pagos.pagado')}
+        titulo={conNombre ? pago.tarjeta.alias : t(parcial ? 'pagos.pagadoParcial' : 'pagos.pagado')}
         detalle={conNombre ? linea : t('pagos.venceEl', { fecha })}
         derecha={
           <Pressable
@@ -78,8 +82,28 @@ export function FilaPago({ pago, conNombre = true }: { pago: PagoPendiente; conN
             </Texto>
           ) : null}
           <View style={{ marginTop: tema.espacio.xs }}>
-            <BotonPastilla icono="check" titulo={t('pagos.yaPague')} etiquetaAccesible={t('pagos.yaPagueDe', { alias: pago.tarjeta.alias })} onPress={() => marcarPagado(pago.tarjeta.id, pago.fecha)} />
+            <BotonPastilla icono="check" titulo={t('pagos.yaPague')} etiquetaAccesible={t('pagos.yaPagueDe', { alias: pago.tarjeta.alias })} onPress={() => setPreguntando(true)} />
           </View>
+          <Hoja visible={preguntando} titulo={t('pagos.preguntaCuanto', { fecha })} onCerrar={() => setPreguntando(false)} cerrarEtiqueta={t('comun.cerrar')}>
+            <ListaAgrupada sangria={16}>
+              <FilaLista
+                titulo={t('pagos.pagoTotal')}
+                detalle={t('pagos.pagoTotalDetalle')}
+                onPress={() => {
+                  setPreguntando(false);
+                  marcarPagado(pago.tarjeta.id, pago.fecha);
+                }}
+              />
+              <FilaLista
+                titulo={t('pagos.pagoMenos')}
+                detalle={t('pagos.pagoMenosDetalle')}
+                onPress={() => {
+                  setPreguntando(false);
+                  marcarPagado(pago.tarjeta.id, pago.fecha, true);
+                }}
+              />
+            </ListaAgrupada>
+          </Hoja>
         </View>
       }
     />

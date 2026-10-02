@@ -1,4 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { Tarjeta } from '@/tipos/tipos';
 import { ProveedorPais } from '@/paises';
 import { migrar } from '@/datos/migraciones';
@@ -59,16 +60,20 @@ test('vencido: pregunta si pagó el balance al corte y deja marcarlo', async () 
   await almacen.getState().guardarTarjeta(sinMarcar);
   const pago = { tarjeta: sinMarcar, fecha: '2026-10-30', dias: -3, pagado: false, vencido: true, aviso: null };
   await render(
-    <ProveedorPais regiones={[{ regionCode: 'DO', currencyCode: 'DOP', languageTag: 'es-DO' }]}>
-      <ProveedorAlmacenDePrueba almacen={almacen}>
-        <FilaPago pago={pago} />
-      </ProveedorAlmacenDePrueba>
-    </ProveedorPais>,
+    <SafeAreaProvider initialMetrics={{ frame: { x: 0, y: 0, width: 390, height: 844 }, insets: { top: 0, left: 0, right: 0, bottom: 0 } }}>
+      <ProveedorPais regiones={[{ regionCode: 'DO', currencyCode: 'DOP', languageTag: 'es-DO' }]}>
+        <ProveedorAlmacenDePrueba almacen={almacen}>
+          <FilaPago pago={pago} />
+        </ProveedorAlmacenDePrueba>
+      </ProveedorPais>
+    </SafeAreaProvider>,
   );
   expect(screen.getByText('¿Pagaste el balance al corte? Vencía el 30 de octubre')).toBeOnTheScreen();
   await fireEvent.press(screen.getByLabelText('Ya pagué Visa Banreservas'));
+  expect(screen.getByText('¿Cuánto pagaste de tu estado del 30 de octubre?')).toBeOnTheScreen();
+  await fireEvent.press(screen.getByText('Menos'));
   await act(async () => {});
-  expect(almacen.getState().tarjetas[0].pagoHecho).toBe('2026-10-30');
+  expect(almacen.getState().tarjetas[0]).toMatchObject({ pagoHecho: '2026-10-30', pagoParcial: true });
 });
 
 test('pagoUrgente: el vencido solo se pinta de alerta si el usuario ya usa "Ya pagué"', () => {

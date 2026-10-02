@@ -24,7 +24,7 @@ export interface EstadoApp {
   borrarTarjeta: (id: string) => Promise<void>;
   alternarPausa: (id: string) => Promise<void>;
   // Marca (o desmarca con null) como pagado el estado que vence en esa fecha.
-  marcarPagado: (id: string, fecha: FechaISO | null) => Promise<void>;
+  marcarPagado: (id: string, fecha: FechaISO | null, parcial?: boolean) => Promise<void>;
   guardarIngreso: (ingreso: FuenteIngreso) => Promise<void>;
   borrarIngreso: (id: string) => Promise<void>;
   guardarPreferencias: (preferencias: Preferencias) => Promise<void>;
@@ -69,11 +69,11 @@ export function crearAlmacen(repos: Repositorios, ahora: () => string = () => ne
       if (tarjeta) await get().guardarTarjeta({ ...tarjeta, enPausa: !tarjeta.enPausa });
     },
 
-    async marcarPagado(id, fecha) {
+    async marcarPagado(id, fecha, parcial = false) {
       const tarjeta = get().tarjetas.find(t => t.id === id);
       if (!tarjeta) return;
-      const { pagoHecho: _anterior, ...resto } = tarjeta;
-      await get().guardarTarjeta(fecha ? { ...resto, pagoHecho: fecha } : resto);
+      const { pagoHecho: _anterior, pagoParcial: _parcial, ...resto } = tarjeta;
+      await get().guardarTarjeta(fecha ? { ...resto, pagoHecho: fecha, ...(parcial ? { pagoParcial: true } : {}) } : resto);
     },
 
     async guardarIngreso(ingreso) {

@@ -27,10 +27,15 @@ const cubierto = (tarjeta: Tarjeta, fecha: FechaISO) => !!tarjeta.pagoHecho && t
 // ya va en el estado nuevo). Antes saltaba al estado siguiente y el vencido no se podía marcar.
 // Solo cuenta si la fecha límite es del día en que se registró la tarjeta o después: la de un
 // estado anterior no se pudo marcar y lo normal es que ya esté pagada.
+// Fecha límite del estado del último corte.
+function pagoDelUltimoEstado(tarjeta: Tarjeta, hoy: FechaISO, pais: ConfigPais): FechaISO {
+  const anterior = corteAnterior(proximoCorte(numeroDe(hoy), tarjeta), tarjeta.diaCorte);
+  return aFecha(fechaLimite(anterior, tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, new Set(pais.feriados)));
+}
+
 export function pagoPendiente(tarjeta: Tarjeta, hoy: FechaISO, pais: ConfigPais): FechaISO {
   const n = numeroDe(hoy);
-  const anterior = corteAnterior(proximoCorte(n, tarjeta), tarjeta.diaCorte);
-  const pagoAnterior = aFecha(fechaLimite(anterior, tarjeta.fechaLimite, tarjeta.ajusteDiaNoHabil, new Set(pais.feriados)));
+  const pagoAnterior = pagoDelUltimoEstado(tarjeta, hoy, pais);
   const vencido = numeroDe(pagoAnterior) < n && pagoAnterior >= tarjeta.creadaEn && !cubierto(tarjeta, pagoAnterior);
   return vencido ? pagoAnterior : proximoPago(tarjeta, hoy, pais);
 }
@@ -39,10 +44,14 @@ export function pagoPendiente(tarjeta: Tarjeta, hoy: FechaISO, pais: ConfigPais)
 // entonces el estado anterior venció sin marcarse como pagado (casi todos los bancos quitan los
 // días sin intereses si no se paga el total). `ya`: venció antes de hoy; si no, vencerá antes
 // de esa compra.
-export function riesgoIntereses(tarjeta: Tarjeta, fecha: FechaISO, hoy: FechaISO, pais: ConfigPais): { pago: FechaISO; ya: boolean } | null {
+// Decisión D101: `parcial`, el estado se marcó pagado pero con menos del balance al corte.
+export function riesgoIntereses(tarjeta: Tarjeta, fecha: FechaISO, hoy: FechaISO, pais: ConfigPais): { pago: FechaISO; ya: boolean; parcial: boolean } | null {
   const pago = pagoPendiente(tarjeta, fecha, pais);
-  if (numeroDe(pago) >= numeroDe(fecha) || cubierto(tarjeta, pago)) return null;
-  return { pago, ya: numeroDe(pago) < numeroDe(hoy) };
+  if (numeroDe(pago) < numeroDe(fecha) && !cubierto(tarjeta, pago)) return { pago, ya: numeroDe(pago) < numeroDe(hoy), parcial: false };
+  // Pagó una parte del último estado: las compras nuevas pueden generar intereses hasta saldarlo.
+  const ultimo = pagoDelUltimoEstado(tarjeta, fecha, pais);
+  if (tarjeta.pagoParcial && tarjeta.pagoHecho === ultimo) return { pago: ultimo, ya: false, parcial: true };
+  return null;
 }
 
 // Todos los pagos pendientes de las tarjetas activas, del más cercano al más lejano.

@@ -715,6 +715,14 @@
     "venceEl": "Vence el {{fecha}}",
     "preguntaVencido": "¿Pagaste el balance al corte? Vencía el {{fecha}}",
     "interesesYa": "Si no pagaste el balance al corte de tu estado del {{fecha}}, esta compra podría generar intereses desde el primer día.",
+    "preguntaCuanto": "¿Cuánto pagaste de tu estado del {{fecha}}?",
+    "pagoTotal": "El balance al corte",
+    "pagoTotalDetalle": "Todo lo que debías el día del corte. No pagas intereses",
+    "pagoMenos": "Menos",
+    "pagoMenosDetalle": "El mínimo u otro monto. Evitas la mora, pero puedes pagar intereses",
+    "pagadoParcialLinea": "Pagaste una parte · vence el {{fecha}}",
+    "pagadoParcial": "Pagaste una parte",
+    "interesesParcial": "Pagaste menos del balance al corte de tu estado del {{fecha}}: las compras nuevas podrían generar intereses hasta que lo saldes.",
     "interesesVencera": "Para ese día ya habrá vencido tu pago del {{fecha}}: paga el balance al corte a tiempo para no perder tus días sin intereses."
   },
   "enfoquePriorizando": {
@@ -784,6 +792,7 @@
     "enPausa": "En pausa: {{valor}}",
     "registrada": "Registrada el {{fecha}}",
     "pagoHecho": "Marcaste como pagado el estado que vence el {{fecha}}",
+    "pagoParcial": "Ese pago fue menor que el balance al corte",
     "cobroReferencia": "último cobro conocido el {{fecha}}",
     "fechaEstimada": "{{fecha}} (estimada)",
     "ajusteCobro": {

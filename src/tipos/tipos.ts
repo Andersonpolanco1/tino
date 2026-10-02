@@ -52,6 +52,9 @@ export interface Tarjeta {
   // "Ya pagué" (decisión D45): la fecha límite del estado que el usuario marcó como pagado.
   // Sin montos; el motor no lo usa. Con el siguiente corte, el pago pendiente cambia solo.
   pagoHecho?: FechaISO;
+  // Decisión D101: ese pago fue menor que el balance al corte (el mínimo u otro monto). Nunca el
+  // monto. Evita la mora, pero las compras nuevas pueden generar intereses hasta saldarlo.
+  pagoParcial?: boolean;
 }
 
 // ---------- Ingresos (nivel 2) ----------
