@@ -59,7 +59,7 @@ https://polancolabs.com/apps/tino/privacidad
 | --- | --- |
 | Uso > Interacción con el producto | Analítica |
 | Identificadores > ID de usuario | Analítica, funcionalidad de la app |
-| Compras > Historial de compras | Funcionalidad de la app |
+| Compras > Historial de compras | Analítica, funcionalidad de la app |
 | Diagnóstico > Datos de fallos | Funcionalidad de la app |
 | Diagnóstico > Datos de rendimiento | Funcionalidad de la app |
 
